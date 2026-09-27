@@ -219,7 +219,7 @@
                                 @endif
                                 <div class="premium-img-wrapper">
                                     <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ !empty($room->image_path) ? asset('storage/' . $room->image_path) : ($room->image_url ?? asset('images/feature.jpg')) }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
+                                        <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
                                     </a>
                                     <span class="room-category-label">{{ $room->name }}</span>
                                 </div>
@@ -498,7 +498,7 @@
                                 <div class="card-top-bar"></div>
                                 <div class="std-img-wrapper">
                                     <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ !empty($room->image_path) ? asset('storage/' . $room->image_path) : ($room->image_url ?? asset('images/placeholder.jpg')) }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
+                                        <img src="{{ $room->image_url ?? asset('images/placeholder.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
                                     </a>
                                 </div>
                                 <div class="std-card-body">

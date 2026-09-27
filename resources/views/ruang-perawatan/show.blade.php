@@ -156,7 +156,7 @@
                     {{-- KIRI: Gambar Utama & Deskripsi --}}
                     <div class="col-lg-8">
                         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
-                            <img src="{{ !empty($room->image_path) ? asset('storage/' . $room->image_path) : ($room->image_url ?? asset('images/feature.jpg')) }}" class="w-100 object-fit-cover" alt="{{ $room->name }}" style="height: 400px;">
+                            <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" class="w-100 object-fit-cover" alt="{{ $room->name }}" style="height: 400px;">
                             <div class="card-body p-4 p-md-5">
                                 <span class="badge bg-primary px-3 py-2 rounded-pill fw-normal mb-3 text-uppercase" style="letter-spacing: 1px;">
                                     {{ $room->category === 'premium' ? 'Premium & Eksklusif' : 'Standar' }}

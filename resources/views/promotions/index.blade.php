@@ -155,7 +155,7 @@
                 <div class="row cards">
                     @forelse ($promotions as $promo)
                         @php
-                            $imgSrc = !empty($promo->image_path) ? asset('storage/' . $promo->image_path) : asset('images/placeholder.jpg');
+                            $imgSrc = !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg');
                         @endphp
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden" 

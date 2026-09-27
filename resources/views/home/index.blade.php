@@ -159,9 +159,9 @@
                 <div class="carousel-inner">
                     @forelse($banners as $index => $banner)
                     <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                        <img src="{{ $banner['image_url'] }}"
+                        <img src="{{ $banner->image_url ?? asset('images/placeholder.jpg') }}"
                              class="d-block w-100"
-                             alt="{{ $banner['title'] }}">
+                             alt="{{ $banner->title }}">
                     </div>
                     @empty
                     {{-- Fallback: tampilkan pesan jika belum ada banner di CMS --}}
@@ -394,14 +394,14 @@
                         <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
                             <div class="row align-items-center g-0">
                                 <div class="col-md-6 text-center facility-img-wrapper">
-                                    <img src="{{ $facility['image_url'] ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility['name'] }}">
+                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility->name }}">
                                 </div>
                                 <div class="col-md-6 p-4 p-md-5">
-                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility['category'] ?? 'Featured' }}</span>
-                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility['name'] }}</h3>
-                                    <p class="text-muted fs-5 mt-3">{{ $facility['short_description'] ?? \Illuminate\Support\Str::limit(strip_tags($facility['description'] ?? ''), 150) }}</p>
+                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility->category ?? 'Featured' }}</span>
+                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
+                                    <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
                                     <div class="mt-4">
-                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility['slug'] ?? $facility['id'] }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -435,12 +435,12 @@
                 <div class="row g-4 justify-content-center" id="promoTrack">
                     @forelse($promotions as $promo)
                         <div class="col-md-6 col-lg-3 {{ $loop->iteration > 4 ? '' : 'position-relative' }}">
-                            <div class="promo-card" {!! $loop->iteration <= 4 ? 'data-bs-toggle="modal" data-bs-target="#promoModal" data-title="'.e($promo->title ?? 'Promo').'" data-desc="'.e($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.').'" data-img="'.(!empty($promo->image_path) ? asset('storage/'.$promo->image_path) : asset('images/placeholder.jpg')).'"' : '' !!}>
+                            <div class="promo-card" {!! $loop->iteration <= 4 ? 'data-bs-toggle="modal" data-bs-target="#promoModal" data-title="'.e($promo->title ?? 'Promo').'" data-desc="'.e($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.').'" data-img="'.(!empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg')).'"' : '' !!}>
                                 <div class="card {{ $loop->iteration > 4 ? 'position-relative teased-card' : 'h-100' }}">
-                                    <img src="{{ !empty($promo->image_path) ? asset('storage/'.$promo->image_path) : asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $promo->title ?? 'Promo' }}">
+                                    <img src="{{ !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $promo->title ?? 'Promo' }}">
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promo->title ?? 'Promo' }}</h5>
-                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->shorts ?? strip_tags($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.'), 60) }}</p>
+                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.'), 60) }}</p>
                                         <div class="mt-3 text-end">
                                             <span class="text-secondary fw-semibold small">Lihat Detail <i class="fa-solid fa-arrow-right ms-1"></i></span>
                                         </div>
@@ -511,20 +511,20 @@
                     <div class="col-md-6 col-lg-3 position-relative">
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
-                                <a href="{{{ route('articles.show', ['slug' => $item['slug']]) }}}">
-                                    <img src="{{ $item['image'] }}" class="news-card-img" alt="{{ $item['title'] }}">
+                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}">
+                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
                                 </a>
                             </div>
                             <div class="news-card-body p-3">
                                 <div class="news-date small">
                                     <i class="fa-regular fa-calendar"></i>
-                                    {{ \Carbon\Carbon::parse($item['date'])->translatedFormat('d M Y') }}
+                                    {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
                                 </div>
-                                <a href="{{{ route('articles.show', ['slug' => $item['slug']]) }}}">
-                                    <h3 class="news-title fs-6">{{ $item['title'] }}</h3>
+                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}">
+                                    <h3 class="news-title fs-6">{{ $item->title }}</h3>
                                 </a>
-                                <p class="news-excerpt small mb-3">{{ Str::limit($item['excerpt'], 80) }}</p>
-                                <a href="{{{ route('articles.show', ['slug' => $item['slug']]) }}}" class="news-read-more small mt-auto">
+                                <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
+                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
                                     Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
@@ -559,23 +559,23 @@
                     <div class="col-md-6 col-lg-3 position-relative">
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}">
-                                    <img src="{{ $item['image'] }}" class="news-card-img" alt="{{ $item['title'] }}">
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
+                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
                                 </a>
                             </div>
                             <div class="news-card-body p-3">
                                 <div class="news-date small d-flex justify-content-between align-items-center mb-2">
                                     <span>
                                         <i class="fa-regular fa-calendar"></i>
-                                        {{ \Carbon\Carbon::parse($item['date'])->translatedFormat('d M Y') }}
+                                        {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
                                     </span>
-                                    <span class="badge bg-primary rounded-pill">{{ $item['category'] ?? 'Berita Umum' }}</span>
+                                    <span class="badge bg-primary rounded-pill">{{ $item->category ?? 'Berita Umum' }}</span>
                                 </div>
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}">
-                                    <h3 class="news-title fs-6">{{ $item['title'] }}</h3>
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
+                                    <h3 class="news-title fs-6">{{ $item->title }}</h3>
                                 </a>
-                                <p class="news-excerpt small mb-3">{{ Str::limit($item['excerpt'], 80) }}</p>
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}" class="news-read-more small mt-auto">
+                                <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
                                     Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>

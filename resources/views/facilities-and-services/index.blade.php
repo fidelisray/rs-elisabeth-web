@@ -180,9 +180,9 @@
                             </div>
                             <div class="facility-list">
                                 @forelse($facilities as $facility)
-                                <button class="btn-facility" data-target="facility-{{ $facility['slug'] ?? $facility['id'] }}">
+                                <button class="btn-facility" data-target="facility-{{ $facility->slug ?? $facility->id }}">
                                     <i class="fa-solid fa-chevron-right"></i>
-                                    {{ $facility['name'] }}
+                                    {{ $facility->name }}
                                 </button>
                                 @empty
                                 <p class="text-center text-muted">Belum ada fasilitas yang ditambahkan.</p>
@@ -196,42 +196,37 @@
                         <div class="facility-detail-panel">
 
                             @foreach ($facilities as $facility)
-                            <div class="facility-detail-item" id="facility-{{ $facility['slug'] ?? $facility['id'] }}">
+                            <div class="facility-detail-item" id="facility-{{ $facility->slug ?? $facility->id }}">
                                 <div class="facility-img-wrapper">
-                                    <img src="{{ $facility['image_url'] ?? asset('images/placeholder.jpg') }}" alt="{{ $facility['name'] }} RS St. Elisabeth Semarang">
+                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" alt="{{ $facility->name }} RS St. Elisabeth Semarang">
                                 </div>
                                 <div class="facility-content-body">
-                                    @if(!empty($facility['category']))
-                                    <span class="facility-tag">{{ $facility['category'] }}</span>
+                                    @if(!empty($facility->category))
+                                    <span class="facility-tag">{{ $facility->category }}</span>
                                     @endif
                                     
-                                    <h3 class="facility-name">{{ $facility['name'] }}</h3>
+                                    <h3 class="facility-name">{{ $facility->name }}</h3>
                                     <hr class="facility-divider">
                                     
                                     <div class="facility-desc-wrapper facility-desc">
-                                        {!! $facility['description'] !!}
+                                        {!! $facility->description !!}
                                     </div>
                                     
-                                    @if(!empty($facility['highlights']) && is_array($facility['highlights']))
+                                    @if(!empty($facility->highlights) && is_array($facility->highlights))
                                     <div class="facility-highlights">
-                                        @foreach($facility['highlights'] as $highlight)
-                                        <span class="facility-highlight-badge"><i class="fa-solid fa-check-circle"></i> {{ $highlight }}</span>
+                                        @foreach($facility->highlights as $highlight)
+                                        <span class="facility-highlight-badge"><i class="fa-solid fa-check-circle"></i> {{ is_array($highlight) ? ($highlight['name'] ?? '') : $highlight }}</span>
                                         @endforeach
                                     </div>
                                     @endif
                                     
                                     <div class="facility-cta">
-                                        @if(!empty($facility['wa_action_url']))
-                                        <a href="{{ $facility['wa_action_url'] }}" target="_blank" class="btn-primary-facility">
-                                            <i class="fa-brands fa-whatsapp"></i> {{ $facility['wa_link_text'] ?: 'Hubungi Kami' }}
+                                        <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20layanan%20{{ urlencode($facility->name) }}" target="_blank" class="btn-primary-facility">
+                                            <i class="fa-brands fa-whatsapp"></i> Hubungi Kami
                                         </a>
-                                        @endif
-                                        
-                                        @if(!empty($facility['has_appointment_cta']) && $facility['has_appointment_cta'])
                                         <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-outline-facility">
                                             <i class="fa-regular fa-calendar-check"></i> Buat Janji
                                         </a>
-                                        @endif
                                     </div>
                                 </div>
                             </div>

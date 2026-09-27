@@ -156,23 +156,23 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="news-card">
                             <div class="news-card-img-wrapper">
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}">
-                                    <img src="{{ $item['image'] }}" class="news-card-img" alt="{{ $item['title'] }}">
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
+                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
                                 </a>
                             </div>
                             <div class="news-card-body">
                                 <div class="news-date d-flex justify-content-between align-items-center mb-3">
                                     <span>
                                         <i class="fa-regular fa-calendar"></i>
-                                        {{ \Carbon\Carbon::parse($item['date'])->translatedFormat('d F Y') }}
+                                        {{ $item->created_at?->translatedFormat('d F Y') ?? now()->translatedFormat('d F Y') }}
                                     </span>
-                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.75rem;">{{ $item['category'] ?? 'Berita Umum' }}</span>
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.75rem;">{{ $item->category ?? 'Berita Umum' }}</span>
                                 </div>
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}">
-                                    <h3 class="news-title">{{ $item['title'] }}</h3>
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
+                                    <h3 class="news-title">{{ $item->title }}</h3>
                                 </a>
-                                <p class="news-excerpt">{{ $item['excerpt'] }}</p>
-                                <a href="{{{ route('news.show', ['slug' => $item['slug']]) }}}" class="news-read-more">
+                                <p class="news-excerpt">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
+                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}" class="news-read-more">
                                     Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
