@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\HospitalApiService;
+use App\Services\CmsApiService;
+use App\DTOs\Cms\FacilityServiceDto;
 
 class FacilityController extends Controller
 {
-    public function index(HospitalApiService $apiService)
+    public function __construct(
+        protected CmsApiService $cmsApiService
+    ) {}
+
+    public function index()
     {
-        $facilities = collect($apiService->getFacilityServices());
+        $rawFacilities = $this->cmsApiService->getFacilities();
+        $facilities = collect($rawFacilities)->map(fn($item) => FacilityServiceDto::fromArray($item))->values();
         
         return view('facilities-and-services.index', compact('facilities'));
     }

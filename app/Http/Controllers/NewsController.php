@@ -3,31 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Services\HospitalApiService;
+use App\Services\CmsApiService;
+use App\DTOs\Cms\NewsDto;
 
 class NewsController extends Controller
 {
-    use \App\Traits\FormatsArticleData;
+    public function __construct(
+        protected CmsApiService $cmsApiService
+    ) {}
 
-    public function index(HospitalApiService $apiService)
+    public function index()
     {
-        $rawNews = $apiService->getNews();
-        $newsList = $this->formatApiData($rawNews)->all();
+        $rawNews = $this->cmsApiService->getNews();
+        $newsList = array_map(fn($item) => NewsDto::fromArray($item), $rawNews);
 
         return view('news.index', compact('newsList'));
     }
 
-    public function show($slug, HospitalApiService $apiService)
+    public function show($slug)
     {
-        $rawNews = $apiService->getNews();
-        $newsList = $this->formatApiData($rawNews);
-        
-        $news = $newsList->firstWhere('slug', $slug);
+        $rawNews = $this->cmsApiService->getNewsBySlug($slug);
 
-        if (!$news) {
-            abort(404);
+        if (!$rawNews) {
+            abort(404, 'Berita tidak ditemukan.');
         }
+
+        $news = NewsDto::fromArray($rawNews);
 
         return view('news.show', compact('news'));
     }

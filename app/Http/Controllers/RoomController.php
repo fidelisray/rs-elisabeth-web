@@ -2,33 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\HospitalApiService;
+use App\Services\CmsApiService;
+use App\DTOs\Cms\RoomFacilityDto;
 
 class RoomController extends Controller
 {
     public function __construct(
-        protected HospitalApiService $apiService
+        protected CmsApiService $cmsApiService
     ) {}
 
     /**
-     * Menampilkan halaman Ruang Perawatan dengan data dari CMS local API.
+     * Menampilkan halaman Ruang Perawatan dengan data dari Headless CMS.
      */
     public function index()
     {
-        $roomsData = $this->apiService->getRoomFacilities();
+        $rawRooms = $this->cmsApiService->getRoomFacilities();
+        $roomsData = collect($rawRooms)->map(fn($item) => RoomFacilityDto::fromArray($item));
 
-        // Pisahkan ruangan berdasarkan kategori untuk mempermudah rendering di view
-        // Data dari API berupa associative array, kita cast ke (object) agar
-        // di Blade bisa menggunakan sintaks $room->name
-        $premiumRooms  = collect($roomsData)
-                            ->where('category', 'premium')
-                            ->map(fn($item) => (object) $item)
-                            ->values();
-                            
-        $standardRooms = collect($roomsData)
-                            ->where('category', 'standard')
-                            ->map(fn($item) => (object) $item)
-                            ->values();
+        // Pisahkan ruangan berdasarkan kategori
+        $premiumRooms  = $roomsData->where('category', 'premium')->values();
+        $standardRooms = $roomsData->where('category', 'standard')->values();
 
         return view('ruang-perawatan.index', compact(
             'roomsData',
@@ -42,15 +35,13 @@ class RoomController extends Controller
      */
     public function show($slug)
     {
-        $roomsData = $this->apiService->getRoomFacilities();
-        $room = collect($roomsData)->firstWhere('slug', $slug);
+        $rawRoom = $this->cmsApiService->getRoomFacilityBySlug($slug);
 
-        if (!$room) {
+        if (!$rawRoom) {
             abort(404, 'Ruang Perawatan tidak ditemukan.');
         }
 
-        // Cast ke object agar seragam penggunaannya di blade ($room->name)
-        $room = (object) $room;
+        $room = RoomFacilityDto::fromArray($rawRoom);
 
         return view('ruang-perawatan.show', compact('room'));
     }

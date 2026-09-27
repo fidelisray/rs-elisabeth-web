@@ -3,32 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\HospitalApiService;
-use Illuminate\Support\Facades\Storage;
+use App\Services\CmsApiService;
+use App\DTOs\Cms\PromotionDto;
 
 class PromotionsController extends Controller
 {
     public function __construct(
-        protected HospitalApiService $apiService
+        protected CmsApiService $cmsApiService
     ) {}
 
     public function index(Request $request)
     {
-        $promotionsData = $this->apiService->getPromotionsList();
+        $rawPromotions = $this->cmsApiService->getPromotions();
         
-        // Convert to object so blade template can use $promo->title
-        $promotions = collect($promotionsData)->map(fn($item) => (object) $item)->values();
+        $promotions = collect($rawPromotions)->map(fn($item) => PromotionDto::fromArray($item))->values();
 
         return view('promotions.index', compact('promotions'));
-    }
-
-    public function savePhoto(string $base64Image, string $judul): string
-    {
-        $imageData = base64_decode($base64Image);
-
-        $filename = "images/promotions/{$judul}.jpg";
-        Storage::disk('public')->put($filename, $imageData);
-
-        return $filename;
     }
 }
