@@ -8,7 +8,6 @@
     "require": {
         "php": "^8.2",
         "darkaonline/l5-swagger": "^11.1",
-        "filament/filament": "^5.7",
         "intervention/image": "*",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
@@ -55,8 +54,7 @@
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
+            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

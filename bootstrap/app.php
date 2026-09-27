@@ -13,10 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Daftarkan alias untuk middleware API Key CMS
-        $middleware->alias([
-            'verifyCmsHmac' => \App\Http\Middleware\VerifyCmsHmacSignature::class,
-        ]);
+        //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Pastikan semua error pada request API (/api/*) selalu dikembalikan

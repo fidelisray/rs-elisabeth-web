@@ -3,27 +3,25 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | CMS API Tolerance
+    | CMS API Connection Details
     |--------------------------------------------------------------------------
-    | Toleransi perbedaan waktu (dalam menit) antara timestamp client
-    | dan timestamp server. Mencegah Replay Attack.
+    | Konfigurasi ini digunakan oleh Consumer (Web) untuk menghubungi CMS.
     */
-    'tolerance_minutes' => (int) env('CMS_API_TOLERANCE_MINUTES', 5),
+    'base_url' => env('CMS_API_BASE_URL', 'http://127.0.0.1:2302/api/v1/cms'),
 
     /*
     |--------------------------------------------------------------------------
-    | CMS API Clients
+    | CMS API Credentials (HMAC)
     |--------------------------------------------------------------------------
-    | Daftar klien yang diizinkan mengakses API CMS.
-    | Struktur: 'Cons-ID' => 'Secret-Key'
-    | 
-    | Jika ada klien baru (misal: Aplikasi Mobile), cukup tambahkan 
-    | baris baru di sini dan di file .env.
+    | Kredensial untuk melakukan otentikasi HMAC saat melakukan request ke CMS.
     */
-    'clients' => [
-        env('CMS_API_CONSID_WEB') => env('CMS_API_SECRET_WEB'),
-        
-        // Contoh untuk klien masa depan:
-        // env('CMS_API_CONSID_MOBILE') => env('CMS_API_SECRET_MOBILE'),
-    ],
+    'cons_id' => env('CMS_API_CONSID_WEB', ''),
+    'secret_key' => env('CMS_API_SECRET_WEB', ''),
+    
+    /*
+    |--------------------------------------------------------------------------
+    | CMS API Timeout
+    |--------------------------------------------------------------------------
+    */
+    'timeout' => 10,
 ];

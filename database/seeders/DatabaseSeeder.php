@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            AdminUserSeeder::class,
-        ]);
+        // Seeder modules web di sini jika diperlukan nanti
     }
 }
