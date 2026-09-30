@@ -68,10 +68,9 @@ class DokterController extends Controller
     public function allDokter(Request $request): \Illuminate\Http\JsonResponse
     {
 
-        // // Tolak jika bukan AJAX request
+        // Tolak jika bukan AJAX request
         if (!$request->ajax()) {
             abort(403, 'Forbidden');
-            sleep(5);
         }
 
         $data = Cache::get('all_doctors_list', []);

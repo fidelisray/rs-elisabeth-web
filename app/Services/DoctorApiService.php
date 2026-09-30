@@ -42,7 +42,7 @@ class DoctorApiService
         $consid = $this->consId;
         $secretKey = $this->secretKey;
 
-        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+        $tStamp = strval(time()); // Unix timestamp — strtotime('1970-01-01') selalu 0
         $signature = hash_hmac('sha256', $tStamp . $consid, $secretKey, true);
         $encodedSignature = base64_encode($signature);
 

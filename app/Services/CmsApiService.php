@@ -35,7 +35,7 @@ class CmsApiService
         $secretKey = $this->secretKey;
 
         // Logika pembuatan X-Signature yang identik dengan DoctorApiService
-        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+        $tStamp = strval(time()); // Unix timestamp — strtotime('1970-01-01') selalu 0
         $signature = hash_hmac('sha256', $tStamp . $consid, $secretKey, true);
         $encodedSignature = base64_encode($signature);
 
@@ -155,6 +155,32 @@ class CmsApiService
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Article ID {$id}", ['error' => $e->getMessage()]);
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Mengambil single artikel berdasarkan slug.
+     * PERBAIKAN: Digunakan oleh ArticleController::show() agar tidak perlu
+     * fetch semua artikel hanya untuk menemukan satu artikel.
+     */
+    public function getArticleBySlug(string $slug): array|null
+    {
+        $cacheKey = "cms_article_slug_{$slug}";
+        $ttl = 600;
+
+        return Cache::remember($cacheKey, $ttl, function () use ($slug) {
+            try {
+                $response = $this->apiRequest()->get("{$this->baseUrl}/articles/{$slug}");
+
+                if ($response->successful()) {
+                    return $response->json('data', null);
+                }
+
+                return null;
+            } catch (\Exception $e) {
+                Log::error("CMS API - Error saat fetch Article Slug {$slug}", ['error' => $e->getMessage()]);
                 return null;
             }
         });

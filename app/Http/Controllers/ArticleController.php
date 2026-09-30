@@ -22,16 +22,16 @@ class ArticleController extends Controller
 
     public function show($slug)
     {
-        // Ideally the API should have a getArticleBySlug endpoint, but for now we fetch all and filter
-        // Wait, CmsApiService has getArticleById, not getArticleBySlug. Let's filter from the list as the old code did.
-        $rawArticles = $this->cmsApiService->getArticles();
-        $articlesList = collect($rawArticles)->map(fn($item) => ArticleDto::fromArray($item));
-        
-        $article = $articlesList->firstWhere('slug', $slug);
+        // PERBAIKAN: Gunakan getArticleBySlug() langsung, bukan fetch semua artikel.
+        // Sebelumnya: getArticles() → filter by slug (sangat tidak efisien, bisa ratusan data)
+        // Sekarang: langsung hit endpoint /articles/{slug} dengan caching per-slug
+        $rawArticle = $this->cmsApiService->getArticleBySlug($slug);
 
-        if (!$article) {
+        if (!$rawArticle) {
             abort(404, 'Artikel tidak ditemukan.');
         }
+
+        $article = ArticleDto::fromArray($rawArticle);
 
         return view('articles.show', compact('article'));
     }

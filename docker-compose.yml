@@ -1,0 +1,121 @@
+
+services:
+  # ---------------------------------------------------------
+  # 1. WEB APPLICATION (PHP-FPM)
+  # ---------------------------------------------------------
+  web_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: fpm_app
+    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    container_name: rses_web_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Override nilai kritis dari .env agar sesuai environment Docker.
+      # Nilai ini mengoverride apapun yang ada di .env
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - LOG_LEVEL=error
+      - DB_HOST=web_db # Nama service Docker, bukan 127.0.0.1
+      - DB_PORT=5432
+    networks:
+      - rses_web_network
+    volumes:
+      # Staging area untuk assets
+      - web_public_assets:/var/www/html/public_shared
+    depends_on:
+      web_db:
+        condition: service_healthy # Tunggu PostgreSQL benar-benar ready
+    # Healthcheck: container dinyatakan "healthy" setelah entrypoint selesai.
+    # Sentinel file /tmp/app_healthy dibuat di akhir entrypoint.sh.
+    # Ini mencegah Nginx start sebelum migrate & config:cache selesai.
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/app_healthy || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  # ---------------------------------------------------------
+  # 2. SCHEDULER (Laravel Cron / Schedule Worker)
+  # ---------------------------------------------------------
+  web_scheduler:
+    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    container_name: rses_web_scheduler
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - APP_ENV=production
+      - DB_HOST=web_db
+    # Override command bawaan (php-fpm) menjadi worker scheduler
+    command: ["php", "artisan", "schedule:work"]
+    networks:
+      - rses_web_network
+    depends_on:
+      web_app:
+        condition: service_healthy
+
+  # ---------------------------------------------------------
+  # 3. NGINX (Web Server)
+  # ---------------------------------------------------------
+  web_nginx:
+    image: nginx:alpine
+    container_name: rses_web_nginx
+    restart: unless-stopped
+    ports:
+      - "2301:80"
+    volumes:
+      # Nginx membaca asset public (termasuk Vite build) dari shared volume, bukan bind mount
+      - web_public_assets:/var/www/html/public:ro
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - rses_web_network
+    depends_on:
+      web_app:
+        condition: service_healthy # Tunggu entrypoint web_app selesai dulu
+    healthcheck:
+      test:
+        ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ---------------------------------------------------------
+  # 3. DATABASE POSTGRESQL
+  # ---------------------------------------------------------
+  web_db:
+    image: postgres:15-alpine
+    container_name: rses_web_db
+    restart: unless-stopped
+    # SECURITY: Port 5432 TIDAK di-expose ke host di production.
+    # web_app bisa connect via nama service 'web_db' dalam Docker network.
+    # Uncomment baris di bawah HANYA untuk debugging lokal (misal: akses DBeaver):
+    # ports:
+    #   - "5433:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - rses_web_dbdata:/var/lib/postgresql/data
+    networks:
+      - rses_web_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  rses_web_network:
+    driver: bridge
+
+volumes:
+  rses_web_dbdata: # PostgreSQL data persistence
+  web_public_assets: # Shared folder untuk Vite CSS/JS

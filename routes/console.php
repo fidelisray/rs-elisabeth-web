@@ -11,21 +11,18 @@ Artisan::command('inspire', function () {
 /*
  * Konfigurasi Cron Job / Task Scheduling
  * --------------------------------------
- * Instruksi:
- * Secara default, dibawah ini di-setting untuk TESTING (berjalan setiap menit).
- * Jika sudah masuk production, uncomment bagian 'Production' dan comment bagian 'Testing'.
+ * Command ini bertugas melakukan "Cache Warm-Up" (mengambil data dari API 
+ * dan menyimpannya ke cache di background) sehingga user tidak pernah merasakan loading lama.
  */
 
-// --- TESTING: Berjalan setiap 30 menit (Untuk uji coba agar tidak memberatkan server) ---
-Schedule::command('cache:clear')
-    ->everyThirtyMinutes()
-    ->then(function () {
-        Artisan::call('dokter:fetch-all');
-    });
+// 1. Fetch Data Dokter (Jadwal, Unit, Spesialisasi) 
+// Karena jadwal dokter bisa berubah sewaktu-waktu, kita set tiap jam.
+Schedule::command('dokter:fetch-all')
+    ->hourly()
+    ->withoutOverlapping();
 
-// --- PRODUCTION: Berjalan setiap jam 4 pagi ---
-// Schedule::command('cache:clear')
-//     ->dailyAt('04:00')
-//     ->then(function () {
-//         Artisan::call('dokter:fetch-all');
-//     });
+// 2. Fetch Kamus Medis (Glossary)
+// Data kamus medis sangat jarang berubah, cukup sehari sekali.
+Schedule::command('glossary:refresh')
+    ->dailyAt('02:00') // Jalan jam 2 pagi saat server sepi
+    ->withoutOverlapping();

@@ -99,7 +99,12 @@ class GlossaryController extends Controller
     public function show(string $term)
     {
         $all  = $this->apiService->getCachedGlosarium();
-        $item = collect($all)->firstWhere('istilah', urldecode($term));
+        // PERBAIKAN: Gunakan pencarian case-insensitive agar "hipertensi" dan "Hipertensi"
+        // sama-sama bisa ditemukan, mencegah false 404.
+        $decodedTerm = strtolower(urldecode($term));
+        $item = collect($all)->first(
+            fn($i) => strtolower($i['istilah']) === $decodedTerm
+        );
 
         abort_if(!$item, 404, 'Istilah medis tidak ditemukan.');
 
