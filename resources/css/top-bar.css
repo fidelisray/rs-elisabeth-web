@@ -1,6 +1,6 @@
 /* Top Bar */
 .top-bar {
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-darker-color);
     color: #fff;
     font-size: 0.85rem;
     padding: 8px 0;
