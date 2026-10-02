@@ -76,22 +76,30 @@
         if (canHover) {
             navItem.addEventListener("mouseenter", openDropdown);
             navItem.addEventListener("mouseleave", scheduleClose);
-            // Link "Tentang Kami" memakai href="#" hanya sebagai placeholder;
-            // cegah lompat ke atas saat diklik agar tidak mengganggu UX.
-            navItem.addEventListener("click", (e) => {
-                if (navItem.querySelector(".nav-link.dropdown-toggle").getAttribute("href") === "#") {
-                    e.preventDefault();
-                }
-            });
+            
+            const toggle = navItem.querySelector(".nav-link.dropdown-toggle");
+            if (toggle) {
+                toggle.addEventListener("click", (e) => {
+                    if (toggle.getAttribute("href") === "#") {
+                        e.preventDefault();
+                    }
+                });
+            }
         } else {
-            navItem.addEventListener("click", (e) => {
-                if (navItem.classList.contains("hover-open")) {
-                    scheduleClose();
-                } else {
-                    openDropdown();
-                }
-                e.preventDefault();
-            });
+            const toggle = navItem.querySelector(".nav-link.dropdown-toggle");
+            if (toggle) {
+                toggle.addEventListener("click", (e) => {
+                    if (navItem.classList.contains("hover-open")) {
+                        scheduleClose();
+                        // Jika ada link, biarkan pengguna menuju ke halaman tersebut pada tap kedua
+                        if (toggle.getAttribute("href") !== "#") return; 
+                    } else {
+                        openDropdown();
+                    }
+                    e.preventDefault();
+                });
+            }
+            
             document.addEventListener("click", (e) => {
                 if (!navItem.contains(e.target)) scheduleClose();
             });
