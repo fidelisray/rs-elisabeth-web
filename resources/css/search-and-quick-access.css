@@ -55,12 +55,7 @@
 
 /* Quick Access Cards */
 #quick-access {
-    background: linear-gradient(
-        135deg,
-        var(--secondary-darker-color),
-        var(--secondary-color),
-        var(--primary-color)
-    );
+    background-color: var(--bg-soft-beige);
 }
 
 #quick-access div.container.quick-access-container div.quick-access-options {

@@ -20,6 +20,12 @@
 
     --transition: all 0.3s ease;
     --shadow-sticky: 0 6px 24px rgba(15, 23, 42, 0.1);
+
+    /* Section Background Colors */
+    --bg-soft-beige: #fdf8f5; /* Lebih muda dari #fbf0e6 */
+    /* --bg-soft-beige: #fbf0e6; */
+    --bg-warm-beige: #f9efe6; /* Lebih muda dari #f8e7d8 */
+    /* --bg-warm-beige: #f8e7d8; */
 }
 
 .btn-primary-custom {
@@ -176,7 +182,17 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
     border-radius: 4px;
 } */
 
+#about-us,
+#search-and-quick-access,
+#latest-articles,
+#promotions {
+    background-color: var(--bg-soft-beige);
+}
 
+#facilities-and-services,
+#latest-news {
+    background-color: var(--bg-warm-beige);
+}
 
 .about-content .about-rs h3 {
     /* color: #124f8c; */
@@ -284,7 +300,6 @@ span.carousel-control-next-icon {
 }
 
 #promotions {
-    background: #fff;
     padding-top: 2rem;
 }
 

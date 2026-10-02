@@ -201,9 +201,9 @@
             </div>
         </section>
 
-        <section id="quick-access" class="py-4">
+        <section id="quick-access" class="py-0">
             <div class="container quick-access-container">
-                <div class="row g-2 quick-access-options">
+                <div class="row g-0 quick-access-options">
                     <div class="col-6 col-md-3 quick-access-option-1">
                         <a href="{{{ route('dokter.index') }}}" class="text-decoration-none h-100">
                             <div class="card card-doctor h-100 border-0 rounded-0 shadow-sm">
@@ -249,6 +249,107 @@
             </div>
         </section>
 
+
+
+
+
+        <section id="about-us" class="py-5">
+            <div class="container">
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Percayakan Kesehatan Anda Bersama Kami</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="row align-items-center mt-5">
+                    <div class="col-md-5 mb-4 mb-md-0 px-md-4">
+                        <div class="about-rs mb-5">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                Terakreditasi Paripurna
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.</p>
+                        </div>
+                        <div class="about-rs mb-5">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                Layanan 24 Jam
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.</p>
+                        </div>
+                        <div class="about-rs">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                Service Excellent
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
+                        <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
+                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="Fasilitas RS St. Elisabeth Semarang" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="facilities-and-services" class="py-5">
+            <div class="container">
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Fasilitas dan Layanan</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Pelayanan unggulan dengan dokter spesialis berpengalaman.</p>
+                </div>
+
+                <div id="carouselExampleCaptions" class="carousel slide shadow rounded-4 overflow-hidden bg-white" data-bs-ride="carousel">
+                    @if(count($facilities) > 0)
+                    <div class="carousel-indicators">
+                        @foreach ($facilities as $index => $facility)
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }} bg-dark" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                        @endforeach
+                    </div>
+                    @endif
+                    <div class="carousel-inner" id="carousel-facilities-and-services">
+                        @forelse ($facilities as $index => $facility)
+                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                            <div class="row align-items-center g-0">
+                                <div class="col-md-6 text-center facility-img-wrapper">
+                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility->name }}">
+                                </div>
+                                <div class="col-md-6 p-4 p-md-5">
+                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility->category ?? 'Featured' }}</span>
+                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
+                                    <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
+                                    <div class="mt-4">
+                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="carousel-item active p-5 text-center">
+                            <p class="text-muted">Belum ada data fasilitas unggulan.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        
         <section id="home-hero">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-pause="false">
                 <div class="carousel-inner">
@@ -273,7 +374,7 @@
         <section id="search-and-quick-access">
             <h2 class="visually-hidden">Pencarian Layanan dan Akses Cepat</h2>
             <div class="container">
-                <div class="search-widget mb-5">
+                <div class="search-widget">
                     <ul class="nav nav-tabs" id="searchTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#doctor"
@@ -339,106 +440,7 @@
             </div>
         </section>
 
-
-
-        <section id="about-us" class="py-5">
-            <div class="container">
-                <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Percayakan Kesehatan Anda Bersama Kami</h2>
-                    <div class="divider"></div>
-                </div>
-                <div class="row align-items-center mt-5">
-                    <div class="col-md-5 mb-4 mb-md-0 px-md-4">
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-medal"></i>
-                                </div>
-                                Terakreditasi Paripurna
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.</p>
-                        </div>
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                Layanan 24 Jam
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.</p>
-                        </div>
-                        <div class="about-rs">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                                Service Excellent
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
-                        <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
-                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="Fasilitas RS St. Elisabeth Semarang" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section id="facilities-and-services" class="py-5 bg-light">
-            <div class="container">
-                <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Fasilitas dan Layanan</h2>
-                    <div class="divider"></div>
-                    <p class="text-muted mt-3">Pelayanan unggulan dengan dokter spesialis berpengalaman.</p>
-                </div>
-
-                <div id="carouselExampleCaptions" class="carousel slide shadow rounded-4 overflow-hidden bg-white" data-bs-ride="carousel">
-                    @if(count($facilities) > 0)
-                    <div class="carousel-indicators">
-                        @foreach ($facilities as $index => $facility)
-                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }} bg-dark" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-                        @endforeach
-                    </div>
-                    @endif
-                    <div class="carousel-inner" id="carousel-facilities-and-services">
-                        @forelse ($facilities as $index => $facility)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                            <div class="row align-items-center g-0">
-                                <div class="col-md-6 text-center facility-img-wrapper">
-                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility->name }}">
-                                </div>
-                                <div class="col-md-6 p-4 p-md-5">
-                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility->category ?? 'Featured' }}</span>
-                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
-                                    <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
-                                    <div class="mt-4">
-                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="carousel-item active p-5 text-center">
-                            <p class="text-muted">Belum ada data fasilitas unggulan.</p>
-                        </div>
-                        @endforelse
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        
-        <section id="promotions" class="position-relative">
+        <section id="promotions" class="position-relative pb-5">
             <div class="section-title text-center mb-5">
                 <h2 class="display-8 fw-bold">Paket dan Promo</h2>
                 <div class="divider"></div>
@@ -505,7 +507,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-5 mb-3">
+            <div class="text-center mt-5">
                 <a href="{{{ route('promotions.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Penawaran Menarik Lainnya">
                     Lihat Penawaran Menarik Lainnya <i class="fa-solid fa-arrow-down ms-2"></i>
                 </a>
@@ -513,7 +515,7 @@
         </section>
 
         <!-- Latest Articles Section -->
-        <section id="latest-articles" class="news-section bg-white pt-2">
+        <section id="latest-articles" class="news-section pt-2 pb-5">
             <div class="section-title text-center mb-5 mt-5">
                 <h2 class="display-8 fw-bold">Artikel Kesehatan</h2>
                 <div class="divider"></div>
@@ -552,7 +554,7 @@
                     </div>
                     @endforelse
                 </div>
-                <div class="text-center mt-5 mb-3">
+                <div class="text-center mt-5">
                     <a href="{{{ route('articles.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Artikel">
                         Lihat Semua Artikel <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
@@ -561,7 +563,7 @@
         </section>
 
         <!-- Latest News Section -->
-        <section id="latest-news" class="news-section bg-light pt-2">
+        <section id="latest-news" class="news-section pt-2 pb-5">
             <div class="section-title text-center mb-5 mt-5">
                 <h2 class="display-8 fw-bold">ElisaNews</h2>
                 <div class="divider"></div>
@@ -603,7 +605,7 @@
                     </div>
                     @endforelse
                 </div>
-                <div class="text-center mt-5 mb-3">
+                <div class="text-center mt-5">
                     <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Berita">
                         Lihat Semua Berita <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
