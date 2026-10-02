@@ -494,7 +494,7 @@ h4.footer-title {
 .floating-emergency {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     background-color: #e53e3e;
     color: white;
     width: 60px;
@@ -525,4 +525,98 @@ h4.footer-title {
 
 .floating-emergency:hover {
     transform: scale(1.1);
+}
+
+/* =========================================
+   Back to Top Button (Dynamic & Premium)
+   ========================================= */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 143, 215, 0.4);
+    z-index: 999;
+    
+    /* Animation & Hide by default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+}
+
+@keyframes bounce-btn {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.back-to-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+    /* Tambahkan animasi pantulan langsung ke tombol dengan delay kecil agar transisi awal bisa selesai */
+    animation: bounce-btn 2s infinite ease-in-out 0.4s;
+    /* Set nilai akhirnya pada 0% keyframe supaya posisinya tetap saat delay */
+    transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+    color: white;
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 143, 215, 0.6);
+    /* Matikan animasi saat dihover agar efek scale hover bekerja */
+    animation: none;
+}
+
+/* Mobile Placement (Tengah Bawah) */
+@media (max-width: 768px) {
+    .floating-emergency {
+        left: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    .back-to-top-btn {
+        right: auto;
+        left: 50%;
+        bottom: 20px;
+        transform: translate(-50%, 20px);
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    @keyframes bounce-btn-mobile {
+        0%, 100% {
+            transform: translate(-50%, 0);
+        }
+        50% {
+            transform: translate(-50%, -10px);
+        }
+    }
+    
+    .back-to-top-btn.show {
+        transform: translate(-50%, 0);
+        animation: bounce-btn-mobile 2s infinite ease-in-out 0.4s;
+    }
+    
+    .back-to-top-btn:hover {
+        transform: translate(-50%, -5px) scale(1.1);
+        animation: none;
+    }
 }

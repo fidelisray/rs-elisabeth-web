@@ -69,12 +69,38 @@
 } */
 
 #quick-access .quick-access-options .card {
-    transition: transform 0.3s ease;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer Effect (Siluet Mengkilat) */
+#quick-access .quick-access-options .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 100%
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+    z-index: 1; /* Pastikan shimmer berada di bawah teks jika teks diberi z-index, tapi teks di card tidak ada background jadi aman */
+}
+
+#quick-access .quick-access-options .card:hover::before {
+    left: 130%;
 }
 
 #quick-access .quick-access-options .card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+    filter: brightness(1.1); /* Perubahan warna otomatis (lebih cerah) */
 }
 
 #quick-access .quick-access-options .card i,

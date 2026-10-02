@@ -671,12 +671,20 @@
         <i class="fa-solid fa-truck-medical"></i>
     </a>
 
+    <!-- Floating Back to Top Button -->
+    <a href="#" id="back-to-top" class="back-to-top-btn" aria-label="Kembali ke Atas">
+        <i class="fa-solid fa-arrow-up"></i>
+    </a>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
+    
+
     @vite([
         'resources/js/navbar/navbar.js',
         'resources/js/navbar/navbar-dropdown.js',
-        'resources/js/promotions/promotions.js'
+        'resources/js/promotions/promotions.js',
+        'resources/js/components/back-to-top.js'
     ])
     <script type="application/ld+json">
     {
