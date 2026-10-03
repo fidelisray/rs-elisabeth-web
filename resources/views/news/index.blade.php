@@ -70,8 +70,14 @@
                         </div>
                     </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada berita terbaru saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Berita Belum Tersedia</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>

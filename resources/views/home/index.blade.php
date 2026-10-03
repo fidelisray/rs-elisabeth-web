@@ -767,9 +767,9 @@
                             <li><h4 class="footer-title">Tautan Cepat</h4></li>
                             <li class="footer-list"><a href="{{{ route("tentang-kami.index") }}}"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
                             <li class="footer-list"><a href="{{{ route("news.index") }}}"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                            {{-- <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Artikel</a></li> --}}
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Hubungi Kami</a></li>
-                            {{-- <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Rekanan</a></li> --}}
+                            <li class="footer-list"><a href="{{{ route("promotions.index") }}}"><i class="fa-solid fa-caret-right"></i> Promo Menarik</a></li>
+                            <li class="footer-list"><a href="{{{ route("articles.index") }}}"><i class="fa-solid fa-caret-right"></i> Artikel</a></li>
+                            <li class="footer-list"><a href="{{{ route("customer-information.index") }}}"><i class="fa-solid fa-caret-right"></i> Informasi Pelanggan</a></li>
                             <li class="footer-list"><a href="{{{ route("glossary.index") }}}"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
                         </ul>
                     </div>
@@ -779,7 +779,11 @@
                             <li class="footer-list">
                                 <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
                             </li>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store"><i class="fa-brands fa-google-play"></i></a></li>
+                            <li>
+                                <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store" class="google-play-btn">
+                                    <i class="fa-brands fa-google-play"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>

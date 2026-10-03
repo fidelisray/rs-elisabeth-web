@@ -190,38 +190,62 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
  */
 #about-us {
     background:
-        radial-gradient(circle 300px at 88% 10%, rgba(183, 228, 229, 0.45), rgba(183, 228, 229, 0) 70%),
+        radial-gradient(
+            circle 300px at 88% 10%,
+            rgba(183, 228, 229, 0.45),
+            rgba(183, 228, 229, 0) 70%
+        ),
         linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
 }
 
 #facilities-and-services {
     background:
-        radial-gradient(circle 340px at 8% 20%, rgba(0, 143, 215, 0.10), rgba(0, 143, 215, 0) 70%),
+        radial-gradient(
+            circle 340px at 8% 20%,
+            rgba(0, 143, 215, 0.1),
+            rgba(0, 143, 215, 0) 70%
+        ),
         linear-gradient(180deg, #eaf4fb 0%, #e5eef8 100%);
 }
 
 #search-and-quick-access {
     background:
-        radial-gradient(circle 320px at 90% 40%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+        radial-gradient(
+            circle 320px at 90% 40%,
+            rgba(183, 228, 229, 0.35),
+            rgba(183, 228, 229, 0) 70%
+        ),
         linear-gradient(180deg, #f4fafe 0%, #ecf4fb 100%);
 }
 
 #promotions {
     background:
-        radial-gradient(circle 360px at 12% 60%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%),
+        radial-gradient(
+            circle 360px at 12% 60%,
+            rgba(0, 143, 215, 0.08),
+            rgba(0, 143, 215, 0) 70%
+        ),
         linear-gradient(180deg, #ecf4fb 0%, #e5eef8 100%);
 }
 
 /* Blok Artikel & Berita memakai biru yang sedikit lebih gelap */
 #latest-articles {
     background:
-        radial-gradient(circle 300px at 85% 15%, rgba(0, 143, 215, 0.10), rgba(0, 143, 215, 0) 70%),
+        radial-gradient(
+            circle 300px at 85% 15%,
+            rgba(0, 143, 215, 0.1),
+            rgba(0, 143, 215, 0) 70%
+        ),
         linear-gradient(180deg, #e5eef8 0%, #dae7f4 100%);
 }
 
 #latest-news {
     background:
-        radial-gradient(circle 340px at 10% 80%, rgba(183, 228, 229, 0.30), rgba(183, 228, 229, 0) 70%),
+        radial-gradient(
+            circle 340px at 10% 80%,
+            rgba(183, 228, 229, 0.3),
+            rgba(183, 228, 229, 0) 70%
+        ),
         linear-gradient(180deg, #dae7f4 0%, #eef7fd 100%);
 }
 
@@ -424,6 +448,13 @@ span.carousel-control-next-icon {
     text-decoration: none;
     color: #fff;
     font-weight: 400;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+#footer .footer-list a:hover {
+    color: var(--accent-color);
+    transform: translateX(6px);
 }
 
 #footer .footer-copyright {
@@ -483,9 +514,33 @@ h4.footer-title {
     color: rgb(232, 7, 7);
 }
 
+.google-play-btn {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.google-play-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+}
+
 .fa-google-play {
     font-size: 3rem;
     color: #fff;
+    transition: all 0.3s ease;
+}
+
+.google-play-btn:hover .fa-google-play {
+    /* Menggunakan trik background-clip text untuk menghasilkan efek gradien 4 warna khas Google Play */
+    background: linear-gradient(
+        135deg,
+        #00d2ff 0%,
+        #3a7bd5 30%,
+        #34a853 60%,
+        #ea4335 90%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
 .elisameds-desc {
@@ -567,7 +622,11 @@ h4.footer-title {
     right: 30px;
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--secondary-color)
+    );
     color: white;
     border-radius: 50%;
     display: flex;
@@ -576,7 +635,7 @@ h4.footer-title {
     font-size: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 143, 215, 0.4);
     z-index: 999;
-    
+
     /* Animation & Hide by default */
     opacity: 0;
     visibility: hidden;
@@ -586,7 +645,8 @@ h4.footer-title {
 }
 
 @keyframes bounce-btn {
-    0%, 100% {
+    0%,
+    100% {
         transform: translateY(0);
     }
     50% {
@@ -605,7 +665,11 @@ h4.footer-title {
 
 .back-to-top-btn:hover {
     color: white;
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    background: linear-gradient(
+        135deg,
+        var(--secondary-color),
+        var(--primary-color)
+    );
     transform: translateY(-5px) scale(1.1);
     box-shadow: 0 8px 25px rgba(0, 143, 215, 0.6);
     /* Matikan animasi saat dihover agar efek scale hover bekerja */
@@ -631,21 +695,22 @@ h4.footer-title {
         height: 50px;
         font-size: 1.25rem;
     }
-    
+
     @keyframes bounce-btn-mobile {
-        0%, 100% {
+        0%,
+        100% {
             transform: translate(-50%, 0);
         }
         50% {
             transform: translate(-50%, -10px);
         }
     }
-    
+
     .back-to-top-btn.show {
         transform: translate(-50%, 0);
         animation: bounce-btn-mobile 2s infinite ease-in-out 0.4s;
     }
-    
+
     .back-to-top-btn:hover {
         transform: translate(-50%, -5px) scale(1.1);
         animation: none;
