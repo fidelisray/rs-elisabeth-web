@@ -201,7 +201,7 @@ export function renderPagination(totalPages, onPageChange) {
     });
 
     paginationContainer.innerHTML = `
-        <ul class="pagination custom-pagination justify-content-center mt-4 mb-5 shadow-sm">
+        <ul class="pagination custom-pagination justify-content-center mt-4 mb-5">
             <li class="page-item ${state.currentPage === 1 ? "disabled" : ""}">
                 <button class="page-link" data-page="${state.currentPage - 1}">&laquo;</button>
             </li>

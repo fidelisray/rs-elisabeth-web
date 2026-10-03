@@ -136,34 +136,48 @@ clinicOptions.forEach((option) => {
 });
 
 // ------------------------------
-// Reset Button
+// Global Search Reset Logic
 // ------------------------------
+async function resetAllSearchState() {
+    // 1. Clear Spesialisasi & Dokter inputs
+    if (dropdownButton) {
+        dropdownButton.innerText = "Pilih Spesialisasi";
+        dropdownButton.dataset.selected_name = "";
+        dropdownButton.dataset.selected_code = "";
+    }
+    if (clinicSearch) clinicSearch.value = "";
+    if (searchInput) searchInput.value = "";
+    clinicOptions.forEach((option) => {
+        option.style.display = "block";
+    });
+
+    // 2. Clear Klinik input
+    const klinikInput = document.querySelector('input[name="klinik"]');
+    if (klinikInput) klinikInput.value = "";
+
+    // 3. Clear URL parameters without reload
+    window.history.pushState({}, document.title, window.location.pathname);
+
+    // 4. Force Reset Data from Server
+    // Karena kita tidak tahu persis state.fullDoctorList saat ini apakah berisi semua dokter 
+    // atau hanya spesialisasi tertentu, maka saat di-reset kita harus memanggil fetchAllDokter().
+    showLoading();
+    const success = await fetchAllDokter();
+    if (success) {
+        updateSearchSummary(null);
+        renderDoctorPage(handlePageChange);
+    } else {
+        showError();
+    }
+}
+
+// Bind to Reset Button
 const btnReset = document.getElementById("btnReset");
 if (btnReset) {
-    btnReset.addEventListener("click", async () => {
-        if (dropdownButton) {
-            dropdownButton.innerText = "Pilih Spesialisasi";
-            dropdownButton.dataset.selected_name = "";
-            dropdownButton.dataset.selected_code = "";
-        }
-
-        if (clinicSearch) clinicSearch.value = "";
-        if (searchInput) searchInput.value = "";
-
-        clinicOptions.forEach((option) => {
-            option.style.display = "block";
-        });
-
-        showLoading();
-        const success = await fetchAllDokter();
-        if (success) {
-            updateSearchSummary(null);
-            renderDoctorPage(handlePageChange);
-        } else {
-            showError();
-        }
-    });
+    btnReset.addEventListener("click", resetAllSearchState);
 }
+
+// Tab Switch event TIDAK LAGI memanggil resetAllSearchState agar hasil pencarian tidak hilang/refresh saat pindah form pencarian.
 
 // ------------------------------
 // Cari Button (if used, it's hidden by default in blade)
