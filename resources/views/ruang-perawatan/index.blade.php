@@ -60,20 +60,18 @@
         {{-- ===== INTRO ===== --}}
         <section id="room-intro">
             <div class="container text-center">
-                <div class="intro-label">
-                    <span>RUANG PERAWATAN</span>
+                <div class="section-title text-center mb-4">
+                    <h2 class="fw-bold">Temukan Ruangan yang Tepat untuk Anda</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.</p>
                 </div>
-                <h2 class="intro-title">Temukan Ruangan yang Tepat untuk Anda</h2>
-                <p class="intro-desc">
-                    RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.
-                </p>
 
                 {{-- Filter Tabs --}}
                 <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600 active"
                             data-room-filter="all"
                             style="background:#008fd7;color:#fff;border:none;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-grid-2 me-1"></i> Semua Kelas
+                        <i class="fa-solid fa-table-cells-large me-1"></i> Semua Kelas
                     </button>
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
                             data-room-filter="premium"
@@ -182,8 +180,21 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-12">
-                            <div class="alert alert-info border-0 shadow-sm">Belum ada data Ruangan Premium.</div>
+                        <div class="col-12 reveal-on-scroll">
+                            <div class="empty-state-premium p-5 text-center rounded-4" style="background: linear-gradient(145deg, #1a2740, #131c2e); border: 1px solid rgba(201, 168, 76, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                                <div class="mb-4">
+                                    <div class="icon-wrapper mx-auto d-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.3);">
+                                        <i class="fa-solid fa-crown" style="font-size: 2.2rem; color: #c9a84c;"></i>
+                                    </div>
+                                </div>
+                                <h4 class="fw-bold mb-3" style="color: #c9a84c; letter-spacing: 0.5px;">Ruang Perawatan Premium Sedang Kami Siapkan</h4>
+                                <p class="mb-4 mx-auto" style="max-width: 600px; color: #a8b2c1; font-size: 1.05rem; line-height: 1.6;">
+                                    Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.
+                                </p>
+                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20ketersediaan%20dan%20informasi%20Ruang%20Perawatan%20Premium%20RS%20St.%20Elisabeth" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-whatsapp me-2"></i> Hubungi Personal Assistant Kami
+                                </a>
+                            </div>
                         </div>
                     @endforelse
 
@@ -376,10 +387,10 @@
         {{-- ===== STANDARD ROOMS (VIP / Kelas I / II / III) ===== --}}
         <section id="standard-rooms">
             <div class="container">
-                <div class="standard-section-header">
-                    <div class="standard-label">Ruang Standar</div>
-                    <h2 class="standard-title">Ruang Perawatan Standar &amp; VIP</h2>
-                    <p class="standard-desc">Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.</p>
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Ruang Perawatan Standar &amp; VIP</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.</p>
                 </div>
 
                 <div class="row g-4">
@@ -432,8 +443,19 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-12">
-                            <div class="alert alert-info border-0 shadow-sm">Belum ada data Ruangan Standar.</div>
+                        <div class="col-12 reveal-on-scroll">
+                            <div class="empty-state-standard p-5 text-center rounded-4" style="background-color: var(--bg-soft-beige, #fdf8f5); border: 2px dashed #d0e8f5;">
+                                <div class="mb-3">
+                                    <i class="fa-solid fa-bed-pulse" style="font-size: 3.5rem; color: #b8d4e3;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Data Ruangan Sedang Diperbarui</h4>
+                                <p class="text-muted mb-4 mx-auto" style="max-width: 550px;">
+                                    Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.
+                                </p>
+                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20informasi%20ketersediaan%20Ruang%20Perawatan%20Standar%20di%20RS%20St.%20Elisabeth" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
+                                    <i class="fa-brands fa-whatsapp me-2"></i> Tanya Ketersediaan Kamar
+                                </a>
+                            </div>
                         </div>
                     @endforelse
 
