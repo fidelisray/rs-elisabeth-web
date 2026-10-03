@@ -48,12 +48,11 @@
         {{-- ===== INTRO SECTION ===== --}}
         <section id="facilities-intro">
             <div class="container text-center">
-                <div class="intro-label">
-                    <span>LAYANAN &amp; FASILITAS</span>
+                <div class="section-title text-center mb-4">
+                    <h2 class="fw-bold">Layanan &amp; Fasilitas</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Kami menyediakan Layanan dan Fasilitas berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna.</p>
                 </div>
-                <p class="intro-desc">
-                    Kami menyediakan Layanan dan Fasilitas berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna.
-                </p>
             </div>
         </section>
 

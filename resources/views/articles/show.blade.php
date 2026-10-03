@@ -39,7 +39,7 @@
             </div>
         </section>
         
-        <section class="py-5 bg-white">
+        <section class="py-5" style="background: radial-gradient(circle 340px at 85% 10%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef7fd 100%);">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">

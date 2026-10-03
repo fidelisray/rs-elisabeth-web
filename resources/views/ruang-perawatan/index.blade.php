@@ -444,7 +444,7 @@
                         </div>
                     @empty
                         <div class="col-12 reveal-on-scroll">
-                            <div class="empty-state-standard p-5 text-center rounded-4" style="background-color: var(--bg-soft-beige, #fdf8f5); border: 2px dashed #d0e8f5;">
+                            <div class="empty-state-standard p-5 text-center rounded-4" style="background-color: #f1f8fd; border: 2px dashed #d0e8f5;">
                                 <div class="mb-3">
                                     <i class="fa-solid fa-bed-pulse" style="font-size: 3.5rem; color: #b8d4e3;"></i>
                                 </div>

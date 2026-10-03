@@ -182,16 +182,47 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
     border-radius: 4px;
 } */
 
-#about-us,
-#search-and-quick-access,
-#latest-articles,
-#promotions {
-    background-color: var(--bg-soft-beige);
+/*
+ * Section backgrounds — blue-tinted gradients (soft & premium),
+ * selaras dengan warna background #customer-info. Setiap section
+ * saling menyatu: warna bawah section dibuat sama dengan warna atas
+ * section berikutnya agar transisinya halus dan tidak "patah".
+ */
+#about-us {
+    background:
+        radial-gradient(circle 300px at 88% 10%, rgba(183, 228, 229, 0.45), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
 }
 
-#facilities-and-services,
+#facilities-and-services {
+    background:
+        radial-gradient(circle 340px at 8% 20%, rgba(0, 143, 215, 0.10), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #eaf4fb 0%, #e5eef8 100%);
+}
+
+#search-and-quick-access {
+    background:
+        radial-gradient(circle 320px at 90% 40%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #f4fafe 0%, #ecf4fb 100%);
+}
+
+#promotions {
+    background:
+        radial-gradient(circle 360px at 12% 60%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #ecf4fb 0%, #e5eef8 100%);
+}
+
+/* Blok Artikel & Berita memakai biru yang sedikit lebih gelap */
+#latest-articles {
+    background:
+        radial-gradient(circle 300px at 85% 15%, rgba(0, 143, 215, 0.10), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #e5eef8 0%, #dae7f4 100%);
+}
+
 #latest-news {
-    background-color: var(--bg-warm-beige);
+    background:
+        radial-gradient(circle 340px at 10% 80%, rgba(183, 228, 229, 0.30), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #dae7f4 0%, #eef7fd 100%);
 }
 
 .about-content .about-rs h3 {

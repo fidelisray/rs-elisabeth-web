@@ -59,7 +59,9 @@ section#hero-section .hero-subtitle {
 /* ---------- Section Intro ---------- */
 #facilities-intro {
     padding: 3.5rem 0 2rem;
-    background: #f8f9fa;
+    background:
+        radial-gradient(circle 320px at 10% 20%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
 }
 
 #facilities-intro .intro-label {
@@ -106,7 +108,9 @@ section#hero-section .hero-subtitle {
 /* ---------- Main Facilities Section ---------- */
 #facilities-main {
     padding: 2rem 0 5rem;
-    background: #f8f9fa;
+    background:
+        radial-gradient(circle 360px at 90% 60%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
 }
 
 /* ---- Left Column: Facility List ---- */

@@ -110,7 +110,7 @@
 
         
         
-        <section class="glosarium-detail bg-light py-5">
+        <section class="glosarium-detail py-5" style="background: radial-gradient(circle 340px at 12% 20%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);">
             <div class="container">
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4 p-md-5">

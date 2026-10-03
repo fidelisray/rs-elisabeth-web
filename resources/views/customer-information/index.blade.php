@@ -39,7 +39,7 @@
             </div>
         </section>
 
-        <section id="customer-info" class="py-5 bg-light">
+        <section id="customer-info" class="py-5" style="background: radial-gradient(circle 340px at 10% 15%, rgba(183, 228, 229, 0.45), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef7fd 55%, #f8fafc 100%);">
             <div class="container">
                 <!-- JAM KUNJUNGAN PASIEN -->
                 <div class="section-heading text-center mb-5">

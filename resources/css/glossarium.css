@@ -159,7 +159,9 @@ section#hero-section .letter-btn.active{
 
 section#advertisement {
 	padding: 2rem 0;
-	background-color: white;
+	background:
+		radial-gradient(circle 340px at 88% 12%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+		linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
 	/* background-color: var(--brand-blue-dark); */
 }
 

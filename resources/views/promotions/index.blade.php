@@ -41,7 +41,7 @@
             </div>
         </section>
 
-        <section id="promotions-list">
+        <section id="promotions-list" style="background: radial-gradient(circle 360px at 12% 20%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #ffffff 0%, #ecf4fb 100%);">
             <div class="container py-5">
                 <div class="row cards">
                     @forelse ($promotions as $promo)

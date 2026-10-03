@@ -58,7 +58,9 @@ section#hero-section .hero-subtitle {
     }
 }
 .news-section {
-    background-color: #f8f9fa;
+    background:
+        radial-gradient(circle 360px at 85% 12%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #ffffff 0%, #eef7fd 100%);
     padding: 60px 0;
 }
 

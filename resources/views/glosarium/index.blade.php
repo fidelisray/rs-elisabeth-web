@@ -128,7 +128,7 @@
         
         
         
-        <div id="defaultGlossaryContent" class="mt-4">
+        <div id="defaultGlossaryContent" class="mt-4" style="background: radial-gradient(circle 360px at 10% 40%, rgba(0, 143, 215, 0.07), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #f1f8fd 0%, #eef7fd 100%);">
             @if ($mode === 'ads')
                 <section id="advertisement">
                     <div class="container">

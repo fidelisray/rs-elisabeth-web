@@ -17,7 +17,8 @@
         'resources/css/stats-section.css',
         'resources/css/app-section.css',
         'resources/css/top-bar.css',
-        'resources/css/promo-banner.css'
+        'resources/css/promo-banner.css',
+        'resources/css/customer-info-section.css'
       ])
   </head>
   <body>
@@ -56,10 +57,25 @@
                              alt="{{ $banner->title }}">
                     </div>
                     @empty
-                    {{-- Fallback: tampilkan pesan jika belum ada banner di CMS --}}
+                    {{-- Fallback: Tampilkan Default Hero Banner jika data CMS sedang kosong --}}
                     <div class="carousel-item active">
-                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 400px;">
-                            <p class="text-muted">Belum ada banner promosi. Tambahkan di CMS Admin Panel.</p>
+                        <div class="d-flex flex-column align-items-center justify-content-center text-center px-4" style="min-height: 420px; background: linear-gradient(135deg, var(--primary-color, #008fd7) 0%, var(--secondary-darker-color, #1a2740) 100%); position: relative; overflow: hidden;">
+                            <!-- Watermark Ikon -->
+                            <div class="position-absolute top-50 start-50 translate-middle" style="opacity: 0.03; pointer-events: none;">
+                                <i class="fa-solid fa-house-medical" style="font-size: 30rem; color: #ffffff;"></i>
+                            </div>
+                            <!-- Konten Banner -->
+                            <div style="z-index: 1;">
+                                <div class="mb-4">
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255,255,255,0.15); color: #fff; font-weight: 500; letter-spacing: 1px;">
+                                        <i class="fa-solid fa-heart-pulse me-1 text-warning"></i> Melayani dengan Kasih
+                                    </span>
+                                </div>
+                                <h2 class="text-white fw-bold mb-3 display-6" style="letter-spacing: 0.5px;">RS St. Elisabeth Semarang</h2>
+                                <p class="text-white opacity-75 mb-0 mx-auto fs-6 fs-md-5" style="max-width: 650px; line-height: 1.6;">
+                                    Hadir dengan sepenuh hati memberikan pelayanan kesehatan terbaik, berteknologi mutakhir, dan profesional bagi Anda dan keluarga.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     @endforelse
@@ -346,8 +362,14 @@
                             </div>
                         </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada promo saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-tags" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Belum Ada Paket & Promo</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
@@ -428,8 +450,14 @@
                         @endif
                     </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada artikel terbaru saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-newspaper" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Artikel Belum Tersedia</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Kami sedang menyiapkan artikel kesehatan terbaru untuk Anda. Silakan nantikan informasi bermanfaat selanjutnya.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
@@ -479,8 +507,14 @@
                         @endif
                     </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada berita terbaru saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Berita Belum Tersedia</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
@@ -488,6 +522,102 @@
                     <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Berita">
                         Lihat Semua Berita <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jam Kunjungan & Ketentuan Pengunjung -->
+        <section id="customer-info">
+            <div class="container">
+                <!-- Judul utama -->
+                <div class="section-title text-center mb-3">
+                    <span class="ci-eyebrow mb-3"><i class="fa-solid fa-hospital-user"></i> Informasi Pelanggan</span>
+                    <h2 class="display-8 fw-bold">Jam Kunjungan Pasien</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:</p>
+                </div>
+
+                <!-- Kartu jam kunjungan -->
+                <div class="row g-4 justify-content-center mb-5">
+                    <!-- Senin - Sabtu -->
+                    <div class="col-md-5">
+                        <div class="ci-visit-card p-4 p-md-5 text-center">
+                            <div class="ci-visit-icon mx-auto mb-3">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Senin – Sabtu</h4>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-value">09.30 – 11.00</span>
+                                </div>
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-value">17.00 – 18.30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Minggu & Hari Libur -->
+                    <div class="col-md-5">
+                        <div class="ci-visit-card p-4 p-md-5 text-center">
+                            <div class="ci-visit-icon mx-auto mb-3">
+                                <i class="fa-regular fa-calendar-check"></i>
+                            </div>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Minggu & Hari Libur</h4>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-value">09.30 – 11.30</span>
+                                </div>
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-value">16.30 – 18.30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ketentuan Pengunjung -->
+                <div class="section-title text-center mb-4">
+                    <h3 class="fw-bold" style="color: var(--secondary-darker-color);">Ketentuan Pengunjung</h3>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-heart-pulse"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Demi kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-volume-xmark"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-child-reaching"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ci-thankyou text-center p-4 mt-4">
+                            <p class="mb-0 fst-italic mx-auto" style="max-width: 750px;"><i class="fa-solid fa-heart me-2"></i>Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama dirawat di <span class="d-inline-block">Rumah Sakit St. Elisabeth Semarang.</span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

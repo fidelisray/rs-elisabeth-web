@@ -25,7 +25,9 @@
 }
 
 #doctor-filter-selection {
-    background-color: var(--bg-soft-beige);
+    background:
+        radial-gradient(circle 320px at 90% 10%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
+        linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
     padding-top: 2rem;
     padding-bottom: 2rem;
 }
@@ -186,7 +188,9 @@ input#searchKeyword::placeholder {
 }
 
 .main-content {
-    background-color: var(--bg-soft-beige);
+    background:
+        radial-gradient(circle 360px at 10% 20%, rgba(0, 143, 215, 0.07), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
 }
 
 div.schedule {
