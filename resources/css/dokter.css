@@ -24,6 +24,17 @@
     font-family: "Outfit", sans-serif;
 }
 
+#doctor-filter-selection {
+    background-color: var(--bg-soft-beige);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+#doctor-filter-selection .search-widget {
+    transform: none;
+    margin-bottom: 0.1rem;
+}
+
 /* main.nav {
     width: 100vw;
 }
@@ -42,14 +53,21 @@ main.nav .navbar {
 
 /* ---------- Hero Section ---------- */
 section#hero-section {
-    background: linear-gradient(145deg, var(--primary-color) 25%, var(--secondary-color) 65%, var(--secondary-darker-color) 100%);
+    background: linear-gradient(
+        145deg,
+        var(--primary-color) 25%,
+        var(--secondary-color) 65%,
+        var(--secondary-darker-color) 100%
+    );
     color: #fff;
     padding: 2.5rem 0 3.5rem;
 }
-section#hero-section .hero-breadcrumb .breadcrumb { margin-bottom: 0; }
+section#hero-section .hero-breadcrumb .breadcrumb {
+    margin-bottom: 0;
+}
 section#hero-section .hero-breadcrumb .breadcrumb-item,
 section#hero-section .hero-breadcrumb .breadcrumb-item a {
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.85);
     font-size: 0.9rem;
     text-decoration: none;
 }
@@ -57,12 +75,15 @@ section#hero-section .hero-breadcrumb .breadcrumb-item.active {
     color: #fff;
     font-weight: 500;
 }
-section#hero-section .hero-breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+section#hero-section
+    .hero-breadcrumb
+    .breadcrumb-item
+    + .breadcrumb-item::before {
     content: "›";
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
 section#hero-section .hero-title {
-    font-family: 'Playfair Display', serif;
+    font-family: "Playfair Display", serif;
     font-weight: 800;
     font-size: 2.75rem;
     line-height: 1.15;
@@ -70,14 +91,18 @@ section#hero-section .hero-title {
 }
 section#hero-section .hero-subtitle {
     font-size: 1.1rem;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255, 255, 255, 0.9);
     margin-top: 0.75rem;
 }
 @media (max-width: 767.98px) {
-    section#hero-section .hero-title { font-size: 2rem; }
+    section#hero-section .hero-title {
+        font-size: 2rem;
+    }
 }
 @media (min-width: 1200px) {
-    section#hero-section .hero-title { font-size: 3.25rem; }
+    section#hero-section .hero-title {
+        font-size: 3.25rem;
+    }
 }
 
 .toolbar-panel {
@@ -161,7 +186,7 @@ input#searchKeyword::placeholder {
 }
 
 .main-content {
-    background: #f8f8f8;
+    background-color: var(--bg-soft-beige);
 }
 
 div.schedule {
@@ -197,7 +222,6 @@ div.schedule.off-day h5.schedule-title {
     color: var(--inactive-fg-color);
 }
 
-
 /*  ==================================================================
     ===================speciality badge doctor card===================
 /*  ==================================================================
@@ -212,7 +236,6 @@ div.schedule.off-day h5.schedule-title {
     border-radius: 1.1rem;
     font-weight: 550;
 }
-
 
 /* 
     =====================Button Buat Jadwal Dokter=====================
@@ -235,7 +258,6 @@ a.btn-cek-profil {
     background-color: var(--accent-color);
     color: #124f8c;
     border-radius: 1.1rem;
-
 }
 
 a.btn-buat-janji {
@@ -300,7 +322,6 @@ a.btn-buat-janji:hover {
 ==========================Detail Dokter Modal==========================
 =======================================================================
 */
-
 
 div#detailDokter .modal-dokter {
     width: 94vw;
@@ -389,7 +410,6 @@ div#detailDokter .modal-schedule-card {
     text-align: center;
 }
 
-
 div#detailDokter .day-badge {
     /* width: 48px;
     height: 48px; */
@@ -397,16 +417,15 @@ div#detailDokter .day-badge {
     height: 24px;
     margin: 0px auto;
     /* background: #7aa6e3; */
-    
+
     /* border-radius: 14px; */
-    
+
     /* display: flex;
     justify-content: center;
     align-items: center; */
-    
+
     /* flex-shrink: 0; */
 }
-
 
 div#detailDokter .day-badge p.day-name {
     font-size: 1rem;
@@ -415,7 +434,6 @@ div#detailDokter .day-badge p.day-name {
     color: var(--secondary-darker-color);
     /* background-color: rgb(255, 204, 74); */
     border-radius: 12px;
-
 }
 
 div#detailDokter .day-badge p.day-name::after {
@@ -778,7 +796,7 @@ div#detailDokter .day-badge p.day-name::after {
     width: 60px;
     text-align: center;
     background-color: #f4f8fc;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 .custom-pagination .pagination-input:focus {
     background-color: #fff;
@@ -791,6 +809,6 @@ div#detailDokter .day-badge p.day-name::after {
     -webkit-appearance: none;
     margin: 0;
 }
-.custom-pagination .pagination-input[type=number] {
+.custom-pagination .pagination-input[type="number"] {
     -moz-appearance: textfield;
 }

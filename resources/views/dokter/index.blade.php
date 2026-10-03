@@ -40,10 +40,10 @@
                 </div>
             </div>
         </section>
-    <section id="search-and-quick-access">
+    <section id="doctor-filter-selection">
         <!-- Toolbar / Search Widget -->
         <div class="container">
-            <div class="search-widget shadow-sm" style="transform: none; margin-bottom: 2rem; margin-top: 2rem;">
+            <div class="search-widget shadow-sm">
                 <ul class="nav nav-tabs" id="searchTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link {{ request('klinik') ? '' : 'active' }}" data-bs-toggle="tab" data-bs-target="#doctor"
@@ -61,7 +61,7 @@
                             <!-- Dropdown Spesialisasi -->
                             <div class="col-md-4">
                                 <div class="dropdown w-100">
-                                    <button class="btn dropdown-toggle form-select text-start" style="height: 45px;" type="button" id="clinicDropdown" data-bs-toggle="dropdown" data-selected="">
+                                    <button class="btn form-select text-start" style="height: 45px;" type="button" id="clinicDropdown" data-bs-toggle="dropdown" data-selected="">
                                         Pilih Spesialisasi
                                     </button>
                                     <div class="dropdown-menu p-0 w-100">
@@ -110,10 +110,6 @@
     <div class="container-fluid main-content py-3">
         <section class="container" id="dokter-container">
             
-            <!-- ================================================= -->
-            <!-- -------------------Card Dokter------------------- -->
-            <!-- ================================================= -->
-            
             <div id="search-summary-container" class="d-none mb-4">
                 <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm border-start border-4 border-primary">
                     <h6 class="mb-0 fw-semibold text-muted"><span id="search-summary-label">Hasil Pencarian:</span> <span class="text-dark fw-bold" id="search-summary-keyword"></span></h6>
@@ -124,17 +120,6 @@
             </div>
 
             <div id="daftar-dokter">
-
-            </div>
-
-            <!-- ================================================= -->
-            <!-- ---------------Default Card Dokter--------------- -->
-            <!-- ================================================= -->
-            <div id="default-card">
-                
-            </div>
-
-            <div id="coba-layout-baru">
 
             </div>
 
