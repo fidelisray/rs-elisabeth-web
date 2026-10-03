@@ -807,8 +807,10 @@ div#detailDokter .day-badge p.day-name::after {
 .custom-pagination .pagination-input::-webkit-outer-spin-button,
 .custom-pagination .pagination-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
+    appearance: none;
     margin: 0;
 }
 .custom-pagination .pagination-input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
 }
