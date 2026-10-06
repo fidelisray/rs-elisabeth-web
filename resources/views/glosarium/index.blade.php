@@ -33,7 +33,7 @@
                         <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                         @if (preg_match('/^[A-Z]$/', $activeLetter))
                             <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Begins with '{{ $activeLetter }}'</li>
+                            <li class="breadcrumb-item active" aria-current="page">Awalan '{{ $activeLetter }}'</li>
                         @else    
                             <li class="breadcrumb-item active"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
                         @endif
@@ -43,10 +43,10 @@
                 <div class="row">
                     <!-- Kolom kiri: Judul, subjudul, search -->
                     <div class="col-12 col-lg-6">
-                        <h1 class="hero-title">Glossary of Health Coverage and Medical Terms</h1>
-                        <p class="hero-subtitle">Easy-to-understand answers about Health and Medical Terms</p>
+                        <h1 class="hero-title">Ensiklopedia Istilah Medis & Kesehatan</h1>
+                        <p class="hero-subtitle">Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya</p>
 
-                        <p class="search-label">Search diseases &amp; conditions</p>
+                        <p class="search-label fw-medium mb-2">Pencarian Istilah Medis</p>
                         {{-- <div class="search-box d-flex align-items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -98,7 +98,7 @@
                     
                     <!-- Kolom kanan: Grid huruf A-Z -->
                     <div class="col-12 col-lg-6 mt-4 mt-lg-0 d-flex flex-column align-items-start align-items-lg-end">
-                        <div class="letter-panel-label">Find diseases &amp; conditions by first letter</div>
+                        <div class="letter-panel-label fw-medium mb-2">Telusuri Cepat Berdasarkan Abjad</div>
                             <div class="letter-grid">
                                 {{-- <a href="#" class="letter-btn active">A</a> --}}
                                 {{-- <a href="{{{ route('glossary.index') }}}"
