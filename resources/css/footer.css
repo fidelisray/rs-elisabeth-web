@@ -1,0 +1,131 @@
+/* ---- Footer ---- */
+
+#footer {
+    background-color: var(--secondary-darker-color);
+}
+
+#footer .footer-body ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#footer .footer-list a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 400;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+#footer .footer-list a:hover {
+    color: var(--accent-color);
+    transform: translateX(6px);
+}
+
+#footer .footer-copyright {
+    padding: 1.1rem;
+}
+
+#footer .footer-copyright p {
+    color: #fff;
+}
+
+.footer-header .rs-name {
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-family: "Cormorant Garamond", sans-serif;
+    color: #fff;
+}
+
+.footer-header p.moto {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: "Crimson Text", sans-serif;
+    font-style: italic;
+    text-transform: capitalize;
+    color: var(--accent-color);
+}
+
+h4.footer-title {
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.footer-list {
+    margin-bottom: 0.475rem;
+    margin-left: 0.5rem;
+}
+
+.social-media {
+    margin-top: 1.5rem;
+}
+
+.btn-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    font-size: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-social:hover {
+    transform: translateY(-4px);
+    border-color: transparent;
+    color: #fff;
+}
+
+.btn-social.instagram:hover {
+    background-color: #E1306C;
+    box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4);
+}
+
+.btn-social.facebook:hover {
+    background-color: #1877F2;
+    box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+}
+
+.btn-social.youtube:hover {
+    background-color: #FF0000;
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+}
+
+.google-play-btn {
+    display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.google-play-btn:hover {
+    transform: translateY(-4px) scale(1.05);
+}
+
+.fa-google-play {
+    font-size: 3rem;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.google-play-btn:hover .fa-google-play {
+    background: linear-gradient(
+        135deg,
+        #00d2ff 0%,
+        #3a7bd5 30%,
+        #34a853 60%,
+        #ea4335 90%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.elisameds-desc {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #fff;
+}

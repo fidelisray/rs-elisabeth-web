@@ -3,11 +3,10 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="Rumah Sakit St. Elisabeth Semarang mengedepankan keselamatan, mutu, dan terpercaya serta menjadi sarana kehadiran cinta dan kuasa Allah, terakreditasi Paripurna oleh Komite Akreditasi Rumah Sakit KARS, dengan layanan IGD 24 Jam, Stroke Terpadu, dan Klinik Neurologi.  ">
-      <link rel="icon" type="image/png" href="{{ asset('images/web-icon.webp') }}">
-      <title>St. Elisabeth Hospital</title>
+      @include('components.seo-meta', ['title' => 'RS St. Elisabeth Semarang'])
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
       @vite([
+        'resources/css/footer.css',
         'resources/css/style.css',
         'resources/css/btn-accent.css',
         'resources/css/navbar-dropdown.css',
@@ -738,67 +737,7 @@
         </section>
 
     </main>
-    <footer id="footer" class="pt-5">
-        <div class="container-fluid col-12 col-md-12">
-            <div class="container">
-                <div class="row footer-body">
-                    <div class="col mb-5">
-                        <div class="footer-header mb-4">
-                            <ul>
-                                <li><h4 class="rs-name">RS St. Elisabeth Semarang</h4></li>
-                                <li><p class="moto">Pancaran cintanya menyembuhkan derita sesama</p></li>
-                            </ul>
-                        </div>
-                        <ul>
-                            <li><h4 class="footer-title">Hubungi Kami</h4></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-location-dot"></i> Jl. Kawi No.1</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8502244</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8310076 / (024) 8310035</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-envelope"></i> sekretariat@365.rs-elisabeth.com</a></li>
-                        </ul>
-                        <div class="social-media d-flex gap-2">
-                            <div class="insta"><i class="fa-brands fa-instagram"></i></div>
-                            <div class="facebook"><i class="fa-brands fa-facebook"></i></div>
-                            <div class="youtube"><i class="fa-brands fa-youtube"></i></div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Tautan Cepat</h4></li>
-                            <li class="footer-list"><a href="{{{ route("tentang-kami.index") }}}"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
-                            <li class="footer-list"><a href="{{{ route("news.index") }}}"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                            <li class="footer-list"><a href="{{{ route("promotions.index") }}}"><i class="fa-solid fa-caret-right"></i> Promo Menarik</a></li>
-                            <li class="footer-list"><a href="{{{ route("articles.index") }}}"><i class="fa-solid fa-caret-right"></i> Artikel</a></li>
-                            <li class="footer-list"><a href="{{{ route("customer-information.index") }}}"><i class="fa-solid fa-caret-right"></i> Informasi Pelanggan</a></li>
-                            <li class="footer-list"><a href="{{{ route("glossary.index") }}}"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Elisameds</h4></li>
-                            <li class="footer-list">
-                                <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
-                            </li>
-                            <li>
-                                <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store" class="google-play-btn">
-                                    <i class="fa-brands fa-google-play"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row footer-copyright">
-                    <div class="col">
-                        <p class="copyright"><i class="fa-solid fa-copyright"></i> 2026 Rumah Sakit Santa Elisabeth Semarang</p>
-                    </div>
-                    <div class="col d-flex justify-content-center gap-3">
-                        <p class="d-inline-block">Designed By Lorem, ipsum dolor.</p>
-                        <p class="d-inline-block">Developed By Lorem, ipsum.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('components.footer')
 
     @include('components.floating-buttons')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
@@ -811,24 +750,6 @@
         'resources/js/promotions/promotions.js',
         'resources/js/components/back-to-top.js'
     ])
-    <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "Hospital",
-      "name": "RS St. Elisabeth Semarang",
-      "image": "{{ asset('images/logo.png') }}",
-      "@@id": "{{ url('/') }}",
-      "url": "{{ url('/') }}",
-      "telephone": "(024) 8502244",
-      "address": {
-        "@@type": "PostalAddress",
-        "streetAddress": "Jl. Kawi No.1",
-        "addressLocality": "Semarang",
-        "addressRegion": "Jawa Tengah",
-        "postalCode": "50252",
-        "addressCountry": "ID"
-      }
-    }
-    </script>
-  </body>
+    @include('components.json-ld')
+    </body>
 </html>

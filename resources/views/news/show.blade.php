@@ -3,10 +3,11 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ $news->title }} - RS St. Elisabeth Semarang</title>
+        @include('components.seo-meta', ['title' => '{{ $news->title }} - RS St. Elisabeth Semarang'])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
+        'resources/css/footer.css',
         'resources/js/components/back-to-top.js',
             'resources/css/style.css',
             'resources/css/btn-accent.css',
@@ -129,5 +130,6 @@
             'resources/js/navbar/navbar.js',
             'resources/js/navbar/navbar-dropdown.js'
         ])
+        @include('components.json-ld')
     </body>
 </html>
