@@ -72,7 +72,7 @@ class GlossaryController extends Controller
 
         if ($activeLetter === 'ALL') {
             return view('glosarium.index', [
-                'mode' => 'ads',
+                'mode' => 'explore',
                 'glossary' => $glossary,
                 'activeLetter' => 'ALL',
                 'availableLetters' => $availableLetters,
@@ -247,7 +247,7 @@ class GlossaryController extends Controller
             ->toArray();
 
         return view('glosarium.gemini.index', [
-            'mode' => $activeLetter === 'ALL' ? 'ads' : 'glosarium',
+            'mode' => $activeLetter === 'ALL' ? 'explore' : 'glosarium',
             'glossary' => $glossary,
             'activeLetter' => $activeLetter,
             'availableLetters' => $availableLetters,

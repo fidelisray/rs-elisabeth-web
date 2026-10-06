@@ -24,11 +24,7 @@
 
     @include('components.navbar')
 
-<section id="hero-section">
-
-
-
-        
+    <section id="hero-section">
             <div class="container">
 
                 <!-- Breadcrumb -->
@@ -130,70 +126,77 @@
         
         
         <div id="defaultGlossaryContent" class="mt-4" style="background: radial-gradient(circle 360px at 10% 40%, rgba(0, 143, 215, 0.07), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #f1f8fd 0%, #eef7fd 100%);">
-            @if ($mode === 'ads')
-                <section id="advertisement">
-                    <div class="container">
-                        <!-- Card 1 -->
-                        <section class="ads-card ads-card-large">
-                            <div class="ads-card-content">
-                                <i class="bi bi-heart-pulse icon"></i>
-                                <h2>Symptom Checker</h2>
-                                <p>
-                                    Find out what could be causing your
-                                    symptoms and when to seek care.
-                                </p>
-                                <a href="#">
-                                    Check symptoms
-                                    <i class="bi bi-chevron-right"></i>
+            @if ($mode === 'explore')
+                <section id="explore-services" class="py-5">
+                    <div class="container" style="max-width: 1100px;">
+                        <div class="row g-4">
+                            <!-- Baris 1 -->
+                            <div class="col-lg-7">
+                                <a href="#" class="explore-bento-card bento-large d-flex flex-column justify-content-between text-decoration-none">
+                                    <div class="bento-content position-relative z-2">
+                                        <div class="icon-wrapper mb-4">
+                                            <i class="fa-solid fa-stethoscope"></i>
+                                        </div>
+                                        <h2 class="bento-title mb-3">Deteksi Gejala Mandiri</h2>
+                                        <p class="bento-desc mb-4">Ketahui kemungkinan penyebab keluhan Anda secara dini dan kapan waktu yang tepat untuk mencari pertolongan medis profesional.</p>
+                                        <div class="bento-action mt-auto font-weight-bold">
+                                            Mulai Pengecekan <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Dekorasi latar belakang khusus untuk card ini -->
+                                    <div class="bento-decor decor-1 z-1"></div>
                                 </a>
                             </div>
-                            <div class="ads-card-image blue"></div>
-                        </section>
-
-                        <!-- Card 2 -->
-                        <section class="ads-card">
-                            <i class="bi bi-beaker icon"></i>
-                            <h3>Clinical trials</h3>
-                            <p>
-                                Search for clinical trials by disease,
-                                treatment, or drug name.
-                            </p>
-                            <a href="#">
-                                Search clinical trials
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </section>
-
-                        <!-- Card 3 -->
-                        <section class="ads-card">
-                            <i class="bi bi-people icon"></i>
-                            <h3>Connect to support groups</h3>
-                            <p>
-                                Share your experiences and find support
-                                in our online communities.
-                            </p>
-                            <a href="#">
-                                Find a support group
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </section>
-
-                        <!-- Card 4 -->
-                        <section class="ads-card ads-card-large">
-                            <div class="ads-card-content dark">
-                                <h2>
-                                    Elisameds
-                                </h2>
-                                <p>
-                                    Elisameds, mobile apps RS St. Elisabeth Semarang
-                                </p>
-                                <a href="#">
-                                    Learn about Elisameds
-                                    <i class="bi bi-chevron-right"></i>
+                            
+                            <div class="col-lg-5">
+                                <a href="#" class="explore-bento-card bento-small d-flex flex-column h-100 text-decoration-none">
+                                    <div class="icon-wrapper mb-4">
+                                        <i class="fa-solid fa-pills"></i>
+                                    </div>
+                                    <h3 class="bento-title-sm mb-3">Info Obat & Tindakan</h3>
+                                    <p class="bento-desc-sm mb-4">Cari tahu detail pengobatan dan prosedur medis berdasarkan diagnosis penyakit dengan sumber terpercaya.</p>
+                                    <div class="bento-action mt-auto">
+                                        Telusuri <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                    </div>
                                 </a>
                             </div>
-                            <div class="ads-card-image dark-blue"></div>
-                        </section>
+
+                            <!-- Baris 2 -->
+                            <div class="col-lg-4">
+                                <a href="#" class="explore-bento-card bento-small d-flex flex-column h-100 text-decoration-none">
+                                    <div class="icon-wrapper mb-4">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <h3 class="bento-title-sm mb-3">Komunitas & Dukungan</h3>
+                                    <p class="bento-desc-sm mb-4">Temukan dukungan dan berbagilah pengalaman dalam grup komunitas pemulihan kami.</p>
+                                    <div class="bento-action mt-auto">
+                                        Gabung <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <div class="col-lg-8">
+                                <a href="#" class="explore-bento-card bento-large bento-premium d-flex flex-column justify-content-between text-decoration-none h-100">
+                                    <div class="row h-100 align-items-center position-relative z-2">
+                                        <div class="col-md-7 bento-content py-3">
+                                            <div class="brand-badge mb-3 d-inline-block">
+                                                <i class="fa-brands fa-google-play me-2"></i>
+                                            </div>
+                                            <h2 class="bento-title text-white mb-3">Aplikasi Mobile Elisameds</h2>
+                                            <p class="bento-desc text-white-50 mb-4">Akses layanan pendaftaran jadwal dokter, riwayat rekam medis, hingga layanan pelanggan langsung dari genggaman Anda.</p>
+                                            <div class="bento-action text-white">
+                                                Unduh Sekarang <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 d-none d-md-flex align-items-center justify-content-center position-relative h-100">
+                                            <!-- Kita menggunakan icon hp besar sebagai ilustrasi -->
+                                            <i class="fa-solid fa-mobile-screen-button display-1 text-white opacity-25" style="font-size: 10rem; position: absolute; right: 2rem;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="bento-decor decor-2 z-1"></div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </section>
             @elseif ($mode === 'glosarium')
@@ -286,63 +289,7 @@
 
 
 
-        <section id="footer" class="pt-5">
-            <div class="container-fluid col-12 col-md-12">
-                <div class="container">
-                    <div class="row footer-body">
-                        <div class="col mb-5">
-                            <div class="footer-header mb-4">
-                                <ul>
-                                    <li><h4 class="rs-name">RS St. Elisabeth Semarang</h4></li>
-                                    <li><p class="moto">Pancaran cintanya menyembuhkan derita sesama</p></li>
-                                </ul>
-                            </div>
-                            <ul>
-                                <li><h4 class="footer-title">Hubungi Kami</h4></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-location-dot"></i> Jl. Kawi No.1</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8502244</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8310076 / (024) 8310035</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-envelope"></i> sekretariat@365.rs-elisabeth.com</a></li>
-                            </ul>
-                            <div class="social-media d-flex gap-2">
-                                <div class="insta"><i class="fa-brands fa-instagram"></i></div>
-                                <div class="facebook"><i class="fa-brands fa-facebook"></i></div>
-                                <div class="youtube"><i class="fa-brands fa-youtube"></i></div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <ul>
-                                <li><h4 class="footer-title">Tautan Cepat</h4></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Artikel</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Hubungi Kami</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Rekanan</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
-                            </ul>
-                        </div>
-                        <div class="col">
-                            <ul>
-                                <li><h4 class="footer-title">Elisameds</h4></li>
-                                <li class="footer-list">
-                                    <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
-                                </li>
-                                <li><a href="https://play.google.com/store/apps/details?id=com.elisameds.app"><i class="fa-brands fa-google-play"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row footer-copyright">
-                        <div class="col">
-                            <p class="copyright"><i class="fa-solid fa-copyright"></i> 2026 Rumah Sakit Santa Elisabeth Semarang</p>
-                        </div>
-                        <div class="col d-flex justify-content-center gap-3">
-                            <p class="d-inline-block">Designed By Lorem, ipsum dolor.</p>
-                            <p class="d-inline-block">Developed By Lorem, ipsum.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.footer')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
         @vite([
