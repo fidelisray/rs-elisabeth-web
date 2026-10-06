@@ -1,0 +1,182 @@
+/* ============================================================
+ * customer-info-section.css
+ * Section "Jam Kunjungan & Ketentuan Pengunjung" untuk halaman Home.
+ * Diselaraskan dengan bahasa desain halaman home:
+ * - warna brand (--primary/--secondary/--secondary-darker)
+ * - aksen kuning (--accent-color)
+ * - section-title + divider, card lembut, hover lift.
+ * ============================================================ */
+
+#customer-info {
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #eef7fd 55%, #f8fafc 100%);
+}
+
+/* Aksen dekoratif lembut di sudut */
+#customer-info::before,
+#customer-info::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+#customer-info::before {
+    width: 420px;
+    height: 420px;
+    background: var(--primary-lighter-color);
+    top: -160px;
+    left: -140px;
+    opacity: 0.55;
+}
+
+#customer-info::after {
+    width: 380px;
+    height: 380px;
+    background: var(--primary-color);
+    bottom: -140px;
+    right: -120px;
+    opacity: 0.08;
+}
+
+#customer-info .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---------- Badge pengantar ---------- */
+.ci-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(0, 143, 215, 0.1);
+    color: var(--primary-color);
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Kartu Jam Kunjungan ---------- */
+.ci-visit-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1.25rem;
+    border: none;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+    height: 100%;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ci-visit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+}
+
+.ci-visit-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    box-shadow: 0 10px 20px rgba(0, 143, 215, 0.3);
+}
+
+.ci-time-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background-color: #f7fafc;
+    transition: background-color 0.25s ease;
+}
+
+.ci-time-row:hover {
+    background-color: #eef7fd;
+}
+
+.ci-time-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.ci-time-value {
+    font-weight: 700;
+    color: var(--secondary-darker-color);
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Kartu Ketentuan Pengunjung ---------- */
+.ci-rule-card {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    height: 100%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ci-rule-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.1);
+}
+
+.ci-rule-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: rgba(0, 143, 215, 0.1);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.ci-rule-card:hover .ci-rule-icon {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* ---------- Catatan penutup ---------- */
+.ci-thankyou {
+    background: linear-gradient(135deg, var(--secondary-darker-color), var(--secondary-color));
+    color: #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 14px 34px rgba(18, 79, 140, 0.25);
+}
+
+.ci-thankyou i {
+    color: var(--accent-color);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+    #customer-info {
+        padding: 56px 0;
+    }
+    .ci-time-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}

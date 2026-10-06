@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Temukan pilihan ruang perawatan RS St. Elisabeth Semarang — dari President Suite mewah hingga Kelas III, semua dengan pelayanan prima dan fasilitas berstandar tinggi.">
-    <title>Ruang Perawatan - RS St. Elisabeth Semarang</title>
+    @include('components.seo-meta', ['title' => 'Ruang Perawatan - RS St. Elisabeth Semarang'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     @vite([
         'resources/css/style.css',
+        'resources/css/footer.css',
         'resources/css/btn-accent.css',
         'resources/css/navbar-dropdown.css',
         'resources/css/ruang-perawatan.css',
@@ -32,120 +32,10 @@
 </head>
 <body>
 
-        <!-- Top Bar -->
-    <div class="top-bar d-none d-lg-block">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <a href="tel:+62248502244" class="ambulance-call p-1 px-3 d-inline-block text-white text-decoration-none"
-                        style="border-radius: 1.5rem; border: 1px solid #d10202; background-color: #d10202; font-weight:600; margin-left: 0;">
-                        <i class="fa-solid fa-truck-medical me-1"></i> IGD 24 Jam
-                    </a>
-                    <a href="tel:+62248502244" class="text-white text-decoration-none"><i class="fas fa-phone-alt me-2"></i> (024) 8502244</a>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#"><i class="fas fa-user-circle me-1"></i> Portal Pasien</a>
-                    <a href="#"><i class="fas fa-globe me-1"></i> ID <i class="fas fa-chevron-down ms-1"
-                            style="font-size: 0.7em;"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <header class="nav-group">
-        <nav class="navbar bg-body-tertiary">
-            <div class="container d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-center gap-3">
-                <a class="navbar-brand m-0" href="/">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-main">
-                    <img src="{{ asset('images/akreditasi.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-akreditasi d-none d-sm-inline-block">
-                </a>
-                <form class="d-flex nav-form-search flex-grow-1 mx-lg-3 order-3 order-lg-2 w-100 w-lg-auto" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Temukan dokter, klinik, jadwal.." aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-                <div class="d-flex align-items-center order-2 order-lg-3">
-                    <a class="btn btn-accent btn-sm d-lg-none me-2" href="tel:+62248502244"><i class="fa-solid fa-phone"></i></a>
-                    <a class="btn btn-accent btn-sm d-lg-none" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check"></i></a>
-                    <a class="btn btn-accent d-none d-lg-inline-block" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check me-2"></i>Buat Janji</a>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div id="navbar-sentinel" class="navbar-sentinel"></div>
-    <nav id="second-navbar" class="navbar navbar-expand-lg second-nav">
-        <div class="container second-nav-body">
-                        <!-- Mobile Menu Modal Toggler -->
-            <button class="navbar-toggler text-white border-white" type="button" data-bs-toggle="modal" data-bs-target="#mobileMenuModal" aria-controls="mobileMenuModal" aria-label="Toggle navigation">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <span class="d-lg-none text-white fw-bold ms-2 me-auto">Menu Utama</span>
 
-            <!-- Desktop Sidebar -->
-            <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-                <ul class="navbar-nav nav-content gap-2">
-                    <li class="nav-item nav-beranda">
-                        <a class="nav-link " aria-current="page" href="{{ route('home.index') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item dropdown nav-tentang-kami">
-                        <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tentang Kami</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#visi-dan-misi">Visi & Misi</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#sejarah-singkat">Sejarah</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-cari-dokter">
-                        <a class="nav-link " href="{{ route('dokter.index') }}">Cari Dokter</a>
-                    </li>
-                    <li class="nav-item nav-ruang-perawatan">
-                        <a class="nav-link active" href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a>
-                    </li>
-                    <li class="nav-item nav-fasilitas">
-                        <a class="nav-link " href="{{ route('facilities.index') }}">Fasilitas</a>
-                    </li>
-                    <li class="nav-item nav-paket-dan-promo">
-                        <a class="nav-link " href="{{ route('promotions.index') }}">Paket dan Promo</a>
-                    </li>
-                    <li class="nav-item nav-informasi-pelanggan">
-                        <a class="nav-link " href="{{ route('customer-information.index') }}">Informasi Pelanggan</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('components.navbar')
 
-    <!-- Mobile Menu Modal -->
-    <div class="modal fade" id="mobileMenuModal" tabindex="-1" aria-labelledby="mobileMenuModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mobile-menu-dialog">
-            <div class="modal-content mobile-menu-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <ul class="mobile-nav-list">
-                        <li><a class="" href="{{ route('home.index') }}">Beranda</a></li>
-                        <li>
-                            <a href="#collapseTentangKamiMobile" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseTentangKamiMobile" class="d-flex justify-content-center align-items-center gap-2 ">
-                                Tentang Kami <i class="fas fa-chevron-down" style="font-size: 0.8em;"></i>
-                            </a>
-                            <div class="collapse" id="collapseTentangKamiMobile">
-                                <ul class="mobile-submenu-list">
-                                    <li><a href="{{ route('tentang-kami.index') }}">Profil</a></li>
-                                    <li><a href="{{ route('tentang-kami.index') }}#visi-dan-misi">Visi & Misi</a></li>
-                                    <li><a href="{{ route('tentang-kami.index') }}#sejarah-singkat">Sejarah</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a class="" href="{{ route('dokter.index') }}">Cari Dokter</a></li>
-                        <li><a class="active" href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a></li>
-                        <li><a class="" href="{{ route('facilities.index') }}">Fasilitas</a></li>
-                        <li><a class="" href="{{ route('promotions.index') }}">Paket dan Promo</a></li>
-                        <li><a class="" href="{{ route('customer-information.index') }}">Informasi Pelanggan</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <main>
+<main>
         <h1 class="visually-hidden">Ruang Perawatan RS Santa Elisabeth Semarang</h1>
 
         {{-- ===== HERO SECTION ===== --}}
@@ -169,20 +59,18 @@
         {{-- ===== INTRO ===== --}}
         <section id="room-intro">
             <div class="container text-center">
-                <div class="intro-label">
-                    <span>RUANG PERAWATAN</span>
+                <div class="section-title text-center mb-4">
+                    <h2 class="fw-bold">Temukan Ruangan yang Tepat untuk Anda</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.</p>
                 </div>
-                <h2 class="intro-title">Temukan Ruangan yang Tepat untuk Anda</h2>
-                <p class="intro-desc">
-                    RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.
-                </p>
 
                 {{-- Filter Tabs --}}
                 <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600 active"
                             data-room-filter="all"
                             style="background:#008fd7;color:#fff;border:none;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-grid-2 me-1"></i> Semua Kelas
+                        <i class="fa-solid fa-table-cells-large me-1"></i> Semua Kelas
                     </button>
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
                             data-room-filter="premium"
@@ -291,8 +179,21 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-12">
-                            <div class="alert alert-info border-0 shadow-sm">Belum ada data Ruangan Premium.</div>
+                        <div class="col-12 reveal-on-scroll">
+                            <div class="empty-state-premium p-5 text-center rounded-4" style="background: linear-gradient(145deg, #1a2740, #131c2e); border: 1px solid rgba(201, 168, 76, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+                                <div class="mb-4">
+                                    <div class="icon-wrapper mx-auto d-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.3);">
+                                        <i class="fa-solid fa-crown" style="font-size: 2.2rem; color: #c9a84c;"></i>
+                                    </div>
+                                </div>
+                                <h4 class="fw-bold mb-3" style="color: #c9a84c; letter-spacing: 0.5px;">Ruang Perawatan Premium Sedang Kami Siapkan</h4>
+                                <p class="mb-4 mx-auto" style="max-width: 600px; color: #a8b2c1; font-size: 1.05rem; line-height: 1.6;">
+                                    Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.
+                                </p>
+                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20ketersediaan%20dan%20informasi%20Ruang%20Perawatan%20Premium%20RS%20St.%20Elisabeth" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
+                                    <i class="fa-brands fa-whatsapp me-2"></i> Hubungi Personal Assistant Kami
+                                </a>
+                            </div>
                         </div>
                     @endforelse
 
@@ -485,10 +386,10 @@
         {{-- ===== STANDARD ROOMS (VIP / Kelas I / II / III) ===== --}}
         <section id="standard-rooms">
             <div class="container">
-                <div class="standard-section-header">
-                    <div class="standard-label">Ruang Standar</div>
-                    <h2 class="standard-title">Ruang Perawatan Standar &amp; VIP</h2>
-                    <p class="standard-desc">Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.</p>
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Ruang Perawatan Standar &amp; VIP</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.</p>
                 </div>
 
                 <div class="row g-4">
@@ -541,8 +442,19 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-12">
-                            <div class="alert alert-info border-0 shadow-sm">Belum ada data Ruangan Standar.</div>
+                        <div class="col-12 reveal-on-scroll">
+                            <div class="empty-state-standard p-5 text-center rounded-4" style="background-color: #f1f8fd; border: 2px dashed #d0e8f5;">
+                                <div class="mb-3">
+                                    <i class="fa-solid fa-bed-pulse" style="font-size: 3.5rem; color: #b8d4e3;"></i>
+                                </div>
+                                <h4 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Data Ruangan Sedang Diperbarui</h4>
+                                <p class="text-muted mb-4 mx-auto" style="max-width: 550px;">
+                                    Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.
+                                </p>
+                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20informasi%20ketersediaan%20Ruang%20Perawatan%20Standar%20di%20RS%20St.%20Elisabeth" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
+                                    <i class="fa-brands fa-whatsapp me-2"></i> Tanya Ketersediaan Kamar
+                                </a>
+                            </div>
                         </div>
                     @endforelse
 
@@ -945,70 +857,17 @@
     </main>
 
     {{-- ===== FOOTER ===== --}}
-    <footer id="footer" class="pt-5">
-        <div class="container-fluid col-12 col-md-12">
-            <div class="container">
-                <div class="row footer-body">
-                    <div class="col mb-5">
-                        <div class="footer-header mb-4">
-                            <ul>
-                                <li><h4 class="rs-name">RS St. Elisabeth Semarang</h4></li>
-                                <li><p class="moto">Pancaran cintanya menyembuhkan derita sesama</p></li>
-                            </ul>
-                        </div>
-                        <ul>
-                            <li><h4 class="footer-title">Hubungi Kami</h4></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-location-dot"></i> Jl. Kawi No.1</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8502244</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8310076 / (024) 8310035</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-envelope"></i> sekretariat@365.rs-elisabeth.com</a></li>
-                        </ul>
-                        <div class="social-media d-flex gap-2">
-                            <div class="insta"><i class="fa-brands fa-instagram"></i></div>
-                            <div class="facebook"><i class="fa-brands fa-facebook"></i></div>
-                            <div class="youtube"><i class="fa-brands fa-youtube"></i></div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Tautan Cepat</h4></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Artikel</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Hubungi Kami</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Rekanan</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Elisameds</h4></li>
-                            <li class="footer-list">
-                                <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
-                            </li>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store"><i class="fa-brands fa-google-play"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row footer-copyright">
-                    <div class="col">
-                        <p class="copyright"><i class="fa-solid fa-copyright"></i> 2026 Rumah Sakit Santa Elisabeth Semarang</p>
-                    </div>
-                    <div class="col d-flex justify-content-center gap-3">
-                        <p class="d-inline-block">Designed By Lorem, ipsum dolor.</p>
-                        <p class="d-inline-block">Developed By Lorem, ipsum.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('components.footer')
 
+    @include('components.floating-buttons')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
     @vite([
         'resources/js/navbar/navbar.js',
         'resources/js/navbar/navbar-dropdown.js',
-        'resources/js/ruang-perawatan/ruang-perawatan.js'
+        'resources/js/ruang-perawatan/ruang-perawatan.js',
+        'resources/js/components/back-to-top.js'
     ])
-</body>
+    @include('components.json-ld')
+    </body>
 </html>

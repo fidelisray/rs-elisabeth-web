@@ -102,6 +102,7 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     border: 1px solid #dbe8f5;
     overflow: hidden;
     height: 100%;
+    background-color: #f8fbff;
 }
 
 .modal-day-header {
@@ -118,7 +119,6 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     display: flex;
     flex-direction: column;
     gap: 6px;
-    background-color: #f8fbff;
 }
 
 .modal-time-slot {

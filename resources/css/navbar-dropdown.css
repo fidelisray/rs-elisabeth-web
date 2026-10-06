@@ -1,9 +1,86 @@
 /* ============================================================
- * navbar-dropdown.css
- * Hover dropdown dengan animasi smooth untuk .nav-tentang-kami
+ * navbar-dropdown.css  — Revisi Penuh
+ * Sistem animasi premium untuk #main-navbar beserta
+ * semua komponen: dropdown, search modal, offcanvas.
  * ============================================================ */
 
-/* Nonaktifkan caret Bootstrap default dan ganti dengan versi kustom */
+/* ============================================================
+ * 1. MAIN NAVBAR — Sticky Shrink Animation
+ * ============================================================ */
+#main-navbar {
+    background-color: #ffffff;
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    box-shadow: none;
+    transition:
+        padding     0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow  0.35s ease,
+        background  0.35s ease;
+    z-index: 1030;
+}
+
+/* State "menempel" — ditambahkan via JS saat halaman discroll */
+#main-navbar.is-stuck {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.09);
+    background-color: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Logo — scale saat navbar mengecil */
+.navbar-logo {
+    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#main-navbar.is-stuck .navbar-logo {
+    height: 36px !important;
+}
+
+/* ============================================================
+ * 2. NAV LINKS — Animated Underline Slide
+ * ============================================================ */
+.nav-link-animated {
+    position: relative;
+    color: #2d3748;
+    font-size: 0.93rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.4rem;
+    transition: color 0.25s ease;
+}
+
+/* Garis bawah yang slide-in dari tengah.
+ * NOTE: memakai ::before agar tidak bentrok dengan caret dropdown
+ *       (.dropdown-toggle) yang menggunakan ::after. */
+.nav-link-animated::before {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    right: 50%;
+    height: 2px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link-animated:hover,
+.nav-link-animated.active {
+    color: var(--primary-color);
+}
+
+.nav-link-animated:hover::before,
+.nav-link-animated.active::before {
+    left: 0.75rem;
+    right: 0.75rem;
+}
+
+/* ============================================================
+ * 3. DROPDOWN TENTANG KAMI — Hover Fade + Slide
+ * ============================================================ */
+
+/* Nonaktifkan caret Bootstrap, ganti kustom */
 .nav-tentang-kami > .nav-link.dropdown-toggle::after {
     display: inline-block;
     margin-left: 0.3em;
@@ -16,84 +93,391 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Caret rotate 180° saat dropdown terbuka */
 .nav-tentang-kami.hover-open > .nav-link.dropdown-toggle::after {
     transform: rotate(-180deg);
 }
 
-/* --- Desktop Hover Animation Only --- */
-@media (min-width: 992px) {
-    /* Override Bootstrap yang menggunakan display:none.
-     * Kita pakai display:block permanen lalu kendalikan
-     * visibility + opacity + transform agar bisa di-animasi.
-     */
-    .nav-tentang-kami .dropdown-menu {
+    @media (min-width: 992px) {
+    .nav-tentang-kami .main-dropdown-menu {
         display: block !important;
         visibility: hidden;
         opacity: 0;
         pointer-events: none;
-
-        transform: translateY(-8px);
+        transform: translateY(-10px) scale(0.98);
         transform-origin: top center;
-
-        /*
-         * Transisi MENUTUP (state hover-open hilang):
-         */
         transition:
             opacity    0.22s cubic-bezier(0.4, 0, 0.2, 1),
             transform  0.22s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0s   linear 0.22s;
-
         border: none;
-        border-radius: 0.65rem;
+        border-radius: 0.75rem;
         padding: 0.5rem 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
-        min-width: 11.5rem;
+        box-shadow:
+            0 10px 40px rgba(0, 0, 0, 0.12),
+            0 2px 8px rgba(0, 0, 0, 0.06);
+        min-width: 12rem;
         background-color: #ffffff;
-        margin-top: 0.3rem;
+        margin-top: 0.5rem !important;
     }
 
-    /* State TERBUKA — class .hover-open ditambahkan via JS */
-    .nav-tentang-kami.hover-open .dropdown-menu {
+    /* Garis aksent di atas dropdown */
+    .nav-tentang-kami .main-dropdown-menu::before {
+        content: "";
+        display: block;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        border-radius: 0.75rem 0.75rem 0 0;
+        margin: -0.5rem 0 0.5rem 0;
+    }
+
+    /* State TERBUKA */
+    .nav-tentang-kami.hover-open .main-dropdown-menu {
         visibility: visible;
         opacity: 1;
         pointer-events: auto;
-        transform: translateY(0);
-
+        transform: translateY(0) scale(1);
         transition:
             opacity    0.3s cubic-bezier(0.4, 0, 0.2, 1),
             transform  0.3s cubic-bezier(0.4, 0, 0.2, 1),
             visibility 0s   linear 0s;
     }
-    
-    /* ---- Dropdown items ---- */
-    .nav-tentang-kami .dropdown-menu .dropdown-item {
-        font-size: 0.92rem;
+
+    /* Item dropdown */
+    .nav-tentang-kami .main-dropdown-menu .dropdown-item {
+        font-size: 0.9rem;
         font-weight: 500;
-        padding: 0.5rem 1.25rem;
+        padding: 0.55rem 1.3rem;
         color: #2c3e50;
-        border-radius: 0.3rem;
+        border-radius: 0;
         transition:
             background-color 0.18s ease,
             color            0.18s ease,
-            padding-left     0.18s ease;
+            padding-left     0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .nav-tentang-kami .dropdown-menu .dropdown-item:hover,
-    .nav-tentang-kami .dropdown-menu .dropdown-item:focus {
-        background-color: #e8f4fd;
-        color: var(--primary-color, #008fd7);
-        padding-left: 1.6rem;
+    .nav-tentang-kami .main-dropdown-menu .dropdown-item:hover {
+        background-color: #eef7fd;
+        color: var(--primary-color);
+        padding-left: 1.7rem;
     }
 
     /* Divider tipis antar item */
-    .nav-tentang-kami .dropdown-menu .dropdown-item + .dropdown-item {
+    .nav-tentang-kami .main-dropdown-menu .dropdown-item + .dropdown-item {
         border-top: 1px solid #f0f4f8;
     }
 }
 
 /* ============================================================
- * Mobile Menu Modal Styles
+ * 4. SEARCH TRIGGER BUTTON — Pulse Hover
+ * ============================================================ */
+.nav-search-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #e2e8f0;
+    background: transparent;
+    color: #4a5568;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:
+        color            0.25s ease,
+        border-color     0.25s ease,
+        background-color 0.25s ease,
+        transform        0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow       0.25s ease;
+}
+
+.nav-search-trigger:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    background-color: #eef7fd;
+    transform: scale(1.1) rotate(8deg);
+    box-shadow: 0 0 0 4px rgba(0, 143, 215, 0.12);
+}
+
+.nav-search-trigger:active {
+    transform: scale(0.95);
+}
+
+/* ============================================================
+ * 5. BTN JANJI — Shimmer Animation Pada Hover
+ * ============================================================ */
+.btn-janji {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform    0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow   0.25s ease !important;
+}
+
+/* Kilatan shimmer */
+.btn-janji::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 100%
+    );
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+
+.btn-janji:hover::before {
+    left: 130%;
+}
+
+.btn-janji:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 230, 0, 0.45) !important;
+}
+
+/* ============================================================
+ * 6. SEARCH MODAL — Glassmorphism Premium
+ * ============================================================ */
+
+/* Backdrop custom */
+.search-modal .modal-backdrop,
+.modal-backdrop {
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.search-modal-content {
+    border-radius: 1.25rem !important;
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+    animation: modalSlideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.search-modal-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+
+/* Input search dengan ikon di dalam */
+.search-input-wrapper {
+    position: relative;
+}
+
+.search-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #a0aec0;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.search-input-wrapper:focus-within .search-input-icon {
+    color: var(--primary-color);
+}
+
+.search-input {
+    padding-left: 2.75rem !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 0.75rem !important;
+    transition:
+        border-color 0.25s ease,
+        box-shadow   0.25s ease !important;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 4px rgba(0, 143, 215, 0.12) !important;
+}
+
+/* Tag saran pencarian */
+.search-suggestions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.search-suggestion-label {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    margin-right: 0.25rem;
+}
+
+.search-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: #f0f4f8;
+    color: #4a5568;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        color            0.2s ease,
+        transform        0.2s ease;
+}
+
+.search-tag:hover {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+ * 7. MOBILE OFFCANVAS — Premium Side Panel
+ * ============================================================ */
+.offcanvas-menu {
+    width: 300px !important;
+    border: none !important;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
+}
+
+.offcanvas-menu-header {
+    background: linear-gradient(135deg, var(--secondary-darker-color) 0%, var(--secondary-color) 100%);
+    padding: 1.25rem 1.5rem;
+    border-bottom: none !important;
+}
+
+.offcanvas-logo {
+    filter: brightness(0) invert(1);
+}
+
+.offcanvas-menu-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8fafc;
+}
+
+/* Daftar nav item */
+.offcanvas-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.5rem 0;
+    flex-grow: 1;
+}
+
+.offcanvas-nav-list li {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.offcanvas-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.95rem 1.5rem;
+    color: #2d3748;
+    text-decoration: none;
+    font-size: 0.97rem;
+    font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        color            0.2s ease,
+        padding-left     0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid transparent;
+}
+
+.offcanvas-nav-link i {
+    color: var(--primary-color);
+    width: 1.25rem;
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+}
+
+.offcanvas-nav-link:hover,
+.offcanvas-nav-link.active {
+    background-color: #eef7fd;
+    color: var(--primary-color);
+    padding-left: 1.85rem;
+    border-left-color: var(--primary-color);
+}
+
+.offcanvas-nav-link:hover i,
+.offcanvas-nav-link.active i {
+    opacity: 1;
+}
+
+/* CTA Wrapper bawah offcanvas */
+.offcanvas-cta-wrapper {
+    padding: 1.25rem 1.5rem 1.5rem;
+    background-color: #fff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.offcanvas-cta-btn {
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 4px 15px rgba(255, 240, 0, 0.35);
+    transition:
+        transform   0.25s ease,
+        box-shadow  0.25s ease !important;
+}
+
+.offcanvas-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 240, 0, 0.45) !important;
+}
+
+.offcanvas-igd-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e53e3e;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.offcanvas-igd-link:hover {
+    color: #c53030;
+}
+
+/* ============================================================
+ * 8. MOBILE IGD BUTTON — Pulse Ring
+ * ============================================================ */
+.mobile-igd-btn {
+    position: relative;
+    transition:
+        transform  0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.mobile-igd-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.2);
+}
+
+/* ============================================================
+ * 9. LEGACY — Styles lama dipertahankan untuk kompatibilitas
+ *    halaman lain yang masih menggunakan class mobile-nav-list
  * ============================================================ */
 .mobile-menu-dialog {
     width: 90vw;
@@ -117,18 +501,11 @@
     margin: 0;
     text-align: center;
     overflow-y: auto;
-    /* Memberi ruang untuk close button (modal-header) */
     max-height: calc(90vh - 60px);
 }
 
-.mobile-nav-list > li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.mobile-nav-list > li:last-child {
-    border-bottom: none;
-}
-
+.mobile-nav-list > li { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
+.mobile-nav-list > li:last-child { border-bottom: none; }
 .mobile-nav-list > li > a {
     display: block;
     padding: 1.2rem 1rem;
@@ -138,45 +515,26 @@
     font-weight: 500;
     transition: color 0.2s ease;
 }
-
 .mobile-nav-list > li > a:hover,
-.mobile-nav-list > li > a.active {
-    color: var(--accent-color, #fff000);
-}
+.mobile-nav-list > li > a.active { color: var(--accent-color, #fff000); }
+.mobile-nav-list > li > a i { transition: transform 0.3s ease; }
+.mobile-nav-list > li > a[aria-expanded="true"] i { transform: rotate(-180deg); }
 
-/* Chevron animasi untuk dropdown accordion */
-.mobile-nav-list > li > a i {
-    transition: transform 0.3s ease;
-}
-.mobile-nav-list > li > a[aria-expanded="true"] i {
-    transform: rotate(-180deg);
-}
-
-/* Submenu / Accordion */
 .mobile-submenu-list {
     list-style: none;
     padding: 0 0 0.5rem 0;
     margin: 0;
-    background-color: rgba(0, 0, 0, 0.15); /* memberi kedalaman visual */
+    background-color: rgba(0, 0, 0, 0.15);
 }
-
-.mobile-submenu-list li {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.mobile-submenu-list li:last-child {
-    border-bottom: none;
-}
-
+.mobile-submenu-list li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.mobile-submenu-list li:last-child { border-bottom: none; }
 .mobile-submenu-list li a {
     display: block;
     padding: 0.9rem 1rem;
     color: rgba(255, 255, 255, 0.85);
     text-decoration: none;
-    font-size: 0.92rem; /* Sama seperti dropdown desktop */
-    font-weight: 500;   /* Sama seperti dropdown desktop */
+    font-size: 0.92rem;
+    font-weight: 500;
     transition: color 0.2s ease;
 }
-
-.mobile-submenu-list li a:hover {
-    color: var(--accent-color, #fff000);
-}
+.mobile-submenu-list li a:hover { color: var(--accent-color, #fff000); }

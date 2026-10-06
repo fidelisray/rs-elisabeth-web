@@ -24,7 +24,12 @@ export function createScheduleGrid(dokter) {
 
     if (activeDays.length === 0) {
         return {
-            html: `<p class="text-muted small mb-0">Jadwal belum tersedia.</p>`,
+            html: `
+                <div class="d-flex align-items-center justify-content-center flex-column py-4 bg-light rounded-3 w-100 h-100" style="border: 2px dashed rgba(0,0,0,0.05);">
+                    <i class="fa-regular fa-calendar-xmark mb-2" style="font-size: 1.5rem; color: var(--secondary-color); opacity: 0.3;"></i>
+                    <span class="text-muted small fw-medium">Jadwal belum tersedia</span>
+                </div>
+            `,
             gridStyle: ''
         };
     }
@@ -115,8 +120,14 @@ export function renderDoctorPage(onPageChange) {
 
     if (state.filteredDoctorList.length === 0) {
         container.innerHTML = `
-            <div class="container bg-light text-muted rounded shadow-sm text-center py-3 my-3">
-                <h5>Mohon Maaf Saat Ini Data Dokter Tersebut Belum Tersedia...</h5>
+            <div class="empty-state-container container text-center py-5 my-4 bg-white rounded-4 shadow-sm" style="max-width: 600px; border: 1px solid rgba(0,0,0,0.05);">
+                <div class="empty-state-icon mb-4">
+                    <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-3">Dokter Tidak Ditemukan</h4>
+                <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
+                    Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.
+                </p>
             </div>
         `;
         renderPagination(0, onPageChange);
@@ -190,7 +201,7 @@ export function renderPagination(totalPages, onPageChange) {
     });
 
     paginationContainer.innerHTML = `
-        <ul class="pagination custom-pagination justify-content-center mt-4 mb-5 shadow-sm">
+        <ul class="pagination custom-pagination justify-content-center mt-4 mb-5">
             <li class="page-item ${state.currentPage === 1 ? "disabled" : ""}">
                 <button class="page-link" data-page="${state.currentPage - 1}">&laquo;</button>
             </li>
@@ -253,8 +264,14 @@ export function showError() {
     const container = document.getElementById("daftar-dokter");
     if (container) {
         container.innerHTML = `
-            <div class="container bg-info text-muted rounded shadow-sm text-center py-3 my-5">
-                <h4>Data dokter belum tersedia...</h4>
+            <div class="empty-state-container container text-center py-5 my-4 bg-white rounded-4 shadow-sm" style="max-width: 600px; border: 1px solid rgba(0,0,0,0.05);">
+                <div class="empty-state-icon mb-4">
+                    <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-3">Dokter Tidak Ditemukan</h4>
+                <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
+                    Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.
+                </p>
             </div>
         `;
     }
@@ -290,7 +307,14 @@ export function renderModal(doctorData) {
     const activeDays = Object.entries(schedule).filter(([, detail]) => detail.length > 0);
 
     if (activeDays.length === 0) {
-        scheduleHtml = `<p class="text-muted">Jadwal belum tersedia.</p>`;
+        scheduleHtml = `
+            <div class="col-12">
+                <div class="d-flex align-items-center justify-content-center flex-column py-5 bg-light rounded-3 w-100" style="border: 2px dashed rgba(0,0,0,0.05);">
+                    <i class="fa-regular fa-calendar-xmark mb-3" style="font-size: 2rem; color: var(--secondary-color); opacity: 0.3;"></i>
+                    <span class="text-muted fw-medium">Jadwal praktik belum tersedia untuk saat ini.</span>
+                </div>
+            </div>
+        `;
     } else {
         activeDays.forEach(([day, detail]) => {
             let timeSlotsHtml = '';

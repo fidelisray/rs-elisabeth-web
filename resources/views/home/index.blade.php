@@ -3,10 +3,10 @@
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <meta name="description" content="Rumah Sakit St. Elisabeth Semarang memberikan pelayanan kesehatan terbaik, profesional, terakreditasi Paripurna KARS, dengan layanan IGD 24 Jam dan Stroke Terpadu.">
-      <title>St. Elisabeth Hospital</title>
+      @include('components.seo-meta', ['title' => 'RS St. Elisabeth Semarang'])
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
       @vite([
+        'resources/css/footer.css',
         'resources/css/style.css',
         'resources/css/btn-accent.css',
         'resources/css/navbar-dropdown.css',
@@ -16,123 +16,15 @@
         'resources/css/stats-section.css',
         'resources/css/app-section.css',
         'resources/css/top-bar.css',
-        'resources/css/promo-banner.css'
+        'resources/css/promo-banner.css',
+        'resources/css/customer-info-section.css'
       ])
   </head>
   <body>
-    <!-- Top Bar -->
-    <div class="top-bar d-none d-lg-block">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <a href="tel:+62248502244" class="ambulance-call p-1 px-3 d-inline-block text-white text-decoration-none"
-                        style="border-radius: 1.5rem; border: 1px solid #d10202; background-color: #d10202; font-weight:600; margin-left: 0;">
-                        <i class="fa-solid fa-truck-medical me-1"></i> IGD 24 Jam
-                    </a>
-                    <a href="tel:+62248502244" class="text-white text-decoration-none"><i class="fas fa-phone-alt me-2"></i> (024) 8502244</a>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#"><i class="fas fa-user-circle me-1"></i> Portal Pasien</a>
-                    <a href="#"><i class="fas fa-globe me-1"></i> ID <i class="fas fa-chevron-down ms-1"
-                            style="font-size: 0.7em;"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <header class="nav-group">
-        <nav class="navbar bg-body-tertiary">
-            <div class="container d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-center gap-3">
-                <a class="navbar-brand m-0" href="/">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-main">
-                    <img src="{{ asset('images/akreditasi.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-akreditasi d-none d-sm-inline-block">
-                </a>
-                <form class="d-flex nav-form-search flex-grow-1 mx-lg-3 order-3 order-lg-2 w-100 w-lg-auto" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Temukan dokter, klinik, jadwal.." aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-                <div class="d-flex align-items-center order-2 order-lg-3">
-                    <a class="btn btn-accent btn-sm d-lg-none me-2" href="tel:+62248502244"><i class="fa-solid fa-phone"></i></a>
-                    <a class="btn btn-accent btn-sm d-lg-none" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check"></i></a>
-                    <a class="btn btn-accent d-none d-lg-inline-block" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check me-2"></i>Buat Janji</a>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div id="navbar-sentinel" class="navbar-sentinel"></div>
-    <nav id="second-navbar" class="navbar navbar-expand-lg second-nav">
-        <div class="container second-nav-body">
-            <!-- Mobile Menu Modal Toggler -->
-            <button class="navbar-toggler text-white border-white" type="button" data-bs-toggle="modal" data-bs-target="#mobileMenuModal" aria-controls="mobileMenuModal" aria-label="Toggle navigation">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <span class="d-lg-none text-white fw-bold ms-2 me-auto">Menu Utama</span>
 
-            <!-- Desktop Sidebar -->
-            <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-                <ul class="navbar-nav nav-content gap-2">
-                    <li class="nav-item nav-beranda">
-                        <a class="nav-link active" aria-current="page" href="#">Beranda</a>
-                    </li>
-                    <li class="nav-item dropdown nav-tentang-kami">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tentang Kami</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{{ route('tentang-kami.index') }}}">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{{ route('tentang-kami.index') }}}#visi-dan-misi">Visi & Misi</a></li>
-                            <li><a class="dropdown-item" href="{{{ route('tentang-kami.index') }}}#sejarah-singkat">Sejarah</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-cari-dokter">
-                        <a class="nav-link" href="{{{ route('dokter.index') }}}">Cari Dokter</a>
-                    </li>
-                    <li class="nav-item nav-ruang-perawatan">
-                        <a class="nav-link" href="{{{ route('ruang-perawatan.index') }}}">Ruang Perawatan</a>
-                    </li>
-                    <li class="nav-item nav-fasilitas">
-                        <a class="nav-link" href="{{{ route('facilities.index') }}}">Fasilitas</a>
-                    </li>
-                    <li class="nav-item nav-paket-dan-promo">
-                        <a class="nav-link" href="{{{ route('promotions.index') }}}">Paket dan Promo</a>
-                    </li>
-                    <li class="nav-item nav-informasi-pelanggan">
-                        <a class="nav-link" href="{{{ route('customer-information.index') }}}">Informasi Pelanggan</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('components.navbar')
 
-    <!-- Mobile Menu Modal -->
-    <div class="modal fade" id="mobileMenuModal" tabindex="-1" aria-labelledby="mobileMenuModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mobile-menu-dialog">
-            <div class="modal-content mobile-menu-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <ul class="mobile-nav-list">
-                        <li><a class="active" href="#">Beranda</a></li>
-                        <li>
-                            <a href="#collapseTentangKamiMobile" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseTentangKamiMobile" class="d-flex justify-content-center align-items-center gap-2">
-                                Tentang Kami <i class="fas fa-chevron-down" style="font-size: 0.8em;"></i>
-                            </a>
-                            <div class="collapse" id="collapseTentangKamiMobile">
-                                <ul class="mobile-submenu-list">
-                                    <li><a href="{{{ route('tentang-kami.index') }}}">Profil</a></li>
-                                    <li><a href="{{{ route('tentang-kami.index') }}}#visi-dan-misi">Visi & Misi</a></li>
-                                    <li><a href="{{{ route('tentang-kami.index') }}}#sejarah-singkat">Sejarah</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a href="{{{ route('dokter.index') }}}">Cari Dokter</a></li>
-                        <li><a href="{{{ route('ruang-perawatan.index') }}}">Ruang Perawatan</a></li>
-                        <li><a href="{{{ route('facilities.index') }}}">Fasilitas</a></li>
-                        <li><a href="{{{ route('promotions.index') }}}">Paket dan Promo</a></li>
-                        <li><a href="{{{ route('customer-information.index') }}}">Informasi Pelanggan</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
     <main>
         <h1 class="visually-hidden">Rumah Sakit Santa Elisabeth Semarang</h1>
 
@@ -164,10 +56,25 @@
                              alt="{{ $banner->title }}">
                     </div>
                     @empty
-                    {{-- Fallback: tampilkan pesan jika belum ada banner di CMS --}}
+                    {{-- Fallback: Tampilkan Default Hero Banner jika data CMS sedang kosong --}}
                     <div class="carousel-item active">
-                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 400px;">
-                            <p class="text-muted">Belum ada banner promosi. Tambahkan di CMS Admin Panel.</p>
+                        <div class="d-flex flex-column align-items-center justify-content-center text-center px-4" style="min-height: 420px; background: linear-gradient(135deg, var(--primary-color, #008fd7) 0%, var(--secondary-darker-color, #1a2740) 100%); position: relative; overflow: hidden;">
+                            <!-- Watermark Ikon -->
+                            <div class="position-absolute top-50 start-50 translate-middle" style="opacity: 0.03; pointer-events: none;">
+                                <i class="fa-solid fa-house-medical" style="font-size: 30rem; color: #ffffff;"></i>
+                            </div>
+                            <!-- Konten Banner -->
+                            <div style="z-index: 1;">
+                                <div class="mb-4">
+                                    <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255,255,255,0.15); color: #fff; font-weight: 500; letter-spacing: 1px;">
+                                        <i class="fa-solid fa-heart-pulse me-1 text-warning"></i> Melayani dengan Kasih
+                                    </span>
+                                </div>
+                                <h2 class="text-white fw-bold mb-3 display-6" style="letter-spacing: 0.5px;">RS St. Elisabeth Semarang</h2>
+                                <p class="text-white opacity-75 mb-0 mx-auto fs-6 fs-md-5" style="max-width: 650px; line-height: 1.6;">
+                                    Hadir dengan sepenuh hati memberikan pelayanan kesehatan terbaik, berteknologi mutakhir, dan profesional bagi Anda dan keluarga.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     @endforelse
@@ -188,9 +95,9 @@
             </div>
         </section>
 
-        <section id="quick-access" class="py-4">
+        <section id="quick-access" class="py-0">
             <div class="container quick-access-container">
-                <div class="row g-2 quick-access-options">
+                <div class="row g-0 quick-access-options">
                     <div class="col-6 col-md-3 quick-access-option-1">
                         <a href="{{{ route('dokter.index') }}}" class="text-decoration-none h-100">
                             <div class="card card-doctor h-100 border-0 rounded-0 shadow-sm">
@@ -236,6 +143,107 @@
             </div>
         </section>
 
+
+
+
+
+        <section id="about-us" class="py-5">
+            <div class="container">
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Percayakan Kesehatan Anda Bersama Kami</h2>
+                    <div class="divider"></div>
+                </div>
+                <div class="row align-items-center mt-5">
+                    <div class="col-md-5 mb-4 mb-md-0 px-md-4">
+                        <div class="about-rs mb-5">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                Terakreditasi Paripurna
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.</p>
+                        </div>
+                        <div class="about-rs mb-5">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                Layanan 24 Jam
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.</p>
+                        </div>
+                        <div class="about-rs">
+                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
+                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                Service Excellent
+                            </h4>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
+                        <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
+                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="Fasilitas RS St. Elisabeth Semarang" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="facilities-and-services" class="py-5">
+            <div class="container">
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">Fasilitas dan Layanan</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Pelayanan unggulan dengan dokter spesialis berpengalaman.</p>
+                </div>
+
+                <div id="carouselExampleCaptions" class="carousel slide shadow rounded-4 overflow-hidden bg-white" data-bs-ride="carousel">
+                    @if(count($facilities) > 0)
+                    <div class="carousel-indicators">
+                        @foreach ($facilities as $index => $facility)
+                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }} bg-dark" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
+                        @endforeach
+                    </div>
+                    @endif
+                    <div class="carousel-inner" id="carousel-facilities-and-services">
+                        @forelse ($facilities as $index => $facility)
+                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                            <div class="row align-items-center g-0">
+                                <div class="col-md-6 text-center facility-img-wrapper">
+                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility->name }}">
+                                </div>
+                                <div class="col-md-6 p-4 p-md-5">
+                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility->category ?? 'Featured' }}</span>
+                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
+                                    <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
+                                    <div class="mt-4">
+                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="carousel-item active p-5 text-center">
+                            <p class="text-muted">Belum ada data fasilitas unggulan.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        
         <section id="home-hero">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-pause="false">
                 <div class="carousel-inner">
@@ -260,7 +268,7 @@
         <section id="search-and-quick-access">
             <h2 class="visually-hidden">Pencarian Layanan dan Akses Cepat</h2>
             <div class="container">
-                <div class="search-widget mb-5">
+                <div class="search-widget">
                     <ul class="nav nav-tabs" id="searchTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#doctor"
@@ -326,106 +334,7 @@
             </div>
         </section>
 
-
-
-        <section id="about-us" class="py-5">
-            <div class="container">
-                <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Percayakan Kesehatan Anda Bersama Kami</h2>
-                    <div class="divider"></div>
-                </div>
-                <div class="row align-items-center mt-5">
-                    <div class="col-md-5 mb-4 mb-md-0 px-md-4">
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-medal"></i>
-                                </div>
-                                Terakreditasi Paripurna
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.</p>
-                        </div>
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                Layanan 24 Jam
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.</p>
-                        </div>
-                        <div class="about-rs">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                                Service Excellent
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
-                        <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
-                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="Fasilitas RS St. Elisabeth Semarang" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section id="facilities-and-services" class="py-5 bg-light">
-            <div class="container">
-                <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Fasilitas dan Layanan</h2>
-                    <div class="divider"></div>
-                    <p class="text-muted mt-3">Pelayanan unggulan dengan dokter spesialis berpengalaman.</p>
-                </div>
-
-                <div id="carouselExampleCaptions" class="carousel slide shadow rounded-4 overflow-hidden bg-white" data-bs-ride="carousel">
-                    @if(count($facilities) > 0)
-                    <div class="carousel-indicators">
-                        @foreach ($facilities as $index => $facility)
-                            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }} bg-dark" aria-current="{{ $index === 0 ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-                        @endforeach
-                    </div>
-                    @endif
-                    <div class="carousel-inner" id="carousel-facilities-and-services">
-                        @forelse ($facilities as $index => $facility)
-                        <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-                            <div class="row align-items-center g-0">
-                                <div class="col-md-6 text-center facility-img-wrapper">
-                                    <img src="{{ $facility->image_url ?? asset('images/placeholder.jpg') }}" class="w-100 h-100 object-fit-cover" alt="{{ $facility->name }}">
-                                </div>
-                                <div class="col-md-6 p-4 p-md-5">
-                                    <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ $facility->category ?? 'Featured' }}</span>
-                                    <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
-                                    <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
-                                    <div class="mt-4">
-                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="carousel-item active p-5 text-center">
-                            <p class="text-muted">Belum ada data fasilitas unggulan.</p>
-                        </div>
-                        @endforelse
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        
-        <section id="promotions" class="position-relative">
+        <section id="promotions" class="position-relative pb-5">
             <div class="section-title text-center mb-5">
                 <h2 class="display-8 fw-bold">Paket dan Promo</h2>
                 <div class="divider"></div>
@@ -452,8 +361,14 @@
                             </div>
                         </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada promo saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-tags" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Belum Ada Paket & Promo</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
@@ -492,7 +407,7 @@
                 </div>
             </div>
 
-            <div class="text-center mt-5 mb-3">
+            <div class="text-center mt-5">
                 <a href="{{{ route('promotions.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Penawaran Menarik Lainnya">
                     Lihat Penawaran Menarik Lainnya <i class="fa-solid fa-arrow-down ms-2"></i>
                 </a>
@@ -500,7 +415,7 @@
         </section>
 
         <!-- Latest Articles Section -->
-        <section id="latest-articles" class="news-section bg-white pt-2">
+        <section id="latest-articles" class="news-section pt-2 pb-5">
             <div class="section-title text-center mb-5 mt-5">
                 <h2 class="display-8 fw-bold">Artikel Kesehatan</h2>
                 <div class="divider"></div>
@@ -534,12 +449,18 @@
                         @endif
                     </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada artikel terbaru saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-newspaper" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Artikel Belum Tersedia</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Kami sedang menyiapkan artikel kesehatan terbaru untuk Anda. Silakan nantikan informasi bermanfaat selanjutnya.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
-                <div class="text-center mt-5 mb-3">
+                <div class="text-center mt-5">
                     <a href="{{{ route('articles.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Artikel">
                         Lihat Semua Artikel <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
@@ -548,7 +469,7 @@
         </section>
 
         <!-- Latest News Section -->
-        <section id="latest-news" class="news-section bg-light pt-2">
+        <section id="latest-news" class="news-section pt-2 pb-5">
             <div class="section-title text-center mb-5 mt-5">
                 <h2 class="display-8 fw-bold">ElisaNews</h2>
                 <div class="divider"></div>
@@ -585,15 +506,117 @@
                         @endif
                     </div>
                     @empty
-                    <div class="col-12">
-                        <div class="alert alert-info">Belum ada berita terbaru saat ini.</div>
+                    <div class="col-12 reveal-on-scroll">
+                        <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">
+                            <div class="mb-3">
+                                <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Berita Belum Tersedia</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.</p>
+                        </div>
                     </div>
                     @endforelse
                 </div>
-                <div class="text-center mt-5 mb-3">
+                <div class="text-center mt-5">
                     <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Berita">
                         Lihat Semua Berita <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Jam Kunjungan & Ketentuan Pengunjung -->
+        <section id="customer-info">
+            <div class="container">
+                <!-- Judul utama -->
+                <div class="section-title text-center mb-3">
+                    <span class="ci-eyebrow mb-3"><i class="fa-solid fa-hospital-user"></i> Informasi Pelanggan</span>
+                    <h2 class="display-8 fw-bold">Jam Kunjungan Pasien</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:</p>
+                </div>
+
+                <!-- Kartu jam kunjungan -->
+                <div class="row g-4 justify-content-center mb-5">
+                    <!-- Senin - Sabtu -->
+                    <div class="col-md-5">
+                        <div class="ci-visit-card p-4 p-md-5 text-center">
+                            <div class="ci-visit-icon mx-auto mb-3">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </div>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Senin – Sabtu</h4>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-value">09.30 – 11.00</span>
+                                </div>
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-value">17.00 – 18.30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Minggu & Hari Libur -->
+                    <div class="col-md-5">
+                        <div class="ci-visit-card p-4 p-md-5 text-center">
+                            <div class="ci-visit-icon mx-auto mb-3">
+                                <i class="fa-regular fa-calendar-check"></i>
+                            </div>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Minggu & Hari Libur</h4>
+                            <div class="d-flex flex-column gap-2">
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-value">09.30 – 11.30</span>
+                                </div>
+                                <div class="ci-time-row">
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-value">16.30 – 18.30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ketentuan Pengunjung -->
+                <div class="section-title text-center mb-4">
+                    <h3 class="fw-bold" style="color: var(--secondary-darker-color);">Ketentuan Pengunjung</h3>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="row g-3">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-heart-pulse"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Demi kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-volume-xmark"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ci-rule-card p-4 d-flex flex-column h-100 text-center">
+                                    <div class="ci-rule-icon mx-auto mb-3">
+                                        <i class="fa-solid fa-child-reaching"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ci-thankyou text-center p-4 mt-4">
+                            <p class="mb-0 fst-italic mx-auto" style="max-width: 750px;"><i class="fa-solid fa-heart me-2"></i>Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama dirawat di <span class="d-inline-block">Rumah Sakit St. Elisabeth Semarang.</span></p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -714,94 +737,19 @@
         </section>
 
     </main>
-    <footer id="footer" class="pt-5">
-        <div class="container-fluid col-12 col-md-12">
-            <div class="container">
-                <div class="row footer-body">
-                    <div class="col mb-5">
-                        <div class="footer-header mb-4">
-                            <ul>
-                                <li><h4 class="rs-name">RS St. Elisabeth Semarang</h4></li>
-                                <li><p class="moto">Pancaran cintanya menyembuhkan derita sesama</p></li>
-                            </ul>
-                        </div>
-                        <ul>
-                            <li><h4 class="footer-title">Hubungi Kami</h4></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-location-dot"></i> Jl. Kawi No.1</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8502244</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8310076 / (024) 8310035</a></li>
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-envelope"></i> sekretariat@365.rs-elisabeth.com</a></li>
-                        </ul>
-                        <div class="social-media d-flex gap-2">
-                            <div class="insta"><i class="fa-brands fa-instagram"></i></div>
-                            <div class="facebook"><i class="fa-brands fa-facebook"></i></div>
-                            <div class="youtube"><i class="fa-brands fa-youtube"></i></div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Tautan Cepat</h4></li>
-                            <li class="footer-list"><a href="{{{ route("tentang-kami.index") }}}"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
-                            <li class="footer-list"><a href="{{{ route("news.index") }}}"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                            {{-- <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Artikel</a></li> --}}
-                            <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Hubungi Kami</a></li>
-                            {{-- <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Rekanan</a></li> --}}
-                            <li class="footer-list"><a href="{{{ route("glossary.index") }}}"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <ul>
-                            <li><h4 class="footer-title">Elisameds</h4></li>
-                            <li class="footer-list">
-                                <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
-                            </li>
-                            <li><a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store"><i class="fa-brands fa-google-play"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row footer-copyright">
-                    <div class="col">
-                        <p class="copyright"><i class="fa-solid fa-copyright"></i> 2026 Rumah Sakit Santa Elisabeth Semarang</p>
-                    </div>
-                    <div class="col d-flex justify-content-center gap-3">
-                        <p class="d-inline-block">Designed By Lorem, ipsum dolor.</p>
-                        <p class="d-inline-block">Developed By Lorem, ipsum.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('components.footer')
 
-    <a href="tel:+62248502244" class="floating-emergency text-decoration-none text-white"
-        title="Emergency Call (024) 8502244">
-        <i class="fa-solid fa-truck-medical"></i>
-    </a>
-
+    @include('components.floating-buttons')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
+    
+
     @vite([
         'resources/js/navbar/navbar.js',
         'resources/js/navbar/navbar-dropdown.js',
-        'resources/js/promotions/promotions.js'
+        'resources/js/promotions/promotions.js',
+        'resources/js/components/back-to-top.js'
     ])
-    <script type="application/ld+json">
-    {
-      "@@context": "https://schema.org",
-      "@@type": "Hospital",
-      "name": "RS St. Elisabeth Semarang",
-      "image": "{{ asset('images/logo.png') }}",
-      "@@id": "{{ url('/') }}",
-      "url": "{{ url('/') }}",
-      "telephone": "(024) 8502244",
-      "address": {
-        "@@type": "PostalAddress",
-        "streetAddress": "Jl. Kawi No.1",
-        "addressLocality": "Semarang",
-        "addressRegion": "Jawa Tengah",
-        "postalCode": "50252",
-        "addressCountry": "ID"
-      }
-    }
-    </script>
-  </body>
+    @include('components.json-ld')
+    </body>
 </html>

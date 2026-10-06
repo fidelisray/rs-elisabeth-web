@@ -5,10 +5,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Kamus Medis</title>
+        @include('components.seo-meta', ['title' => 'Kamus Medis'])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
+        'resources/css/footer.css',
+        'resources/js/components/back-to-top.js',
             'resources/css/style.css',
             'resources/css/btn-accent.css',
             'resources/css/hero.css',
@@ -19,124 +21,10 @@
         ])
     </head>
     <body>
-            <!-- Top Bar -->
-    <div class="top-bar d-none d-lg-block">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <a href="tel:+62248502244" class="ambulance-call p-1 px-3 d-inline-block text-white text-decoration-none"
-                        style="border-radius: 1.5rem; border: 1px solid #d10202; background-color: #d10202; font-weight:600; margin-left: 0;">
-                        <i class="fa-solid fa-truck-medical me-1"></i> IGD 24 Jam
-                    </a>
-                    <a href="tel:+62248502244" class="text-white text-decoration-none"><i class="fas fa-phone-alt me-2"></i> (024) 8502244</a>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#"><i class="fas fa-user-circle me-1"></i> Portal Pasien</a>
-                    <a href="#"><i class="fas fa-globe me-1"></i> ID <i class="fas fa-chevron-down ms-1"
-                            style="font-size: 0.7em;"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <header class="nav-group">
-        <nav class="navbar bg-body-tertiary">
-            <div class="container d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-center gap-3">
-                <a class="navbar-brand m-0" href="/">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-main">
-                    <img src="{{ asset('images/akreditasi.png') }}" alt="Logo RS St. Elisabeth Semarang" width="auto" height="50" class="d-inline-block align-text-top logo-akreditasi d-none d-sm-inline-block">
-                </a>
-                <form class="d-flex nav-form-search flex-grow-1 mx-lg-3 order-3 order-lg-2 w-100 w-lg-auto" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Temukan dokter, klinik, jadwal.." aria-label="Search"/>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-                <div class="d-flex align-items-center order-2 order-lg-3">
-                    <a class="btn btn-accent btn-sm d-lg-none me-2" href="tel:+62248502244"><i class="fa-solid fa-phone"></i></a>
-                    <a class="btn btn-accent btn-sm d-lg-none" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check"></i></a>
-                    <a class="btn btn-accent d-none d-lg-inline-block" href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener noreferrer"><i class="far fa-calendar-check me-2"></i>Buat Janji</a>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div id="navbar-sentinel" class="navbar-sentinel"></div>
-    <nav id="second-navbar" class="navbar navbar-expand-lg second-nav">
-        <div class="container second-nav-body">
-                        <!-- Mobile Menu Modal Toggler -->
-            <button class="navbar-toggler text-white border-white" type="button" data-bs-toggle="modal" data-bs-target="#mobileMenuModal" aria-controls="mobileMenuModal" aria-label="Toggle navigation">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <span class="d-lg-none text-white fw-bold ms-2 me-auto">Menu Utama</span>
 
-            <!-- Desktop Sidebar -->
-            <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNavDropdown">
-                <ul class="navbar-nav nav-content gap-2">
-                    <li class="nav-item nav-beranda">
-                        <a class="nav-link " aria-current="page" href="{{ route('home.index') }}">Beranda</a>
-                    </li>
-                    <li class="nav-item dropdown nav-tentang-kami">
-                        <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tentang Kami</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#visi-dan-misi">Visi & Misi</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#sejarah-singkat">Sejarah</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item nav-cari-dokter">
-                        <a class="nav-link " href="{{ route('dokter.index') }}">Cari Dokter</a>
-                    </li>
-                    <li class="nav-item nav-ruang-perawatan">
-                        <a class="nav-link " href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a>
-                    </li>
-                    <li class="nav-item nav-fasilitas">
-                        <a class="nav-link " href="{{ route('facilities.index') }}">Fasilitas</a>
-                    </li>
-                    <li class="nav-item nav-paket-dan-promo">
-                        <a class="nav-link " href="{{ route('promotions.index') }}">Paket dan Promo</a>
-                    </li>
-                    <li class="nav-item nav-informasi-pelanggan">
-                        <a class="nav-link " href="{{ route('customer-information.index') }}">Informasi Pelanggan</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    @include('components.navbar')
 
-    <!-- Mobile Menu Modal -->
-    <div class="modal fade" id="mobileMenuModal" tabindex="-1" aria-labelledby="mobileMenuModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mobile-menu-dialog">
-            <div class="modal-content mobile-menu-content">
-                <div class="modal-header border-0 pb-0">
-                    <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body pt-0">
-                    <ul class="mobile-nav-list">
-                        <li><a class="" href="{{ route('home.index') }}">Beranda</a></li>
-                        <li>
-                            <a href="#collapseTentangKamiMobile" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseTentangKamiMobile" class="d-flex justify-content-center align-items-center gap-2 ">
-                                Tentang Kami <i class="fas fa-chevron-down" style="font-size: 0.8em;"></i>
-                            </a>
-                            <div class="collapse" id="collapseTentangKamiMobile">
-                                <ul class="mobile-submenu-list">
-                                    <li><a href="{{ route('tentang-kami.index') }}">Profil</a></li>
-                                    <li><a href="{{ route('tentang-kami.index') }}#visi-dan-misi">Visi & Misi</a></li>
-                                    <li><a href="{{ route('tentang-kami.index') }}#sejarah-singkat">Sejarah</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li><a class="" href="{{ route('dokter.index') }}">Cari Dokter</a></li>
-                        <li><a class="" href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a></li>
-                        <li><a class="" href="{{ route('facilities.index') }}">Fasilitas</a></li>
-                        <li><a class="" href="{{ route('promotions.index') }}">Paket dan Promo</a></li>
-                        <li><a class="" href="{{ route('customer-information.index') }}">Informasi Pelanggan</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
     <section id="hero-section">
-
-
-
-        
             <div class="container">
 
                 <!-- Breadcrumb -->
@@ -145,7 +33,7 @@
                         <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
                         @if (preg_match('/^[A-Z]$/', $activeLetter))
                             <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Begins with '{{ $activeLetter }}'</li>
+                            <li class="breadcrumb-item active" aria-current="page">Awalan '{{ $activeLetter }}'</li>
                         @else    
                             <li class="breadcrumb-item active"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
                         @endif
@@ -155,10 +43,10 @@
                 <div class="row">
                     <!-- Kolom kiri: Judul, subjudul, search -->
                     <div class="col-12 col-lg-6">
-                        <h1 class="hero-title">Glossary of Health Coverage and Medical Terms</h1>
-                        <p class="hero-subtitle">Easy-to-understand answers about Health and Medical Terms</p>
+                        <h1 class="hero-title">Ensiklopedia Istilah Medis & Kesehatan</h1>
+                        <p class="hero-subtitle">Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya</p>
 
-                        <p class="search-label">Search diseases &amp; conditions</p>
+                        <p class="search-label fw-medium mb-2">Pencarian Istilah Medis</p>
                         {{-- <div class="search-box d-flex align-items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -210,7 +98,7 @@
                     
                     <!-- Kolom kanan: Grid huruf A-Z -->
                     <div class="col-12 col-lg-6 mt-4 mt-lg-0 d-flex flex-column align-items-start align-items-lg-end">
-                        <div class="letter-panel-label">Find diseases &amp; conditions by first letter</div>
+                        <div class="letter-panel-label fw-medium mb-2">Telusuri Cepat Berdasarkan Abjad</div>
                             <div class="letter-grid">
                                 {{-- <a href="#" class="letter-btn active">A</a> --}}
                                 {{-- <a href="{{{ route('glossary.index') }}}"
@@ -237,71 +125,78 @@
         
         
         
-        <div id="defaultGlossaryContent" class="mt-4">
-            @if ($mode === 'ads')
-                <section id="advertisement">
-                    <div class="container">
-                        <!-- Card 1 -->
-                        <section class="ads-card ads-card-large">
-                            <div class="ads-card-content">
-                                <i class="bi bi-heart-pulse icon"></i>
-                                <h2>Symptom Checker</h2>
-                                <p>
-                                    Find out what could be causing your
-                                    symptoms and when to seek care.
-                                </p>
-                                <a href="#">
-                                    Check symptoms
-                                    <i class="bi bi-chevron-right"></i>
+        <div id="defaultGlossaryContent" class="mt-4" style="background: radial-gradient(circle 360px at 10% 40%, rgba(0, 143, 215, 0.07), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #f1f8fd 0%, #eef7fd 100%);">
+            @if ($mode === 'explore')
+                <section id="explore-services" class="py-5">
+                    <div class="container" style="max-width: 1100px;">
+                        <div class="row g-4">
+                            <!-- Baris 1 -->
+                            <div class="col-lg-7">
+                                <a href="#" class="explore-bento-card bento-large d-flex flex-column justify-content-between text-decoration-none">
+                                    <div class="bento-content position-relative z-2">
+                                        <div class="icon-wrapper mb-4">
+                                            <i class="fa-solid fa-stethoscope"></i>
+                                        </div>
+                                        <h2 class="bento-title mb-3">Deteksi Gejala Mandiri</h2>
+                                        <p class="bento-desc mb-4">Ketahui kemungkinan penyebab keluhan Anda secara dini dan kapan waktu yang tepat untuk mencari pertolongan medis profesional.</p>
+                                        <div class="bento-action mt-auto font-weight-bold">
+                                            Mulai Pengecekan <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                        </div>
+                                    </div>
+                                    <!-- Dekorasi latar belakang khusus untuk card ini -->
+                                    <div class="bento-decor decor-1 z-1"></div>
                                 </a>
                             </div>
-                            <div class="ads-card-image blue"></div>
-                        </section>
-
-                        <!-- Card 2 -->
-                        <section class="ads-card">
-                            <i class="bi bi-beaker icon"></i>
-                            <h3>Clinical trials</h3>
-                            <p>
-                                Search for clinical trials by disease,
-                                treatment, or drug name.
-                            </p>
-                            <a href="#">
-                                Search clinical trials
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </section>
-
-                        <!-- Card 3 -->
-                        <section class="ads-card">
-                            <i class="bi bi-people icon"></i>
-                            <h3>Connect to support groups</h3>
-                            <p>
-                                Share your experiences and find support
-                                in our online communities.
-                            </p>
-                            <a href="#">
-                                Find a support group
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </section>
-
-                        <!-- Card 4 -->
-                        <section class="ads-card ads-card-large">
-                            <div class="ads-card-content dark">
-                                <h2>
-                                    Elisameds
-                                </h2>
-                                <p>
-                                    Elisameds, mobile apps RS St. Elisabeth Semarang
-                                </p>
-                                <a href="#">
-                                    Learn about Elisameds
-                                    <i class="bi bi-chevron-right"></i>
+                            
+                            <div class="col-lg-5">
+                                <a href="#" class="explore-bento-card bento-small d-flex flex-column h-100 text-decoration-none">
+                                    <div class="icon-wrapper mb-4">
+                                        <i class="fa-solid fa-pills"></i>
+                                    </div>
+                                    <h3 class="bento-title-sm mb-3">Info Obat & Tindakan</h3>
+                                    <p class="bento-desc-sm mb-4">Cari tahu detail pengobatan dan prosedur medis berdasarkan diagnosis penyakit dengan sumber terpercaya.</p>
+                                    <div class="bento-action mt-auto">
+                                        Telusuri <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                    </div>
                                 </a>
                             </div>
-                            <div class="ads-card-image dark-blue"></div>
-                        </section>
+
+                            <!-- Baris 2 -->
+                            <div class="col-lg-4">
+                                <a href="#" class="explore-bento-card bento-small d-flex flex-column h-100 text-decoration-none">
+                                    <div class="icon-wrapper mb-4">
+                                        <i class="fa-solid fa-users"></i>
+                                    </div>
+                                    <h3 class="bento-title-sm mb-3">Komunitas & Dukungan</h3>
+                                    <p class="bento-desc-sm mb-4">Temukan dukungan dan berbagilah pengalaman dalam grup komunitas pemulihan kami.</p>
+                                    <div class="bento-action mt-auto">
+                                        Gabung <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <div class="col-lg-8">
+                                <a href="#" class="explore-bento-card bento-large bento-premium d-flex flex-column justify-content-between text-decoration-none h-100">
+                                    <div class="row h-100 align-items-center position-relative z-2">
+                                        <div class="col-md-7 bento-content py-3">
+                                            <div class="brand-badge mb-3 d-inline-block">
+                                                <i class="fa-brands fa-google-play me-2"></i>
+                                            </div>
+                                            <h2 class="bento-title text-white mb-3">Aplikasi Mobile Elisameds</h2>
+                                            <p class="bento-desc text-white-50 mb-4">Akses layanan pendaftaran jadwal dokter, riwayat rekam medis, hingga layanan pelanggan langsung dari genggaman Anda.</p>
+                                            <div class="bento-action text-white">
+                                                Unduh Sekarang <i class="fa-solid fa-arrow-right ms-2 transition-icon"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 d-none d-md-flex align-items-center justify-content-center position-relative h-100">
+                                            <!-- Kita menggunakan icon hp besar sebagai ilustrasi -->
+                                            <i class="fa-solid fa-mobile-screen-button display-1 text-white opacity-25" style="font-size: 10rem; position: absolute; right: 2rem;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="bento-decor decor-2 z-1"></div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </section>
             @elseif ($mode === 'glosarium')
@@ -394,63 +289,7 @@
 
 
 
-        <section id="footer" class="pt-5">
-            <div class="container-fluid col-12 col-md-12">
-                <div class="container">
-                    <div class="row footer-body">
-                        <div class="col mb-5">
-                            <div class="footer-header mb-4">
-                                <ul>
-                                    <li><h4 class="rs-name">RS St. Elisabeth Semarang</h4></li>
-                                    <li><p class="moto">Pancaran cintanya menyembuhkan derita sesama</p></li>
-                                </ul>
-                            </div>
-                            <ul>
-                                <li><h4 class="footer-title">Hubungi Kami</h4></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-location-dot"></i> Jl. Kawi No.1</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8502244</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-phone"></i> (024) 8310076 / (024) 8310035</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-envelope"></i> sekretariat@365.rs-elisabeth.com</a></li>
-                            </ul>
-                            <div class="social-media d-flex gap-2">
-                                <div class="insta"><i class="fa-brands fa-instagram"></i></div>
-                                <div class="facebook"><i class="fa-brands fa-facebook"></i></div>
-                                <div class="youtube"><i class="fa-brands fa-youtube"></i></div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <ul>
-                                <li><h4 class="footer-title">Tautan Cepat</h4></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Tentang Kami</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Elisanews</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Artikel</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Hubungi Kami</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Rekanan</a></li>
-                                <li class="footer-list"><a href="#"><i class="fa-solid fa-caret-right"></i> Perpustakaan Online</a></li>
-                            </ul>
-                        </div>
-                        <div class="col">
-                            <ul>
-                                <li><h4 class="footer-title">Elisameds</h4></li>
-                                <li class="footer-list">
-                                    <p class="elisameds-desc">Aplikasi Mobile Rumah Sakit St. Elisabeth Semarang untuk meningkatkan kualitas pelayanan kesehatan kepada pasien.</p>
-                                </li>
-                                <li><a href="https://play.google.com/store/apps/details?id=com.elisameds.app"><i class="fa-brands fa-google-play"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="row footer-copyright">
-                        <div class="col">
-                            <p class="copyright"><i class="fa-solid fa-copyright"></i> 2026 Rumah Sakit Santa Elisabeth Semarang</p>
-                        </div>
-                        <div class="col d-flex justify-content-center gap-3">
-                            <p class="d-inline-block">Designed By Lorem, ipsum dolor.</p>
-                            <p class="d-inline-block">Developed By Lorem, ipsum.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.footer')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
         @vite([
@@ -458,5 +297,6 @@
             'resources/js/navbar/navbar-dropdown.js',
             'resources/js/glosarium/glosarium.js'
         ])
+        @include('components.json-ld')
     </body>
 </html>

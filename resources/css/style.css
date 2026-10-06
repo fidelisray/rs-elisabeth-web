@@ -20,6 +20,12 @@
 
     --transition: all 0.3s ease;
     --shadow-sticky: 0 6px 24px rgba(15, 23, 42, 0.1);
+
+    /* Section Background Colors */
+    --bg-soft-beige: #fdf8f5; /* Lebih muda dari #fbf0e6 */
+    /* --bg-soft-beige: #fbf0e6; */
+    --bg-warm-beige: #f9efe6; /* Lebih muda dari #f8e7d8 */
+    /* --bg-warm-beige: #f8e7d8; */
 }
 
 .btn-primary-custom {
@@ -176,7 +182,72 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
     border-radius: 4px;
 } */
 
+/*
+ * Section backgrounds — blue-tinted gradients (soft & premium),
+ * selaras dengan warna background #customer-info. Setiap section
+ * saling menyatu: warna bawah section dibuat sama dengan warna atas
+ * section berikutnya agar transisinya halus dan tidak "patah".
+ */
+#about-us {
+    background:
+        radial-gradient(
+            circle 300px at 88% 10%,
+            rgba(183, 228, 229, 0.45),
+            rgba(183, 228, 229, 0) 70%
+        ),
+        linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
+}
 
+#facilities-and-services {
+    background:
+        radial-gradient(
+            circle 340px at 8% 20%,
+            rgba(0, 143, 215, 0.1),
+            rgba(0, 143, 215, 0) 70%
+        ),
+        linear-gradient(180deg, #eaf4fb 0%, #e5eef8 100%);
+}
+
+#search-and-quick-access {
+    background:
+        radial-gradient(
+            circle 320px at 90% 40%,
+            rgba(183, 228, 229, 0.35),
+            rgba(183, 228, 229, 0) 70%
+        ),
+        linear-gradient(180deg, #f4fafe 0%, #ecf4fb 100%);
+}
+
+#promotions {
+    background:
+        radial-gradient(
+            circle 360px at 12% 60%,
+            rgba(0, 143, 215, 0.08),
+            rgba(0, 143, 215, 0) 70%
+        ),
+        linear-gradient(180deg, #ecf4fb 0%, #e5eef8 100%);
+}
+
+/* Blok Artikel & Berita memakai biru yang sedikit lebih gelap */
+#latest-articles {
+    background:
+        radial-gradient(
+            circle 300px at 85% 15%,
+            rgba(0, 143, 215, 0.1),
+            rgba(0, 143, 215, 0) 70%
+        ),
+        linear-gradient(180deg, #e5eef8 0%, #dae7f4 100%);
+}
+
+#latest-news {
+    background:
+        radial-gradient(
+            circle 340px at 10% 80%,
+            rgba(183, 228, 229, 0.3),
+            rgba(183, 228, 229, 0) 70%
+        ),
+        linear-gradient(180deg, #dae7f4 0%, #eef7fd 100%);
+}
 
 .about-content .about-rs h3 {
     /* color: #124f8c; */
@@ -284,7 +355,6 @@ span.carousel-control-next-icon {
 }
 
 #promotions {
-    background: #fff;
     padding-top: 2rem;
 }
 
@@ -355,98 +425,6 @@ span.carousel-control-next-icon {
     animation-delay: 0.6s;
 }
 
-/* ************* */
-/* ---- Footer ---- */
-/* ************* */
-
-#footer {
-    /* background: var(--primary-color); */
-    background-color: var(--secondary-darker-color);
-}
-
-/* #footer .footer-body {
-    height: 12rem;
-} */
-
-#footer .footer-body ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-#footer .footer-list a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 400;
-}
-
-#footer .footer-copyright {
-    padding: 1.1rem;
-}
-
-#footer .footer-copyright p {
-    color: #fff;
-}
-
-.footer-header .rs-name {
-    font-size: 1.8rem;
-    font-weight: 900;
-    font-family: "Cormorant Garamond", sans-serif;
-    color: #fff;
-}
-
-.footer-header p.moto {
-    font-size: 1.5rem;
-    font-weight: 600;
-    font-family: "Crimson Text", sans-serif;
-    font-style: italic;
-    text-transform: capitalize;
-    color: var(--accent-color);
-}
-
-h4.footer-title {
-    font-weight: 700;
-    /* color: rgb(1, 1, 88); */
-    color: var(--accent-color);
-}
-
-.footer-list {
-    margin-bottom: 0.475rem;
-    margin-left: 0.5rem;
-}
-
-.social-media {
-    margin-top: 1.2rem;
-}
-
-.social-media > * {
-    font-size: 2rem;
-    color: #eee;
-    transition: all 0.1s ease;
-}
-
-.social-media div:nth-child(1):hover {
-    color: rgba(227, 20, 103, 1);
-}
-
-.social-media div:nth-child(2):hover {
-    color: rgb(5, 5, 201);
-}
-
-.social-media div:nth-child(3):hover {
-    color: rgb(232, 7, 7);
-}
-
-.fa-google-play {
-    font-size: 3rem;
-    color: #fff;
-}
-
-.elisameds-desc {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #fff;
-}
 
 /* Bouncing Button Animation */
 @keyframes bounce-y {
@@ -479,7 +457,7 @@ h4.footer-title {
 .floating-emergency {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     background-color: #e53e3e;
     color: white;
     width: 60px;
@@ -510,4 +488,108 @@ h4.footer-title {
 
 .floating-emergency:hover {
     transform: scale(1.1);
+}
+
+/* =========================================
+   Back to Top Button (Dynamic & Premium)
+   ========================================= */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--secondary-color)
+    );
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 143, 215, 0.4);
+    z-index: 999;
+
+    /* Animation & Hide by default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+}
+
+@keyframes bounce-btn {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.back-to-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+    /* Tambahkan animasi pantulan langsung ke tombol dengan delay kecil agar transisi awal bisa selesai */
+    animation: bounce-btn 2s infinite ease-in-out 0.4s;
+    /* Set nilai akhirnya pada 0% keyframe supaya posisinya tetap saat delay */
+    transform: translateY(0);
+}
+
+.back-to-top-btn:hover {
+    color: white;
+    background: linear-gradient(
+        135deg,
+        var(--secondary-color),
+        var(--primary-color)
+    );
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0, 143, 215, 0.6);
+    /* Matikan animasi saat dihover agar efek scale hover bekerja */
+    animation: none;
+}
+
+/* Mobile Placement (Tengah Bawah) */
+@media (max-width: 768px) {
+    .floating-emergency {
+        left: 20px;
+        bottom: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    .back-to-top-btn {
+        right: auto;
+        left: 50%;
+        bottom: 20px;
+        transform: translate(-50%, 20px);
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+
+    @keyframes bounce-btn-mobile {
+        0%,
+        100% {
+            transform: translate(-50%, 0);
+        }
+        50% {
+            transform: translate(-50%, -10px);
+        }
+    }
+
+    .back-to-top-btn.show {
+        transform: translate(-50%, 0);
+        animation: bounce-btn-mobile 2s infinite ease-in-out 0.4s;
+    }
+
+    .back-to-top-btn:hover {
+        transform: translate(-50%, -5px) scale(1.1);
+        animation: none;
+    }
 }
