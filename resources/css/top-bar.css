@@ -4,6 +4,8 @@
     color: #fff;
     font-size: 0.85rem;
     padding: 8px 0;
+    position: relative;
+    z-index: 1050;
 }
 
 .top-bar a {
@@ -15,4 +17,27 @@
 
 .top-bar a:hover {
     color: var(--accent-color);
+}
+
+/*
+ * Language dropdown — override style link top-bar agar item dropdown
+ * tetap terbaca (gelap di atas putih) dan tidak mewarisi margin-left 15px
+ * yang membuat item bergeser tidak rapi.
+ */
+.top-bar .dropdown .dropdown-item {
+    color: #2d3748;
+    margin-left: 0;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.top-bar .dropdown .dropdown-item:hover {
+    background-color: #eef7fd;
+    color: var(--primary-color);
+}
+
+.top-bar .dropdown .dropdown-item.active {
+    background-color: var(--primary-color);
+    color: #fff;
 }

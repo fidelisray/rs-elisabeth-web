@@ -146,6 +146,7 @@ class HospitalApiService
             // 'Authorization' => 'Bearer ' . $this->apiKey,
             'X-Token' => $token,
             'Accept'  => 'application/json',
+            'Accept-Language' => app()->getLocale(),
         ])->timeout($this->timeout);
     }
 
@@ -218,7 +219,7 @@ class HospitalApiService
         $cacheKey = 'promotions_' . md5(serialize($category));
         $ttl      = config('rsapi.cache_ttl.promotions');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($category) {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () use ($category) {
             try {
                 $response = $this->apiRequest()
                     ->withBody(json_encode([
@@ -250,9 +251,9 @@ class HospitalApiService
         $cacheKey = "local_cms_promotions_";
         $ttl      = config('rsapi.cache_ttl.promotions', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
-                $response = Http::get(url('/api/cms/promotions'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/promotions'));
 
                 return $response->successful()
                     ? $response->json('data', [])
@@ -271,7 +272,7 @@ class HospitalApiService
         $cacheKey = 'glosarium_';
         $ttl      = config('rsapi.cache_ttl.glosarium');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () use ($filters) {
             $response = $this->requestWithRetry('GET', '/glossarium');
 
             $data = $response['Data'] ?? [];
@@ -297,7 +298,7 @@ class HospitalApiService
                 usort($data, fn($a, $b) => strcasecmp($a['istilah'], $b['istilah']));
                 
                 $ttl = config('rsapi.cache_ttl.glosarium');
-                Cache::put('glosarium_', $data, $ttl);
+                Cache::put('glosarium_' . app()->getLocale(), $data, $ttl);
                 
                 Log::info('Glossary cache refreshed successfully with fresh API data.');
                 return $data;
@@ -310,13 +311,13 @@ class HospitalApiService
         Log::warning('Failed to refresh glossary cache: API offline or returned empty. Keeping old cache.');
         
         // Kembalikan cache lama yang masih ada agar command tidak error
-        return Cache::get('glosarium_') ?? [];
+        return Cache::get('glosarium_' . app()->getLocale()) ?? [];
     }
 
 
     public function getCachedGlosarium(): array
     {
-        return Cache::get('glosarium_', []);
+        return Cache::get('glosarium_' . app()->getLocale(), []);
     }
 
     /**
@@ -367,7 +368,7 @@ class HospitalApiService
         $cacheKey = "articles_";
         $ttl      = config('rsapi.cache_ttl.articles');
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
                 $response = $this->apiRequest()
                     ->withBody(json_encode([
@@ -391,10 +392,10 @@ class HospitalApiService
         $cacheKey = "local_cms_articles_";
         $ttl      = config('rsapi.cache_ttl.articles', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
                 // Fetch dari lokal API CMS yang baru kita buat
-                $response = Http::get(url('/api/cms/articles'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/articles'));
 
                 // dd($response->json());
 
@@ -420,7 +421,7 @@ class HospitalApiService
         $cacheKey = "elisanews_";
         $ttl      = config('rsapi.cache_ttl.elisanews');
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
                 $response = $this->apiRequest()
                     ->withBody(json_encode([
@@ -444,9 +445,9 @@ class HospitalApiService
         $cacheKey = "local_cms_news_";
         $ttl      = config('rsapi.cache_ttl.elisanews', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
-                $response = Http::get(url('/api/cms/news'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/news'));
 
                 return $response->successful()
                     ? $response->json('data', [])
@@ -469,9 +470,9 @@ class HospitalApiService
         $cacheKey = "local_cms_room_facilities_";
         $ttl      = config('rsapi.cache_ttl.room_facilities', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
-                $response = Http::get(url('/api/cms/room-facilities'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/room-facilities'));
 
                 return $response->successful()
                     ? $response->json('data', [])
@@ -494,9 +495,9 @@ class HospitalApiService
         $cacheKey = 'local_cms_banner_promotions_';
         $ttl      = config('rsapi.cache_ttl.banner_promotions', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
-                $response = Http::get(url('/api/cms/banner-promotions'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/banner-promotions'));
 
                 return $response->successful()
                     ? $response->json('data', [])
@@ -518,9 +519,9 @@ class HospitalApiService
         $cacheKey = 'local_cms_facility_services_';
         $ttl      = config('rsapi.cache_ttl.facility_services', 60);
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
             try {
-                $response = Http::get(url('/api/cms/facilities'));
+                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/facilities'));
 
                 return $response->successful()
                     ? $response->json('data', [])

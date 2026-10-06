@@ -82,3 +82,18 @@ Route::prefix('news')->name('news.')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('index');
     Route::get('/{slug}', [NewsController::class, 'show'])->name('show');
 });
+
+// Route Language Switcher
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        \Illuminate\Support\Facades\Session::put('locale', $locale);
+    }
+
+    // Hindari redirect()->back() yang rapuh ketika header Referer tidak ada.
+    // Fallback ke halaman utama bila referer kosong atau sama dengan URL switcher
+    // (mencegah redirect loop).
+    $previous = url()->previous();
+    $current  = url()->current();
+
+    return redirect($previous !== $current ? $previous : url('/'));
+})->name('lang.switch');

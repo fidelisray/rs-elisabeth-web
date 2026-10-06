@@ -4,7 +4,7 @@
             <!-- Kiri: Darurat & Kontak -->
             <div class="d-flex align-items-center gap-3">
                 <a href="tel:+62248502244" class="ambulance-call p-1 px-3 d-inline-block ms-0">
-                    <i class="fa-solid fa-truck-medical me-2"></i> IGD 24 Jam
+                    <i class="fa-solid fa-truck-medical me-2"></i> {{ __('IGD 24 Jam') }}
                 </a>
                 <span class="text-white-50">|</span>
                 <a href="tel:+62248502244">
@@ -13,9 +13,17 @@
             </div>
             <!-- Kanan: Portal & Bahasa -->
             <div class="d-flex align-items-center gap-3">
-                <a href="#"><i class="fas fa-user-circle me-1"></i> Portal Pasien</a>
+                <a href="#"><i class="fas fa-user-circle me-1"></i> {{ __('Portal Pasien') }}</a>
                 <span class="text-white-50">|</span>
-                <a href="#"><i class="fas fa-globe me-1"></i> ID <i class="fas fa-chevron-down ms-1 fa-xs"></i></a>
+                <div class="dropdown">
+                    <a href="#" class="text-decoration-none dropdown-toggle" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe me-1"></i> {{ strtoupper(app()->getLocale()) }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item {{ app()->getLocale() === 'id' ? 'active' : '' }}" href="{{ route('lang.switch', 'id') }}">Indonesia (ID)</a></li>
+                        <li><a class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', 'en') }}">English (EN)</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -42,19 +50,19 @@
             <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                 <!-- Navigasi Utama -->
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-medium gap-lg-1">
-                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
                     <li class="nav-item dropdown nav-tentang-kami">
-                        <a class="nav-link nav-link-animated dropdown-toggle {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}" data-bs-toggle="dropdown">Tentang Kami</a>
+                        <a class="nav-link nav-link-animated dropdown-toggle {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}" data-bs-toggle="dropdown">{{ __('Tentang Kami') }}</a>
                         <ul class="dropdown-menu main-dropdown-menu shadow-sm border-0 mt-2">
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}">Profil</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#sejarah-singkat">Sejarah</a></li>
-                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#visi-dan-misi">Visi & Misi</a></li>
+                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}">{{ __('Profil') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#sejarah-singkat">{{ __('Sejarah') }}</a></li>
+                            <li><a class="dropdown-item" href="{{ route('tentang-kami.index') }}#visi-dan-misi">{{ __('Visi & Misi') }}</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('dokter.*') ? 'active' : '' }}" href="{{ route('dokter.index') }}">Cari Dokter</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('ruang-perawatan.*') ? 'active' : '' }}" href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}">Fasilitas</a></li>
-                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}">Paket & Promo</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('dokter.*') ? 'active' : '' }}" href="{{ route('dokter.index') }}">{{ __('Cari Dokter') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('ruang-perawatan.*') ? 'active' : '' }}" href="{{ route('ruang-perawatan.index') }}">{{ __('Ruang Perawatan') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}">{{ __('Fasilitas') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}">{{ __('Paket & Promo') }}</a></li>
                 </ul>
 
                 <!-- Tombol Aksi Kanan -->
@@ -65,7 +73,7 @@
                     </button>
                     <!-- Buat Janji CTA -->
                     <a class="btn btn-accent btn-janji rounded-pill px-4 fw-semibold" href="https://regonline.rs-elisabeth.com" target="_blank">
-                        <i class="far fa-calendar-check me-2"></i>Buat Janji
+                        <i class="far fa-calendar-check me-2"></i>{{ __('Buat Janji') }}
                     </a>
                 </div>
             </div>
@@ -77,20 +85,20 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content search-modal-content border-0">
                 <div class="modal-body p-4">
-                    <p class="search-modal-label">Apa yang Anda cari?</p>
+                    <p class="search-modal-label">{{ __('Apa yang Anda cari?') }}</p>
                     <form class="d-flex w-100 search-modal-form" role="search" action="{{ route('dokter.index') }}" method="GET">
                         <div class="search-input-wrapper flex-grow-1 me-2">
                             <i class="fa-solid fa-magnifying-glass search-input-icon"></i>
-                            <input class="form-control form-control-lg search-input" name="nama" type="search" placeholder="Dokter, klinik, jadwal, layanan..." autofocus>
+                            <input class="form-control form-control-lg search-input" name="nama" type="search" placeholder="{{ __('Dokter, klinik, jadwal, layanan...') }}" autofocus>
                         </div>
-                        <button class="btn btn-primary-custom btn-lg px-4" type="submit">Cari</button>
+                        <button class="btn btn-primary-custom btn-lg px-4" type="submit">{{ __('Cari') }}</button>
                     </form>
                     <div class="search-suggestions mt-3">
-                        <span class="search-suggestion-label">Pencarian populer:</span>
-                        <a href="{{ route('dokter.index') }}?spesialis=jantung" class="search-tag">Dokter Jantung</a>
+                        <span class="search-suggestion-label">{{ __('Pencarian populer:') }}</span>
+                        <a href="{{ route('dokter.index') }}?spesialis=jantung" class="search-tag">{{ __('Dokter Jantung') }}</a>
                         <a href="{{ route('facilities.index') }}" class="search-tag">IGD</a>
-                        <a href="{{ route('dokter.index') }}" class="search-tag">Jadwal Poli</a>
-                        <a href="{{ route('facilities.index') }}" class="search-tag">Stroke Terpadu</a>
+                        <a href="{{ route('dokter.index') }}" class="search-tag">{{ __('Jadwal Poli') }}</a>
+                        <a href="{{ route('facilities.index') }}" class="search-tag">{{ __('Stroke Terpadu') }}</a>
                     </div>
                 </div>
             </div>
@@ -105,20 +113,20 @@
         </div>
         <div class="offcanvas-body offcanvas-menu-body">
             <ul class="offcanvas-nav-list">
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}"><i class="fa-solid fa-house me-2"></i>Beranda</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}"><i class="fa-solid fa-hospital me-2"></i>Tentang Kami</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('dokter.*') ? 'active' : '' }}" href="{{ route('dokter.index') }}"><i class="fa-solid fa-user-doctor me-2"></i>Cari Dokter</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('ruang-perawatan.*') ? 'active' : '' }}" href="{{ route('ruang-perawatan.index') }}"><i class="fa-solid fa-bed-pulse me-2"></i>Ruang Perawatan</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}"><i class="fa-solid fa-star-of-life me-2"></i>Fasilitas</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}"><i class="fa-solid fa-tags me-2"></i>Paket & Promo</a></li>
-                <li><a class="offcanvas-nav-link {{ request()->routeIs('customer-information.*') ? 'active' : '' }}" href="{{ route('customer-information.index') }}"><i class="fa-solid fa-circle-info me-2"></i>Informasi Pelanggan</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}"><i class="fa-solid fa-house me-2"></i>{{ __('Beranda') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}"><i class="fa-solid fa-hospital me-2"></i>{{ __('Tentang Kami') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('dokter.*') ? 'active' : '' }}" href="{{ route('dokter.index') }}"><i class="fa-solid fa-user-doctor me-2"></i>{{ __('Cari Dokter') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('ruang-perawatan.*') ? 'active' : '' }}" href="{{ route('ruang-perawatan.index') }}"><i class="fa-solid fa-bed-pulse me-2"></i>{{ __('Ruang Perawatan') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}"><i class="fa-solid fa-star-of-life me-2"></i>{{ __('Fasilitas') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}"><i class="fa-solid fa-tags me-2"></i>{{ __('Paket & Promo') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('customer-information.*') ? 'active' : '' }}" href="{{ route('customer-information.index') }}"><i class="fa-solid fa-circle-info me-2"></i>{{ __('Informasi Pelanggan') }}</a></li>
             </ul>
             <div class="offcanvas-cta-wrapper">
                 <a class="btn btn-accent w-100 rounded-pill py-3 offcanvas-cta-btn" href="https://regonline.rs-elisabeth.com">
-                    <i class="far fa-calendar-check me-2"></i> Buat Janji Sekarang
+                    <i class="far fa-calendar-check me-2"></i> {{ __('Buat Janji Sekarang') }}
                 </a>
                 <a class="offcanvas-igd-link" href="tel:+62248502244">
-                    <i class="fa-solid fa-truck-medical me-2"></i> IGD 24 Jam: (024) 8502244
+                    <i class="fa-solid fa-truck-medical me-2"></i> {{ __('IGD 24 Jam') }}: (024) 8502244
                 </a>
             </div>
         </div>
