@@ -357,6 +357,109 @@ class HospitalApiService
         return $grouped;
     }
 
+    /**
+     * Tentukan file JSON kamus medis berdasarkan locale aktif.
+     * Mendukung internasionalisasi (en / id) dengan fallback ke 'en'.
+     */
+    protected function getLocalGlossaryJsonPath(): string
+    {
+        $locale = app()->getLocale();
+
+        // Pastikan hanya locale yang kita dukung yang dipetakan ke file yang benar.
+        $supported = ['en', 'id'];
+
+        if (!in_array($locale, $supported, true)) {
+            $locale = config('app.fallback_locale', 'en');
+        }
+
+        return storage_path("app/json/glossarium/{$locale}_medical_glossary.json");
+    }
+
+    /**
+     * Ambil seluruh data kamus medis dari file JSON lokal.
+     * Data dinormalisasi ke struktur: slug, istilah, deskripsi, source, category.
+     *
+     * Cache per-locale menggunakan mekanisme Cache (TTL dari config cache_ttl.glosarium).
+     * Cache hanya dianggap valid bila file JSON-nya tidak berubah (mtime disertakan
+     * di dalam key cache) sehingga data selalu sinkron saat file diperbarui.
+     */
+    public function getLocalGlossary(): array
+    {
+        $path = $this->getLocalGlossaryJsonPath();
+
+        if (!file_exists($path)) {
+            Log::error('File JSON kamus medis lokal tidak ditemukan', ['path' => $path]);
+            return [];
+        }
+
+        $locale = app()->getLocale();
+        $mtime  = filemtime($path);
+        $ttl    = (int) config('rsapi.cache_ttl.glosarium', 86400);
+
+        $cacheKey = "local_glossary_{$locale}_{$mtime}";
+
+        return Cache::remember($cacheKey, $ttl, function () use ($path) {
+            $raw = file_get_contents($path);
+
+            if ($raw === false) {
+                Log::error('Gagal membaca file JSON kamus medis lokal', ['path' => $path]);
+                return [];
+            }
+
+            $decoded = json_decode($raw, true);
+
+            if (!is_array($decoded) || !isset($decoded['data']) || !is_array($decoded['data'])) {
+                Log::error('Struktur file JSON kamus medis lokal tidak valid', ['path' => $path]);
+                return [];
+            }
+
+            return array_values(array_filter(array_map(
+                function ($entry) {
+                    if (!is_array($entry) || empty($entry['name'])) {
+                        return null;
+                    }
+
+                    return [
+                        'slug'       => $entry['name'],
+                        'istilah'    => ucwords(str_replace('-', ' ', (string) $entry['name'])),
+                        'deskripsi'  => $entry['description'] ?? '',
+                        'source'     => $entry['source'] ?? '',
+                        'category'   => strtoupper((string) ($entry['category'] ?? substr((string) $entry['name'], 0, 1))),
+                    ];
+                },
+                $decoded['data']
+            )));
+        });
+    }
+
+    /**
+     * Ambil kamus medis lokal yang sudah dikelompokkan berdasarkan 2 huruf awal.
+     * Struktur hasil identik dengan getGlossaryGrouped() sehingga dapat dipakai
+     * langsung oleh view tanpa perubahan.
+     */
+    public function getLocalGlossaryGrouped(string $letter = 'ALL'): array
+    {
+        $items = $this->getLocalGlossary();
+
+        if ($letter !== 'ALL') {
+            $items = array_values(array_filter(
+                $items,
+                fn($item) => strtoupper(substr($item['istilah'], 0, 1)) === strtoupper($letter)
+            ));
+        }
+
+        $grouped = [];
+
+        foreach ($items as $item) {
+            $prefix            = strtoupper(substr($item['istilah'], 0, 2));
+            $grouped[$prefix][] = $item;
+        }
+
+        ksort($grouped);
+
+        return $grouped;
+    }
+
 
     /**
      * Ambil Data Artikel Kesehatan (Kategori: artikel)

@@ -343,3 +343,107 @@ section#glosarium .glosarium-container {
     display: grid;
     grid-template-columns: 1fr 45%;
 }
+
+/* ========================= */
+/* GLOSSARY EXPLORE (LANDING) */
+/* ========================= */
+.stat-card {
+    background: #fff;
+    border: 1px solid rgba(0, 143, 215, 0.12);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+}
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 143, 215, 0.12);
+    border-color: rgba(0, 143, 215, 0.25);
+}
+.stat-card .stat-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.75rem;
+    border-radius: 14px;
+    background: rgba(0, 143, 215, 0.1);
+    color: var(--brand-blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+.stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--brand-blue-dark);
+    line-height: 1.1;
+}
+.stat-card .stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.term-pill {
+    display: inline-block;
+    padding: 0.5rem 1.1rem;
+    border-radius: 50px;
+    background: #f1f8fd;
+    border: 1px solid rgba(0, 143, 215, 0.18);
+    color: var(--brand-blue-dark);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.term-pill:hover {
+    background: var(--brand-blue-light);
+    border-color: var(--brand-blue-light);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.cta-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    transition: all 0.25s ease;
+}
+.cta-primary {
+    background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--brand-blue) 100%);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(0, 143, 215, 0.25);
+}
+.cta-primary .cta-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+.cta-outline {
+    background: #fff;
+    border: 1px solid rgba(0, 143, 215, 0.2);
+    color: var(--brand-blue-dark);
+}
+.cta-outline .cta-icon {
+    background: rgba(0, 143, 215, 0.1);
+    color: var(--brand-blue-light);
+}
+.cta-card .cta-icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+.cta-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(0, 143, 215, 0.18);
+}
+.cta-card > .fa-arrow-right {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}

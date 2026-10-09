@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        @include('components.seo-meta', ['title' => 'Kamus Medis'])
+        @include('components.seo-meta', ['title' => __('Kamus Medis')])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
@@ -34,8 +34,8 @@
                 <!-- Breadcrumb -->
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">{{ __('Kamus Medis') }}</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ $item['istilah'] ?? '' }}</li>
                     </ol>
                 </nav>
@@ -116,16 +116,27 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4 p-md-5">
                         <h1 class="title mb-4 fw-bold" style="color: #0b5c96;">
-                            {{ $item['istilah'] ?? 'Istilah Tidak Ditemukan' }}
+                            {{ $item['istilah'] ?? __('Istilah Tidak Ditemukan') }}
                         </h1>
                         <hr class="mb-4">
                         <div class="deskripsi-text fs-5 text-secondary" style="line-height: 1.8;">
-                            {{ $item['deskripsi'] ?? 'Deskripsi tidak tersedia untuk istilah ini.' }}
+                            {{ $item['deskripsi'] ?? __('Deskripsi tidak tersedia untuk istilah ini.') }}
                         </div>
-                        
+
+                        @if(!empty($item['source']))
+                            <div class="mt-4">
+                                <small class="text-muted">
+                                    {{ __('Sumber') }}:
+                                    <a href="{{ $item['source'] }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">
+                                        {{ $item['source'] }}
+                                    </a>
+                                </small>
+                            </div>
+                        @endif
+
                         <div class="mt-5">
                             <a href="{{{ route('glossary.index') }}}" class="btn btn-outline-primary">
-                                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Kamus Medis
+                                <i class="fa-solid fa-arrow-left me-2"></i> {{ __('Kembali ke Kamus Medis') }}
                             </a>
                         </div>
                     </div>

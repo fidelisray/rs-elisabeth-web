@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        @include('components.seo-meta', ['title' => 'Kamus Medis'])
+        @include('components.seo-meta', ['title' => __('Kamus Medis')])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
@@ -30,12 +30,12 @@
                 <!-- Breadcrumb -->
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
                         @if (preg_match('/^[A-Z]$/', $activeLetter))
-                            <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Awalan '{{ $activeLetter }}'</li>
+                            <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">{{ __('Kamus Medis') }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ __('Awalan') }} '{{ $activeLetter }}'</li>
                         @else    
-                            <li class="breadcrumb-item active"><a href="{{{ route('glossary.index') }}}">Kamus Medis</a></li>
+                            <li class="breadcrumb-item active"><a href="{{{ route('glossary.index') }}}">{{ __('Kamus Medis') }}</a></li>
                         @endif
                     </ol>
                 </nav>
@@ -43,26 +43,10 @@
                 <div class="row">
                     <!-- Kolom kiri: Judul, subjudul, search -->
                     <div class="col-12 col-lg-6">
-                        <h1 class="hero-title">Ensiklopedia Istilah Medis & Kesehatan</h1>
-                        <p class="hero-subtitle">Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya</p>
+                        <h1 class="hero-title">{{ __('Ensiklopedia Istilah Medis & Kesehatan') }}</h1>
+                        <p class="hero-subtitle">{{ __('Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya') }}</p>
 
-                        <p class="search-label fw-medium mb-2">Pencarian Istilah Medis</p>
-                        {{-- <div class="search-box d-flex align-items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                            </svg>
-                            <form id="glossarySearchForm" role="search" autocomplete="off" onsubmit="return false;">
-                                <input
-                                    type="text"
-                                    id="glossarySearchInput"
-                                    name="q"
-                                    class="form-control"
-                                    placeholder="Cari istilah medis..."
-                                    minlength="2"
-                                    autocomplete="off"
-                                >
-                            </form>
-                        </div> --}}
+                        <p class="search-label fw-medium mb-2">{{ __('Pencarian Istilah Medis') }}</p>
 
 
                         <div class="search-box d-flex align-items-center gap-2">
@@ -76,17 +60,17 @@
                                     name="q"
                                     value="{{ request('q') }}"
                                     class="form-control"
-                                    placeholder="Cari istilah medis..."
+                                    placeholder="{{ __('Cari istilah medis...') }}"
                                     minlength="2"
                                     autocomplete="off"
                                 >
                                 @if(request('q'))
                                     <a href="{{{ route('glossary.index') }}}" id="resetSearchBtn" class="btn btn-outline-danger">
-                                        Reset
+                                        {{ __('Reset') }}
                                     </a>
                                 @else
                                     <button type="submit" class="btn btn-outline-success">
-                                        Cari
+                                        {{ __('Cari') }}
                                     </button>
                                 @endif
                             </form>
@@ -98,7 +82,7 @@
                     
                     <!-- Kolom kanan: Grid huruf A-Z -->
                     <div class="col-12 col-lg-6 mt-4 mt-lg-0 d-flex flex-column align-items-start align-items-lg-end">
-                        <div class="letter-panel-label fw-medium mb-2">Telusuri Cepat Berdasarkan Abjad</div>
+                        <div class="letter-panel-label fw-medium mb-2">{{ __('Telusuri Cepat Berdasarkan Abjad') }}</div>
                             <div class="letter-grid">
                                 {{-- <a href="#" class="letter-btn active">A</a> --}}
                                 {{-- <a href="{{{ route('glossary.index') }}}"
@@ -127,6 +111,7 @@
         
         <div id="defaultGlossaryContent" class="mt-4" style="background: radial-gradient(circle 360px at 10% 40%, rgba(0, 143, 215, 0.07), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #f1f8fd 0%, #eef7fd 100%);">
             @if ($mode === 'explore')
+                {{-- 
                 <section id="explore-services" class="py-5">
                     <div class="container" style="max-width: 1100px;">
                         <div class="row g-4">
@@ -199,12 +184,147 @@
                         </div>
                     </div>
                 </section>
+                 --}}
+                 <section id="explore-services" class="py-5">
+                    <div class="container" style="max-width: 1100px;">
+                        @php
+                            $flatTerms = [];
+                            foreach ($glossary as $items) {
+                                foreach ($items as $item) {
+                                    $flatTerms[] = $item;
+                                }
+                            }
+                            $totalTerms = count($flatTerms);
+
+                            $popularSlugs = [
+                                'hypertension', 'diabetes', 'type-2-diabetes', 'asthma',
+                                'stroke', 'heart-attack', 'heart-disease', 'anemia',
+                                'migraine-headache', 'allergies', 'dengue-fever',
+                                'typhoid-fever', 'gastritis', 'chronic-kidney-disease',
+                                'kidney-failure', 'pneumonia', 'tuberculosis', 'appendicitis',
+                                'arthritis', 'osteoporosis', 'epilepsy', 'atrial-fibrillation',
+                            ];
+                            $popularTerms = [];
+                            $seen = [];
+                            foreach ($popularSlugs as $slug) {
+                                foreach ($flatTerms as $term) {
+                                    $key = strtolower($term['slug']);
+                                    if (!isset($seen[$key]) && $key === strtolower($slug)) {
+                                        $popularTerms[] = $term;
+                                        $seen[$key] = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            $popularTerms = array_slice($popularTerms, 0, 14);
+                            if (empty($popularTerms)) {
+                                $popularTerms = array_slice($flatTerms, 0, 14);
+                            }
+                        @endphp
+
+                        <!-- Intro -->
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bold mb-2" style="font-family:'Playfair Display', serif; color: var(--brand-blue-dark); font-size: 2rem;">
+                                {{ __('Jelajahi Kamus Medis Elisabeth') }}
+                            </h2>
+                            <p class="text-muted mx-auto" style="max-width: 640px;">
+                                {{ __('Gunakan kolom pencarian atau telusuri abjad A–Z di atas untuk menemukan penjelasan lengkap mengenai istilah medis, nama penyakit, dan gangguan kesehatan lainnya.') }}
+                            </p>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-6 col-md-3">
+                                <div class="stat-card h-100">
+                                    <div class="stat-icon"><i class="fa-solid fa-book-medical"></i></div>
+                                    <div class="stat-value">{{ number_format($totalTerms, 0, ',', '.') }}+</div>
+                                    <div class="stat-label">{{ __('Istilah Medis') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="stat-card h-100">
+                                    <div class="stat-icon"><i class="fa-solid fa-font"></i></div>
+                                    <div class="stat-value">{{ count($availableLetters) }}</div>
+                                    <div class="stat-label">{{ __('Abjad Tersedia') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="stat-card h-100">
+                                    <div class="stat-icon"><i class="fa-solid fa-shield-heart"></i></div>
+                                    <div class="stat-value">100%</div>
+                                    <div class="stat-label">{{ __('Sumber Terpercaya') }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="stat-card h-100">
+                                    <div class="stat-icon"><i class="fa-solid fa-circle-info"></i></div>
+                                    <div class="stat-value">{{ __('Gratis') }}</div>
+                                    <div class="stat-label">{{ __('Akses Informasi') }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Popular terms -->
+                        <div class="bg-white rounded-4 shadow-sm border p-4 p-md-5 mb-4">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+                                <h3 class="h5 fw-bold mb-0" style="color: var(--brand-blue-dark);">
+                                    <i class="fa-solid fa-fire-flame-curved me-2" style="color: var(--brand-blue-light);"></i>{{ __('Istilah yang Sering Dicari') }}
+                                </h3>
+                                <a href="#" class="text-decoration-none fw-semibold" style="color: var(--brand-blue-light);"
+                                   onclick="document.getElementById('glossarySearchInput').focus(); return false;">
+                                    {{ __('Cari sendiri') }} <i class="fa-solid fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                            @if(!empty($popularTerms))
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach($popularTerms as $term)
+                                        <a href="{{ route('glossary.show', urlencode($term['slug'])) }}" class="term-pill">
+                                            {{ $term['istilah'] }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">
+                                    {{ __('Istilah medis sedang dimuat. Silakan gunakan kolom pencarian di atas untuk menemukan istilah yang Anda butuhkan.') }}
+                                </p>
+                            @endif
+                        </div>
+
+                        <!-- CTA -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <a href="{{ route('dokter.index') }}" class="cta-card cta-primary text-decoration-none">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="cta-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                                        <div>
+                                            <h3 class="h6 fw-bold mb-1">{{ __('Butuh Konsultasi?') }}</h3>
+                                            <p class="mb-0 small text-white-50">{{ __('Konsultasikan keluhan Anda langsung dengan dokter kami.') }}</p>
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right ms-auto"></i>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ route('articles.index') }}" class="cta-card cta-outline text-decoration-none">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="cta-icon"><i class="fa-solid fa-newspaper"></i></div>
+                                        <div>
+                                            <h3 class="h6 fw-bold mb-1">{{ __('Artikel Kesehatan') }}</h3>
+                                            <p class="mb-0 small text-muted">{{ __('Baca artikel kesehatan terbaru dan terpercaya.') }}</p>
+                                        </div>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-right ms-auto"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                 </section>
             @elseif ($mode === 'glosarium')
                 <div class="container mt-4"></div>
                 <section id="glosarium">
                     <div class="container">
                         <div class="title text-center">
-                            <h2 class="display-8 fw-bold section-title">Kamus Medis Elisabeth</h2>
+                            <h2 class="display-8 fw-bold section-title">{{ __('Kamus Medis Elisabeth') }}</h2>
                         </div>
                         <div class="glosarium-container py-5">
                             <section class="content-body">
@@ -216,7 +336,7 @@
 
                                         @foreach($items as $item)
                                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                                <a href="{{ route('glossary.show', urlencode($item['istilah'])) }}"
+                                                <a href="{{ route('glossary.show', urlencode($item['slug'])) }}"
                                                 class="text-decoration-none text-dark fs-6">
                                                     {{ $item['istilah'] }}
                                                 </a>
@@ -227,9 +347,9 @@
                                 @else
                                     <div class="alert alert-info mt-3 fs-5">
                                         @if(isset($keyword) && $keyword !== '')
-                                            Mohon maaf data yang anda inputkan <strong>{{ $keyword }}</strong> saat ini belum tersedia.
+                                            {{ __('Mohon maaf data yang anda inputkan') }} <strong>{{ $keyword }}</strong> {{ __('saat ini belum tersedia.') }}
                                         @else
-                                            Tidak ada istilah medis untuk huruf <strong>{{ $activeLetter }}</strong>.
+                                            {{ __('Tidak ada istilah medis untuk huruf') }} <strong>{{ $activeLetter }}</strong>.
                                         @endif
                                     </div>
                                 @endif
@@ -264,7 +384,7 @@
                     <div class="modal-content">
                         
                         <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="termDetailModalLabel">Detail Istilah Medis</h5>
+                            <h5 class="modal-title" id="termDetailModalLabel">{{ __('Detail Istilah Medis') }}</h5>
                             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         
@@ -274,7 +394,7 @@
                         </div>
                         
                         <div class="modal-footer border-top-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Tutup') }}</button>
                         </div>
                         
                     </div>

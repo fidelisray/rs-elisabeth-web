@@ -65,12 +65,6 @@ Route::prefix('glosarium')->name('glossary.')->group(function () {
     Route::get('/{term}', [GlossaryController::class, 'show'])   ->name('show');
 });
 
-Route::prefix('glosarium-gemini')->name('gemini.')->group(function () {
-    Route::get('/tampil-data', [GlossaryController::class, 'tampil_data'])->name('tampil_data');
-    Route::get('/', [GlossaryController::class, 'gemini_index'])->name('index');
-    Route::get('/{slug}', [GlossaryController::class, 'gemini_show'])->name('show');
-});
-
 // Artikel Kesehatan
 Route::prefix('articles')->name('articles.')->group(function () {
     Route::get('/', [App\Http\Controllers\ArticleController::class, 'index'])->name('index');
