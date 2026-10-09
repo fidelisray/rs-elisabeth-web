@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @include('components.seo-meta', ['title' => '{{ $room->name }} - Ruang Perawatan RS St. Elisabeth Semarang'])
+    @include('components.seo-meta', ['title' => $room->name . ' - ' . __('Ruang Perawatan') . ' - RS St. Elisabeth Semarang'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     @vite([
@@ -23,15 +23,15 @@
     @include('components.navbar')
 
 <main>
-        <h1 class="visually-hidden">Detail Ruang Perawatan {{ $room->name }} - RS Santa Elisabeth Semarang</h1>
+        <h1 class="visually-hidden">{{ __('Detail Ruang Perawatan') }} {{ $room->name }} - RS Santa Elisabeth Semarang</h1>
 
         {{-- ===== HERO SECTION & BREADCRUMBS ===== --}}
         <section id="hero-section" style="padding: 2rem 0;">
             <div class="container">
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('ruang-perawatan.index') }}">Ruang Perawatan</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('ruang-perawatan.index') }}">{{ __('Ruang Perawatan') }}</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ $room->name }}</li>
                     </ol>
                 </nav>
@@ -49,7 +49,7 @@
                             <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" class="w-100 object-fit-cover" alt="{{ $room->name }}" style="height: 400px;">
                             <div class="card-body p-4 p-md-5">
                                 <span class="badge bg-primary px-3 py-2 rounded-pill fw-normal mb-3 text-uppercase" style="letter-spacing: 1px;">
-                                    {{ $room->category === 'premium' ? 'Premium & Eksklusif' : 'Standar' }}
+                                    {{ $room->category === 'premium' ? __('Premium & Eksklusif') : __('Standar') }}
                                 </span>
                                 <h2 class="fw-bold mb-3" style="color: var(--secondary-color);">{{ $room->name }}</h2>
                                 @if($room->tagline)
@@ -69,7 +69,7 @@
                                     @endif
                                     @if($room->max_companion)
                                         <div class="bg-light px-3 py-2 rounded border">
-                                            <i class="fa-solid fa-user-group text-primary me-2"></i> Maks. {{ $room->max_companion }} Penunggu
+                                            <i class="fa-solid fa-user-group text-primary me-2"></i> {{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}
                                         </div>
                                     @endif
                                 </div>
@@ -90,19 +90,19 @@
                             {{-- CTA Card --}}
                             <div class="card border-0 shadow-sm rounded-4 mb-4">
                                 <div class="card-body p-4 text-center">
-                                    <h4 class="fw-bold mb-3">Tertarik dengan ruangan ini?</h4>
-                                    <p class="text-muted small mb-4">Hubungi kami untuk menanyakan ketersediaan kamar {{ $room->name }} atau informasi lebih lanjut.</p>
+                                    <h4 class="fw-bold mb-3">{{ __('Tertarik dengan ruangan ini?') }}</h4>
+                                    <p class="text-muted small mb-4">{{ __('Hubungi kami untuk menanyakan ketersediaan kamar') }} {{ $room->name }} {{ __('atau informasi lebih lanjut.') }}</p>
                                     
                                     @php
                                         $waText = $room->whatsapp_text ?? 'Halo, saya ingin menanyakan ketersediaan ruang perawatan ' . $room->name;
                                     @endphp
                                     
                                     <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill py-3 fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">
-                                        <i class="fa-brands fa-whatsapp fs-4"></i> Tanya via WhatsApp
+                                        <i class="fa-brands fa-whatsapp fs-4"></i> {{ __('Tanya via WhatsApp') }}
                                     </a>
                                     
                                     <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn btn-outline-primary w-100 rounded-pill py-3 fw-bold d-flex justify-content-center align-items-center gap-2">
-                                        <i class="fa-regular fa-calendar-check fs-5"></i> Daftar Online
+                                        <i class="fa-regular fa-calendar-check fs-5"></i> {{ __('Daftar Online') }}
                                     </a>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                             {{-- Amenities & Highlights --}}
                             <div class="card border-0 shadow-sm rounded-4">
                                 <div class="card-body p-4">
-                                    <h5 class="fw-bold mb-4 border-bottom pb-2">Fasilitas Khusus</h5>
+                                    <h5 class="fw-bold mb-4 border-bottom pb-2">{{ __('Fasilitas Khusus') }}</h5>
                                     
                                     @if($room->highlight_tags && is_array($room->highlight_tags))
                                         <div class="d-flex flex-wrap gap-2 mb-4">
@@ -129,7 +129,7 @@
                                                 <div class="accordion-item bg-transparent">
                                                     <h2 class="accordion-header">
                                                         <button class="accordion-button {{ $index === 0 ? '' : 'collapsed' }} bg-transparent fw-bold px-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAmenity{{ $index }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="collapseAmenity{{ $index }}">
-                                                            {{ $amenityGroup['group'] ?? $amenityGroup['group_name'] ?? 'Fasilitas' }}
+                                                            {{ $amenityGroup['group'] ?? $amenityGroup['group_name'] ?? __('Fasilitas') }}
                                                         </button>
                                                     </h2>
                                                     <div id="collapseAmenity{{ $index }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" data-bs-parent="#accordionAmenities">

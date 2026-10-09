@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        @include('components.seo-meta', ['title' => 'ElisNews - St Elisabeth Hospital'])
+        @include('components.seo-meta', ['title' => __('ElisaNews - RS St. Elisabeth Semarang')])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
@@ -27,15 +27,15 @@
                 <!-- Breadcrumb -->
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Berita & Artikel</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Berita & Artikel') }}</li>
                     </ol>
                 </nav>
 
                 <div class="row">
                     <div class="col-12 col-lg-8">
                         <h1 class="hero-title">ElisaNews</h1>
-                        <p class="hero-subtitle">Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.</p>
+                        <p class="hero-subtitle">{{ __('Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.') }}</p>
                     </div>
                 </div>
             </div>
@@ -58,14 +58,14 @@
                                         <i class="fa-regular fa-calendar"></i>
                                         {{ $item->created_at?->translatedFormat('d F Y') ?? now()->translatedFormat('d F Y') }}
                                     </span>
-                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.75rem;">{{ $item->category ?? 'Berita Umum' }}</span>
+                                    <span class="badge bg-primary rounded-pill" style="font-size: 0.75rem;">{{ $item->category ?? __('Berita Umum') }}</span>
                                 </div>
                                 <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
                                     <h3 class="news-title">{{ $item->title }}</h3>
                                 </a>
                                 <p class="news-excerpt">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
                                 <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}" class="news-read-more">
-                                    Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+                                    {{ __('Baca Selengkapnya') }} <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -76,8 +76,8 @@
                             <div class="mb-3">
                                 <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
                             </div>
-                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Berita Belum Tersedia</h5>
-                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.</p>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Berita Belum Tersedia') }}</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">{{ __('Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.') }}</p>
                         </div>
                     </div>
                     @endforelse

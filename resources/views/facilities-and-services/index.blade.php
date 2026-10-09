@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @include('components.seo-meta', ['title' => 'Fasilitas & Layanan - RS St. Elisabeth Semarang'])
+    @include('components.seo-meta', ['title' => __('Fasilitas & Layanan') . ' - RS St. Elisabeth Semarang'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     @vite([
         'resources/css/footer.css',
@@ -22,7 +22,7 @@
     @include('components.navbar')
 
 <main>
-        <h1 class="visually-hidden">Fasilitas dan Layanan RS Santa Elisabeth Semarang</h1>
+        <h1 class="visually-hidden">{{ __('Fasilitas dan Layanan RS Santa Elisabeth Semarang') }}</h1>
 
         {{-- ===== HERO SECTION (diambil dari promotions/index.blade.php) ===== --}}
         <section id="hero-section">
@@ -30,16 +30,16 @@
                 {{-- Breadcrumb --}}
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Fasilitas & Layanan</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Fasilitas & Layanan') }}</li>
                     </ol>
                 </nav>
 
                 <div class="row">
                     {{-- Kolom kiri: Judul, subjudul --}}
                     <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">Fasilitas &amp; Layanan Unggulan</h2>
-                        <p class="hero-subtitle">Kami menyediakan fasilitas dan layanan berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna kepada setiap pasien.</p>
+                        <h2 class="hero-title">{{ __('Fasilitas & Layanan Unggulan') }}</h2>
+                        <p class="hero-subtitle">{{ __('Kami menyediakan fasilitas dan layanan berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna kepada setiap pasien.') }}</p>
                     </div>
                 </div>
             </div>
@@ -49,9 +49,9 @@
         <section id="facilities-intro">
             <div class="container text-center">
                 <div class="section-title text-center mb-4">
-                    <h2 class="fw-bold">Layanan &amp; Fasilitas</h2>
+                    <h2 class="fw-bold">{{ __('Layanan & Fasilitas') }}</h2>
                     <div class="divider"></div>
-                    <p class="text-muted mt-3">Kami menyediakan Layanan dan Fasilitas berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna.</p>
+                    <p class="text-muted mt-3">{{ __('Kami menyediakan Layanan dan Fasilitas berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna.') }}</p>
                 </div>
             </div>
         </section>
@@ -66,7 +66,7 @@
                         <div class="facility-sidebar">
                             <div class="facility-sidebar-header">
                                 <i class="fa-solid fa-list-ul"></i>
-                                <span>Pilih Fasilitas</span>
+                                <span>{{ __('Pilih Fasilitas') }}</span>
                             </div>
                             <div class="facility-list">
                                 @forelse($facilities as $facility)
@@ -75,7 +75,7 @@
                                     {{ $facility->name }}
                                 </button>
                                 @empty
-                                <p class="text-center text-muted">Belum ada fasilitas yang ditambahkan.</p>
+                                <p class="text-center text-muted">{{ __('Belum ada fasilitas yang ditambahkan.') }}</p>
                                 @endforelse
                             </div>
                         </div>
@@ -112,10 +112,10 @@
                                     
                                     <div class="facility-cta">
                                         <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20layanan%20{{ urlencode($facility->name) }}" target="_blank" class="btn-primary-facility">
-                                            <i class="fa-brands fa-whatsapp"></i> Hubungi Kami
+                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Hubungi Kami') }}
                                         </a>
                                         <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-outline-facility">
-                                            <i class="fa-regular fa-calendar-check"></i> Buat Janji
+                                            <i class="fa-regular fa-calendar-check"></i> {{ __('Buat Janji') }}
                                         </a>
                                     </div>
                                 </div>

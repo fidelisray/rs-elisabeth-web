@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @include('components.seo-meta', ['title' => 'Ruang Perawatan - RS St. Elisabeth Semarang'])
+    @include('components.seo-meta', ['title' => __('Ruang Perawatan') . ' - RS St. Elisabeth Semarang'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     @vite([
         'resources/css/style.css',
@@ -36,21 +36,21 @@
     @include('components.navbar')
 
 <main>
-        <h1 class="visually-hidden">Ruang Perawatan RS Santa Elisabeth Semarang</h1>
+        <h1 class="visually-hidden">{{ __('Ruang Perawatan RS Santa Elisabeth Semarang') }}</h1>
 
         {{-- ===== HERO SECTION ===== --}}
         <section id="hero-section">
             <div class="container">
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Ruang Perawatan</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Ruang Perawatan') }}</li>
                     </ol>
                 </nav>
                 <div class="row">
                     <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">Ruang Perawatan</h2>
-                        <p class="hero-subtitle">Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.</p>
+                        <h2 class="hero-title">{{ __('Ruang Perawatan') }}</h2>
+                        <p class="hero-subtitle">{{ __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.') }}</p>
                     </div>
                 </div>
             </div>
@@ -60,9 +60,9 @@
         <section id="room-intro">
             <div class="container text-center">
                 <div class="section-title text-center mb-4">
-                    <h2 class="fw-bold">Temukan Ruangan yang Tepat untuk Anda</h2>
+                    <h2 class="fw-bold">{{ __('Temukan Ruangan yang Tepat untuk Anda') }}</h2>
                     <div class="divider"></div>
-                    <p class="text-muted mt-3">RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.</p>
+                    <p class="text-muted mt-3">{{ __('RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.') }}</p>
                 </div>
 
                 {{-- Filter Tabs --}}
@@ -70,17 +70,17 @@
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600 active"
                             data-room-filter="all"
                             style="background:#008fd7;color:#fff;border:none;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-table-cells-large me-1"></i> Semua Kelas
+                        <i class="fa-solid fa-table-cells-large me-1"></i> {{ __('Semua Kelas') }}
                     </button>
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
                             data-room-filter="premium"
                             style="background:#1a2740;color:#c9a84c;border:1px solid rgba(201,168,76,.35);font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-crown me-1"></i> Premium &amp; Eksklusif
+                        <i class="fa-solid fa-crown me-1"></i> {{ __('Premium & Eksklusif') }}
                     </button>
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
                             data-room-filter="standard"
                             style="background:#f0f7ff;color:#026199;border:1px solid #d0e8f5;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-bed me-1"></i> Standar
+                        <i class="fa-solid fa-bed me-1"></i> {{ __('Standar') }}
                     </button>
                 </div>
             </div>
@@ -91,10 +91,10 @@
             <div class="container position-relative">
                 <div class="premium-section-header">
                     <div class="premium-badge">
-                        <i class="fa-solid fa-crown"></i> Koleksi Eksklusif
+                        <i class="fa-solid fa-crown"></i> {{ __('Koleksi Eksklusif') }}
                     </div>
-                    <h2 class="premium-title">Ruang Perawatan Premium</h2>
-                    <p class="premium-subtitle">Rasakan pengalaman perawatan setara hotel bintang lima dengan privasi penuh, desain interior elegan, dan layanan personal yang tak tertandingi.</p>
+                    <h2 class="premium-title">{{ __('Ruang Perawatan Premium') }}</h2>
+                    <p class="premium-subtitle">{{ __('Rasakan pengalaman perawatan setara hotel bintang lima dengan privasi penuh, desain interior elegan, dan layanan personal yang tak tertandingi.') }}</p>
                 </div>
 
                 {{-- Grid: Dynamic Premium Cards --}}
@@ -120,7 +120,7 @@
                                         @endif
                                         @if($room->max_companion)
                                         <span class="room-size-chip">
-                                            <i class="fa-solid fa-user-group"></i> Maks. {{ $room->max_companion }} Penunggu
+                                            <i class="fa-solid fa-user-group"></i> {{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}
                                         </span>
                                         @endif
                                     </div>
@@ -132,7 +132,7 @@
                                         <div class="premium-amenities">
                                             @foreach($room->amenities as $amenityGroup)
                                                 <div class="premium-amenity-group">
-                                                    <h6>{{ $amenityGroup['group'] ?? $amenityGroup['group_name'] ?? 'Fasilitas' }}</h6>
+                                                    <h6>{{ $amenityGroup['group'] ?? $amenityGroup['group_name'] ?? __('Fasilitas') }}</h6>
                                                     @php
                                                         $items = $amenityGroup['items'] ?? [];
                                                     @endphp
@@ -161,14 +161,14 @@
 
                                     <div class="premium-card-cta">
                                         <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn-gold-outline w-100 mb-2 d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-solid fa-circle-info"></i> Lihat Detail Lengkap
+                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail Lengkap') }}
                                         </a>
                                         <div class="d-flex w-100 gap-2">
                                             @php
                                                 $waText = $room->whatsapp_text ?? 'Halo, saya ingin informasi ruangan ' . $room->name;
                                             @endphp
                                             <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-gold flex-grow-1 d-flex align-items-center justify-content-center gap-1">
-                                                <i class="fa-brands fa-whatsapp"></i> Tanya
+                                                <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya') }}
                                             </a>
                                             <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-gold-outline d-flex align-items-center justify-content-center">
                                                 <i class="fa-regular fa-calendar-check"></i>
@@ -186,12 +186,12 @@
                                         <i class="fa-solid fa-crown" style="font-size: 2.2rem; color: #c9a84c;"></i>
                                     </div>
                                 </div>
-                                <h4 class="fw-bold mb-3" style="color: #c9a84c; letter-spacing: 0.5px;">Ruang Perawatan Premium Sedang Kami Siapkan</h4>
+                                <h4 class="fw-bold mb-3" style="color: #c9a84c; letter-spacing: 0.5px;">{{ __('Ruang Perawatan Premium Sedang Kami Siapkan') }}</h4>
                                 <p class="mb-4 mx-auto" style="max-width: 600px; color: #a8b2c1; font-size: 1.05rem; line-height: 1.6;">
-                                    Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.
+                                    {{ __('Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.') }}
                                 </p>
                                 <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20ketersediaan%20dan%20informasi%20Ruang%20Perawatan%20Premium%20RS%20St.%20Elisabeth" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> Hubungi Personal Assistant Kami
+                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Hubungi Personal Assistant Kami') }}
                                 </a>
                             </div>
                         </div>
@@ -387,9 +387,9 @@
         <section id="standard-rooms">
             <div class="container">
                 <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Ruang Perawatan Standar &amp; VIP</h2>
+                    <h2 class="fw-bold">{{ __('Ruang Perawatan Standar & VIP') }}</h2>
                     <div class="divider"></div>
-                    <p class="text-muted mt-3">Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.</p>
+                    <p class="text-muted mt-3">{{ __('Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.') }}</p>
                 </div>
 
                 <div class="row g-4">
@@ -429,13 +429,13 @@
 
                                     <div class="std-card-cta d-flex flex-column gap-2 mt-auto">
                                         <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn btn-outline-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-solid fa-circle-info"></i> Lihat Detail
+                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail') }}
                                         </a>
                                         @php
                                             $waText = $room->whatsapp_text ?? 'Halo, saya ingin informasi ruangan ' . $room->name;
                                         @endphp
                                         <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-blue w-100 d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
+                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya Ketersediaan') }}
                                         </a>
                                     </div>
                                 </div>
@@ -447,12 +447,12 @@
                                 <div class="mb-3">
                                     <i class="fa-solid fa-bed-pulse" style="font-size: 3.5rem; color: #b8d4e3;"></i>
                                 </div>
-                                <h4 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Data Ruangan Sedang Diperbarui</h4>
+                                <h4 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Data Ruangan Sedang Diperbarui') }}</h4>
                                 <p class="text-muted mb-4 mx-auto" style="max-width: 550px;">
-                                    Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.
+                                    {{ __('Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.') }}
                                 </p>
                                 <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20informasi%20ketersediaan%20Ruang%20Perawatan%20Standar%20di%20RS%20St.%20Elisabeth" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> Tanya Ketersediaan Kamar
+                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Tanya Ketersediaan Kamar') }}
                                 </a>
                             </div>
                         </div>
@@ -629,14 +629,14 @@
         <section id="room-comparison">
             <div class="container">
                 <div class="comparison-header">
-                    <h2 class="comparison-title">Perbandingan Fasilitas Ruangan</h2>
-                    <p class="comparison-desc">Bandingkan semua fasilitas di setiap kelas ruang perawatan kami secara mudah.</p>
+                    <h2 class="comparison-title">{{ __('Perbandingan Fasilitas Ruangan') }}</h2>
+                    <p class="comparison-desc">{{ __('Bandingkan semua fasilitas di setiap kelas ruang perawatan kami secara mudah.') }}</p>
                 </div>
                 <div class="table-responsive">
                     <table class="comparison-table">
                         <thead>
                             <tr>
-                                <th style="text-align:left; padding-left:1.25rem;">Fasilitas</th>
+                                <th style="text-align:left; padding-left:1.25rem;">{{ __('Fasilitas') }}</th>
                                 @foreach($allRooms as $room)
                                     <th class="{{ $room->category === 'premium' ? 'col-premium' : '' }}">
                                         {{ $room->name }}
@@ -695,7 +695,7 @@
                 </div>
                 <p class="text-center text-muted mt-3" style="font-size:0.8rem;">
                     <i class="fa-solid fa-circle-info me-1"></i>
-                    Fasilitas dapat berubah. Hubungi kami untuk informasi terkini dan ketersediaan kamar.
+                    {{ __('Fasilitas dapat berubah. Hubungi kami untuk informasi terkini dan ketersediaan kamar.') }}
                 </p>
             </div>
         </section>
@@ -838,14 +838,14 @@
         {{-- ===== CTA BANNER ===== --}}
         <section id="room-cta-banner">
             <div class="container position-relative" style="z-index:1;">
-                <h2 class="cta-title">Siap Melakukan Reservasi?</h2>
-                <p class="cta-subtitle">Hubungi tim kami sekarang untuk memeriksa ketersediaan kamar dan mendapatkan informasi lebih lanjut tentang biaya perawatan.</p>
+                <h2 class="cta-title">{{ __('Siap Melakukan Reservasi?') }}</h2>
+                <p class="cta-subtitle">{{ __('Hubungi tim kami sekarang untuk memeriksa ketersediaan kamar dan mendapatkan informasi lebih lanjut tentang biaya perawatan.') }}</p>
                 <div class="d-flex justify-content-center flex-wrap">
                     <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20reservasi%20ruang%20perawatan" target="_blank" class="btn-cta-white">
-                        <i class="fa-brands fa-whatsapp fs-5"></i> Hubungi via WhatsApp
+                        <i class="fa-brands fa-whatsapp fs-5"></i> {{ __('Hubungi via WhatsApp') }}
                     </a>
                     <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-cta-outline">
-                        <i class="fa-regular fa-calendar-check"></i> Daftar Online
+                        <i class="fa-regular fa-calendar-check"></i> {{ __('Daftar Online') }}
                     </a>
                     <a href="tel:024850224" class="btn-cta-outline">
                         <i class="fa-solid fa-phone"></i> (024) 8502244

@@ -5,6 +5,6 @@
 </a>
 
 <!-- Floating Back to Top Button -->
-<a href="#" id="back-to-top" class="back-to-top-btn" aria-label="Kembali ke Atas">
+<a href="#" id="back-to-top" class="back-to-top-btn" aria-label="{{ __('Kembali ke Atas') }}">
     <i class="fa-solid fa-arrow-up"></i>
 </a>

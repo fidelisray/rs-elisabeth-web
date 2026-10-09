@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        @include('components.seo-meta', ['title' => '{{ $article->title }} - RS St. Elisabeth Semarang'])
+        @include('components.seo-meta', ['title' => ($article->title ?? __('Artikel Kesehatan')) . ' - RS St. Elisabeth Semarang'])
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         @vite([
@@ -27,8 +27,8 @@
                 <!-- Breadcrumb -->
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{{ route('articles.index') }}}">Berita & Artikel</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{{ route('articles.index') }}}">{{ __('Berita & Artikel') }}</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($article->title, 30) }}</li>
                     </ol>
                 </nav>
@@ -47,7 +47,7 @@
                         <div class="article-header text-center">
                             <div class="article-meta justify-content-center">
                                 <span><i class="fa-regular fa-calendar me-2"></i> {{ $article->created_at?->translatedFormat('d F Y') ?? now()->translatedFormat('d F Y') }}</span>
-                                <span><i class="fa-regular fa-folder-open me-2"></i> Rumah Sakit St. Elisabeth</span>
+                                <span><i class="fa-regular fa-folder-open me-2"></i> {{ __('Rumah Sakit St. Elisabeth') }}</span>
                             </div>
                         </div>
                         
@@ -59,7 +59,7 @@
                         
                         <div class="mt-5 border-top pt-4 text-center">
                             <a href="{{{ route('articles.index') }}}" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold">
-                                <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Daftar Artikel
+                                <i class="fa-solid fa-arrow-left me-2"></i> {{ __('Kembali ke Daftar Artikel') }}
                             </a>
                         </div>
                     </div>

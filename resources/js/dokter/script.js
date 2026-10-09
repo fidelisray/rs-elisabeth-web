@@ -8,6 +8,14 @@ const dropdownButton = document.getElementById("clinicDropdown");
 const searchInput = document.getElementById("searchKeyword");
 const detailDokterModal = document.getElementById("detailDokter");
 
+const isEn = () => document.documentElement.lang?.toLowerCase().startsWith('en');
+const tSearch = {
+    clinicResult: () => isEn() ? "Clinic Search Results:" : "Hasil Pencarian Klinik:",
+    nameResult: () => isEn() ? "Name Search Results:" : "Hasil Pencarian Nama:",
+    specialty: () => isEn() ? "Specialty:" : "Spesialisasi:",
+    selectSpecialty: () => isEn() ? "Select Specialty" : "Pilih Spesialisasi",
+};
+
 // Initialization
 document.addEventListener("DOMContentLoaded", async () => {
     showLoading();
@@ -37,13 +45,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (fetchSuccess) {
         if (klinik) {
             filterDoctors(klinik, "klinik");
-            updateSearchSummary("Hasil Pencarian Klinik:", klinik);
+            updateSearchSummary(tSearch.clinicResult(), klinik);
         } else if (nama) {
             if (searchInput) searchInput.value = nama;
             filterDoctors(nama.toLowerCase());
-            updateSearchSummary("Hasil Pencarian Nama:", nama);
+            updateSearchSummary(tSearch.nameResult(), nama);
         } else if (specialtyCode && dropdownButton) {
-            updateSearchSummary("Spesialisasi:", dropdownButton.dataset.selected_name);
+            updateSearchSummary(tSearch.specialty(), dropdownButton.dataset.selected_name);
         } else {
             updateSearchSummary(null);
         }
@@ -92,7 +100,7 @@ if (searchInput) {
         searchDebounceTimer = setTimeout(() => {
             const keyword = this.value.trim().toLowerCase();
             filterDoctors(keyword);
-            updateSearchSummary(keyword ? "Hasil Pencarian Nama:" : null, keyword);
+            updateSearchSummary(keyword ? tSearch.nameResult() : null, keyword);
             renderDoctorPage(handlePageChange);
         }, 400);
     });
@@ -127,7 +135,7 @@ clinicOptions.forEach((option) => {
         const success = await fetchDokterBySpecialtyCode(selected_code);
         if (success) {
             if (searchInput) searchInput.value = "";
-            updateSearchSummary("Spesialisasi:", selected_name);
+            updateSearchSummary(tSearch.specialty(), selected_name);
             renderDoctorPage(handlePageChange);
         } else {
             showError();
@@ -141,7 +149,7 @@ clinicOptions.forEach((option) => {
 async function resetAllSearchState() {
     // 1. Clear Spesialisasi & Dokter inputs
     if (dropdownButton) {
-        dropdownButton.innerText = "Pilih Spesialisasi";
+        dropdownButton.innerText = tSearch.selectSpecialty();
         dropdownButton.dataset.selected_name = "";
         dropdownButton.dataset.selected_code = "";
     }

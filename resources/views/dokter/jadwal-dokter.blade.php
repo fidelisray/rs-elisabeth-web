@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  @include('components.seo-meta', ['title' => 'Jadwal Dokter'])
+  @include('components.seo-meta', ['title' => __('Jadwal Dokter') . ' - RS St. Elisabeth Semarang'])
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <style>
     /* =====================
@@ -115,7 +115,7 @@
 
 <div class="container py-4">
   <div class="jadwal-wrapper">
-    <h2 class="jadwal-title">Jadwal Dokter</h2>
+    <h2 class="jadwal-title">{{ __('Jadwal Dokter') }}</h2>
 
     <div class="jadwal-scroll">
       <div class="jadwal-grid" id="jadwalGrid">
@@ -126,13 +126,13 @@
              Untuk dynamic: bandingkan $hari dengan hari saat ini di Blade.
              ============================================================ --}}
 
-        <div class="day-header today">Senin</div>
-        <div class="day-header">Selasa</div>
-        <div class="day-header">Rabu</div>
-        <div class="day-header">Kamis</div>
-        <div class="day-header">Jum'at</div>
-        <div class="day-header">Sabtu</div>
-        <div class="day-header">Minggu</div>
+        <div class="day-header today">{{ __('Senin') }}</div>
+        <div class="day-header">{{ __('Selasa') }}</div>
+        <div class="day-header">{{ __('Rabu') }}</div>
+        <div class="day-header">{{ __('Kamis') }}</div>
+        <div class="day-header">{{ __('Jumat') }}</div>
+        <div class="day-header">{{ __('Sabtu') }}</div>
+        <div class="day-header">{{ __('Minggu') }}</div>
 
         {{-- ============================================================
              KOLOM SENIN (hari ini — semua card pakai .today-card)

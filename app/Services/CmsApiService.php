@@ -44,6 +44,7 @@ class CmsApiService
             'X-Timestamp' => $tStamp,
             'X-Signature' => $encodedSignature,
             'Accept'  => 'application/json',
+            'Accept-Language' => app()->getLocale(),
         ])->timeout($this->timeout);
     }
 
@@ -60,8 +61,9 @@ class CmsApiService
      */
     public function getNews(array $filters = []): array
     {
-        // Parameter filters disertakan pada cache key agar spesifik
-        $cacheKey = 'cms_news_' . md5(serialize($filters));
+        $locale = app()->getLocale();
+        // Parameter filters dan locale disertakan pada cache key agar spesifik
+        $cacheKey = "cms_news_{$locale}_" . md5(serialize($filters));
         $ttl = 600; // TTL Cache: 10 menit
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
@@ -93,7 +95,8 @@ class CmsApiService
      */
     public function getNewsBySlug(string $slug): array|null
     {
-        $cacheKey = "cms_news_slug_{$slug}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_news_slug_{$locale}_{$slug}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
@@ -117,7 +120,8 @@ class CmsApiService
      */
     public function getArticles(array $filters = []): array
     {
-        $cacheKey = 'cms_articles_' . md5(serialize($filters));
+        $locale = app()->getLocale();
+        $cacheKey = "cms_articles_{$locale}_" . md5(serialize($filters));
         $ttl = 600; 
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
@@ -141,7 +145,8 @@ class CmsApiService
      */
     public function getArticleById(string $id): array|null
     {
-        $cacheKey = "cms_article_{$id}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_article_{$locale}_{$id}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($id) {
@@ -167,7 +172,8 @@ class CmsApiService
      */
     public function getArticleBySlug(string $slug): array|null
     {
-        $cacheKey = "cms_article_slug_{$slug}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_article_slug_{$locale}_{$slug}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
@@ -191,7 +197,8 @@ class CmsApiService
      */
     public function getPromotions(array $filters = []): array
     {
-        $cacheKey = 'cms_promotions_' . md5(serialize($filters));
+        $locale = app()->getLocale();
+        $cacheKey = "cms_promotions_{$locale}_" . md5(serialize($filters));
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
@@ -211,7 +218,8 @@ class CmsApiService
      */
     public function getPromotionById(string $id): array|null
     {
-        $cacheKey = "cms_promotion_{$id}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_promotion_{$locale}_{$id}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($id) {
@@ -231,7 +239,8 @@ class CmsApiService
      */
     public function getFacilities(array $filters = []): array
     {
-        $cacheKey = 'cms_facilities_' . md5(serialize($filters));
+        $locale = app()->getLocale();
+        $cacheKey = "cms_facilities_{$locale}_" . md5(serialize($filters));
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
@@ -251,7 +260,8 @@ class CmsApiService
      */
     public function getFacilityBySlug(string $slug): array|null
     {
-        $cacheKey = "cms_facility_{$slug}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_facility_{$locale}_{$slug}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
@@ -271,7 +281,8 @@ class CmsApiService
      */
     public function getRoomFacilities(array $filters = []): array
     {
-        $cacheKey = 'cms_room_facilities_' . md5(serialize($filters));
+        $locale = app()->getLocale();
+        $cacheKey = "cms_room_facilities_{$locale}_" . md5(serialize($filters));
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
@@ -291,7 +302,8 @@ class CmsApiService
      */
     public function getRoomFacilityBySlug(string $slug): array|null
     {
-        $cacheKey = "cms_room_facility_{$slug}";
+        $locale = app()->getLocale();
+        $cacheKey = "cms_room_facility_{$locale}_{$slug}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
@@ -311,7 +323,8 @@ class CmsApiService
      */
     public function getBannerPromotions(): array
     {
-        $cacheKey = 'cms_banner_promotions';
+        $locale = app()->getLocale();
+        $cacheKey = "cms_banner_promotions_{$locale}";
         $ttl = 600;
 
         return Cache::remember($cacheKey, $ttl, function () {

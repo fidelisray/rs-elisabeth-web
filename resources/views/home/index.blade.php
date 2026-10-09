@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -67,12 +67,12 @@
                             <div style="z-index: 1;">
                                 <div class="mb-4">
                                     <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(255,255,255,0.15); color: #fff; font-weight: 500; letter-spacing: 1px;">
-                                        <i class="fa-solid fa-heart-pulse me-1 text-warning"></i> Melayani dengan Kasih
+                                        <i class="fa-solid fa-heart-pulse me-1 text-warning"></i> {{ __('Melayani dengan Kasih') }}
                                     </span>
                                 </div>
                                 <h2 class="text-white fw-bold mb-3 display-6" style="letter-spacing: 0.5px;">RS St. Elisabeth Semarang</h2>
                                 <p class="text-white opacity-75 mb-0 mx-auto fs-6 fs-md-5" style="max-width: 650px; line-height: 1.6;">
-                                    Hadir dengan sepenuh hati memberikan pelayanan kesehatan terbaik, berteknologi mutakhir, dan profesional bagi Anda dan keluarga.
+                                    {{ __('Hadir dengan sepenuh hati memberikan pelayanan kesehatan terbaik, berteknologi mutakhir, dan profesional bagi Anda dan keluarga.') }}
                                 </p>
                             </div>
                         </div>
@@ -103,7 +103,7 @@
                             <div class="card card-doctor h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-solid fa-user-doctor doctor-icon mb-2 mb-md-3"></i>
-                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">Cari Dokter</h5>
+                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">{{ __('Cari Dokter') }}</h5>
                                 </div>
                             </div>
                         </a>
@@ -113,7 +113,7 @@
                             <div class="card card-appointment h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-regular fa-calendar appointment-icon mb-2 mb-md-3"></i>
-                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">Buat Janji</h5>
+                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">{{ __('Buat Janji') }}</h5>
                                 </div>
                             </div>
                         </a>
@@ -123,7 +123,7 @@
                             <div class="card card-contact h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-brands fa-whatsapp whatsapp-icon mb-2 mb-md-3"></i>
-                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">Hubungi Kami</h5>
+                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">{{ __('Hubungi Kami') }}</h5>
                                 </div>
                             </div>
                         </a>
@@ -133,8 +133,8 @@
                             <div class="card card-emergency h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-solid fa-book-medical glossary-icon mb-2 mb-md-3"></i>
-                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">Kamus Medis</h5>
-                                    <p class="mb-0 mt-1 mt-md-2 opacity-75 small d-none d-md-block">Temukan penyakit & istilah medis</p>
+                                    <h5 class="fw-bold m-0 text-white fs-6 fs-md-5">{{ __('Kamus Medis') }}</h5>
+                                    <p class="mb-0 mt-1 mt-md-2 opacity-75 small d-none d-md-block">{{ __('Temukan penyakit & istilah medis') }}</p>
                                 </div>
                             </div>
                         </a>
@@ -150,7 +150,7 @@
         <section id="about-us" class="py-5">
             <div class="container">
                 <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Percayakan Kesehatan Anda Bersama Kami</h2>
+                    <h2 class="fw-bold">{{ __('Percayakan Kesehatan Anda Bersama Kami') }}</h2>
                     <div class="divider"></div>
                 </div>
                 <div class="row align-items-center mt-5">
@@ -160,27 +160,27 @@
                                 <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
                                     <i class="fas fa-medal"></i>
                                 </div>
-                                Terakreditasi Paripurna
+                                {{ __('Terakreditasi Paripurna') }}
                             </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.</p>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.') }}</p>
                         </div>
                         <div class="about-rs mb-5">
                             <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
                                 <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
                                     <i class="fas fa-clock"></i>
                                 </div>
-                                Layanan 24 Jam
+                                {{ __('Layanan 24 Jam') }}
                             </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.</p>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.') }}</p>
                         </div>
                         <div class="about-rs">
                             <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
                                 <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
                                     <i class="fas fa-heart"></i>
                                 </div>
-                                Service Excellent
+                                {{ __('Pelayanan Prima') }}
                             </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.</p>
+                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.') }}</p>
                         </div>
                     </div>
                     <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
@@ -195,9 +195,9 @@
         <section id="facilities-and-services" class="py-5">
             <div class="container">
                 <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">Fasilitas dan Layanan</h2>
+                    <h2 class="fw-bold">{{ __('Fasilitas dan Layanan') }}</h2>
                     <div class="divider"></div>
-                    <p class="text-muted mt-3">Pelayanan unggulan dengan dokter spesialis berpengalaman.</p>
+                    <p class="text-muted mt-3">{{ __('Pelayanan unggulan dengan dokter spesialis berpengalaman.') }}</p>
                 </div>
 
                 <div id="carouselExampleCaptions" class="carousel slide shadow rounded-4 overflow-hidden bg-white" data-bs-ride="carousel">
@@ -220,14 +220,14 @@
                                     <h3 class="fw-bold" style="color: var(--secondary-color);">{{ $facility->name }}</h3>
                                     <p class="text-muted fs-5 mt-3">{{ $facility->short_description ?? \Illuminate\Support\Str::limit(strip_tags($facility->description ?? ''), 150) }}</p>
                                     <div class="mt-4">
-                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Learn More <i class="fas fa-arrow-right ms-2"></i></a>
+                                        <a href="{{ route('facilities.index') }}#facility-{{ $facility->slug ?? $facility->id }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">{{ __('Selengkapnya') }} <i class="fas fa-arrow-right ms-2"></i></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         @empty
                         <div class="carousel-item active p-5 text-center">
-                            <p class="text-muted">Belum ada data fasilitas unggulan.</p>
+                            <p class="text-muted">{{ __('Belum ada data fasilitas unggulan.') }}</p>
                         </div>
                         @endforelse
                     </div>
@@ -255,8 +255,8 @@
 
             <div class="container position-relative h-100">
                 <div class="hero-content h-100 d-flex flex-column justify-content-center">
-                    <h1 class="display-5 fw-bold text-white mb-3">Kesehatan Anda Adalah Prioritas Utama Kami</h1>
-                    <p class="fs-5 text-white mb-4">Pelayanan prima dan paripurna dari RS St. Elisabeth Semarang dengan fasilitas berstandar internasional dan tenaga medis profesional yang penuh kasih.</p>
+                    <h1 class="display-5 fw-bold text-white mb-3">{{ __('Kesehatan Anda Adalah Prioritas Utama Kami') }}</h1>
+                    <p class="fs-5 text-white mb-4">{{ __('Pelayanan prima dan paripurna dari RS St. Elisabeth Semarang dengan fasilitas berstandar internasional dan tenaga medis profesional yang penuh kasih.') }}</p>
                     <div class="d-flex gap-3 flex-column flex-sm-row">
                         {{-- <button class="btn btn-primary-custom px-4 py-2">Temukan Dokter</button> --}}
                         {{-- <button class="btn btn-outline-light px-4 py-2 fw-semibold rounded-pill">Hubungi Kami</button> --}}
@@ -266,17 +266,17 @@
         </section>
 
         <section id="search-and-quick-access">
-            <h2 class="visually-hidden">Pencarian Layanan dan Akses Cepat</h2>
+            <h2 class="visually-hidden">{{ __('Pencarian Layanan dan Akses Cepat') }}</h2>
             <div class="container">
                 <div class="search-widget">
                     <ul class="nav nav-tabs" id="searchTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#doctor"
-                                type="button"><i class="fas fa-user-md me-2"></i>Cari Dokter</button>
+                                type="button"><i class="fas fa-user-md me-2"></i>{{ __('Cari Dokter') }}</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#clinic" type="button"><i
-                                    class="fas fa-hospital me-2"></i>Cari Klinik</button>
+                                    class="fas fa-hospital me-2"></i>{{ __('Cari Klinik') }}</button>
                         </li>
                         {{-- <li class="nav-item" role="presentation">
                             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#condition"
@@ -287,11 +287,11 @@
                         <div class="tab-pane fade show active" id="doctor">
                             <form class="row g-3" action="{{{ route('dokter.index') }}}" method="GET">
                                 <div class="col-md-4">
-                                    <input type="text" name="nama" class="form-control" placeholder="Nama Dokter">
+                                    <input type="text" name="nama" class="form-control" placeholder="{{ __('Nama Dokter') }}">
                                 </div>
                                 <div class="col-md-4">
                                     <select name="specialty_code" class="form-select">
-                                        <option value="" selected>Pilih Spesialisasi</option>
+                                        <option value="" selected>{{ __('Pilih Spesialisasi') }}</option>
                                         @if(isset($spesialisasi))
                                             @foreach ($spesialisasi as $spesialis)
                                                 <option value="{{ $spesialis->Code }}">{{ ucwords(strtolower($spesialis->Name)) }}</option>
@@ -301,7 +301,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <button class="btn btn-primary-custom w-100" type="submit"><i
-                                            class="fas fa-search me-2"></i>Cari</button>
+                                            class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -309,11 +309,11 @@
                             <form class="row g-3" action="{{{ route('dokter.index') }}}" method="GET">
                                 <div class="col-md-8">
                                     <input type="text" name="klinik" class="form-control"
-                                        placeholder="Nama Klinik">
+                                        placeholder="{{ __('Nama Klinik') }}">
                                 </div>
                                 <div class="col-md-4">
                                     <button class="btn btn-primary-custom w-100" type="submit"><i
-                                            class="fas fa-search me-2"></i>Cari</button>
+                                            class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
                                 </div>
                             </form>
                         </div>
@@ -336,7 +336,7 @@
 
         <section id="promotions" class="position-relative pb-5">
             <div class="section-title text-center mb-5">
-                <h2 class="display-8 fw-bold">Paket dan Promo</h2>
+                <h2 class="display-8 fw-bold">{{ __('Paket dan Promo') }}</h2>
                 <div class="divider"></div>
                 {{-- <p class="text-muted mt-3">Temukan penawaran terbaik untuk layanan kesehatan Anda</p> --}}
             </div>
@@ -351,7 +351,7 @@
                                         <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promo->title ?? 'Promo' }}</h5>
                                         <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.'), 60) }}</p>
                                         <div class="mt-3 text-end">
-                                            <span class="text-secondary fw-semibold small">Lihat Detail <i class="fa-solid fa-arrow-right ms-1"></i></span>
+                                            <span class="text-secondary fw-semibold small">{{ __('Lihat Detail') }} <i class="fa-solid fa-arrow-right ms-1"></i></span>
                                         </div>
                                     </div>
                                     @if($loop->iteration > 4)
@@ -366,8 +366,8 @@
                             <div class="mb-3">
                                 <i class="fa-solid fa-tags" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
                             </div>
-                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Belum Ada Paket & Promo</h5>
-                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.</p>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Belum Ada Paket & Promo') }}</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">{{ __('Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.') }}</p>
                         </div>
                     </div>
                     @endforelse
@@ -387,17 +387,17 @@
                                 </div>
                                 <!-- Bagian Kanan: Detail Promo -->
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">
-                                    <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">Info Spesial</h6>
+                                    <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">{{ __('Info Spesial') }}</h6>
                                     <h2 id="promoModalTitle" class="fw-bold mb-4" style="color: var(--primary-color);"></h2>
                                     <p id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></p>
                                     
                                     <div class="mt-auto border-top pt-4">
-                                        <p class="text-muted fw-semibold mb-3">Dapatkan penawaran ini sekarang!</p>
+                                        <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>
                                         <div class="d-flex flex-wrap gap-2">
                                             <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
-                                                <i class="fa-brands fa-whatsapp fs-5 me-2"></i> Hubungi Kami
+                                                <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Hubungi Kami') }}
                                             </a>
-                                            <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">Tutup</button>
+                                            <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">{{ __('Tutup') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -408,8 +408,8 @@
             </div>
 
             <div class="text-center mt-5">
-                <a href="{{{ route('promotions.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Penawaran Menarik Lainnya">
-                    Lihat Penawaran Menarik Lainnya <i class="fa-solid fa-arrow-down ms-2"></i>
+                <a href="{{{ route('promotions.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Penawaran Menarik Lainnya') }}">
+                    {{ __('Lihat Penawaran Menarik Lainnya') }} <i class="fa-solid fa-arrow-down ms-2"></i>
                 </a>
             </div>
         </section>
@@ -417,7 +417,7 @@
         <!-- Latest Articles Section -->
         <section id="latest-articles" class="news-section pt-2 pb-5">
             <div class="section-title text-center mb-5 mt-5">
-                <h2 class="display-8 fw-bold">Artikel Kesehatan</h2>
+                <h2 class="display-8 fw-bold">{{ __('Artikel Kesehatan') }}</h2>
                 <div class="divider"></div>
             </div>
             <div class="container pb-5">
@@ -440,7 +440,7 @@
                                 </a>
                                 <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
                                 <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
-                                    Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+                                    {{ __('Baca Selengkapnya') }} <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -454,15 +454,15 @@
                             <div class="mb-3">
                                 <i class="fa-solid fa-newspaper" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
                             </div>
-                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Artikel Belum Tersedia</h5>
-                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Kami sedang menyiapkan artikel kesehatan terbaru untuk Anda. Silakan nantikan informasi bermanfaat selanjutnya.</p>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Artikel Belum Tersedia') }}</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">{{ __('Kami sedang menyiapkan artikel kesehatan terbaru untuk Anda. Silakan nantikan informasi bermanfaat selanjutnya.') }}</p>
                         </div>
                     </div>
                     @endforelse
                 </div>
                 <div class="text-center mt-5">
-                    <a href="{{{ route('articles.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Artikel">
-                        Lihat Semua Artikel <i class="fa-solid fa-arrow-right ms-2"></i>
+                    <a href="{{{ route('articles.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Artikel') }}">
+                        {{ __('Lihat Semua Artikel') }} <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -490,14 +490,14 @@
                                         <i class="fa-regular fa-calendar"></i>
                                         {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
                                     </span>
-                                    <span class="badge bg-primary rounded-pill">{{ $item->category ?? 'Berita Umum' }}</span>
+                                    <span class="badge bg-primary rounded-pill">{{ $item->category ?? __('Berita Umum') }}</span>
                                 </div>
                                 <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
                                     <h3 class="news-title fs-6">{{ $item->title }}</h3>
                                 </a>
                                 <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
                                 <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
-                                    Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+                                    {{ __('Baca Selengkapnya') }} <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
@@ -511,15 +511,15 @@
                             <div class="mb-3">
                                 <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
                             </div>
-                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Berita Belum Tersedia</h5>
-                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.</p>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Berita Belum Tersedia') }}</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">{{ __('Belum ada berita terbaru seputar rumah sakit saat ini. Kami akan segera memperbarui informasi terkini untuk Anda.') }}</p>
                         </div>
                     </div>
                     @endforelse
                 </div>
                 <div class="text-center mt-5">
-                    <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="Lihat Semua Berita">
-                        Lihat Semua Berita <i class="fa-solid fa-arrow-right ms-2"></i>
+                    <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Berita') }}">
+                        {{ __('Lihat Semua Berita') }} <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
@@ -530,10 +530,10 @@
             <div class="container">
                 <!-- Judul utama -->
                 <div class="section-title text-center mb-3">
-                    <span class="ci-eyebrow mb-3"><i class="fa-solid fa-hospital-user"></i> Informasi Pelanggan</span>
-                    <h2 class="display-8 fw-bold">Jam Kunjungan Pasien</h2>
+                    <span class="ci-eyebrow mb-3"><i class="fa-solid fa-hospital-user"></i> {{ __('Informasi Pelanggan') }}</span>
+                    <h2 class="display-8 fw-bold">{{ __('Jam Kunjungan Pasien') }}</h2>
                     <div class="divider"></div>
-                    <p class="text-muted mt-3">Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:</p>
+                    <p class="text-muted mt-3">{{ __('Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:') }}</p>
                 </div>
 
                 <!-- Kartu jam kunjungan -->
@@ -544,14 +544,14 @@
                             <div class="ci-visit-icon mx-auto mb-3">
                                 <i class="fa-solid fa-calendar-day"></i>
                             </div>
-                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Senin – Sabtu</h4>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">{{ __('Senin – Sabtu') }}</h4>
                             <div class="d-flex flex-column gap-2">
                                 <div class="ci-time-row">
-                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> {{ __('Pagi') }}</span>
                                     <span class="ci-time-value">09.30 – 11.00</span>
                                 </div>
                                 <div class="ci-time-row">
-                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> {{ __('Sore') }}</span>
                                     <span class="ci-time-value">17.00 – 18.30</span>
                                 </div>
                             </div>
@@ -563,14 +563,14 @@
                             <div class="ci-visit-icon mx-auto mb-3">
                                 <i class="fa-regular fa-calendar-check"></i>
                             </div>
-                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">Minggu & Hari Libur</h4>
+                            <h4 class="fw-bold mb-4" style="color: var(--secondary-darker-color);">{{ __('Minggu & Hari Libur') }}</h4>
                             <div class="d-flex flex-column gap-2">
                                 <div class="ci-time-row">
-                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> Pagi</span>
+                                    <span class="ci-time-label"><i class="fa-regular fa-sun text-warning"></i> {{ __('Pagi') }}</span>
                                     <span class="ci-time-value">09.30 – 11.30</span>
                                 </div>
                                 <div class="ci-time-row">
-                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> Sore</span>
+                                    <span class="ci-time-label"><i class="fa-solid fa-cloud-sun text-info"></i> {{ __('Sore') }}</span>
                                     <span class="ci-time-value">16.30 – 18.30</span>
                                 </div>
                             </div>
@@ -580,7 +580,7 @@
 
                 <!-- Ketentuan Pengunjung -->
                 <div class="section-title text-center mb-4">
-                    <h3 class="fw-bold" style="color: var(--secondary-darker-color);">Ketentuan Pengunjung</h3>
+                    <h3 class="fw-bold" style="color: var(--secondary-darker-color);">{{ __('Ketentuan Pengunjung') }}</h3>
                     <div class="divider"></div>
                 </div>
 
@@ -592,7 +592,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-heart-pulse"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">Demi kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.</p>
+                                    <p class="mb-0 text-muted">{{ __('Demi Kesehatan Anda, kami menyarankan untuk') }} <strong>{{ __('tidak melakukan kunjungan') }}</strong> {{ __('terlebih dahulu apabila kondisi badan sedang tidak fit.') }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -600,7 +600,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-volume-xmark"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).</p>
+                                    <p class="mb-0 text-muted">{{ __('Mohon untuk') }} <strong>{{ __('tidak berbicara keras') }}</strong> {{ __('dan berkunjung secara bergantian (') }}<strong>{{ __('maksimal 2 pengunjung') }}</strong> {{ __('untuk tiap pasien).') }}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -608,13 +608,13 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-child-reaching"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.</p>
+                                    <p class="mb-0 text-muted">{{ __('Anak-anak') }} <strong>{{ __('di bawah usia 12 tahun') }}</strong> {{ __('tidak diizinkan berkunjung.') }}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="ci-thankyou text-center p-4 mt-4">
-                            <p class="mb-0 fst-italic mx-auto" style="max-width: 750px;"><i class="fa-solid fa-heart me-2"></i>Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama dirawat di <span class="d-inline-block">Rumah Sakit St. Elisabeth Semarang.</span></p>
+                            <p class="mb-0 fst-italic mx-auto" style="max-width: 750px;"><i class="fa-solid fa-heart me-2"></i>{{ __('Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama di rawat di Rumah Sakit St. Elisabeth Semarang.') }}</p>
                         </div>
                     </div>
                 </div>
@@ -627,25 +627,25 @@
                     <div class="col-md-3 col-6">
                         <div class="stat-item">
                             <div class="stat-number">95+</div>
-                            <div class="stat-text">Tahun Pengalaman</div>
+                            <div class="stat-text">{{ __('Tahun Pengalaman') }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-6">
                         <div class="stat-item">
                             <div class="stat-number">150+</div>
-                            <div class="stat-text">Dokter Ahli</div>
+                            <div class="stat-text">{{ __('Dokter Ahli') }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-12">
                         <div class="stat-item">
-                            <div class="stat-number">Paripurna</div>
-                            <div class="stat-text">Akreditasi KARS</div>
+                            <div class="stat-number">{{ __('Paripurna') }}</div>
+                            <div class="stat-text">{{ __('Akreditasi KARS') }}</div>
                         </div>
                     </div>
                     <div class="col-md-3 col-12">
                         <div class="stat-item">
                             <div class="stat-number">24/7</div>
-                            <div class="stat-text">Pelayanan Prima</div>
+                            <div class="stat-text">{{ __('Pelayanan Prima') }}</div>
                         </div>
                     </div>
                 </div>
@@ -661,13 +661,13 @@
                 <div class="row align-items-center mb-5 pb-lg-4">
                     <div class="col-lg-6 mb-5 mb-lg-0 app-content pe-lg-5">
                         <span class="badge bg-primary text-white mb-3 px-3 py-2 rounded-pill fw-semibold shadow-sm">Elisameds App</span>
-                        <h2 class="display-5 mb-4">Kemudahan Dalam Genggaman Anda</h2>
-                        <p class="lead mb-4" style="color: #4a5568;">Aplikasi <strong>Elisameds</strong> hadir untuk menyederhanakan layanan kesehatan Anda di RS St. Elisabeth Semarang. Dari pendaftaran hingga riwayat medis, semuanya lebih praktis.</p>
+                        <h2 class="display-5 mb-4">{{ __('Kemudahan Dalam Genggaman Anda') }}</h2>
+                        <p class="lead mb-4" style="color: #4a5568;">{!! __('Aplikasi <strong>Elisameds</strong> hadir untuk menyederhanakan layanan kesehatan Anda di RS St. Elisabeth Semarang. Dari pendaftaran hingga riwayat medis, semuanya lebih praktis.') !!}</p>
 
                         <ul class="list-unstyled mb-5">
-                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>Reservasi dokter dan klinik secara online</span></li>
-                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>Akses riwayat kesehatan dengan aman</span></li>
-                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>Info antrean dan jadwal dokter secara real-time</span></li>
+                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>{{ __('Reservasi dokter dan klinik secara online') }}</span></li>
+                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>{{ __('Akses riwayat kesehatan dengan aman') }}</span></li>
+                            <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>{{ __('Info antrean dan jadwal dokter secara real-time') }}</span></li>
                         </ul>
 
                         <div class="d-flex flex-wrap gap-3 mt-4">
@@ -699,8 +699,8 @@
                             <div class="floating-badge">
                                 <div class="icon-box"><i class="fa-solid fa-calendar-check"></i></div>
                                 <div>
-                                    <strong>Reservasi Mudah</strong>
-                                    <span>Tanpa antre lama</span>
+                                    <strong>{{ __('Reservasi Mudah') }}</strong>
+                                    <span>{{ __('Tanpa antre lama') }}</span>
                                 </div>
                             </div>
                         </div>

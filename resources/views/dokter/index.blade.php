@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    @include('components.seo-meta', ['title' => 'Dokter Kami - RS St. Elisabeth Semarang'])
+    @include('components.seo-meta', ['title' => __('Dokter Kami') . ' - RS St. Elisabeth Semarang'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     @vite([
@@ -28,14 +28,14 @@
             <div class="container">
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dokter Kami</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Dokter Kami') }}</li>
                     </ol>
                 </nav>
                 <div class="row">
                     <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">Dokter Kami</h2>
-                        <p class="hero-subtitle">Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.</p>
+                        <h2 class="hero-title">{{ __('Dokter Kami') }}</h2>
+                        <p class="hero-subtitle">{{ __('Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.') }}</p>
                     </div>
                 </div>
             </div>
@@ -47,11 +47,11 @@
                 <ul class="nav nav-tabs" id="searchTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link {{ request('klinik') ? '' : 'active' }}" data-bs-toggle="tab" data-bs-target="#doctor"
-                            type="button"><i class="fas fa-user-md me-2"></i>Cari Spesialisasi & Dokter</button>
+                            type="button"><i class="fas fa-user-md me-2"></i>{{ __('Cari Spesialisasi & Dokter') }}</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link {{ request('klinik') ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#clinic" type="button"><i
-                                class="fas fa-hospital me-2"></i>Cari Klinik</button>
+                                class="fas fa-hospital me-2"></i>{{ __('Cari Klinik') }}</button>
                     </li>
                 </ul>
                 <div class="tab-content" id="searchTabsContent">
@@ -62,11 +62,11 @@
                             <div class="col-md-4">
                                 <div class="dropdown w-100">
                                     <button class="btn form-select text-start" style="height: 45px;" type="button" id="clinicDropdown" data-bs-toggle="dropdown" data-selected="">
-                                        Pilih Spesialisasi
+                                        {{ __('Pilih Spesialisasi') }}
                                     </button>
                                     <div class="dropdown-menu p-0 w-100">
                                         <div class="p-2 border-bottom">
-                                            <input type="text" id="clinicSearch" class="form-control" placeholder="Cari Spesialisasi...">
+                                            <input type="text" id="clinicSearch" class="form-control" placeholder="{{ __('Cari Spesialisasi...') }}">
                                         </div>
                                         <div id="clinicList" class="clinic-list" style="max-height: 250px; overflow-y: auto;">
                                             @foreach ($spesialisasi as $spesialis)
@@ -80,12 +80,12 @@
                             </div>
                             <!-- Search Nama Dokter -->
                             <div class="col-md-4">
-                                <input type="text" id="searchKeyword" class="form-control" style="height: 45px;" placeholder="Nama Dokter">
+                                <input type="text" id="searchKeyword" class="form-control" style="height: 45px;" placeholder="{{ __('Nama Dokter') }}">
                             </div>
                             <!-- Buttons -->
                             <div class="col-md-4 d-flex gap-2">
-                                <button type="button" class="btn btn-primary-custom-sm flex-grow-1"><i class="fas fa-search me-2"></i>Cari</button>
-                                <button type="button" id="btnReset" class="btn btn-outline-secondary px-3" style="border-radius: 50px;" title="Reset Pencarian"><i class="fas fa-undo"></i></button>
+                                <button type="button" class="btn btn-primary-custom-sm flex-grow-1"><i class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
+                                <button type="button" id="btnReset" class="btn btn-outline-secondary px-3" style="border-radius: 50px;" title="{{ __('Reset Pencarian') }}"><i class="fas fa-undo"></i></button>
                             </div>
                         </div>
                     </div>
@@ -94,11 +94,11 @@
                     <div class="tab-pane fade {{ request('klinik') ? 'show active' : '' }}" id="clinic">
                         <form class="row g-3 align-items-center" action="{{{ route('dokter.index') }}}" method="GET">
                             <div class="col-md-8">
-                                <input type="text" name="klinik" class="form-control" style="height: 45px;" placeholder="Nama Klinik" value="{{ request('klinik') }}">
+                                <input type="text" name="klinik" class="form-control" style="height: 45px;" placeholder="{{ __('Nama Klinik') }}" value="{{ request('klinik') }}">
                             </div>
                             <div class="col-md-4 d-flex gap-2">
-                                <button class="btn btn-primary-custom-sm flex-grow-1" type="submit"><i class="fas fa-search me-2"></i>Cari</button>
-                                <a href="{{{ route('dokter.index') }}}" class="btn btn-outline-secondary px-3 d-flex align-items-center justify-content-center" style="border-radius: 50px;" title="Reset Pencarian"><i class="fas fa-undo"></i></a>
+                                <button class="btn btn-primary-custom-sm flex-grow-1" type="submit"><i class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
+                                <a href="{{{ route('dokter.index') }}}" class="btn btn-outline-secondary px-3 d-flex align-items-center justify-content-center" style="border-radius: 50px;" title="{{ __('Reset Pencarian') }}"><i class="fas fa-undo"></i></a>
                             </div>
                         </form>
                     </div>
@@ -112,9 +112,9 @@
             
             <div id="search-summary-container" class="d-none mb-4">
                 <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm border-start border-4 border-primary">
-                    <h6 class="mb-0 fw-semibold text-muted"><span id="search-summary-label">Hasil Pencarian:</span> <span class="text-dark fw-bold" id="search-summary-keyword"></span></h6>
+                    <h6 class="mb-0 fw-semibold text-muted"><span id="search-summary-label">{{ __('Hasil Pencarian:') }}</span> <span class="text-dark fw-bold" id="search-summary-keyword"></span></h6>
                     <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fs-6">
-                        Ditemukan <span id="search-summary-count" class="fw-bold">0</span> dokter
+                        {{ __('Ditemukan') }} <span id="search-summary-count" class="fw-bold">0</span> {{ __('dokter') }}
                     </span>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                                         data-bs-toggle="tab"
                                         data-bs-target="#tentang-pane"
                                         type="button">
-                                        Tentang
+                                        {{ __('Tentang') }}
                                     </button>
                                 </li>
 
@@ -179,7 +179,7 @@
                                         data-bs-toggle="tab"
                                         data-bs-target="#jadwal-pane"
                                         type="button">
-                                        Jadwal
+                                        {{ __('Jadwal') }}
                                     </button>
                                 </li>
                             </ul>
@@ -195,11 +195,10 @@
                                             <div class="section-header row">
                                                 <div class="col-12">
                                                     <div class="section-title">
-                                                        Tentang Dokter
+                                                        {{ __('Tentang Dokter') }}
                                                     </div>
                                                     <p class="text-secondary">
-                                                        Dokter berpengalaman yang siap memberikan pelayanan
-                                                        kesehatan terbaik.
+                                                        {{ __('Dokter berpengalaman yang siap memberikan pelayanan kesehatan terbaik.') }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -211,7 +210,7 @@
                                                             <i class="bi bi-geo-alt"></i>
                                                         </div>
                                                         <div>
-                                                            <div class="info-label">Lokasi</div>
+                                                            <div class="info-label">{{ __('Lokasi') }}</div>
                                                             <div>Semarang, Indonesia</div>
                                                         </div>
                                                     </div>
@@ -223,8 +222,8 @@
                                                             <i class="bi bi-briefcase"></i>
                                                         </div>
                                                         <div>
-                                                            <div class="info-label">Pengalaman</div>
-                                                            <strong>Lebih Dari 5 Tahun</strong>
+                                                            <div class="info-label">{{ __('Pengalaman') }}</div>
+                                                            <strong>{{ __('Lebih Dari 5 Tahun') }}</strong>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,8 +234,8 @@
                                                             <i class="bi bi-mortarboard"></i>
                                                         </div>
                                                         <div>
-                                                            <div class="info-label">Pendidikan</div>
-                                                            <strong>Universitas Terkemuka</strong>
+                                                            <div class="info-label">{{ __('Pendidikan') }}</div>
+                                                            <strong>{{ __('Universitas Terkemuka') }}</strong>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -246,7 +245,7 @@
                                                 <div class="button-group col-lg-12">
                                                     <button type="button" class="cta-btn mt-4 button-janji">
                                                         <i class="fa-brands fa-whatsapp"></i>
-                                                        Buat Janji Dokter
+                                                        {{ __('Buat Janji Dokter') }}
                                                         <i class="bi bi-chevron-right float-end"></i>
                                                     </button>
                                                 </div>
@@ -264,11 +263,11 @@
                                         <!-- isi jadwal di bawah -->
                                         <div class="section-jadwal col-lg">
                                             
-                                            <div class="section-header row">
+                                             <div class="section-header row">
                                                 <div class="col-12">
                                                     <div class="section-title">
                                                         <i class="bi bi-clock me-2"></i>
-                                                        Jadwal Praktik
+                                                        {{ __('Jadwal Praktik') }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -279,21 +278,11 @@
                                                 </div>
                                             </div>
 
-                                            {{-- <div class="schedule-card d-none">
-                                                <div class="day-badge"></div>
-    
-                                                <div>
-                                                    <div class="schedule-day"></div>
-                                                    <span class="schedule-time">
-                                                    </span>
-                                                </div>
-                                            </div> --}}
-                                            
                                             <div class="info-button row">
                                                 <div class="button-group col-lg-12">
                                                     <button type="button" class="cta-btn mt-4 button-janji">
                                                         <i class="fa-brands fa-whatsapp"></i>
-                                                        Buat Janji Dokter
+                                                        {{ __('Buat Janji Dokter') }}
                                                         <i class="bi bi-chevron-right float-end"></i>
                                                     </button>
                                                 </div>

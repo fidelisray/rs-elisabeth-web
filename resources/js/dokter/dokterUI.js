@@ -1,12 +1,49 @@
 import { state } from './dokterService.js';
 
-const HARI_INDONESIA = {
-    1: "Senin", 2: "Selasa", 3: "Rabu", 4: "Kamis",
-    5: "Jumat", 6: "Sabtu", 7: "Minggu",
+export function getLocale() {
+    return document.documentElement.lang?.toLowerCase().startsWith('en') ? 'en' : 'id';
+}
+
+export const I18N = {
+    id: {
+        days: { 1: "Senin", 2: "Selasa", 3: "Rabu", 4: "Kamis", 5: "Jumat", 6: "Sabtu", 7: "Minggu" },
+        dayList: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+        generalSpecialist: "Spesialis Umum",
+        scheduleNotAvailable: "Jadwal belum tersedia",
+        doctorPhoto: "Foto Dokter",
+        checkProfile: "Cek Profil",
+        makeAppointment: "Buat Janji",
+        doctorSchedule: "Jadwal Dokter",
+        doctorNotFoundTitle: "Dokter Tidak Ditemukan",
+        doctorNotFoundDesc: "Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.",
+        loadingDoctors: "Memuat data dokter...",
+        modalScheduleNotAvailable: "Jadwal praktik belum tersedia untuk saat ini.",
+        paginationInputTitle: "Ketik halaman lalu Enter"
+    },
+    en: {
+        days: { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" },
+        dayList: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        generalSpecialist: "General Practitioner",
+        scheduleNotAvailable: "Schedule not available",
+        doctorPhoto: "Doctor's Photo",
+        checkProfile: "View Profile",
+        makeAppointment: "Book Appointment",
+        doctorSchedule: "Doctor Schedule",
+        doctorNotFoundTitle: "Doctor Not Found",
+        doctorNotFoundDesc: "Sorry, we could not find any doctors or clinics matching your search keywords. Please try a different specialty or doctor name.",
+        loadingDoctors: "Loading doctors data...",
+        modalScheduleNotAvailable: "Practice schedule is not available at the moment.",
+        paginationInputTitle: "Type page and press Enter"
+    }
 };
 
+export function t(key) {
+    const locale = getLocale();
+    return I18N[locale]?.[key] ?? I18N['id'][key];
+}
+
 function getSpecialtyName(specialtyCode) {
-    let name = "Spesialis Umum";
+    let name = t('generalSpecialist');
     if (specialtyCode) {
         const option = document.querySelector(`.clinic-option[data-code="${specialtyCode}"]`);
         if (option) name = option.dataset.value;
@@ -27,7 +64,7 @@ export function createScheduleGrid(dokter) {
             html: `
                 <div class="d-flex align-items-center justify-content-center flex-column py-4 bg-light rounded-3 w-100 h-100" style="border: 2px dashed rgba(0,0,0,0.05);">
                     <i class="fa-regular fa-calendar-xmark mb-2" style="font-size: 1.5rem; color: var(--secondary-color); opacity: 0.3;"></i>
-                    <span class="text-muted small fw-medium">Jadwal belum tersedia</span>
+                    <span class="text-muted small fw-medium">${t('scheduleNotAvailable')}</span>
                 </div>
             `,
             gridStyle: ''
@@ -49,7 +86,7 @@ export function createScheduleGrid(dokter) {
         });
         html += `
             <div class="jadwal-day-col">
-                <div class="jadwal-day-name">${HARI_INDONESIA[day]}</div>
+                <div class="jadwal-day-name">${t('days')[day]}</div>
                 <div class="jadwal-slots">${slotsHtml}</div>
             </div>
         `;
@@ -69,7 +106,7 @@ export function createDoctorCard(dokter) {
                                 src="https://mobile.rs-elisabeth.com/paramedic/${dokter.paramedicCode}.png"
                                 class="rounded-circle img-fluid mb-3"
                                 style="width:180px;height:180px;object-fit:cover;"
-                                alt="Foto Dokter"
+                                alt="${t('doctorPhoto')}"
                                 onerror="this.onerror=null; this.src='/images/default.png';">
                             <span class="badge bg-primary mb-3 d-none fw-bold">
                                     ${getSpecialtyName(dokter.specialtyCode)}
@@ -81,11 +118,11 @@ export function createDoctorCard(dokter) {
                                     data-bs-toggle='modal'
                                     data-bs-target='#detailDokter'
                                     data-id='${dokter.entry_id}'
-                                    data-jadwal=''>Cek Profil</a>
+                                    data-jadwal=''>${t('checkProfile')}</a>
                                 <a
                                     href='https://regonline.rs-elisabeth.com/'
                                     class='btn-buat-janji'
-                                    target='_blank'>Buat Janji</a>
+                                    target='_blank'>${t('makeAppointment')}</a>
                             </div>
                         </div>
                     </div>
@@ -100,7 +137,7 @@ export function createDoctorCard(dokter) {
                             <div class="jadwal-wrapper">
                                 <h2 class="jadwal-title">
                                     <i class="fa-regular fa-calendar"></i>
-                                    Jadwal Dokter
+                                    ${t('doctorSchedule')}
                                 </h2>
                                 <div class="jadwal-scroll">
                                     <div class="jadwal-grid" id="jadwalGrid-${dokter.paramedicCode}">
@@ -124,9 +161,9 @@ export function renderDoctorPage(onPageChange) {
                 <div class="empty-state-icon mb-4">
                     <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
                 </div>
-                <h4 class="fw-bold text-dark mb-3">Dokter Tidak Ditemukan</h4>
+                <h4 class="fw-bold text-dark mb-3">${t('doctorNotFoundTitle')}</h4>
                 <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
-                    Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.
+                    ${t('doctorNotFoundDesc')}
                 </p>
             </div>
         `;
@@ -188,7 +225,7 @@ export function renderPagination(totalPages, onPageChange) {
         if (p === 'INPUT' || p === 'INPUT_2') {
             pagesHtml += `
                 <li class="page-item">
-                    <input type="number" class="page-link pagination-input jump-page-input" placeholder="..." min="1" max="${totalPages}" title="Ketik halaman lalu Enter">
+                    <input type="number" class="page-link pagination-input jump-page-input" placeholder="..." min="1" max="${totalPages}" title="${t('paginationInputTitle')}">
                 </li>
             `;
         } else {
@@ -252,7 +289,7 @@ export function showLoading() {
         container.innerHTML = `
             <div class="container text-center py-5">
                 <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2 text-muted">Memuat data dokter...</p>
+                <p class="mt-2 text-muted">${t('loadingDoctors')}</p>
             </div>
         `;
     }
@@ -268,9 +305,9 @@ export function showError() {
                 <div class="empty-state-icon mb-4">
                     <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
                 </div>
-                <h4 class="fw-bold text-dark mb-3">Dokter Tidak Ditemukan</h4>
+                <h4 class="fw-bold text-dark mb-3">${t('doctorNotFoundTitle')}</h4>
                 <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
-                    Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.
+                    ${t('doctorNotFoundDesc')}
                 </p>
             </div>
         `;
@@ -280,13 +317,12 @@ export function showError() {
 }
 
 export function renderModal(doctorData) {
-    const hari = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
     const fotoDokter = document.getElementById("foto-dokter");
 
     if (fotoDokter) {
         fotoDokter.innerHTML = `
             <img src="https://mobile.rs-elisabeth.com/paramedic/${doctorData.paramedicCode}.png" 
-            alt="Doctor"
+            alt="${t('doctorPhoto')}"
             onerror="this.onerror=null; this.src='/images/default.png';">
         `;
     }
@@ -311,7 +347,7 @@ export function renderModal(doctorData) {
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-center flex-column py-5 bg-light rounded-3 w-100" style="border: 2px dashed rgba(0,0,0,0.05);">
                     <i class="fa-regular fa-calendar-xmark mb-3" style="font-size: 2rem; color: var(--secondary-color); opacity: 0.3;"></i>
-                    <span class="text-muted fw-medium">Jadwal praktik belum tersedia untuk saat ini.</span>
+                    <span class="text-muted fw-medium">${t('modalScheduleNotAvailable')}</span>
                 </div>
             </div>
         `;
@@ -332,7 +368,7 @@ export function renderModal(doctorData) {
             scheduleHtml += `
                 <div class="col-6 col-md-4 col-lg-3 mb-3">
                     <div class="modal-schedule-card">
-                        <div class="modal-day-header">${hari[parseInt(day) - 1]}</div>
+                        <div class="modal-day-header">${t('dayList')[parseInt(day) - 1]}</div>
                         <div class="modal-time-list">
                             ${timeSlotsHtml}
                         </div>

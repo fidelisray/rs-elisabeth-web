@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="id">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @include('components.seo-meta', ['title' => 'Promotions - RS St. Elisabeth Semarang'])
+    @include('components.seo-meta', ['title' => __('Promo & Penawaran - RS St. Elisabeth Semarang')])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     @vite([
         'resources/css/footer.css',
@@ -26,16 +26,16 @@
                 <!-- Breadcrumb -->
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">
                     <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Promo dan Penawaran</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Promo dan Penawaran') }}</li>
                     </ol>
                 </nav>
 
                 <div class="row">
                     <!-- Kolom kiri: Judul, subjudul -->
                     <div class="col-12 col-lg-8">
-                        <h1 class="hero-title">Promo & Penawaran Spesial</h1>
-                        <p class="hero-subtitle">Temukan penawaran menarik layanan kesehatan unggulan dari RS St. Elisabeth Semarang.</p>
+                        <h1 class="hero-title">{{ __('Promo & Penawaran Spesial') }}</h1>
+                        <p class="hero-subtitle">{{ __('Temukan penawaran menarik layanan kesehatan unggulan dari RS St. Elisabeth Semarang.') }}</p>
                     </div>
                 </div>
             </div>
@@ -47,21 +47,24 @@
                     @forelse ($promotions as $promo)
                         @php
                             $imgSrc = !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg');
+                            $promoTitle = $promo->title ?? __('Promo');
+                            $promoDesc = $promo->description ?? __('Info spesial dari RS St. Elisabeth Semarang.');
+                            $waGreeting = app()->getLocale() === 'en' ? 'Hello, I would like to order the promo ' : 'Halo, saya ingin memesan promo ';
                         @endphp
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden" 
                                  data-bs-toggle="modal" data-bs-target="#promoModal"
-                                 data-title="{{ $promo->title ?? 'Promo' }}"
-                                 data-desc="{{ $promo->description ?? 'Info spesial dari RS St. Elisabeth Semarang.' }}"
+                                 data-title="{{ $promoTitle }}"
+                                 data-desc="{{ $promoDesc }}"
                                  data-img="{{ $imgSrc }}"
                                  style="cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)';">
-                                <img src="{{ $imgSrc }}" class="card-img-top" alt="Promotion" style="height: 300px; object-fit: contain; background-color: #f8f9fa;">
+                                <img src="{{ $imgSrc }}" class="card-img-top" alt="{{ $promoTitle }}" style="height: 300px; object-fit: contain; background-color: #f8f9fa;">
                                 <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title fw-bold text-primary mb-3" style="text-transform: capitalize">{{ $promo->title ?? 'Promo' }}</h5>
-                                    <p class="card-text text-muted flex-grow-1">{{ $promo->description ?? 'Info spesial dari RS St. Elisabeth Semarang.' }}</p>
+                                    <h5 class="card-title fw-bold text-primary mb-3" style="text-transform: capitalize">{{ $promoTitle }}</h5>
+                                    <p class="card-text text-muted flex-grow-1">{{ $promoDesc }}</p>
                                     <div class="mt-4">
-                                        <a href="https://wa.me/6281234567890?text={{ urlencode('Halo, saya ingin memesan promo ' . ($promo->title ?? '')) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
-                                            <i class="fa-brands fa-whatsapp fs-5 me-2"></i> Pesan Sekarang
+                                        <a href="https://wa.me/6281234567890?text={{ urlencode($waGreeting . $promoTitle) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
+                                            <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Pesan Sekarang') }}
                                         </a>
                                     </div>
                                 </div>
@@ -73,8 +76,8 @@
                             <div class="mb-3">
                                 <i class="fa-solid fa-tags" style="font-size: 3rem; color: rgba(2, 97, 153, 0.4);"></i>
                             </div>
-                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">Belum Ada Paket & Promo</h5>
-                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.</p>
+                            <h5 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Belum Ada Paket & Promo') }}</h5>
+                            <p class="text-muted mb-0 mx-auto" style="max-width: 500px;">{{ __('Saat ini belum ada penawaran spesial terbaru. Silakan periksa kembali nanti untuk promo menarik dari kami.') }}</p>
                         </div>
                     </div>
                     @endforelse
@@ -94,17 +97,17 @@
                                 </div>
                                 <!-- Bagian Kanan: Detail Promo -->
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">
-                                    <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">Info Spesial</h6>
+                                    <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">{{ __('Info Spesial') }}</h6>
                                     <h2 id="promoModalTitle" class="fw-bold mb-4" style="color: var(--primary-color);"></h2>
                                     <p id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></p>
                                     
                                     <div class="mt-auto border-top pt-4">
-                                        <p class="text-muted fw-semibold mb-3">Dapatkan penawaran ini sekarang!</p>
+                                        <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>
                                         <div class="d-flex flex-wrap gap-2">
                                             <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
-                                                <i class="fa-brands fa-whatsapp fs-5 me-2"></i> Hubungi Kami
+                                                <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Hubungi Kami') }}
                                             </a>
-                                            <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">Tutup</button>
+                                            <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">{{ __('Tutup') }}</button>
                                         </div>
                                     </div>
                                 </div>

@@ -8,7 +8,7 @@
                     <p class="moto">Pancaran cintanya menyembuhkan derita sesama</p>
                 </div>
                 
-                <h4 class="footer-title mb-4 fs-5">Hubungi Kami</h4>
+                <h4 class="footer-title mb-4 fs-5">{{ __('Hubungi Kami') }}</h4>
                 <ul class="list-unstyled mb-4">
                     <li class="footer-list mb-3 d-flex align-items-start gap-3">
                         <i class="fa-solid fa-location-dot mt-1" style="color: var(--accent-color);"></i>
@@ -37,20 +37,20 @@
 
             <!-- Bagian 2: Tautan Cepat (2 Kolom) -->
             <div class="col-lg-4 col-md-6">
-                <h4 class="footer-title mb-4 fs-5">Tautan Cepat</h4>
+                <h4 class="footer-title mb-4 fs-5">{{ __('Tautan Cepat') }}</h4>
                 <div class="row">
                     <div class="col-6">
                         <ul class="list-unstyled">
-                            <li class="footer-list mb-3"><a href="{{{ route('tentang-kami.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Tentang Kami</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('tentang-kami.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Tentang Kami') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('news.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Elisanews</a></li>
-                            <li class="footer-list mb-3"><a href="{{{ route('promotions.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Promo Menarik</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('promotions.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Promo Menarik') }}</a></li>
                         </ul>
                     </div>
                     <div class="col-6">
                         <ul class="list-unstyled">
-                            <li class="footer-list mb-3"><a href="{{{ route('articles.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Artikel</a></li>
-                            <li class="footer-list mb-3"><a href="{{{ route('customer-information.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Info Pelanggan</a></li>
-                            <li class="footer-list mb-3"><a href="{{{ route('glossary.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Kamus Medis</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('articles.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Artikel') }}</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('customer-information.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Info Pelanggan') }}</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('glossary.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Kamus Medis') }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -58,12 +58,12 @@
 
             <!-- Bagian 3: Aplikasi Elisameds -->
             <div class="col-lg-4 col-md-12">
-                <h4 class="footer-title mb-4 fs-5">Aplikasi Elisameds</h4>
+                <h4 class="footer-title mb-4 fs-5">{{ __('Aplikasi Elisameds') }}</h4>
                 <div class="p-4 rounded-4" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);">
                     <p class="elisameds-desc mb-4 lh-lg" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
-                        Permudah urusan kesehatan Anda. Unduh aplikasi Mobile RS St. Elisabeth Semarang sekarang juga untuk layanan pendaftaran dan riwayat medis yang lebih cepat & praktis.
+                        {{ __('Permudah urusan kesehatan Anda. Unduh aplikasi Mobile RS St. Elisabeth Semarang sekarang juga untuk layanan pendaftaran dan riwayat medis yang lebih cepat & praktis.') }}
                     </p>
-                    <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="Unduh aplikasi Elisameds di Google Play Store" class="google-play-btn d-inline-block">
+                    <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="{{ __('Unduh aplikasi Elisameds di Google Play Store') }}" class="google-play-btn d-inline-block">
                         <i class="fa-brands fa-google-play"></i>
                     </a>
                 </div>
@@ -74,7 +74,7 @@
         <div class="row align-items-center py-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
             <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
                 <p class="mb-0 small" style="color: rgba(255,255,255,0.7);">
-                    &copy; 2026 <strong>Rumah Sakit Santa Elisabeth Semarang</strong>. All Rights Reserved.
+                    &copy; 2026 <strong>Rumah Sakit Santa Elisabeth Semarang</strong>. {{ __('Hak Cipta Dilindungi.') }}
                 </p>
             </div>
             <div class="col-md-6 text-center text-md-end">
