@@ -208,64 +208,6 @@ class HospitalApiService
         return [];
     }
 
-    /**
-     * Ambil daftar promoitions, 
-     * setup cache 
-     */
-    public function getPromotionsList(string $category = ''): array
-    {
-        /*
-        // ----- MASTER API LAMA (JANGAN DIHAPUS, UNCOMMENT JIKA INGIN KEMBALI) -----
-        $cacheKey = 'promotions_' . md5(serialize($category));
-        $ttl      = config('rsapi.cache_ttl.promotions');
-
-        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () use ($category) {
-            try {
-                $response = $this->apiRequest()
-                    ->withBody(json_encode([
-                        "category" => $category
-                    ]), 'application/json')
-                    ->get("{$this->baseUrl}/ads");
-
-                // Dump struktur response, lalu stop eksekusi
-                // dd($response->json());
-
-                if ($response->successful()) {
-                    return $response->json('Data', []);
-                }
-
-                Log::warning('API promotions gagal', [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
-                return [];
-
-            } catch (\Exception $e) {
-                Log::error('Gagal connect ke API RS', ['error' => $e->getMessage()]);
-                return [];
-            }
-        });
-        */
-
-        // ----- LOCAL CMS API BARU -----
-        $cacheKey = "local_cms_promotions_";
-        $ttl      = config('rsapi.cache_ttl.promotions', 60);
-
-        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () {
-            try {
-                $response = Http::withHeaders(['Accept-Language' => app()->getLocale()])->get(url('/api/cms/promotions'));
-
-                return $response->successful()
-                    ? $response->json('data', [])
-                    : [];
-            } catch (\Exception $e) {
-                Log::error('Gagal ambil data promotions dari lokal CMS API', [
-                    'error' => $e->getMessage(),
-                ]);
-                return [];
-            }
-        });
-    }
     
     public function getGlosarium(array $filters = []): array
     {
