@@ -270,10 +270,12 @@
                                 <h3 class="h5 fw-bold mb-0" style="color: var(--brand-blue-dark);">
                                     <i class="fa-solid fa-fire-flame-curved me-2" style="color: var(--brand-blue-light);"></i>{{ __('Istilah yang Sering Dicari') }}
                                 </h3>
+                                {{-- 
                                 <a href="#" class="text-decoration-none fw-semibold" style="color: var(--brand-blue-light);"
                                    onclick="document.getElementById('glossarySearchInput').focus(); return false;">
                                     {{ __('Cari sendiri') }} <i class="fa-solid fa-arrow-right ms-1"></i>
                                 </a>
+                                 --}}
                             </div>
                             @if(!empty($popularTerms))
                                 <div class="d-flex flex-wrap gap-2">
