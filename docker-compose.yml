@@ -22,9 +22,11 @@ services:
       - DB_PORT=5432
       - REDIS_HOST=web_redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-rses_redis_secret}
       - CACHE_STORE=redis
       - SESSION_DRIVER=redis
-      - QUEUE_CONNECTION=redis
+      - SESSION_CONNECTION=default
+      - QUEUE_CONNECTION=sync
     networks:
       - rses_web_network
     volumes:
@@ -59,8 +61,9 @@ services:
       - DB_HOST=web_db
       - REDIS_HOST=web_redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-rses_redis_secret}
       - CACHE_STORE=redis
-      - QUEUE_CONNECTION=redis
+      - QUEUE_CONNECTION=sync
     # Override command bawaan (php-fpm) menjadi worker scheduler
     command: ["php", "artisan", "schedule:work"]
     networks:
@@ -135,14 +138,15 @@ services:
       "redis-server",
       "--requirepass", "${REDIS_PASSWORD:-rses_redis_secret}",
       "--maxmemory", "256mb",
-      "--maxmemory-policy", "allkeys-lru"
+      "--maxmemory-policy", "volatile-lru",
+      "--appendonly", "yes"
     ]
     volumes:
       - rses_web_redisdata:/data
     networks:
       - rses_web_network
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-rses_redis_secret}", "ping"]
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:-rses_redis_secret}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
