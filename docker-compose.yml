@@ -20,6 +20,11 @@ services:
       - LOG_LEVEL=error
       - DB_HOST=web_db # Nama service Docker, bukan 127.0.0.1
       - DB_PORT=5432
+      - REDIS_HOST=web_redis
+      - REDIS_PORT=6379
+      - CACHE_STORE=redis
+      - SESSION_DRIVER=redis
+      - QUEUE_CONNECTION=redis
     networks:
       - rses_web_network
     volumes:
@@ -28,6 +33,8 @@ services:
     depends_on:
       web_db:
         condition: service_healthy # Tunggu PostgreSQL benar-benar ready
+      web_redis:
+        condition: service_healthy # Tunggu Redis benar-benar ready
     # Healthcheck: container dinyatakan "healthy" setelah entrypoint selesai.
     # Sentinel file /tmp/app_healthy dibuat di akhir entrypoint.sh.
     # Ini mencegah Nginx start sebelum migrate & config:cache selesai.
@@ -50,12 +57,18 @@ services:
     environment:
       - APP_ENV=production
       - DB_HOST=web_db
+      - REDIS_HOST=web_redis
+      - REDIS_PORT=6379
+      - CACHE_STORE=redis
+      - QUEUE_CONNECTION=redis
     # Override command bawaan (php-fpm) menjadi worker scheduler
     command: ["php", "artisan", "schedule:work"]
     networks:
       - rses_web_network
     depends_on:
       web_app:
+        condition: service_healthy
+      web_redis:
         condition: service_healthy
 
   # ---------------------------------------------------------
@@ -85,7 +98,7 @@ services:
       start_period: 15s
 
   # ---------------------------------------------------------
-  # 3. DATABASE POSTGRESQL
+  # 4. DATABASE POSTGRESQL
   # ---------------------------------------------------------
   web_db:
     image: postgres:15-alpine
@@ -111,6 +124,30 @@ services:
       retries: 5
       start_period: 10s
 
+  # ---------------------------------------------------------
+  # 5. REDIS (In-Memory Cache & Session Store)
+  # ---------------------------------------------------------
+  web_redis:
+    image: redis:7-alpine
+    container_name: rses_web_redis
+    restart: unless-stopped
+    command: [
+      "redis-server",
+      "--requirepass", "${REDIS_PASSWORD:-rses_redis_secret}",
+      "--maxmemory", "256mb",
+      "--maxmemory-policy", "allkeys-lru"
+    ]
+    volumes:
+      - rses_web_redisdata:/data
+    networks:
+      - rses_web_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-rses_redis_secret}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
 networks:
   rses_web_network:
     driver: bridge
@@ -118,3 +155,4 @@ networks:
 volumes:
   rses_web_dbdata: # PostgreSQL data persistence
   web_public_assets: # Shared folder untuk Vite CSS/JS
+  rses_web_redisdata: # Redis persistence (AOF/RDB)

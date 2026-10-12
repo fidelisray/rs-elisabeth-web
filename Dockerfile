@@ -45,8 +45,14 @@ RUN apk add --no-cache \
 
 # 2. Configure & Install PHP Extensions
 # opcache: WAJIB untuk production, meningkatkan performa PHP secara signifikan
+# phpredis: C-extension berkecepatan tinggi untuk in-memory caching, session, dan queue
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl zip opcache \
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps \
+    && rm -rf /tmp/pear \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # 3. Install Composer dari official image
