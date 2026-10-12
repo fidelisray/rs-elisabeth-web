@@ -21,7 +21,7 @@
 
     @include('components.navbar')
 
-<main>
+    <main class="facilities-page-canvas">
         <h1 class="visually-hidden">{{ __('Fasilitas dan Layanan RS Santa Elisabeth Semarang') }}</h1>
 
         {{-- ===== HERO SECTION (diambil dari promotions/index.blade.php) ===== --}}

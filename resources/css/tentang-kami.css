@@ -1,10 +1,41 @@
 
 
+/* Canvas Background */
+.tentang-kami-canvas {
+    background:
+        radial-gradient(
+            circle 500px at 90% 12%,
+            rgba(183, 228, 229, 0.32),
+            rgba(183, 228, 229, 0) 70%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f5fafe 25%,
+            #ecf5fc 60%,
+            #e4f0fa 100%
+        );
+    min-height: calc(100vh - 80px);
+    position: relative;
+    overflow-x: hidden;
+}
+
 /* Scroll Offset for Sticky Navbar */
 #motto,
 #sejarah-singkat,
 #visi-dan-misi {
     scroll-margin-top: 95px;
+}
+
+/* Buffer Spacing Sebelum Footer */
+#visi-dan-misi {
+    padding-bottom: 5.5rem;
+}
+
+@media (min-width: 992px) {
+    #visi-dan-misi {
+        padding-bottom: 7.5rem;
+    }
 }
 
 /* Motto Section */

@@ -68,9 +68,11 @@
                 <!-- Tombol Aksi Kanan -->
                 <div class="d-flex align-items-center gap-3">
                     <!-- Search Trigger (Buka Modal) -->
+                    {{-- 
                     <button class="nav-search-trigger" data-bs-toggle="modal" data-bs-target="#searchModal" aria-label="{{ __('Cari') }}">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
+                     --}}
                     <!-- Buat Janji CTA -->
                     <a class="btn btn-accent btn-janji rounded-pill px-4 fw-semibold" href="https://regonline.rs-elisabeth.com" target="_blank">
                         <i class="far fa-calendar-check me-2"></i>{{ __('Buat Janji') }}

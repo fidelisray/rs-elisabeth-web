@@ -55,7 +55,7 @@
 
 /* Quick Access Cards */
 #quick-access {
-    background: linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
+    background: transparent;
 }
 
 #quick-access div.container.quick-access-container div.quick-access-options {

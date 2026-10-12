@@ -56,12 +56,21 @@ section#hero-section .hero-subtitle {
     }
 }
 
+/* Unified Canvas for Facilities Page */
+.facilities-page-canvas {
+    background:
+        radial-gradient(circle 480px at 12% 18%, rgba(183, 228, 229, 0.28), rgba(183, 228, 229, 0) 70%),
+        radial-gradient(circle 520px at 88% 55%, rgba(0, 143, 215, 0.06), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #ffffff 0%, #f4f9fd 25%, #eaf4fb 65%, #e3effa 100%);
+    min-height: calc(100vh - 80px);
+    position: relative;
+    overflow-x: hidden;
+}
+
 /* ---------- Section Intro ---------- */
 #facilities-intro {
     padding: 3.5rem 0 2rem;
-    background:
-        radial-gradient(circle 320px at 10% 20%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
-        linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
+    background: transparent;
 }
 
 #facilities-intro .intro-label {
@@ -107,10 +116,8 @@ section#hero-section .hero-subtitle {
 
 /* ---------- Main Facilities Section ---------- */
 #facilities-main {
-    padding: 2rem 0 5rem;
-    background:
-        radial-gradient(circle 360px at 90% 60%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%),
-        linear-gradient(180deg, #f1f8fd 0%, #eaf4fb 100%);
+    padding: 2rem 0 6rem;
+    background: transparent;
 }
 
 /* ---- Left Column: Facility List ---- */

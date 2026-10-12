@@ -23,7 +23,7 @@
 
     @include('components.navbar')
 
-<main>
+    <main class="doctor-page-canvas">
         <section id="hero-section">
             <div class="container">
                 <nav class="hero-breadcrumb" aria-label="breadcrumb">

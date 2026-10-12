@@ -24,8 +24,7 @@
 
     @include('components.navbar')
 
-</div>
-    <main>
+    <main class="home-canvas">
         <h1 class="visually-hidden">Rumah Sakit Santa Elisabeth Semarang</h1>
 
         <!-- Modern Promo Banner Section (Hero Baru) -->

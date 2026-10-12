@@ -24,7 +24,7 @@
 
     @include('components.navbar')
 
-<main style="background: radial-gradient(circle 360px at 90% 15%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);">
+    <main class="tentang-kami-canvas">
         <!-- Hero Section -->
         <section id="hero-section">
             <div class="container">
