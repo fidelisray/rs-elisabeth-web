@@ -24,4 +24,21 @@ return [
     |--------------------------------------------------------------------------
     */
     'timeout' => 10,
+
+    /*
+    |--------------------------------------------------------------------------
+    | CMS API Cache TTL (detik)
+    |--------------------------------------------------------------------------
+    | Lama penyimpanan respons API CMS di dalam cache, dikelompokkan per modul.
+    | Digunakan oleh App\Services\CmsApiService untuk menghindari angka TTL
+    | yang tersebar (hardcoded) di dalam kode.
+    */
+    'cache_ttl' => [
+        'news'              => 600, // 10 menit
+        'articles'          => 600, // 10 menit
+        'promotions'        => 600, // 10 menit
+        'facilities'        => 600, // 10 menit
+        'room_facilities'   => 600, // 10 menit
+        'banner_promotions' => 600, // 10 menit
+    ],
 ];

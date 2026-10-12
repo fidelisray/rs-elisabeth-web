@@ -49,6 +49,15 @@ class CmsApiService
     }
 
     /**
+     * Ambil nilai TTL cache untuk sebuah modul dari config/cms_api.php.
+     * Fallback ke 600 detik bila kunci belum terdaftar agar perilaku tetap aman.
+     */
+    protected function cacheTtl(string $module): int
+    {
+        return (int) config("cms_api.cache_ttl.{$module}", 600);
+    }
+
+    /**
      * =========================================================================
      * ENDPOINT METHODS
      * Berikut adalah contoh method untuk menarik data dari Headless CMS.
@@ -64,7 +73,7 @@ class CmsApiService
         $locale = app()->getLocale();
         // Parameter filters dan locale disertakan pada cache key agar spesifik
         $cacheKey = "cms_news_{$locale}_" . md5(serialize($filters));
-        $ttl = 600; // TTL Cache: 10 menit
+        $ttl = $this->cacheTtl('news');
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
             try {
@@ -97,7 +106,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_news_slug_{$locale}_{$slug}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('news');
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
             try {
@@ -122,7 +131,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_articles_{$locale}_" . md5(serialize($filters));
-        $ttl = 600; 
+        $ttl = $this->cacheTtl('articles');
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
             try {
@@ -147,7 +156,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_article_{$locale}_{$id}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('articles');
 
         return Cache::remember($cacheKey, $ttl, function () use ($id) {
             try {
@@ -174,7 +183,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_article_slug_{$locale}_{$slug}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('articles');
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
             try {
@@ -199,7 +208,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_promotions_{$locale}_" . md5(serialize($filters));
-        $ttl = 600;
+        $ttl = $this->cacheTtl('promotions');
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
             try {
@@ -220,7 +229,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_promotion_{$locale}_{$id}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('promotions');
 
         return Cache::remember($cacheKey, $ttl, function () use ($id) {
             try {
@@ -241,7 +250,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_facilities_{$locale}_" . md5(serialize($filters));
-        $ttl = 600;
+        $ttl = $this->cacheTtl('facilities');
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
             try {
@@ -262,7 +271,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_facility_{$locale}_{$slug}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('facilities');
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
             try {
@@ -283,7 +292,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_room_facilities_{$locale}_" . md5(serialize($filters));
-        $ttl = 600;
+        $ttl = $this->cacheTtl('room_facilities');
 
         return Cache::remember($cacheKey, $ttl, function () use ($filters) {
             try {
@@ -304,7 +313,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_room_facility_{$locale}_{$slug}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('room_facilities');
 
         return Cache::remember($cacheKey, $ttl, function () use ($slug) {
             try {
@@ -325,7 +334,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_banner_promotions_{$locale}";
-        $ttl = 600;
+        $ttl = $this->cacheTtl('banner_promotions');
 
         return Cache::remember($cacheKey, $ttl, function () {
             try {
