@@ -1,5 +1,5 @@
 import { fetchAllDokter, fetchDokterBySpecialtyCode, filterDoctors, state } from './dokterService.js';
-import { renderDoctorPage, renderModal, showLoading, showError } from './dokterUI.js';
+import { renderDoctorPage, renderModal, showLoading, showError, t } from './dokterUI.js';
 
 // Elements
 const clinicSearch = document.getElementById("clinicSearch");
@@ -7,14 +7,6 @@ const clinicOptions = document.querySelectorAll(".clinic-option");
 const dropdownButton = document.getElementById("clinicDropdown");
 const searchInput = document.getElementById("searchKeyword");
 const detailDokterModal = document.getElementById("detailDokter");
-
-const isEn = () => document.documentElement.lang?.toLowerCase().startsWith('en');
-const tSearch = {
-    clinicResult: () => isEn() ? "Clinic Search Results:" : "Hasil Pencarian Klinik:",
-    nameResult: () => isEn() ? "Name Search Results:" : "Hasil Pencarian Nama:",
-    specialty: () => isEn() ? "Specialty:" : "Spesialisasi:",
-    selectSpecialty: () => isEn() ? "Select Specialty" : "Pilih Spesialisasi",
-};
 
 // Initialization
 document.addEventListener("DOMContentLoaded", async () => {
@@ -45,13 +37,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (fetchSuccess) {
         if (klinik) {
             filterDoctors(klinik, "klinik");
-            updateSearchSummary(tSearch.clinicResult(), klinik);
+            updateSearchSummary(t('clinicResult'), klinik);
         } else if (nama) {
             if (searchInput) searchInput.value = nama;
             filterDoctors(nama.toLowerCase());
-            updateSearchSummary(tSearch.nameResult(), nama);
+            updateSearchSummary(t('nameResult'), nama);
         } else if (specialtyCode && dropdownButton) {
-            updateSearchSummary(tSearch.specialty(), dropdownButton.dataset.selected_name);
+            updateSearchSummary(t('specialty'), dropdownButton.dataset.selected_name);
         } else {
             updateSearchSummary(null);
         }
@@ -100,7 +92,7 @@ if (searchInput) {
         searchDebounceTimer = setTimeout(() => {
             const keyword = this.value.trim().toLowerCase();
             filterDoctors(keyword);
-            updateSearchSummary(keyword ? tSearch.nameResult() : null, keyword);
+            updateSearchSummary(keyword ? t('nameResult') : null, keyword);
             renderDoctorPage(handlePageChange);
         }, 400);
     });
@@ -135,7 +127,7 @@ clinicOptions.forEach((option) => {
         const success = await fetchDokterBySpecialtyCode(selected_code);
         if (success) {
             if (searchInput) searchInput.value = "";
-            updateSearchSummary(tSearch.specialty(), selected_name);
+            updateSearchSummary(t('specialty'), selected_name);
             renderDoctorPage(handlePageChange);
         } else {
             showError();
@@ -149,7 +141,7 @@ clinicOptions.forEach((option) => {
 async function resetAllSearchState() {
     // 1. Clear Spesialisasi & Dokter inputs
     if (dropdownButton) {
-        dropdownButton.innerText = tSearch.selectSpecialty();
+        dropdownButton.innerText = t('selectSpecialty');
         dropdownButton.dataset.selected_name = "";
         dropdownButton.dataset.selected_code = "";
     }

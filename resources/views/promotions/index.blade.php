@@ -49,7 +49,7 @@
                             $imgSrc = !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg');
                             $promoTitle = $promo->title ?? __('Promo');
                             $promoDesc = $promo->description ?? __('Info spesial dari RS St. Elisabeth Semarang.');
-                            $waGreeting = app()->getLocale() === 'en' ? 'Hello, I would like to order the promo ' : 'Halo, saya ingin memesan promo ';
+                            $waText = __('Halo, saya ingin memesan promo :title', ['title' => $promoTitle]);
                         @endphp
                         <div class="col-md-4 mb-4">
                             <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden" 
@@ -63,7 +63,7 @@
                                     <h5 class="card-title fw-bold text-primary mb-3" style="text-transform: capitalize">{{ $promoTitle }}</h5>
                                     <p class="card-text text-muted flex-grow-1">{{ $promoDesc }}</p>
                                     <div class="mt-4">
-                                        <a href="https://wa.me/6281234567890?text={{ urlencode($waGreeting . $promoTitle) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
+                                        <a href="https://wa.me/6281234567890?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
                                             <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Pesan Sekarang') }}
                                         </a>
                                     </div>
@@ -88,12 +88,12 @@
             <div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white p-2 rounded-circle shadow-sm" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.9;"></button>
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white p-2 rounded-circle shadow-sm" data-bs-dismiss="modal" aria-label="{{ __('Tutup') }}" style="opacity: 0.9;"></button>
                         <div class="modal-body p-0">
                             <div class="row g-0">
                                 <!-- Bagian Kiri: Gambar Promo -->
                                 <div class="col-md-6 d-flex align-items-center justify-content-center bg-light">
-                                    <img src="" id="promoModalImg" class="img-fluid w-100 h-100" style="object-fit: contain; max-height: 85vh;" alt="Promo">
+                                    <img src="" id="promoModalImg" class="img-fluid w-100 h-100" style="object-fit: contain; max-height: 85vh;" alt="{{ __('Promo') }}">
                                 </div>
                                 <!-- Bagian Kanan: Detail Promo -->
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">

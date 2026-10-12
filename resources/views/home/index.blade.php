@@ -84,11 +84,11 @@
                 @if(count($banners) > 1)
                 <button class="carousel-control-prev" type="button" data-bs-target="#promo-banner-carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">{{ __('Sebelumnya') }}</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#promo-banner-carousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">{{ __('Selanjutnya') }}</span>
                 </button>
                 @endif
 
@@ -119,7 +119,7 @@
                         </a>
                     </div>
                     <div class="col-6 col-md-3 quick-access-option-3">
-                        <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20membuat%20janji%20temu" class="text-decoration-none h-100">
+                        <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin membuat janji temu')) }}" class="text-decoration-none h-100">
                             <div class="card card-contact h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-brands fa-whatsapp whatsapp-icon mb-2 mb-md-3"></i>
@@ -185,7 +185,7 @@
                     </div>
                     <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
                         <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
-                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="Fasilitas RS St. Elisabeth Semarang" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
+                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="{{ __('Fasilitas RS St. Elisabeth Semarang') }}" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
                     </div>
                 </div>
             </div>
@@ -233,11 +233,11 @@
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">{{ __('Sebelumnya') }}</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
                         <span class="carousel-control-next-icon bg-dark p-3 rounded-circle" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Next</span>
+                        <span class="visually-hidden">{{ __('Selanjutnya') }}</span>
                     </button>
                 </div>
             </div>
@@ -344,12 +344,12 @@
                 <div class="row g-4 justify-content-center" id="promoTrack">
                     @forelse($promotions as $promo)
                         <div class="col-md-6 col-lg-3 {{ $loop->iteration > 4 ? '' : 'position-relative' }}">
-                            <div class="promo-card" {!! $loop->iteration <= 4 ? 'data-bs-toggle="modal" data-bs-target="#promoModal" data-title="'.e($promo->title ?? 'Promo').'" data-desc="'.e($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.').'" data-img="'.(!empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg')).'"' : '' !!}>
+                            <div class="promo-card" {!! $loop->iteration <= 4 ? 'data-bs-toggle="modal" data-bs-target="#promoModal" data-title="'.e($promo->title ?? __('Promo')).'" data-desc="'.e($promo->description ?? __('Penawaran spesial dari RS St. Elisabeth Semarang.')).'" data-img="'.(!empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg')).'"' : '' !!}>
                                 <div class="card {{ $loop->iteration > 4 ? 'position-relative teased-card' : 'h-100' }}">
-                                    <img src="{{ !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $promo->title ?? 'Promo' }}">
+                                    <img src="{{ !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $promo->title ?? __('Promo') }}">
                                     <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promo->title ?? 'Promo' }}</h5>
-                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promo->description ?? 'Penawaran spesial dari RS St. Elisabeth Semarang.'), 60) }}</p>
+                                        <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promo->title ?? __('Promo') }}</h5>
+                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promo->description ?? __('Penawaran spesial dari RS St. Elisabeth Semarang.')), 60) }}</p>
                                         <div class="mt-3 text-end">
                                             <span class="text-secondary fw-semibold small">{{ __('Lihat Detail') }} <i class="fa-solid fa-arrow-right ms-1"></i></span>
                                         </div>
@@ -378,12 +378,12 @@
             <div class="modal fade" id="promoModal" tabindex="-1" aria-labelledby="promoModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white p-2 rounded-circle shadow-sm" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.9;"></button>
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3 bg-white p-2 rounded-circle shadow-sm" data-bs-dismiss="modal" aria-label="{{ __('Tutup') }}" style="opacity: 0.9;"></button>
                         <div class="modal-body p-0">
                             <div class="row g-0">
                                 <!-- Bagian Kiri: Gambar Promo -->
                                 <div class="col-md-6 d-flex align-items-center justify-content-center bg-light">
-                                    <img src="" id="promoModalImg" class="img-fluid w-100 h-100" style="object-fit: contain; max-height: 85vh;" alt="Promo">
+                                    <img src="" id="promoModalImg" class="img-fluid w-100 h-100" style="object-fit: contain; max-height: 85vh;" alt="{{ __('Promo') }}">
                                 </div>
                                 <!-- Bagian Kanan: Detail Promo -->
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">
@@ -592,7 +592,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-heart-pulse"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{{ __('Demi Kesehatan Anda, kami menyarankan untuk') }} <strong>{{ __('tidak melakukan kunjungan') }}</strong> {{ __('terlebih dahulu apabila kondisi badan sedang tidak fit.') }}</p>
+                                    <p class="mb-0 text-muted">{!! __('Demi Kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.') !!}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -600,7 +600,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-volume-xmark"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{{ __('Mohon untuk') }} <strong>{{ __('tidak berbicara keras') }}</strong> {{ __('dan berkunjung secara bergantian (') }}<strong>{{ __('maksimal 2 pengunjung') }}</strong> {{ __('untuk tiap pasien).') }}</p>
+                                    <p class="mb-0 text-muted">{!! __('Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).') !!}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -608,7 +608,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-child-reaching"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{{ __('Anak-anak') }} <strong>{{ __('di bawah usia 12 tahun') }}</strong> {{ __('tidak diizinkan berkunjung.') }}</p>
+                                    <p class="mb-0 text-muted">{!! __('Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.') !!}</p>
                                 </div>
                             </div>
                         </div>

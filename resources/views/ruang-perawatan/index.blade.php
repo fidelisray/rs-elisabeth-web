@@ -165,7 +165,7 @@
                                         </a>
                                         <div class="d-flex w-100 gap-2">
                                             @php
-                                                $waText = $room->whatsapp_text ?? 'Halo, saya ingin informasi ruangan ' . $room->name;
+                                                $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
                                             @endphp
                                             <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-gold flex-grow-1 d-flex align-items-center justify-content-center gap-1">
                                                 <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya') }}
@@ -190,7 +190,7 @@
                                 <p class="mb-4 mx-auto" style="max-width: 600px; color: #a8b2c1; font-size: 1.05rem; line-height: 1.6;">
                                     {{ __('Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.') }}
                                 </p>
-                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20ketersediaan%20dan%20informasi%20Ruang%20Perawatan%20Premium%20RS%20St.%20Elisabeth" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
+                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan dan informasi Ruang Perawatan Premium RS St. Elisabeth')) }}" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
                                     <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Hubungi Personal Assistant Kami') }}
                                 </a>
                             </div>
@@ -432,7 +432,7 @@
                                             <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail') }}
                                         </a>
                                         @php
-                                            $waText = $room->whatsapp_text ?? 'Halo, saya ingin informasi ruangan ' . $room->name;
+                                            $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
                                         @endphp
                                         <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-blue w-100 d-flex align-items-center justify-content-center gap-2">
                                             <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya Ketersediaan') }}
@@ -451,7 +451,7 @@
                                 <p class="text-muted mb-4 mx-auto" style="max-width: 550px;">
                                     {{ __('Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.') }}
                                 </p>
-                                <a href="https://wa.me/6285600600870?text=Halo,%20saya%20ingin%20menanyakan%20informasi%20ketersediaan%20Ruang%20Perawatan%20Standar%20di%20RS%20St.%20Elisabeth" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
+                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan informasi ketersediaan Ruang Perawatan Standar di RS St. Elisabeth')) }}" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
                                     <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Tanya Ketersediaan Kamar') }}
                                 </a>
                             </div>
@@ -841,7 +841,7 @@
                 <h2 class="cta-title">{{ __('Siap Melakukan Reservasi?') }}</h2>
                 <p class="cta-subtitle">{{ __('Hubungi tim kami sekarang untuk memeriksa ketersediaan kamar dan mendapatkan informasi lebih lanjut tentang biaya perawatan.') }}</p>
                 <div class="d-flex justify-content-center flex-wrap">
-                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20reservasi%20ruang%20perawatan" target="_blank" class="btn-cta-white">
+                    <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin reservasi ruang perawatan')) }}" target="_blank" class="btn-cta-white">
                         <i class="fa-brands fa-whatsapp fs-5"></i> {{ __('Hubungi via WhatsApp') }}
                     </a>
                     <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-cta-outline">

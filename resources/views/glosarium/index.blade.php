@@ -387,7 +387,7 @@
                         
                         <div class="modal-header bg-primary text-white">
                             <h5 class="modal-title" id="termDetailModalLabel">{{ __('Detail Istilah Medis') }}</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{{ __('Tutup') }}"></button>
                         </div>
                         
                         <div class="modal-body">

@@ -18,7 +18,11 @@ export const I18N = {
         doctorNotFoundDesc: "Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.",
         loadingDoctors: "Memuat data dokter...",
         modalScheduleNotAvailable: "Jadwal praktik belum tersedia untuk saat ini.",
-        paginationInputTitle: "Ketik halaman lalu Enter"
+        paginationInputTitle: "Ketik halaman lalu Enter",
+        clinicResult: "Hasil Pencarian Klinik:",
+        nameResult: "Hasil Pencarian Nama:",
+        specialty: "Spesialisasi:",
+        selectSpecialty: "Pilih Spesialisasi"
     },
     en: {
         days: { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" },
@@ -33,7 +37,11 @@ export const I18N = {
         doctorNotFoundDesc: "Sorry, we could not find any doctors or clinics matching your search keywords. Please try a different specialty or doctor name.",
         loadingDoctors: "Loading doctors data...",
         modalScheduleNotAvailable: "Practice schedule is not available at the moment.",
-        paginationInputTitle: "Type page and press Enter"
+        paginationInputTitle: "Type page and press Enter",
+        clinicResult: "Clinic Search Results:",
+        nameResult: "Name Search Results:",
+        specialty: "Specialty:",
+        selectSpecialty: "Select Specialty"
     }
 };
 

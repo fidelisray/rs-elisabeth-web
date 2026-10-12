@@ -91,10 +91,10 @@
                             <div class="card border-0 shadow-sm rounded-4 mb-4">
                                 <div class="card-body p-4 text-center">
                                     <h4 class="fw-bold mb-3">{{ __('Tertarik dengan ruangan ini?') }}</h4>
-                                    <p class="text-muted small mb-4">{{ __('Hubungi kami untuk menanyakan ketersediaan kamar') }} {{ $room->name }} {{ __('atau informasi lebih lanjut.') }}</p>
+                                    <p class="text-muted small mb-4">{{ __('Hubungi kami untuk menanyakan ketersediaan kamar :name atau informasi lebih lanjut.', ['name' => $room->name]) }}</p>
                                     
                                     @php
-                                        $waText = $room->whatsapp_text ?? 'Halo, saya ingin menanyakan ketersediaan ruang perawatan ' . $room->name;
+                                        $waText = $room->whatsapp_text ?? __('Halo, saya ingin menanyakan ketersediaan ruang perawatan :name', ['name' => $room->name]);
                                     @endphp
                                     
                                     <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill py-3 fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">

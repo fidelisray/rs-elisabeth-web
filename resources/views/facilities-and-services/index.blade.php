@@ -111,7 +111,7 @@
                                     @endif
                                     
                                     <div class="facility-cta">
-                                        <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20layanan%20{{ urlencode($facility->name) }}" target="_blank" class="btn-primary-facility">
+                                        <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin informasi layanan :name', ['name' => $facility->name])) }}" target="_blank" class="btn-primary-facility">
                                             <i class="fa-brands fa-whatsapp"></i> {{ __('Hubungi Kami') }}
                                         </a>
                                         <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-outline-facility">

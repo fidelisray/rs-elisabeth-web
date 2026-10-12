@@ -68,7 +68,7 @@
                 <!-- Tombol Aksi Kanan -->
                 <div class="d-flex align-items-center gap-3">
                     <!-- Search Trigger (Buka Modal) -->
-                    <button class="nav-search-trigger" data-bs-toggle="modal" data-bs-target="#searchModal" aria-label="Cari">
+                    <button class="nav-search-trigger" data-bs-toggle="modal" data-bs-target="#searchModal" aria-label="{{ __('Cari') }}">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                     <!-- Buat Janji CTA -->
@@ -109,9 +109,19 @@
     <div class="offcanvas offcanvas-end offcanvas-menu" tabindex="-1" id="mobileOffcanvas">
         <div class="offcanvas-header offcanvas-menu-header">
             <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth" height="36" class="offcanvas-logo">
-            <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="{{ __('Tutup') }}"></button>
         </div>
         <div class="offcanvas-body offcanvas-menu-body">
+            <!-- Mobile Language Switcher Bar -->
+            <div class="px-4 py-3 bg-white border-bottom d-flex align-items-center justify-content-between">
+                <span class="small fw-semibold text-secondary">
+                    <i class="fas fa-globe me-2 text-primary"></i>{{ __('Bahasa') }}
+                </span>
+                <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Pilih Bahasa') }}">
+                    <a href="{{ route('lang.switch', 'id') }}" class="btn {{ app()->getLocale() === 'id' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold">ID</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="btn {{ app()->getLocale() === 'en' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold">EN</a>
+                </div>
+            </div>
             <ul class="offcanvas-nav-list">
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}"><i class="fa-solid fa-house me-2"></i>{{ __('Beranda') }}</a></li>
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}"><i class="fa-solid fa-hospital me-2"></i>{{ __('Tentang Kami') }}</a></li>
