@@ -208,104 +208,16 @@ class HospitalApiService
         return [];
     }
 
-    
-    public function getGlosarium(array $filters = []): array
-    {
-        $cacheKey = 'glosarium_';
-        $ttl      = config('rsapi.cache_ttl.glosarium');
-
-        return Cache::remember($cacheKey . '_' . app()->getLocale(), $ttl, function () use ($filters) {
-            $response = $this->requestWithRetry('GET', '/glossarium');
-
-            $data = $response['Data'] ?? [];
-
-            usort($data, fn($a, $b) => strcasecmp($a['istilah'], $b['istilah']));
-
-            return $data ?? [];
-        });
-    }
-
-    /**
-     * Paksa refresh cache kamus medis (dipanggil manual / via Artisan).
-     */
-    public function refreshGlossaryCache(): array
-    {
-        // 1. Coba ambil data baru langsung dari API (bypass cache)
-        try {
-            $response = $this->requestWithRetry('GET', '/glossarium');
-            $data = $response['Data'] ?? [];
-
-            // 2. Jika data berhasil ditarik dan TIDAK kosong, timpa cache lama
-            if (!empty($data)) {
-                usort($data, fn($a, $b) => strcasecmp($a['istilah'], $b['istilah']));
-                
-                $ttl = config('rsapi.cache_ttl.glosarium');
-                Cache::put('glosarium_' . app()->getLocale(), $data, $ttl);
-                
-                Log::info('Glossary cache refreshed successfully with fresh API data.');
-                return $data;
-            }
-        } catch (\Exception $e) {
-            Log::error('Failed to connect to API during glossary cache refresh: ' . $e->getMessage());
-        }
-
-        // 3. Jika API gagal / kosong, jangan hapus cache lama!
-        Log::warning('Failed to refresh glossary cache: API offline or returned empty. Keeping old cache.');
-        
-        // Kembalikan cache lama yang masih ada agar command tidak error
-        return Cache::get('glosarium_' . app()->getLocale()) ?? [];
-    }
-
-
-    public function getCachedGlosarium(): array
-    {
-        return Cache::get('glosarium_' . app()->getLocale(), []);
-    }
-
-    /**
-     * Filter glossary berdasarkan huruf awal.
-     * Proses di PHP, tidak perlu request API lagi.
-     */
-    public function getGlossaryByLetter(string $letter): array
-    {
-        $all = $this->getCachedGlosarium();
-
-        if ($letter === 'ALL') {
-            return $all;
-        }
-
-        return array_values(
-            array_filter($all, fn($item) =>
-                strtoupper(substr($item['istilah'], 0, 1)) === strtoupper($letter)
-            )
-        );
-    }
-
-    /**
-     * Ambil glossary dikelompokkan berdasarkan 2 huruf pertama.
-     * Memanfaatkan getGlossaryByLetter() yang sudah ada.
-     */
-    public function getGlossaryGrouped(string $letter = 'ALL'): array
-    {
-        $items   = $this->getGlossaryByLetter($letter); // pakai method lama
-        $grouped = [];
-
-        foreach ($items as $item) {
-            $prefix            = strtoupper(substr($item['istilah'], 0, 2));
-            $grouped[$prefix][] = $item;
-        }
-
-        ksort($grouped); // urutkan prefix-nya (Ba, Bi, Bu, dst)
-        return $grouped;
-    }
-
     /**
      * Tentukan file JSON kamus medis berdasarkan locale aktif.
      * Mendukung internasionalisasi (en / id) dengan fallback ke 'en'.
+     *
+     * NOTE: visibility diubah ke public (dari protected) agar dapat dipakai
+     * oleh command glossary:refresh untuk mengecek keberadaan file JSON.
      */
-    protected function getLocalGlossaryJsonPath(): string
+    public function getLocalGlossaryJsonPath(?string $locale = null): string
     {
-        $locale = app()->getLocale();
+        $locale = $locale ?? app()->getLocale();
 
         // Pastikan hanya locale yang kita dukung yang dipetakan ke file yang benar.
         $supported = ['en', 'id'];
@@ -372,6 +284,52 @@ class HospitalApiService
                 $decoded['data']
             )));
         });
+    }
+
+    /**
+     * Validasi & hitung isi file JSON kamus medis lokal untuk seluruh locale.
+     *
+     * Dipakai oleh command `glossary:refresh` untuk memastikan file JSON sumber
+     * (bukan API eksternal) ada dan berformat valid. Mengembalikan map
+     * ['id' => int, 'en' => int] berisi jumlah entri per locale.
+     *
+     * Tidak menyentuh cache sama sekali: cache per-locale memakai key yang
+     * menyertakan mtime file, sehingga perubahan file otomatis membuat cache
+     * lama tidak terpakai.
+     */
+    public function refreshGlossaryCache(): array
+    {
+        $summary = [];
+
+        foreach (['id', 'en'] as $locale) {
+            $path = $this->getLocalGlossaryJsonPath($locale);
+
+            if (!file_exists($path)) {
+                Log::warning('File JSON kamus medis lokal tidak ditemukan', ['path' => $path]);
+                $summary[$locale] = 0;
+                continue;
+            }
+
+            $raw = file_get_contents($path);
+
+            if ($raw === false) {
+                Log::error('Gagal membaca file JSON kamus medis lokal', ['path' => $path]);
+                $summary[$locale] = 0;
+                continue;
+            }
+
+            $decoded = json_decode($raw, true);
+
+            if (!is_array($decoded) || !isset($decoded['data']) || !is_array($decoded['data'])) {
+                Log::error('Struktur file JSON kamus medis lokal tidak valid', ['path' => $path]);
+                $summary[$locale] = 0;
+                continue;
+            }
+
+            $summary[$locale] = count($decoded['data']);
+        }
+
+        return $summary;
     }
 
     /**
