@@ -86,8 +86,17 @@ Route::get('lang/{locale}', function ($locale) {
     // Hindari redirect()->back() yang rapuh ketika header Referer tidak ada.
     // Fallback ke halaman utama bila referer kosong atau sama dengan URL switcher
     // (mencegah redirect loop).
+    //
+    // Keamanan: hanya izinkan redirect ke URL internal (host yang sama dengan
+    // aplikasi) untuk mencegah open-redirect bila header Referer di-spoof
+    // ke domain pihak ketiga.
     $previous = url()->previous();
     $current  = url()->current();
 
-    return redirect($previous !== $current ? $previous : url('/'));
+    $previousHost = parse_url($previous, PHP_URL_HOST);
+    $appHost      = parse_url(url('/'), PHP_URL_HOST);
+
+    $target = ($previous !== $current && $previousHost === $appHost) ? $previous : url('/');
+
+    return redirect($target);
 })->name('lang.switch');

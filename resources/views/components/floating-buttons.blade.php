@@ -1,6 +1,6 @@
 <!-- Floating Emergency Button -->
 <a href="tel:+62248502244" class="floating-emergency text-decoration-none text-white"
-    title="Emergency Call (024) 8502244">
+    title="{{ __('Panggilan Darurat (024) 8502244') }}">
     <i class="fa-solid fa-truck-medical"></i>
 </a>
 

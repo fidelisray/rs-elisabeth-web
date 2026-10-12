@@ -42,7 +42,7 @@
                     <div class="col-6">
                         <ul class="list-unstyled">
                             <li class="footer-list mb-3"><a href="{{{ route('tentang-kami.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Tentang Kami') }}</a></li>
-                            <li class="footer-list mb-3"><a href="{{{ route('news.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> Elisanews</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('news.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('ElisaNews') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('promotions.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Promo Menarik') }}</a></li>
                         </ul>
                     </div>
