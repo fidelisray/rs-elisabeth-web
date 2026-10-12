@@ -592,7 +592,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-heart-pulse"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{!! __('Demi Kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.') !!}</p>
+                                    <p class="mb-0 text-muted">{!! __('Demi Kesehatan Anda, kami menyarankan untuk :strong terlebih dahulu apabila kondisi badan sedang tidak fit.', ['strong' => '<strong>' . __('tidak melakukan kunjungan') . '</strong>']) !!}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -600,7 +600,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-volume-xmark"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{!! __('Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).') !!}</p>
+                                    <p class="mb-0 text-muted">{!! __('Mohon untuk :strong1 dan berkunjung secara bergantian (:strong2 untuk tiap pasien).', ['strong1' => '<strong>' . __('tidak berbicara keras') . '</strong>', 'strong2' => '<strong>' . __('maksimal 2 pengunjung') . '</strong>']) !!}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-4">
@@ -608,7 +608,7 @@
                                     <div class="ci-rule-icon mx-auto mb-3">
                                         <i class="fa-solid fa-child-reaching"></i>
                                     </div>
-                                    <p class="mb-0 text-muted">{!! __('Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.') !!}</p>
+                                    <p class="mb-0 text-muted">{!! __('Anak-anak :strong tidak diizinkan berkunjung.', ['strong' => '<strong>' . __('di bawah usia 12 tahun') . '</strong>']) !!}</p>
                                 </div>
                             </div>
                         </div>
@@ -662,7 +662,7 @@
                     <div class="col-lg-6 mb-5 mb-lg-0 app-content pe-lg-5">
                         <span class="badge bg-primary text-white mb-3 px-3 py-2 rounded-pill fw-semibold shadow-sm">Elisameds App</span>
                         <h2 class="display-5 mb-4">{{ __('Kemudahan Dalam Genggaman Anda') }}</h2>
-                        <p class="lead mb-4" style="color: #4a5568;">{!! __('Aplikasi <strong>Elisameds</strong> hadir untuk menyederhanakan layanan kesehatan Anda di RS St. Elisabeth Semarang. Dari pendaftaran hingga riwayat medis, semuanya lebih praktis.') !!}</p>
+                        <p class="lead mb-4" style="color: #4a5568;">{!! __('Aplikasi :strong hadir untuk menyederhanakan layanan kesehatan Anda di RS St. Elisabeth Semarang. Dari pendaftaran hingga riwayat medis, semuanya lebih praktis.', ['strong' => '<strong>' . __('Elisameds') . '</strong>']) !!}</p>
 
                         <ul class="list-unstyled mb-5">
                             <li class="mb-3 d-flex align-items-center"><i class="fas fa-check-circle me-3 fs-5" style="color: var(--primary-color);"></i> <span>{{ __('Reservasi dokter dan klinik secara online') }}</span></li>

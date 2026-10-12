@@ -96,7 +96,7 @@
                                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-4 flex-shrink-0" style="width: 50px; height: 50px;">
                                     <i class="fa-solid fa-heart-pulse fs-5"></i>
                                 </div>
-                                <p class="mb-0 text-muted">{!! __('Demi Kesehatan Anda, kami menyarankan untuk <strong>tidak melakukan kunjungan</strong> terlebih dahulu apabila kondisi badan sedang tidak fit.') !!}</p>
+                                <p class="mb-0 text-muted">{!! __('Demi Kesehatan Anda, kami menyarankan untuk :strong terlebih dahulu apabila kondisi badan sedang tidak fit.', ['strong' => '<strong>' . __('tidak melakukan kunjungan') . '</strong>']) !!}</p>
                             </div>
                         </div>
                         <div class="card border-0 shadow-sm rounded-4 p-2 mb-3 bg-white">
@@ -104,7 +104,7 @@
                                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-4 flex-shrink-0" style="width: 50px; height: 50px;">
                                     <i class="fa-solid fa-volume-xmark fs-5"></i>
                                 </div>
-                                <p class="mb-0 text-muted">{!! __('Mohon untuk <strong>tidak berbicara keras</strong> dan berkunjung secara bergantian (<strong>maksimal 2 pengunjung</strong> untuk tiap pasien).') !!}</p>
+                                <p class="mb-0 text-muted">{!! __('Mohon untuk :strong1 dan berkunjung secara bergantian (:strong2 untuk tiap pasien).', ['strong1' => '<strong>' . __('tidak berbicara keras') . '</strong>', 'strong2' => '<strong>' . __('maksimal 2 pengunjung') . '</strong>']) !!}</p>
                             </div>
                         </div>
                         <div class="card border-0 shadow-sm rounded-4 p-2 mb-4 bg-white">
@@ -112,7 +112,7 @@
                                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center me-4 flex-shrink-0" style="width: 50px; height: 50px;">
                                     <i class="fa-solid fa-child-reaching fs-5"></i>
                                 </div>
-                                <p class="mb-0 text-muted">{!! __('Anak-anak <strong>di bawah usia 12 tahun</strong> tidak diizinkan berkunjung.') !!}</p>
+                                <p class="mb-0 text-muted">{!! __('Anak-anak :strong tidak diizinkan berkunjung.', ['strong' => '<strong>' . __('di bawah usia 12 tahun') . '</strong>']) !!}</p>
                             </div>
                         </div>
                         <div class="text-center mt-5 text-muted fst-italic">

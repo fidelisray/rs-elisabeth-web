@@ -74,10 +74,10 @@
                                 </div>
                                 <div class="history-content ps-md-5 ms-md-4">
                                     <p class="mb-3 fs-5 lh-base text-secondary">
-                                        {!! __('Rumah Sakit St. Elisabeth Semarang adalah rumah sakit swasta tipe B non Pendidikan yang didirikan oleh <strong>Kongregasi Suster Santo Fransiskus (OSF)</strong> yang terpanggil untuk mendirikan Rumah Sakit dikarenakan wabah kolera yang melanda masyarakat Semarang.') !!}
+                                        {!! __('Rumah Sakit St. Elisabeth Semarang adalah rumah sakit swasta tipe B non Pendidikan yang didirikan oleh :strong yang terpanggil untuk mendirikan Rumah Sakit dikarenakan wabah kolera yang melanda masyarakat Semarang.', ['strong' => '<strong>' . __('Kongregasi Suster Santo Fransiskus (OSF)') . '</strong>']) !!}
                                     </p>
                                     <p class="mb-0 fs-5 lh-base text-secondary">
-                                        {!! __('Rumah Sakit St. Elisabeth Semarang diresmikan pada tanggal <strong>18 Oktober 1927</strong> dengan kapasitas awal 50 tempat tidur, dan terus berkembang hingga saat ini menjadi salah satu rumah sakit swasta terkemuka di Jawa Tengah.') !!}
+                                        {!! __('Rumah Sakit St. Elisabeth Semarang diresmikan pada tanggal :strong dengan kapasitas awal 50 tempat tidur, dan terus berkembang hingga saat ini menjadi salah satu rumah sakit swasta terkemuka di Jawa Tengah.', ['strong' => '<strong>' . __('18 Oktober 1927') . '</strong>']) !!}
                                     </p>
                                 </div>
                             </div>
