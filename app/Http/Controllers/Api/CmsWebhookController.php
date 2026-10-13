@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\CmsApiService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+class CmsWebhookController extends Controller
+{
+    /**
+     * Endpoint internal webhook untuk menerima sinyal invalidasi cache dari CMS.
+     * Mengosongkan tag cache Redis secara instan saat data diubah di CMS.
+     *
+     * @param Request $request
+     * @param CmsApiService $cmsApiService
+     * @return JsonResponse
+     */
+    public function invalidate(Request $request, CmsApiService $cmsApiService): JsonResponse
+    {
+        $validated = $request->validate([
+            'module'    => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions',
+            'event'     => 'nullable|string|max:50',
+            'slug'      => 'nullable|string|max:255',
+            'timestamp' => 'nullable|numeric',
+        ]);
+
+        $module = $validated['module'] ?? 'all';
+        $event = $validated['event'] ?? 'content.updated';
+
+        Log::info("CMS Webhook Received - Event: {$event}, Module: {$module}", [
+            'ip'     => $request->ip(),
+            'client' => $request->header('X-Cons-ID'),
+        ]);
+
+        $result = $cmsApiService->invalidateCache($module);
+
+        if ($result['status'] === 'unknown_module') {
+            return response()->json([
+                'success' => false,
+                'message' => "Modul '{$module}' tidak dikenali untuk invalidasi cache.",
+                'data'    => null,
+            ], 422);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Cache CMS berhasil dibatalkan untuk modul: {$module}.",
+            'data'    => [
+                'module'       => $module,
+                'event'        => $event,
+                'tags_flushed' => $result['tags'],
+                'driver_status'=> $result['status'],
+                'timestamp'    => time(),
+            ],
+        ], 200);
+    }
+}

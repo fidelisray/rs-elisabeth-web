@@ -58,6 +58,72 @@ class CmsApiService
     }
 
     /**
+     * Menyimpan respon ke cache dengan dukungan Cache Tags (Redis).
+     * Jika store cache tidak mendukung tags (misal di local development),
+     * method ini secara aman fallback ke Cache::remember() standar.
+     */
+    protected function rememberTagged(string $module, string $key, int $ttl, \Closure $callback)
+    {
+        if (Cache::supportsTags()) {
+            return Cache::tags(['cms', "cms_{$module}"])->remember($key, $ttl, $callback);
+        }
+
+        return Cache::remember($key, $ttl, $callback);
+    }
+
+    /**
+     * Melakukan invalidasi cache untuk modul tertentu atau seluruh modul CMS.
+     * Mengembalikan status dan daftar tag yang dibersihkan.
+     */
+    public function invalidateCache(string $module = 'all'): array
+    {
+        $supportedModules = [
+            'news',
+            'articles',
+            'promotions',
+            'facilities',
+            'room_facilities',
+            'banner_promotions',
+        ];
+
+        if (Cache::supportsTags()) {
+            if ($module === 'all') {
+                Cache::tags(['cms'])->flush();
+                Log::info("CMS API Cache - Flushed all 'cms' tags.");
+                return [
+                    'flushed' => 'all',
+                    'tags'    => ['cms'],
+                    'status'  => 'success',
+                ];
+            }
+
+            if (in_array($module, $supportedModules, true)) {
+                $tag = "cms_{$module}";
+                Cache::tags([$tag])->flush();
+                Log::info("CMS API Cache - Flushed tag: {$tag}.");
+                return [
+                    'flushed' => $module,
+                    'tags'    => [$tag],
+                    'status'  => 'success',
+                ];
+            }
+
+            return [
+                'flushed' => null,
+                'status'  => 'unknown_module',
+            ];
+        }
+
+        // Fallback untuk driver tanpa tags di local development
+        Log::info("CMS API Cache - Invalidate requested for '{$module}', but current driver does not support tags.");
+        return [
+            'flushed' => $module,
+            'tags'    => [],
+            'status'  => 'driver_unsupported_tags',
+        ];
+    }
+
+    /**
      * =========================================================================
      * ENDPOINT METHODS
      * Berikut adalah contoh method untuk menarik data dari Headless CMS.
@@ -75,7 +141,7 @@ class CmsApiService
         $cacheKey = "cms_news_{$locale}_" . md5(serialize($filters));
         $ttl = $this->cacheTtl('news');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return $this->rememberTagged('news', $cacheKey, $ttl, function () use ($filters) {
             try {
                 // Endpoint target: http://172.17.12.17:2302/api/v1/cms/news
                 $response = $this->apiRequest()->get("{$this->baseUrl}/news", $filters);
@@ -108,7 +174,7 @@ class CmsApiService
         $cacheKey = "cms_news_slug_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('news');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('news', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/news/{$slug}");
 
@@ -133,7 +199,7 @@ class CmsApiService
         $cacheKey = "cms_articles_{$locale}_" . md5(serialize($filters));
         $ttl = $this->cacheTtl('articles');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/articles", $filters);
 
@@ -158,7 +224,7 @@ class CmsApiService
         $cacheKey = "cms_article_{$locale}_{$id}";
         $ttl = $this->cacheTtl('articles');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($id) {
+        return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($id) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/articles/{$id}");
 
@@ -185,7 +251,7 @@ class CmsApiService
         $cacheKey = "cms_article_slug_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('articles');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/articles/{$slug}");
 
@@ -210,7 +276,7 @@ class CmsApiService
         $cacheKey = "cms_promotions_{$locale}_" . md5(serialize($filters));
         $ttl = $this->cacheTtl('promotions');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return $this->rememberTagged('promotions', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/promotions", $filters);
                 if ($response->successful()) return $response->json('data', []);
@@ -231,7 +297,7 @@ class CmsApiService
         $cacheKey = "cms_promotion_{$locale}_{$id}";
         $ttl = $this->cacheTtl('promotions');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($id) {
+        return $this->rememberTagged('promotions', $cacheKey, $ttl, function () use ($id) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/promotions/{$id}");
                 if ($response->successful()) return $response->json('data', null);
@@ -252,7 +318,7 @@ class CmsApiService
         $cacheKey = "cms_facilities_{$locale}_" . md5(serialize($filters));
         $ttl = $this->cacheTtl('facilities');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return $this->rememberTagged('facilities', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/facilities", $filters);
                 if ($response->successful()) return $response->json('data', []);
@@ -273,7 +339,7 @@ class CmsApiService
         $cacheKey = "cms_facility_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('facilities');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('facilities', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/facilities/{$slug}");
                 if ($response->successful()) return $response->json('data', null);
@@ -294,7 +360,7 @@ class CmsApiService
         $cacheKey = "cms_room_facilities_{$locale}_" . md5(serialize($filters));
         $ttl = $this->cacheTtl('room_facilities');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($filters) {
+        return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/room-facilities", $filters);
                 if ($response->successful()) return $response->json('data', []);
@@ -315,7 +381,7 @@ class CmsApiService
         $cacheKey = "cms_room_facility_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('room_facilities');
 
-        return Cache::remember($cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/room-facilities/{$slug}");
                 if ($response->successful()) return $response->json('data', null);
@@ -336,7 +402,7 @@ class CmsApiService
         $cacheKey = "cms_banner_promotions_{$locale}";
         $ttl = $this->cacheTtl('banner_promotions');
 
-        return Cache::remember($cacheKey, $ttl, function () {
+        return $this->rememberTagged('banner_promotions', $cacheKey, $ttl, function () {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/banner-promotions");
                 if ($response->successful()) return $response->json('data', []);

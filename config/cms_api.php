@@ -43,4 +43,18 @@ return [
         'room_facilities'   => (int) env('CMS_CACHE_TTL_ROOM_FACILITIES', 600),
         'banner_promotions' => (int) env('CMS_CACHE_TTL_BANNER_PROMOTIONS', 600),
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | CMS Webhook Cache Invalidation Configuration
+    |--------------------------------------------------------------------------
+    | Konfigurasi keamanan untuk endpoint internal webhook cache invalidation.
+    | CMS mengirim request dengan header X-Cons-ID, X-Timestamp, dan X-Signature.
+    */
+    'webhook' => [
+        'enabled'           => (bool) env('CMS_WEBHOOK_ENABLED', true),
+        'cons_id'           => env('CMS_WEBHOOK_CONSID', env('CMS_API_CONSID_WEB', 'WEB-FRONTEND')),
+        'secret_key'        => env('CMS_WEBHOOK_SECRET', env('CMS_API_SECRET_WEB', '')),
+        'tolerance_seconds' => (int) env('CMS_WEBHOOK_TOLERANCE', 300), // 5 menit
+    ],
 ];
