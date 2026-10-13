@@ -52,9 +52,9 @@ return [
     | CMS mengirim request dengan header X-Cons-ID, X-Timestamp, dan X-Signature.
     */
     'webhook' => [
-        'enabled'           => (bool) env('CMS_WEBHOOK_ENABLED', true),
-        'cons_id'           => env('CMS_WEBHOOK_CONSID', env('CMS_API_CONSID_WEB', 'WEB-FRONTEND')),
-        'secret_key'        => env('CMS_WEBHOOK_SECRET', env('CMS_API_SECRET_WEB', '')),
+        'enabled'           => filter_var(env('CMS_WEBHOOK_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+        'cons_id'           => env('CMS_WEBHOOK_CONSID', ''),
+        'secret_key'        => env('CMS_WEBHOOK_SECRET', ''),
         'tolerance_seconds' => (int) env('CMS_WEBHOOK_TOLERANCE', 300), // 5 menit
     ],
 ];

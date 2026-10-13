@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\Localization::class,
         ]);
+
+        // Aktifkan rate limiter bawaan 'api' pada seluruh endpoint API (/api/*).
+        // Limiter 'api' didefinisikan via RateLimiter::for('api', ...) di AppServiceProvider.
+        // Ini juga melindungi endpoint internal webhook dari penyalahgunaan (DoS/brute-force).
+        $middleware->throttleApi('api');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Pastikan semua error pada request API (/api/*) selalu dikembalikan

@@ -26,14 +26,16 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
     /**
      * Helper untuk membuat header HMAC yang valid.
+     * Signature menandatangani `timestamp + consId + raw request body`
+     * agar konsisten dengan logika verifikasi middleware (anti-replay).
      */
-    protected function generateHmacHeaders(?int $customTimestamp = null, ?string $customConsId = null, ?string $customSecret = null): array
+    protected function generateHmacHeaders(array $body = [], ?int $customTimestamp = null, ?string $customConsId = null, ?string $customSecret = null): array
     {
         $timestamp = (string) ($customTimestamp ?? time());
         $consId = $customConsId ?? $this->consId;
         $secret = $customSecret ?? $this->secretKey;
 
-        $rawSignature = hash_hmac('sha256', $timestamp . $consId, $secret, true);
+        $rawSignature = hash_hmac('sha256', $timestamp . $consId . json_encode($body), $secret, true);
         $signature = base64_encode($rawSignature);
 
         return [
@@ -57,9 +59,10 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
     public function test_rejects_request_with_invalid_consumer_id(): void
     {
-        $headers = $this->generateHmacHeaders(customConsId: 'MALICIOUS-CLIENT');
+        $body = ['module' => 'news'];
+        $headers = $this->generateHmacHeaders($body, customConsId: 'MALICIOUS-CLIENT');
 
-        $response = $this->postJson($this->endpoint, ['module' => 'news'], $headers);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(403)
             ->assertJson([
@@ -71,10 +74,11 @@ class CmsWebhookCacheInvalidationTest extends TestCase
     public function test_rejects_request_with_expired_timestamp(): void
     {
         // Timestamp 10 menit yang lalu (melebihi toleransi 300 detik)
+        $body = ['module' => 'news'];
         $expiredTime = time() - 600;
-        $headers = $this->generateHmacHeaders(customTimestamp: $expiredTime);
+        $headers = $this->generateHmacHeaders($body, customTimestamp: $expiredTime);
 
-        $response = $this->postJson($this->endpoint, ['module' => 'news'], $headers);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(401)
             ->assertJson([
@@ -85,10 +89,29 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
     public function test_rejects_request_with_tampered_signature(): void
     {
-        $headers = $this->generateHmacHeaders();
+        $body = ['module' => 'news'];
+        $headers = $this->generateHmacHeaders($body);
         $headers['X-Signature'] = base64_encode('invalid-fake-signature');
 
-        $response = $this->postJson($this->endpoint, ['module' => 'news'], $headers);
+        $response = $this->postJson($this->endpoint, $body, $headers);
+
+        $response->assertStatus(403)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Invalid HMAC signature (X-Signature).',
+            ]);
+    }
+
+    public function test_rejects_request_with_mismatched_body_signature(): void
+    {
+        // Signature dibuat untuk body A, tapi request dikirim dengan body B.
+        // Membuktikan signature benar-benar mengikat isi body (anti-replay).
+        $signedBody = ['module' => 'news'];
+        $sentBody  = ['module' => 'all'];
+
+        $headers = $this->generateHmacHeaders($signedBody);
+
+        $response = $this->postJson($this->endpoint, $sentBody, $headers);
 
         $response->assertStatus(403)
             ->assertJson([
@@ -101,8 +124,9 @@ class CmsWebhookCacheInvalidationTest extends TestCase
     {
         Config::set('cms_api.webhook.enabled', false);
 
-        $headers = $this->generateHmacHeaders();
-        $response = $this->postJson($this->endpoint, ['module' => 'news'], $headers);
+        $body = ['module' => 'news'];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(403)
             ->assertJson([
@@ -119,11 +143,12 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
         $this->assertEquals('old_news_data', Cache::tags(['cms', 'cms_news'])->get('test_news_key'));
 
-        $headers = $this->generateHmacHeaders();
-        $response = $this->postJson($this->endpoint, [
+        $body = [
             'module' => 'news',
             'event'  => 'content.updated',
-        ], $headers);
+        ];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -144,11 +169,12 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         Cache::tags(['cms', 'cms_news'])->put('key_news', 'news_data', 600);
         Cache::tags(['cms', 'cms_promotions'])->put('key_promo', 'promo_data', 600);
 
-        $headers = $this->generateHmacHeaders();
-        $response = $this->postJson($this->endpoint, [
+        $body = [
             'module' => 'all',
             'event'  => 'cache.flush_all',
-        ], $headers);
+        ];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(200)
             ->assertJson([
@@ -165,11 +191,27 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
     public function test_rejects_invalid_module_name(): void
     {
-        $headers = $this->generateHmacHeaders();
-        $response = $this->postJson($this->endpoint, [
-            'module' => 'unsupported_module_xyz',
-        ], $headers);
+        $body = ['module' => 'unsupported_module_xyz'];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
 
         $response->assertStatus(422);
+    }
+
+    public function test_returns_501_when_cache_driver_does_not_support_tags(): void
+    {
+        // FileStore tidak mendukung cache tags → endpoint wajib membalas non-200
+        // agar pengirim tidak keliru mengira cache sudah dibersihkan.
+        Config::set('cache.default', 'file');
+
+        $body = ['module' => 'news'];
+        $headers = $this->generateHmacHeaders($body);
+
+        $response = $this->postJson($this->endpoint, $body, $headers);
+
+        $response->assertStatus(501)
+            ->assertJson([
+                'success' => false,
+            ]);
     }
 }

@@ -23,6 +23,10 @@ class CmsWebhookController extends Controller
         $validated = $request->validate([
             'module'    => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions',
             'event'     => 'nullable|string|max:50',
+            // 'slug' disediakan sebagai metadata tambahan untuk keperluan logging/audit
+            // di masa mendatang. Saat ini invalidasi bersifat granular per-modul
+            // (cache tags), sehingga slug tidak dipakai untuk menargetkan satu entri.
+            // Pertahankan field ini agar payload CMS tetap kompatibel ke depan.
             'slug'      => 'nullable|string|max:255',
             'timestamp' => 'nullable|numeric',
         ]);
@@ -33,6 +37,8 @@ class CmsWebhookController extends Controller
         Log::info("CMS Webhook Received - Event: {$event}, Module: {$module}", [
             'ip'     => $request->ip(),
             'client' => $request->header('X-Cons-ID'),
+            // Metadata tambahan: slug entitas yang berubah (jika dikirim oleh CMS).
+            'slug'   => $validated['slug'] ?? null,
         ]);
 
         $result = $cmsApiService->invalidateCache($module);
@@ -43,6 +49,16 @@ class CmsWebhookController extends Controller
                 'message' => "Modul '{$module}' tidak dikenali untuk invalidasi cache.",
                 'data'    => null,
             ], 422);
+        }
+
+        // Driver cache tidak mendukung tags (misal file/database) → cache TIDAK terhapus.
+        // Jangan balas 200 agar pengirim tidak keliru mengira cache sudah dibersihkan.
+        if ($result['status'] === 'driver_unsupported_tags') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalidasi cache tidak dapat dilakukan: driver cache aktif tidak mendukung cache tags.',
+                'data'    => null,
+            ], 501);
         }
 
         return response()->json([

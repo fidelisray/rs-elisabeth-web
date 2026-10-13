@@ -68,15 +68,13 @@ class VerifyCmsWebhookSignature
         }
 
         // 6. Validasi HMAC SHA-256 Signature
-        // Format standar RS: base64(hash_hmac('sha256', timestamp + consId, secretKey, true))
-        $expectedRaw = hash_hmac('sha256', $timestamp . $consId, $secretKey, true);
-        $expectedSignature = base64_encode($expectedRaw);
-
-        // Fallback opsional: jika CMS mengirim signature yang menyertakan request content
+        // Signature WAJIB mengikat isi body (timestamp + consId + raw request content)
+        // agar mencegah replay-attack: signature lama tidak dapat dipakai ulang
+        // dengan body yang berbeda dalam jendela toleransi timestamp.
         $contentRaw = hash_hmac('sha256', $timestamp . $consId . $request->getContent(), $secretKey, true);
-        $contentSignature = base64_encode($contentRaw);
+        $expectedSignature = base64_encode($contentRaw);
 
-        if (!hash_equals($expectedSignature, $signature) && !hash_equals($contentSignature, $signature)) {
+        if (!hash_equals($expectedSignature, $signature)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid HMAC signature (X-Signature).',
