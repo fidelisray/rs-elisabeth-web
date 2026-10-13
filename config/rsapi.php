@@ -30,10 +30,5 @@ return [
         'glosarium'            => 86400,
         'articles'             => 1800,
         'elisanews'            => 1800,
-
-        // Local CMS API (data dikelola dari Filament Admin Panel)
-        'room_facilities'      => 300,   // 5 menit — data jarang berubah
-        'banner_promotions'    => 300,   // 5 menit — data jarang berubah
-        'facility_services'    => 300,   // 5 menit — data jarang berubah
     ],
 ];
