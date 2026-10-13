@@ -30,15 +30,17 @@ return [
     | CMS API Cache TTL (detik)
     |--------------------------------------------------------------------------
     | Lama penyimpanan respons API CMS di dalam cache, dikelompokkan per modul.
-    | Digunakan oleh App\Services\CmsApiService untuk menghindari angka TTL
-    | yang tersebar (hardcoded) di dalam kode.
+    | Menggunakan pola fallback env() dengan nilai default 600 detik (10 menit).
+    | Memberikan fleksibilitas tuning antar-environment (misal: testing lokal)
+    | tanpa mengubah kode, sekaligus menjamin keamanan nilai default di production.
     */
     'cache_ttl' => [
-        'news'              => 600, // 10 menit
-        'articles'          => 600, // 10 menit
-        'promotions'        => 600, // 10 menit
-        'facilities'        => 600, // 10 menit
-        'room_facilities'   => 600, // 10 menit
-        'banner_promotions' => 600, // 10 menit
+        'default'           => (int) env('CMS_CACHE_TTL_DEFAULT', 600),
+        'news'              => (int) env('CMS_CACHE_TTL_NEWS', 600),
+        'articles'          => (int) env('CMS_CACHE_TTL_ARTICLES', 600),
+        'promotions'        => (int) env('CMS_CACHE_TTL_PROMOTIONS', 600),
+        'facilities'        => (int) env('CMS_CACHE_TTL_FACILITIES', 600),
+        'room_facilities'   => (int) env('CMS_CACHE_TTL_ROOM_FACILITIES', 600),
+        'banner_promotions' => (int) env('CMS_CACHE_TTL_BANNER_PROMOTIONS', 600),
     ],
 ];
