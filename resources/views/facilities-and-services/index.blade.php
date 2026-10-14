@@ -110,14 +110,21 @@
                                     </div>
                                     @endif
                                     
+                                    @if(!empty($facility->wa_action_url) || $facility->has_appointment_cta)
                                     <div class="facility-cta">
-                                        <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin informasi layanan :name', ['name' => $facility->name])) }}" target="_blank" class="btn-primary-facility">
-                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Hubungi Kami') }}
+                                        @if(!empty($facility->wa_action_url))
+                                        <a href="{{ $facility->wa_action_url }}" target="_blank" rel="noopener" class="btn-primary-facility">
+                                            <i class="fa-brands fa-whatsapp"></i> {{ $facility->wa_link_text ?: __('Hubungi Kami') }}
                                         </a>
-                                        <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-outline-facility">
+                                        @endif
+
+                                        @if($facility->has_appointment_cta)
+                                        <a href="https://regonline.rs-elisabeth.com" target="_blank" rel="noopener" class="btn-outline-facility">
                                             <i class="fa-regular fa-calendar-check"></i> {{ __('Buat Janji') }}
                                         </a>
+                                        @endif
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                             @endforeach
