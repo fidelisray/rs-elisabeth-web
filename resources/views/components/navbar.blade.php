@@ -1,29 +1,49 @@
-    <!-- 1. Top Bar (Ringkas & Tipis) -->
+    <!-- 1. Top Bar -->
     <div class="top-bar d-none d-lg-block border-bottom">
         <div class="container d-flex justify-content-between align-items-center">
-            <!-- Kiri: Darurat & Kontak -->
-            <div class="d-flex align-items-center gap-3">
-                <a href="tel:+62248502244" class="ambulance-call p-1 px-3 d-inline-block ms-0">
-                    <i class="fa-solid fa-truck-medical me-2"></i> {{ __('IGD 24 Jam') }}
-                </a>
-                <span class="text-white-50">|</span>
-                <a href="tel:+62248502244">
-                    <i class="fas fa-phone-alt me-2"></i> (024) 8502244
+            <!-- Kiri: Layanan Darurat / Emergency (Unified Emergency Pill) -->
+            <div class="top-bar-left d-flex align-items-center">
+                <a href="tel:+62248502244" class="top-bar-emergency-pill" title="{{ __('Panggilan Darurat IGD 24 Jam: (024) 8502244') }}">
+                    <span class="pill-badge">
+                        <i class="fa-solid fa-truck-medical"></i>
+                        <span>{{ __('IGD 24 Jam') }}</span>
+                    </span>
+                    <span class="pill-divider">•</span>
+                    <span class="pill-phone">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>(024) 8502244</span>
+                    </span>
                 </a>
             </div>
-            <!-- Kanan: Portal & Bahasa -->
-            <div class="d-flex align-items-center gap-3">
-                <a href="#"><i class="fas fa-user-circle me-1"></i> {{ __('Portal Pasien') }}</a>
-                <span class="text-white-50">|</span>
-                <div class="dropdown">
-                    <a href="#" class="text-decoration-none dropdown-toggle" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-globe me-1"></i> {{ strtoupper(app()->getLocale()) }}
+
+            <!-- Tengah: Layanan Pelanggan & WhatsApp -->
+            <div class="top-bar-center d-flex align-items-center gap-2 gap-xl-3">
+                <div class="top-bar-group item-support d-flex align-items-center gap-1">
+                    <i class="fas fa-headset item-icon me-1"></i>
+                    <span class="item-label">{{ __('Layanan Pelanggan') }}:</span>
+                    <a href="tel:+62248310076" class="top-bar-item item-support" title="{{ __('Telepon Layanan Pelanggan 1') }}">
+                        <span class="item-val">(024) 8310076</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="languageDropdown">
-                        <li><a class="dropdown-item {{ app()->getLocale() === 'id' ? 'active' : '' }}" href="{{ route('lang.switch', 'id') }}">Indonesia (ID)</a></li>
-                        <li><a class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', 'en') }}">English (EN)</a></li>
-                    </ul>
+                    <span class="top-bar-slash">/</span>
+                    <a href="tel:+62248310035" class="top-bar-item item-support" title="{{ __('Telepon Layanan Pelanggan 2') }}">
+                        <span class="item-val">(024) 8310035</span>
+                    </a>
                 </div>
+
+                <span class="top-bar-divider"></span>
+
+                <a href="https://wa.me/6282138907740?text={{ __('Halo, saya ingin melakukan konsultasi') }}" target="_blank" rel="noopener noreferrer" class="top-bar-item item-whatsapp" title="{{ __('Chat WhatsApp RS St. Elisabeth') }}">
+                    <i class="fab fa-whatsapp item-icon"></i>
+                    <span class="item-label">WhatsApp:</span>
+                    <span class="item-val">0821-3890-7740</span>
+                </a>
+            </div>
+
+            <!-- Kanan: Social Media Elisabeth Hospital -->
+            <div class="top-bar-right d-flex align-items-center gap-2">
+                <a href="#" class="btn-social instagram" title="Instagram RS St. Elisabeth" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="btn-social facebook" title="Facebook RS St. Elisabeth" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="btn-social youtube" title="YouTube RS St. Elisabeth" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
             </div>
         </div>
     </div>
@@ -67,6 +87,50 @@
 
                 <!-- Tombol Aksi Kanan -->
                 <div class="d-flex align-items-center gap-3">
+                    {{-- Dropdown Bahasa (ID / EN) --}}
+                    <div class="dropdown nav-lang-dropdown">
+                        <button class="btn dropdown-toggle d-flex align-items-center gap-2 shadow-sm" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            @if(app()->getLocale() === 'id')
+                                <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="18" height="13" style="border: 1px solid rgba(0,0,0,0.15);">
+                                    <path fill="#e70011" d="M0 0h640v240H0z"/>
+                                    <path fill="#ffffff" d="M0 240h640v240H0z"/>
+                                </svg>
+                                <span>ID</span>
+                            @else
+                                <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="18" height="13">
+                                    <path fill="#012169" d="M0 0h640v480H0z"/>
+                                    <path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-179L0 64V0h75z"/>
+                                    <path fill="#c8102e" d="m424 281 216 159v40L369 281h55zm-184 20 6 35L54 480H0l240-179zM640 0v3L447 146l31 35L640 40V0zM0 40l239 179h-60L0 42v-2z"/>
+                                    <path fill="#fff" d="M240 0v480h160V0H240zM0 160v160h640V160H0z"/>
+                                    <path fill="#c8102e" d="M0 192v96h640v-96H0zM272 0v480h96V0h-96z"/>
+                                </svg>
+                                <span>EN</span>
+                            @endif
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2 py-2" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 {{ app()->getLocale() === 'id' ? 'active' : '' }}" href="{{ route('lang.switch', 'id') }}">
+                                    <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="20" height="15" style="border: 1px solid rgba(0,0,0,0.15);">
+                                        <path fill="#e70011" d="M0 0h640v240H0z"/>
+                                        <path fill="#ffffff" d="M0 240h640v240H0z"/>
+                                    </svg>
+                                    <span class="fw-medium">Indonesia</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center gap-2 py-2 px-3 {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{ route('lang.switch', 'en') }}">
+                                    <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="20" height="15">
+                                        <path fill="#012169" d="M0 0h640v480H0z"/>
+                                        <path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-179L0 64V0h75z"/>
+                                        <path fill="#c8102e" d="m424 281 216 159v40L369 281h55zm-184 20 6 35L54 480H0l240-179zM640 0v3L447 146l31 35L640 40V0zM0 40l239 179h-60L0 42v-2z"/>
+                                        <path fill="#fff" d="M240 0v480h160V0H240zM0 160v160h640V160H0z"/>
+                                        <path fill="#c8102e" d="M0 192v96h640v-96H0zM272 0v480h96V0h-96z"/>
+                                    </svg>
+                                    <span class="fw-medium">English</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <!-- Search Trigger (Buka Modal) -->
                     {{-- 
                     <button class="nav-search-trigger" data-bs-toggle="modal" data-bs-target="#searchModal" aria-label="{{ __('Cari') }}">
@@ -110,7 +174,9 @@
     <!-- 4. Mobile Offcanvas Menu (Menggantikan Modal Lama) -->
     <div class="offcanvas offcanvas-end offcanvas-menu" tabindex="-1" id="mobileOffcanvas">
         <div class="offcanvas-header offcanvas-menu-header">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth" height="36" class="offcanvas-logo">
+            <div class="offcanvas-logo-container">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth" height="32" class="offcanvas-logo">
+            </div>
             <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="{{ __('Tutup') }}"></button>
         </div>
         <div class="offcanvas-body offcanvas-menu-body">
@@ -120,8 +186,23 @@
                     <i class="fas fa-globe me-2 text-primary"></i>{{ __('Bahasa') }}
                 </span>
                 <div class="btn-group btn-group-sm" role="group" aria-label="{{ __('Pilih Bahasa') }}">
-                    <a href="{{ route('lang.switch', 'id') }}" class="btn {{ app()->getLocale() === 'id' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold">ID</a>
-                    <a href="{{ route('lang.switch', 'en') }}" class="btn {{ app()->getLocale() === 'en' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold">EN</a>
+                    <a href="{{ route('lang.switch', 'id') }}" class="btn {{ app()->getLocale() === 'id' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold d-inline-flex align-items-center gap-2">
+                        <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="16" height="12" style="border: 1px solid rgba(0,0,0,0.15);">
+                            <path fill="#e70011" d="M0 0h640v240H0z"/>
+                            <path fill="#ffffff" d="M0 240h640v240H0z"/>
+                        </svg>
+                        <span>ID</span>
+                    </a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="btn {{ app()->getLocale() === 'en' ? 'btn-primary text-white' : 'btn-outline-secondary' }} px-3 py-1 fw-bold d-inline-flex align-items-center gap-2">
+                        <svg class="flag-icon rounded-1 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" width="16" height="12">
+                            <path fill="#012169" d="M0 0h640v480H0z"/>
+                            <path fill="#fff" d="m75 0 244 181L562 0h78v62L400 241l240 178v61h-80L320 301 81 480H0v-60l239-179L0 64V0h75z"/>
+                            <path fill="#c8102e" d="m424 281 216 159v40L369 281h55zm-184 20 6 35L54 480H0l240-179zM640 0v3L447 146l31 35L640 40V0zM0 40l239 179h-60L0 42v-2z"/>
+                            <path fill="#fff" d="M240 0v480h160V0H240zM0 160v160h640V160H0z"/>
+                            <path fill="#c8102e" d="M0 192v96h640v-96H0zM272 0v480h96V0h-96z"/>
+                        </svg>
+                        <span>EN</span>
+                    </a>
                 </div>
             </div>
             <ul class="offcanvas-nav-list">

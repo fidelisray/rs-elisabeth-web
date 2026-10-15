@@ -425,6 +425,32 @@ span.carousel-control-next-icon {
     transform: scale(1.05);
 }
 
+/* Floating Buttons (WhatsApp & Emergency) */
+.floating-whatsapp {
+    position: fixed;
+    bottom: 105px;
+    left: 30px;
+    background-color: #25d366;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.85rem;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.floating-whatsapp:hover {
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6);
+}
+
 /* Floating Emergency Button */
 .floating-emergency {
     position: fixed;
@@ -525,8 +551,16 @@ span.carousel-control-next-icon {
     animation: none;
 }
 
-/* Mobile Placement (Tengah Bawah) */
+/* Mobile Placement (Tengah Bawah & Kiri) */
 @media (max-width: 768px) {
+    .floating-whatsapp {
+        left: 20px;
+        bottom: 80px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
     .floating-emergency {
         left: 20px;
         bottom: 20px;

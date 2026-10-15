@@ -388,7 +388,7 @@
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">
                                     <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">{{ __('Info Spesial') }}</h6>
                                     <h2 id="promoModalTitle" class="fw-bold mb-4" style="color: var(--primary-color);"></h2>
-                                    <p id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></p>
+                                    <div id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></div>
                                     
                                     <div class="mt-auto border-top pt-4">
                                         <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>

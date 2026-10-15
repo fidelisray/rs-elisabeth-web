@@ -61,7 +61,7 @@
                                 <img src="{{ $imgSrc }}" class="card-img-top" alt="{{ $promoTitle }}" style="height: 300px; object-fit: contain; background-color: #f8f9fa;">
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title fw-bold text-primary mb-3" style="text-transform: capitalize">{{ $promoTitle }}</h5>
-                                    <p class="card-text text-muted flex-grow-1">{{ $promoDesc }}</p>
+                                    <p class="card-text text-muted flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promoDesc), 120) }}</p>
                                     <div class="mt-4">
                                         <a href="https://wa.me/6281234567890?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
                                             <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Pesan Sekarang') }}
@@ -99,7 +99,7 @@
                                 <div class="col-md-6 p-4 p-md-5 d-flex flex-column justify-content-center bg-white">
                                     <h6 class="text-uppercase fw-bold mb-2" style="color: var(--secondary-color); letter-spacing: 1px;">{{ __('Info Spesial') }}</h6>
                                     <h2 id="promoModalTitle" class="fw-bold mb-4" style="color: var(--primary-color);"></h2>
-                                    <p id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></p>
+                                    <div id="promoModalDesc" class="text-secondary fs-5 lh-base mb-5"></div>
                                     
                                     <div class="mt-auto border-top pt-4">
                                         <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>

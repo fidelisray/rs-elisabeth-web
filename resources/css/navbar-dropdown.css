@@ -203,6 +203,56 @@
 }
 
 /* ============================================================
+ * 4.5. LANGUAGE DROPDOWN — Main Navbar
+ * ============================================================ */
+.nav-lang-dropdown .dropdown-toggle {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 0.85rem;
+    border-radius: 50rem;
+    transition: all 0.2s ease;
+}
+
+.nav-lang-dropdown .dropdown-toggle:hover,
+.nav-lang-dropdown .dropdown-toggle:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 143, 215, 0.15);
+}
+
+.nav-lang-dropdown .dropdown-menu {
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-width: 175px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid #edf2f7;
+    z-index: 1060;
+}
+
+.nav-lang-dropdown .dropdown-item {
+    border-radius: 8px;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #2d3748;
+    transition: all 0.15s ease;
+}
+
+.nav-lang-dropdown .dropdown-item:hover {
+    background-color: #eef7fd;
+    color: var(--primary-color);
+}
+
+.nav-lang-dropdown .dropdown-item.active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+/* ============================================================
  * 5. BTN JANJI — Shimmer Animation Pada Hover
  * ============================================================ */
 .btn-janji {
@@ -352,7 +402,8 @@
  * 7. MOBILE OFFCANVAS — Premium Side Panel
  * ============================================================ */
 .offcanvas-menu {
-    width: 300px !important;
+    width: 340px !important;
+    max-width: 85vw !important;
     border: none !important;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
 }
@@ -363,8 +414,19 @@
     border-bottom: none !important;
 }
 
+.offcanvas-logo-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 0.35rem 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
 .offcanvas-logo {
-    filter: brightness(0) invert(1);
+    height: 32px;
+    width: auto;
+    object-fit: contain;
 }
 
 .offcanvas-menu-body {
