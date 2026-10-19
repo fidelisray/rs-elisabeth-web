@@ -18,6 +18,10 @@ class HomeController extends Controller
         protected CmsApiService $cmsApiService
     ) {}
 
+    public const HOME_NEWS_LIMIT = 3;
+    public const HOME_ARTICLES_LIMIT = 3;
+    public const HOME_PROMOTIONS_LIMIT = 3;
+
     public function index()
     {
         // 1. Ambil data spesialisasi dokter (dari Medinfras API)
@@ -27,23 +31,26 @@ class HomeController extends Controller
         $rawArticles = $this->cmsApiService->getArticles();
         $latestArticles = collect($rawArticles)
                             ->map(fn($item) => ArticleDto::fromArray($item))
-                            ->take(7)
-                            ->toArray();
+                            ->take(self::HOME_ARTICLES_LIMIT)
+                            ->values()
+                            ->all();
 
         // 3. Ambil data Berita / ElisaNews (dari Headless CMS)
         $rawNews = $this->cmsApiService->getNews();
         $latestNews = collect($rawNews)
                         ->map(fn($item) => NewsDto::fromArray($item))
-                        ->take(7)
-                        ->toArray();
+                        ->take(self::HOME_NEWS_LIMIT)
+                        ->values()
+                        ->all();
         
         // 4. Ambil data Promo (dari Headless CMS)
         $rawPromotions = $this->cmsApiService->getPromotions();
         $promotions = collect($rawPromotions)
                         ->map(fn($item) => PromotionDto::fromArray($item))
                         ->where('is_active', true)
-                        ->take(6)
-                        ->toArray();
+                        ->take(self::HOME_PROMOTIONS_LIMIT)
+                        ->values()
+                        ->all();
 
         // 5. Ambil data Banner Promotions (dari Headless CMS)
         $rawBanners = $this->cmsApiService->getBannerPromotions();

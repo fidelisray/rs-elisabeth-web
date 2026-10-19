@@ -337,25 +337,33 @@
             <div class="section-title text-center mb-5">
                 <h2 class="display-8 fw-bold">{{ __('Paket dan Promo') }}</h2>
                 <div class="divider"></div>
-                {{-- <p class="text-muted mt-3">Temukan penawaran terbaik untuk layanan kesehatan Anda</p> --}}
             </div>
             <div class="container pb-5">
                 <div class="row g-4 justify-content-center" id="promoTrack">
                     @forelse($promotions as $promo)
-                        <div class="col-md-6 col-lg-3 {{ $loop->iteration > 4 ? '' : 'position-relative' }}">
-                            <div class="promo-card" {!! $loop->iteration <= 4 ? 'data-bs-toggle="modal" data-bs-target="#promoModal" data-title="'.e($promo->title ?? __('Promo')).'" data-desc="'.e($promo->description ?? __('Penawaran spesial dari RS St. Elisabeth Semarang.')).'" data-img="'.(!empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg')).'"' : '' !!}>
-                                <div class="card {{ $loop->iteration > 4 ? 'position-relative teased-card' : 'h-100' }}">
-                                    <img src="{{ !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg') }}" class="card-img-top" alt="{{ $promo->title ?? __('Promo') }}">
-                                    <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promo->title ?? __('Promo') }}</h5>
-                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promo->description ?? __('Penawaran spesial dari RS St. Elisabeth Semarang.')), 60) }}</p>
+                        @php
+                            $promoImg = !empty($promo->image_url) ? $promo->image_url : asset('images/placeholder.jpg');
+                            $promoTitle = $promo->title ?? __('Promo');
+                            $promoDesc = $promo->description ?? __('Penawaran spesial dari RS St. Elisabeth Semarang.');
+                        @endphp
+                        <div class="col-md-6 col-lg-4">
+                            <div class="promo-card" 
+                                 data-bs-toggle="modal" 
+                                 data-bs-target="#promoModal" 
+                                 data-title="{{ $promoTitle }}" 
+                                 data-desc="{{ $promoDesc }}" 
+                                 data-img="{{ $promoImg }}">
+                                <div class="card h-100">
+                                    <div class="promo-img-wrapper">
+                                        <img src="{{ $promoImg }}" class="card-img-top promo-card-img" alt="{{ $promoTitle }}" loading="lazy">
+                                    </div>
+                                    <div class="card-body d-flex flex-column p-4">
+                                        <h5 class="card-title fw-bold text-primary mb-2" style="text-transform: capitalize;">{{ $promoTitle }}</h5>
+                                        <p class="card-text text-muted small flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promoDesc), 90) }}</p>
                                         <div class="mt-3 text-end">
                                             <span class="text-secondary fw-semibold small">{{ __('Lihat Detail') }} <i class="fa-solid fa-arrow-right ms-1"></i></span>
                                         </div>
                                     </div>
-                                    @if($loop->iteration > 4)
-                                    <div class="tease-overlay position-absolute top-0 bottom-0 start-0 end-0" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.95) 35%, rgba(255,255,255,1) 100%); z-index: 5; pointer-events: none;"></div>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -407,7 +415,7 @@
             </div>
 
             <div class="text-center mt-5">
-                <a href="{{{ route('promotions.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Penawaran Menarik Lainnya') }}">
+                <a href="{{ route('promotions.index') }}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Penawaran Menarik Lainnya') }}">
                     {{ __('Lihat Penawaran Menarik Lainnya') }} <i class="fa-solid fa-arrow-down ms-2"></i>
                 </a>
             </div>
@@ -422,30 +430,33 @@
             <div class="container pb-5">
                 <div class="row g-4 justify-content-center">
                     @forelse($latestArticles as $item)
-                    <div class="col-md-6 col-lg-3 position-relative">
+                    @php
+                        $articleUrl = !empty($item->slug) ? route('articles.show', ['slug' => $item->slug]) : route('articles.index');
+                    @endphp
+                    <div class="col-md-6 col-lg-4">
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
-                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}">
-                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
+                                <a href="{{ $articleUrl }}" aria-label="{{ $item->title }}">
+                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
                                 </a>
                             </div>
-                            <div class="news-card-body p-3">
-                                <div class="news-date small">
-                                    <i class="fa-regular fa-calendar"></i>
-                                    {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
+                            <div class="news-card-body">
+                                <div class="news-date d-flex justify-content-between align-items-center mb-2">
+                                    <span>
+                                        <i class="fa-regular fa-calendar me-1"></i>
+                                        {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
+                                    </span>
+                                    <span class="news-category-badge">{{ $item->tags ? Str::before($item->tags, ',') : __('Artikel Kesehatan') }}</span>
                                 </div>
-                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}">
-                                    <h3 class="news-title fs-6">{{ $item->title }}</h3>
+                                <a href="{{ $articleUrl }}">
+                                    <h3 class="news-title">{{ $item->title }}</h3>
                                 </a>
-                                <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
-                                <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
+                                <p class="news-excerpt">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 95) }}</p>
+                                <a href="{{ $articleUrl }}" class="news-read-more">
                                     {{ __('Baca Selengkapnya') }} <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
-                        @if($loop->iteration > 4)
-                            <div class="position-absolute top-0 bottom-0 start-0 end-0" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,1) 100%); z-index: 5; border-radius: var(--bs-border-radius, 0.375rem); pointer-events: none;"></div>
-                        @endif
                     </div>
                     @empty
                     <div class="col-12 reveal-on-scroll">
@@ -460,7 +471,7 @@
                     @endforelse
                 </div>
                 <div class="text-center mt-5">
-                    <a href="{{{ route('articles.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Artikel') }}">
+                    <a href="{{ route('articles.index') }}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Artikel') }}">
                         {{ __('Lihat Semua Artikel') }} <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -476,33 +487,33 @@
             <div class="container pb-5">
                 <div class="row g-4 justify-content-center">
                     @forelse($latestNews as $item)
-                    <div class="col-md-6 col-lg-3 position-relative">
+                    @php
+                        $newsUrl = !empty($item->slug) ? route('news.show', ['slug' => $item->slug]) : route('news.index');
+                    @endphp
+                    <div class="col-md-6 col-lg-4">
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
-                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
-                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
+                                <a href="{{ $newsUrl }}" aria-label="{{ $item->title }}">
+                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
                                 </a>
                             </div>
-                            <div class="news-card-body p-3">
-                                <div class="news-date small d-flex justify-content-between align-items-center mb-2">
+                            <div class="news-card-body">
+                                <div class="news-date d-flex justify-content-between align-items-center mb-2">
                                     <span>
-                                        <i class="fa-regular fa-calendar"></i>
+                                        <i class="fa-regular fa-calendar me-1"></i>
                                         {{ $item->created_at?->translatedFormat('d M Y') ?? now()->translatedFormat('d M Y') }}
                                     </span>
-                                    <span class="badge bg-primary rounded-pill">{{ $item->category ?? __('Berita Umum') }}</span>
+                                    <span class="news-category-badge">{{ $item->category ?? __('Berita Umum') }}</span>
                                 </div>
-                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}">
-                                    <h3 class="news-title fs-6">{{ $item->title }}</h3>
+                                <a href="{{ $newsUrl }}">
+                                    <h3 class="news-title">{{ $item->title }}</h3>
                                 </a>
-                                <p class="news-excerpt small mb-3">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 80) }}</p>
-                                <a href="{{{ route('news.show', ['slug' => $item->slug]) }}}" class="news-read-more small mt-auto">
+                                <p class="news-excerpt">{{ Str::limit(strip_tags($item->excerpt ?? $item->content ?? ''), 95) }}</p>
+                                <a href="{{ $newsUrl }}" class="news-read-more">
                                     {{ __('Baca Selengkapnya') }} <i class="fa-solid fa-arrow-right"></i>
                                 </a>
                             </div>
                         </div>
-                        @if($loop->iteration > 4)
-                            <div class="position-absolute top-0 bottom-0 start-0 end-0" style="background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,1) 100%); z-index: 5; border-radius: var(--bs-border-radius, 0.375rem); pointer-events: none;"></div>
-                        @endif
                     </div>
                     @empty
                     <div class="col-12 reveal-on-scroll">
@@ -517,7 +528,7 @@
                     @endforelse
                 </div>
                 <div class="text-center mt-5">
-                    <a href="{{{ route('news.index') }}}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Berita') }}">
+                    <a href="{{ route('news.index') }}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Berita') }}">
                         {{ __('Lihat Semua Berita') }} <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
                 </div>
@@ -525,7 +536,7 @@
         </section>
 
         <!-- Jam Kunjungan & Ketentuan Pengunjung -->
-        <section id="customer-info">
+        {{-- <section id="customer-info">
             <div class="container">
                 <!-- Judul utama -->
                 <div class="section-title text-center mb-3">
@@ -618,9 +629,9 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
-        <section id="stats-section">
+        {{-- <section id="stats-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-3 col-6">
@@ -649,7 +660,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
         <section id="app-section">
             <!-- Decorative background elements -->

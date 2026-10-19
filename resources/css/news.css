@@ -65,11 +65,11 @@ section#hero-section .hero-subtitle {
 }
 
 .news-card {
-    transition: all 0.3s ease;
-    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border-radius: 14px;
     overflow: hidden;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(2, 97, 153, 0.08);
+    box-shadow: 0 4px 16px rgba(2, 97, 153, 0.06);
     background: #fff;
     height: 100%;
     display: flex;
@@ -77,14 +77,17 @@ section#hero-section .hero-subtitle {
 }
 
 .news-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(2, 97, 153, 0.12);
+    border-color: rgba(2, 97, 153, 0.22);
 }
 
 .news-card-img-wrapper {
     overflow: hidden;
-    height: 200px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     position: relative;
+    background-color: #f1f5f9;
 }
 
 .news-card-img {
@@ -99,32 +102,52 @@ section#hero-section .hero-subtitle {
 }
 
 .news-card-body {
-    padding: 24px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .news-date {
-    font-size: 0.85rem;
-    color: #6c757d;
+    font-size: 0.825rem;
+    color: #64748b;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
+.news-category-badge {
+    background-color: rgba(2, 97, 153, 0.08);
+    color: #0b5c96;
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50rem;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(2, 97, 153, 0.15);
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+.news-card:hover .news-category-badge {
+    background-color: #0b5c96;
+    color: #fff;
+    border-color: #0b5c96;
+}
+
 .news-title {
     font-size: 1.15rem;
     font-weight: 700;
-    color: #0b5c96; /* RS Elisabeth primary brand color based on glosarium/home */
-    margin-bottom: 15px;
-    line-height: 1.4;
+    color: #0b5c96; /* RS Elisabeth primary brand color */
+    margin-bottom: 12px;
+    line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .news-card a {
@@ -136,10 +159,10 @@ section#hero-section .hero-subtitle {
 }
 
 .news-excerpt {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 20px;
+    font-size: 0.925rem;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 18px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -153,9 +176,9 @@ section#hero-section .hero-subtitle {
     color: #0b5c96;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color 0.2s ease;
     margin-top: auto;
 }
 
