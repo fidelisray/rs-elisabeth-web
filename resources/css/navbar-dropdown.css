@@ -13,9 +13,9 @@
     padding-bottom: 0.6rem;
     box-shadow: none;
     transition:
-        padding     0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow  0.35s ease,
-        background  0.35s ease;
+        padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s ease,
+        background 0.35s ease;
     z-index: 1030;
 }
 
@@ -43,9 +43,10 @@
 .nav-link-animated {
     position: relative;
     color: #2d3748;
-    font-size: 0.93rem;
-    padding: 0.35rem 0.75rem;
+    font-size: 0.91rem;
+    padding: 0.35rem 0.65rem;
     border-radius: 0.4rem;
+    white-space: nowrap;
     transition: color 0.25s ease;
 }
 
@@ -61,8 +62,9 @@
     height: 2px;
     background-color: var(--primary-color);
     border-radius: 2px;
-    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+        left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link-animated:hover,
@@ -72,8 +74,32 @@
 
 .nav-link-animated:hover::before,
 .nav-link-animated.active::before {
-    left: 0.75rem;
-    right: 0.75rem;
+    left: 0.65rem;
+    right: 0.65rem;
+}
+
+/* Kompresi proporsional pada laptop menengah (1200px - 1399.98px) agar 9 menu tetap 1 baris */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .nav-link-animated {
+        font-size: 0.84rem;
+        padding: 0.3rem 0.45rem;
+    }
+    .nav-link-animated:hover::before,
+    .nav-link-animated.active::before {
+        left: 0.45rem;
+        right: 0.45rem;
+    }
+    .navbar-logo {
+        height: 38px !important;
+    }
+    .btn-janji {
+        font-size: 0.82rem !important;
+        padding: 0.4rem 0.95rem !important;
+    }
+    .nav-lang-dropdown .dropdown-toggle {
+        font-size: 0.8rem !important;
+        padding: 0.35rem 0.7rem !important;
+    }
 }
 
 /* ============================================================
@@ -97,7 +123,7 @@
     transform: rotate(-180deg);
 }
 
-    @media (min-width: 992px) {
+@media (min-width: 1200px) {
     .nav-tentang-kami .main-dropdown-menu {
         display: block !important;
         visibility: hidden;
@@ -106,9 +132,9 @@
         transform: translateY(-10px) scale(0.98);
         transform-origin: top center;
         transition:
-            opacity    0.22s cubic-bezier(0.4, 0, 0.2, 1),
-            transform  0.22s cubic-bezier(0.4, 0, 0.2, 1),
-            visibility 0s   linear 0.22s;
+            opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0s linear 0.22s;
         border: none;
         border-radius: 0.75rem;
         padding: 0.5rem 0;
@@ -125,7 +151,11 @@
         content: "";
         display: block;
         height: 3px;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        background: linear-gradient(
+            90deg,
+            var(--primary-color),
+            var(--secondary-color)
+        );
         border-radius: 0.75rem 0.75rem 0 0;
         margin: -0.5rem 0 0.5rem 0;
     }
@@ -137,9 +167,9 @@
         pointer-events: auto;
         transform: translateY(0) scale(1);
         transition:
-            opacity    0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            transform  0.3s cubic-bezier(0.4, 0, 0.2, 1),
-            visibility 0s   linear 0s;
+            opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            visibility 0s linear 0s;
     }
 
     /* Item dropdown */
@@ -151,8 +181,8 @@
         border-radius: 0;
         transition:
             background-color 0.18s ease,
-            color            0.18s ease,
-            padding-left     0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            color 0.18s ease,
+            padding-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-tentang-kami .main-dropdown-menu .dropdown-item:hover {
@@ -183,11 +213,11 @@
     font-size: 1rem;
     cursor: pointer;
     transition:
-        color            0.25s ease,
-        border-color     0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease,
         background-color 0.25s ease,
-        transform        0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow       0.25s ease;
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s ease;
 }
 
 .nav-search-trigger:hover {
@@ -259,8 +289,8 @@
     position: relative;
     overflow: hidden;
     transition:
-        transform    0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow   0.25s ease !important;
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.25s ease !important;
 }
 
 /* Kilatan shimmer */
@@ -355,7 +385,7 @@
     border-radius: 0.75rem !important;
     transition:
         border-color 0.25s ease,
-        box-shadow   0.25s ease !important;
+        box-shadow 0.25s ease !important;
 }
 
 .search-input:focus {
@@ -388,8 +418,8 @@
     text-decoration: none;
     transition:
         background-color 0.2s ease,
-        color            0.2s ease,
-        transform        0.2s ease;
+        color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .search-tag:hover {
@@ -409,7 +439,11 @@
 }
 
 .offcanvas-menu-header {
-    background: linear-gradient(135deg, var(--secondary-darker-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(
+        135deg,
+        var(--secondary-darker-color) 0%,
+        var(--secondary-color) 100%
+    );
     padding: 1.25rem 1.5rem;
     border-bottom: none !important;
 }
@@ -458,8 +492,8 @@
     font-weight: 500;
     transition:
         background-color 0.2s ease,
-        color            0.2s ease,
-        padding-left     0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        color 0.2s ease,
+        padding-left 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border-left: 3px solid transparent;
 }
 
@@ -498,8 +532,8 @@
     font-weight: 700;
     box-shadow: 0 4px 15px rgba(255, 240, 0, 0.35);
     transition:
-        transform   0.25s ease,
-        box-shadow  0.25s ease !important;
+        transform 0.25s ease,
+        box-shadow 0.25s ease !important;
 }
 
 .offcanvas-cta-btn:hover {
@@ -528,7 +562,7 @@
 .mobile-igd-btn {
     position: relative;
     transition:
-        transform  0.2s ease,
+        transform 0.2s ease,
         box-shadow 0.2s ease;
 }
 
@@ -566,8 +600,12 @@
     max-height: calc(90vh - 60px);
 }
 
-.mobile-nav-list > li { border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
-.mobile-nav-list > li:last-child { border-bottom: none; }
+.mobile-nav-list > li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+.mobile-nav-list > li:last-child {
+    border-bottom: none;
+}
 .mobile-nav-list > li > a {
     display: block;
     padding: 1.2rem 1rem;
@@ -578,9 +616,15 @@
     transition: color 0.2s ease;
 }
 .mobile-nav-list > li > a:hover,
-.mobile-nav-list > li > a.active { color: var(--accent-color, #fff000); }
-.mobile-nav-list > li > a i { transition: transform 0.3s ease; }
-.mobile-nav-list > li > a[aria-expanded="true"] i { transform: rotate(-180deg); }
+.mobile-nav-list > li > a.active {
+    color: var(--accent-color, #fff000);
+}
+.mobile-nav-list > li > a i {
+    transition: transform 0.3s ease;
+}
+.mobile-nav-list > li > a[aria-expanded="true"] i {
+    transform: rotate(-180deg);
+}
 
 .mobile-submenu-list {
     list-style: none;
@@ -588,8 +632,12 @@
     margin: 0;
     background-color: rgba(0, 0, 0, 0.15);
 }
-.mobile-submenu-list li { border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-.mobile-submenu-list li:last-child { border-bottom: none; }
+.mobile-submenu-list li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.mobile-submenu-list li:last-child {
+    border-bottom: none;
+}
 .mobile-submenu-list li a {
     display: block;
     padding: 0.9rem 1rem;
@@ -599,4 +647,6 @@
     font-weight: 500;
     transition: color 0.2s ease;
 }
-.mobile-submenu-list li a:hover { color: var(--accent-color, #fff000); }
+.mobile-submenu-list li a:hover {
+    color: var(--accent-color, #fff000);
+}

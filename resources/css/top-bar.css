@@ -54,7 +54,8 @@
 
 /* Labels & Values */
 .top-bar-item .item-label,
-.top-bar-group .item-label {
+.top-bar-group .item-label,
+.top-bar-right .item-label {
     color: rgba(255, 255, 255, 0.75);
     font-weight: 400;
     font-size: 0.8125rem;
@@ -217,7 +218,8 @@
 /* Responsive adjustment for compact laptop screens (992px - 1199px) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
     .top-bar-item,
-    .top-bar-group .item-label {
+    .top-bar-group .item-label,
+    .top-bar-right .item-label {
         font-size: 0.775rem;
     }
     .top-bar-emergency-pill {

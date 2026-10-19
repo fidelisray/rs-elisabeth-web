@@ -1,5 +1,5 @@
     <!-- 1. Top Bar -->
-    <div class="top-bar d-none d-lg-block border-bottom">
+    <div class="top-bar d-none d-xl-block border-bottom">
         <div class="container d-flex justify-content-between align-items-center">
             <!-- Kiri: Layanan Darurat / Emergency (Unified Emergency Pill) -->
             <div class="top-bar-left d-flex align-items-center">
@@ -41,6 +41,7 @@
 
             <!-- Kanan: Social Media Elisabeth Hospital -->
             <div class="top-bar-right d-flex align-items-center gap-2">
+                <span class="item-label me-1">{{ __('Ikuti Kami') }}</span>
                 <a href="#" class="btn-social instagram" title="Instagram RS St. Elisabeth" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                 <a href="#" class="btn-social facebook" title="Facebook RS St. Elisabeth" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
                 <a href="#" class="btn-social youtube" title="YouTube RS St. Elisabeth" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
@@ -49,8 +50,8 @@
     </div>
 
     <!-- 2. Main Navbar (Logo, Menu, dan CTA tergabung) -->
-    <nav id="main-navbar" class="navbar navbar-expand-lg bg-white sticky-top py-2">
-        <div class="container align-items-center">
+    <nav id="main-navbar" class="navbar navbar-expand-xl bg-white sticky-top py-2">
+        <div class="container-fluid px-3 px-xl-4 px-xxl-5 align-items-center">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" height="45" class="logo-main navbar-logo">
@@ -58,7 +59,7 @@
             </a>
 
             <!-- Mobile Toggles (Kanan) -->
-            <div class="d-flex align-items-center gap-2 d-lg-none">
+            <div class="d-flex align-items-center gap-2 d-xl-none">
                 <a class="btn btn-outline-danger btn-sm rounded-circle p-2 mobile-igd-btn" href="tel:+62248502244"><i class="fa-solid fa-phone"></i></a>
                 <!-- Tombol Offcanvas Toggler -->
                 <button class="navbar-toggler border-0 shadow-none px-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileOffcanvas">
@@ -69,7 +70,7 @@
             <!-- Desktop Menu & Actions -->
             <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
                 <!-- Navigasi Utama -->
-                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 fw-medium gap-lg-1">
+                <ul class="navbar-nav mx-auto mb-2 mb-xl-0 fw-medium gap-xl-1">
                     <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('home.index') || request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
                     <li class="nav-item dropdown nav-tentang-kami">
                         <a class="nav-link nav-link-animated dropdown-toggle {{ request()->routeIs('tentang-kami.*') ? 'active' : '' }}" href="{{ route('tentang-kami.index') }}" data-bs-toggle="dropdown">{{ __('Tentang Kami') }}</a>
@@ -83,6 +84,9 @@
                     <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('ruang-perawatan.*') ? 'active' : '' }}" href="{{ route('ruang-perawatan.index') }}">{{ __('Ruang Perawatan') }}</a></li>
                     <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}">{{ __('Fasilitas') }}</a></li>
                     <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}">{{ __('Paket & Promo') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('customer-information.*') ? 'active' : '' }}" href="{{ route('customer-information.index') }}">{{ __('Informasi Pelanggan') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('news.*') ? 'active' : '' }}" href="{{ route('news.index') }}">{{ __('ElisaNews') }}</a></li>
+                    <li class="nav-item"><a class="nav-link nav-link-animated {{ request()->routeIs('articles.*') ? 'active' : '' }}" href="{{ route('articles.index') }}">{{ __('Artikel') }}</a></li>
                 </ul>
 
                 <!-- Tombol Aksi Kanan -->
@@ -165,6 +169,7 @@
                         <a href="{{ route('facilities.index') }}" class="search-tag">IGD</a>
                         <a href="{{ route('dokter.index') }}" class="search-tag">{{ __('Jadwal Poli') }}</a>
                         <a href="{{ route('facilities.index') }}" class="search-tag">{{ __('Stroke Terpadu') }}</a>
+                        <a href="{{ route('customer-information.index') }}" class="search-tag">{{ __('Informasi Pelanggan') }}</a>
                     </div>
                 </div>
             </div>
@@ -213,6 +218,8 @@
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('facilities.*') ? 'active' : '' }}" href="{{ route('facilities.index') }}"><i class="fa-solid fa-star-of-life me-2"></i>{{ __('Fasilitas') }}</a></li>
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('promotions.*') ? 'active' : '' }}" href="{{ route('promotions.index') }}"><i class="fa-solid fa-tags me-2"></i>{{ __('Paket & Promo') }}</a></li>
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('customer-information.*') ? 'active' : '' }}" href="{{ route('customer-information.index') }}"><i class="fa-solid fa-circle-info me-2"></i>{{ __('Informasi Pelanggan') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('news.*') ? 'active' : '' }}" href="{{ route('news.index') }}"><i class="fa-solid fa-newspaper me-2"></i>{{ __('ElisaNews') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('articles.*') ? 'active' : '' }}" href="{{ route('articles.index') }}"><i class="fa-solid fa-file-lines me-2"></i>{{ __('Artikel') }}</a></li>
             </ul>
             <div class="offcanvas-cta-wrapper">
                 <a class="btn btn-accent w-100 rounded-pill py-3 offcanvas-cta-btn" href="https://regonline.rs-elisabeth.com">
