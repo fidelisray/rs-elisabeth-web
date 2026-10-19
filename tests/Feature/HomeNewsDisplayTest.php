@@ -239,4 +239,71 @@ class HomeNewsDisplayTest extends TestCase
         $response->assertSee(route('news.index'));
         $response->assertSee(route('articles.index'));
     }
+
+    public function test_home_page_renders_faq_section_properly(): void
+    {
+        $mockCms = Mockery::mock(CmsApiService::class);
+        $mockCms->shouldReceive('getArticles')->andReturn([]);
+        $mockCms->shouldReceive('getNews')->andReturn([]);
+        $mockCms->shouldReceive('getPromotions')->andReturn([]);
+        $mockCms->shouldReceive('getBannerPromotions')->andReturn([]);
+        $mockCms->shouldReceive('getFacilities')->andReturn([]);
+
+        $mockDoctor = Mockery::mock(DoctorApiService::class);
+        $mockDoctor->shouldReceive('getDaftarSpesialisasi')->andReturn([]);
+
+        $this->app->instance(CmsApiService::class, $mockCms);
+        $this->app->instance(DoctorApiService::class, $mockDoctor);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('frequently-ask-question');
+        $response->assertSee('Pertanyaan yang Sering Diajukan');
+        $response->assertSee('Kapan waktu jam kunjungan (besuk) pasien rawat inap?');
+        $response->assertSee('Berapa jumlah maksimal pengunjung untuk setiap pasien?');
+        $response->assertSee('Apakah anak-anak diizinkan berkunjung menjenguk pasien?');
+        $response->assertSee('Bagaimana ketentuan bagi pengunjung yang sedang merasa kurang sehat?');
+        $response->assertSee('Apa saja tata tertib yang perlu ditaati selama berkunjung?');
+        $response->assertSee(route('customer-information.index'));
+    }
+
+    public function test_home_page_faq_renders_english_translations(): void
+    {
+        $mockCms = Mockery::mock(CmsApiService::class);
+        $mockCms->shouldReceive('getArticles')->andReturn([]);
+        $mockCms->shouldReceive('getNews')->andReturn([]);
+        $mockCms->shouldReceive('getPromotions')->andReturn([]);
+        $mockCms->shouldReceive('getBannerPromotions')->andReturn([]);
+        $mockCms->shouldReceive('getFacilities')->andReturn([]);
+
+        $mockDoctor = Mockery::mock(DoctorApiService::class);
+        $mockDoctor->shouldReceive('getDaftarSpesialisasi')->andReturn([]);
+
+        $this->app->instance(CmsApiService::class, $mockCms);
+        $this->app->instance(DoctorApiService::class, $mockDoctor);
+
+        $response = $this->withSession(['locale' => 'en'])->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Frequently Asked Questions');
+        $response->assertSee('Information &amp; FAQ', false);
+        $response->assertSee('What are the visiting hours for inpatient care?');
+        $response->assertSee('Monday – Saturday');
+        $response->assertSee('Sundays &amp; Public Holidays', false);
+        $response->assertSee('What is the maximum number of visitors allowed per patient?');
+        $response->assertSee('maximum 2 visitors');
+        $response->assertSee('Are children allowed to visit inpatient rooms?');
+        $response->assertSee('under 12 years of age');
+        $response->assertSee('What are the guidelines for visitors who are feeling unwell?');
+        $response->assertSee('refraining from visiting');
+        $response->assertSee('What rules and etiquette must be observed during the visit?');
+        $response->assertSee('Tranquility:');
+        $response->assertSee('Hand Hygiene:');
+        $response->assertSee('Punctuality:');
+        $response->assertSee('Customer Information');
+        $response->assertSee('Need More Assistance?');
+        $response->assertSee('Chat on WhatsApp');
+    }
 }
+

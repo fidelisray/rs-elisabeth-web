@@ -17,7 +17,8 @@
         'resources/css/app-section.css',
         'resources/css/top-bar.css',
         'resources/css/promo-banner.css',
-        'resources/css/customer-info-section.css'
+        'resources/css/customer-info-section.css',
+        'resources/css/faq-section.css'
       ])
   </head>
   <body>
@@ -531,6 +532,185 @@
                     <a href="{{ route('news.index') }}" class="btn btn-bouncing px-5 py-3 rounded-pill fw-bold shadow-lg" aria-label="{{ __('Lihat Semua Berita') }}">
                         {{ __('Lihat Semua Berita') }} <i class="fa-solid fa-arrow-right ms-2"></i>
                     </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="frequently-ask-question">
+            <div class="container">
+                <div class="row g-5 align-items-start">
+                    <!-- Kolom Kiri: Header & Quick Support Card -->
+                    <div class="col-lg-5">
+                        <div class="pe-lg-4">
+                            <span class="faq-eyebrow">
+                                <i class="fa-solid fa-circle-question"></i> {{ __('Informasi & Tanya Jawab') }}
+                            </span>
+                            <h2 class="faq-title">{{ __('Pertanyaan yang Sering Diajukan') }}</h2>
+                            <p class="faq-desc">
+                                {{ __('Temukan informasi penting seputar jam kunjungan pasien, tata tertib rumah sakit, dan ketentuan berkunjung untuk kenyamanan bersama di RS St. Elisabeth Semarang.') }}
+                            </p>
+
+                            <!-- Kartu Bantuan / Narahubung Cepat -->
+                            <div class="faq-help-card">
+                                <div class="faq-help-icon">
+                                    <i class="fa-solid fa-headset"></i>
+                                </div>
+                                <h3 class="faq-help-title">{{ __('Butuh Bantuan Lainnya?') }}</h3>
+                                <p class="faq-help-desc">
+                                    {{ __('Tim customer care kami siap memberikan informasi seputar layanan medis, rawat inap, dan pendaftaran 24 jam sehari.') }}
+                                </p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="faq-btn-wa">
+                                        <i class="fa-brands fa-whatsapp fs-5"></i> {{ __('Chat WhatsApp') }}
+                                    </a>
+                                    <a href="{{ route('customer-information.index') }}" class="faq-btn-info">
+                                        <i class="fa-solid fa-circle-info"></i> {{ __('Informasi Pelanggan') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan: Accordion FAQ -->
+                    <div class="col-lg-7">
+                        <div class="accordion faq-accordion" id="faqAccordion">
+
+                            <!-- FAQ 1: Jam Kunjungan -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqOne" aria-expanded="true" aria-controls="collapseFaqOne">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-clock"></i></span>
+                                        <span>{{ __('Kapan waktu jam kunjungan (besuk) pasien rawat inap?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqOne" class="accordion-collapse collapse show" aria-labelledby="headingFaqOne" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-3">
+                                            {{ __('Untuk menjaga ketenangan, kenyamanan, dan proses istirahat pasien, jam kunjungan diatur menjadi dua sesi setiap harinya:') }}
+                                        </p>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <div class="faq-time-card">
+                                                    <div class="faq-time-title">
+                                                        <i class="fa-solid fa-calendar-day text-primary"></i>
+                                                        <span>{{ __('Senin – Sabtu') }}</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-regular fa-sun text-warning me-1"></i> {{ __('Pagi') }}</span>
+                                                        <span class="fw-bold text-dark">09.30 - 11.00 WIB</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-solid fa-cloud-sun text-info me-1"></i> {{ __('Sore') }}</span>
+                                                        <span class="fw-bold text-dark">17.00 - 18.30 WIB</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="faq-time-card">
+                                                    <div class="faq-time-title">
+                                                        <i class="fa-regular fa-calendar-check text-primary"></i>
+                                                        <span>{{ __('Minggu & Hari Libur') }}</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-regular fa-sun text-warning me-1"></i> {{ __('Pagi') }}</span>
+                                                        <span class="fw-bold text-dark">09.30 - 11.30 WIB</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-solid fa-cloud-sun text-info me-1"></i> {{ __('Sore') }}</span>
+                                                        <span class="fw-bold text-dark">16.30 - 18.30 WIB</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 2: Batas Jumlah Pengunjung -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqTwo" aria-expanded="false" aria-controls="collapseFaqTwo">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-users"></i></span>
+                                        <span>{{ __('Berapa jumlah maksimal pengunjung untuk setiap pasien?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqTwo" class="accordion-collapse collapse" aria-labelledby="headingFaqTwo" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-2">
+                                            {!! __('Demi ketenangan dan kelancaran perawatan medis pasien, setiap pasien diperkenankan menerima :badge secara bergantian.', ['badge' => '<span class="badge bg-primary-subtle text-primary fw-bold px-2 py-1">' . __('maksimal 2 pengunjung') . '</span>']) !!}
+                                        </p>
+                                        <p class="mb-0 text-muted">
+                                            {{ __('Apabila keluarga atau kerabat yang datang berjumlah lebih dari dua orang, dimohon untuk menunggu di ruang tunggu yang telah disediakan dan bergantian saat memasuki kamar rawat inap.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 3: Batas Usia Anak -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqThree" aria-expanded="false" aria-controls="collapseFaqThree">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-child-reaching"></i></span>
+                                        <span>{{ __('Apakah anak-anak diizinkan berkunjung menjenguk pasien?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqThree" class="accordion-collapse collapse" aria-labelledby="headingFaqThree" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-2">
+                                            {!! __('Anak-anak :badge tidak diizinkan berkunjung ke area ruang perawatan pasien.', ['badge' => '<span class="badge bg-danger-subtle text-danger fw-bold px-2 py-1">' . __('di bawah usia 12 tahun') . '</span>']) !!}
+                                        </p>
+                                        <p class="mb-0 text-muted">
+                                            {{ __('Kebijakan ini diterapkan demi keselamatan dan perlindungan imunitas anak terhadap risiko paparan kuman serta penyakit menular di lingkungan rumah sakit.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 4: Kondisi Kesehatan Pengunjung -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqFour" aria-expanded="false" aria-controls="collapseFaqFour">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-heart-pulse"></i></span>
+                                        <span>{{ __('Bagaimana ketentuan bagi pengunjung yang sedang merasa kurang sehat?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqFour" class="accordion-collapse collapse" aria-labelledby="headingFaqFour" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-2">
+                                            {!! __('Demi kesehatan pasien yang sedang dalam masa penyembuhan, kami menyarankan untuk :badge terlebih dahulu apabila kondisi badan Anda sedang tidak fit.', ['badge' => '<span class="badge bg-warning-subtle text-warning-emphasis fw-bold px-2 py-1">' . __('tidak melakukan kunjungan') . '</span>']) !!}
+                                        </p>
+                                        <p class="mb-0 text-muted">
+                                            {{ __('Jika mengalami gejala seperti demam, flu, batuk, pilek, atau keluhan infeksi lainnya, mohon beristirahat hingga pulih sebelum merencanakan kunjungan kembali.') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 5: Tata Tertib & Kenyamanan -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqFive">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqFive" aria-expanded="false" aria-controls="collapseFaqFive">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-volume-xmark"></i></span>
+                                        <span>{{ __('Apa saja tata tertib yang perlu ditaati selama berkunjung?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqFive" class="accordion-collapse collapse" aria-labelledby="headingFaqFive" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <ul class="mb-3 ps-3">
+                                            <li class="mb-1"><strong>{{ __('Ketenangan:') }}</strong> {{ __('Mohon untuk tidak berbicara keras atau membuat kegaduhan di lingkungan ruang rawat inap.') }}</li>
+                                            <li class="mb-1"><strong>{{ __('Kebersihan Tangan:') }}</strong> {{ __('Gunakan cairan antiseptik hand sanitizer yang disediakan sebelum dan setelah memasuki kamar pasien.') }}</li>
+                                            <li class="mb-1"><strong>{{ __('Ketepatan Waktu:') }}</strong> {{ __('Harap mengakhiri kunjungan tepat pada saat jam kunjungan berakhir agar pasien dapat beristirahat.') }}</li>
+                                        </ul>
+                                        <div class="p-3 rounded-3 bg-light text-muted small fst-italic border border-light-subtle">
+                                            <i class="fa-solid fa-heart text-danger me-1"></i>
+                                            {{ __('Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama di rawat di Rumah Sakit St. Elisabeth Semarang.') }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
