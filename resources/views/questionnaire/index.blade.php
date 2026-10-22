@@ -25,10 +25,10 @@
         <!-- 1. Hero Header Section -->
         <section class="questionnaire-hero text-center">
             <div class="container position-relative">
-                <nav class="feedback-breadcrumb mb-3" aria-label="breadcrumb">
+                <nav class="questionnaire-breadcrumb mb-3" aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-white-50 text-decoration-none">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item text-white active" aria-current="page">{{ __('Kuesioner Kepuasan Pasien') }}</li>
+                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Kuesioner Kepuasan Pasien') }}</li>
                     </ol>
                 </nav>
 
