@@ -56,6 +56,12 @@ Route::get('/informasi-pelanggan', function () {
     return view('customer-information.index');
 })->name('customer-information.index');
 
+// Halaman Kritik & Saran (Feedback Pelanggan)
+Route::get('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+Route::post('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
+Route::redirect('/feedback', '/kritik-dan-saran');
+
+
 // Glosarium
 // Route::get('/kamus', [HospitalController::class, 'getKamusMedis'])->name('getKamusMedis');
 // Route::prefix('kamus-medis')->name('glossary.')->group(function () {

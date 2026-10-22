@@ -51,6 +51,7 @@
                             <li class="footer-list mb-3"><a href="{{{ route('articles.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Artikel') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('customer-information.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Info Pelanggan') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('glossary.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Kamus Medis') }}</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('feedback.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Kritik & Saran') }}</a></li>
                         </ul>
                     </div>
                 </div>
