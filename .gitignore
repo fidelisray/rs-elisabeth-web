@@ -43,3 +43,4 @@ _ide_helper_models.php
 HEADLESS_CMS_CONTEXT.md
 *.bak
 compose.yaml
+/docs

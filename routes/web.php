@@ -61,6 +61,21 @@ Route::get('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class
 Route::post('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
 Route::redirect('/feedback', '/kritik-dan-saran');
 
+// Halaman Kuesioner Kepuasan Pasien (Diakses khusus via QR Code / Barcode)
+Route::prefix('kuesioner')->name('questionnaire.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\QuestionnaireController::class, 'index'])->name('index');
+    Route::get('/igd', [\App\Http\Controllers\QuestionnaireController::class, 'igd'])->name('igd');
+    Route::post('/igd', [\App\Http\Controllers\QuestionnaireController::class, 'storeIgd'])->name('igd.store');
+    Route::get('/rawat-jalan', [\App\Http\Controllers\QuestionnaireController::class, 'rawatJalan'])->name('rawat-jalan');
+    Route::post('/rawat-jalan', [\App\Http\Controllers\QuestionnaireController::class, 'storeRawatJalan'])->name('rawat-jalan.store');
+    Route::get('/rawat-inap', [\App\Http\Controllers\QuestionnaireController::class, 'rawatInap'])->name('rawat-inap');
+    Route::post('/rawat-inap', [\App\Http\Controllers\QuestionnaireController::class, 'storeRawatInap'])->name('rawat-inap.store');
+});
+Route::redirect('/kuisioner', '/kuesioner');
+Route::redirect('/kuisioner/igd', '/kuesioner/igd');
+Route::redirect('/kuisioner/rawat-jalan', '/kuesioner/rawat-jalan');
+Route::redirect('/kuisioner/rawat-inap', '/kuesioner/rawat-inap');
+
 
 // Glosarium
 // Route::get('/kamus', [HospitalController::class, 'getKamusMedis'])->name('getKamusMedis');
