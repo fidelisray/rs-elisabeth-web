@@ -455,5 +455,47 @@ class CmsApiService
             ];
         }
     }
+
+    /**
+     * Mengirimkan data kuesioner kepuasan pasien ke CMS API.
+     * Menggunakan HTTP POST dengan HMAC signature otomatis.
+     */
+    public function submitQuestionnaire(string $type, array $payload): array
+    {
+        try {
+            $response = $this->apiRequest()->post("{$this->baseUrl}/questionnaires/{$type}", $payload);
+
+            if ($response->successful()) {
+                return [
+                    'status'    => 'success',
+                    'http_code' => $response->status(),
+                    'message'   => $response->json('message', 'Kuesioner berhasil dikirimkan.'),
+                    'data'      => $response->json('data', []),
+                ];
+            }
+
+            Log::warning("CMS API - Gagal submit Kuesioner {$type}", [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
+            return [
+                'status'    => 'error',
+                'http_code' => $response->status(),
+                'message'   => $response->json('message', 'Gagal memproses pengiriman data kuesioner ke server CMS.'),
+            ];
+        } catch (\Exception $e) {
+            Log::error("CMS API - Exception saat submit Kuesioner {$type}", [
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'status'    => 'exception',
+                'http_code' => 500,
+                'message'   => $e->getMessage(),
+            ];
+        }
+    }
 }
+
 

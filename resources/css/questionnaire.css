@@ -1,0 +1,524 @@
+/* ==========================================================================
+   PATIENT SATISFACTION QUESTIONNAIRE STYLES (RS ST. ELISABETH SEMARANG)
+   ========================================================================== */
+
+.questionnaire-page-wrapper {
+    background:
+        radial-gradient(
+            circle 600px at 92% 6%,
+            rgba(183, 228, 229, 0.28),
+            rgba(183, 228, 229, 0) 70%
+        ),
+        radial-gradient(
+            circle 700px at 6% 22%,
+            rgba(0, 143, 215, 0.07),
+            rgba(0, 143, 215, 0) 70%
+        ),
+        linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f9fd 15%,
+            #eaf4fb 35%,
+            #edf5fc 60%,
+            #f8fafc 100%
+        );
+    min-height: 85vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Hero Header */
+.questionnaire-hero {
+    background: linear-gradient(135deg, #026199 0%, #008fd7 65%, #2389f0 100%);
+    color: #ffffff;
+    padding: 3.5rem 0 4.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.questionnaire-hero::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.questionnaire-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255, 240, 0, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.questionnaire-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    padding: 0.4rem 1.15rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.questionnaire-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 0.85rem;
+}
+
+.questionnaire-subtitle {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 720px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* Card Container Overlapping Hero */
+.questionnaire-container {
+    margin-top: -2.5rem;
+    position: relative;
+    z-index: 5;
+    padding-bottom: 5rem;
+}
+
+.questionnaire-main-card {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(2, 97, 153, 0.1);
+    box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    padding: 2.5rem;
+}
+
+@media (max-width: 767.98px) {
+    .questionnaire-hero {
+        padding: 2.5rem 0 3.5rem;
+    }
+    .questionnaire-title {
+        font-size: 1.65rem;
+    }
+    .questionnaire-main-card {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+}
+
+/* Step Header */
+.questionnaire-step-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px dashed rgba(2, 97, 153, 0.12);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: var(--secondary-color, #026199);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.step-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--secondary-darker-color, #124f8c);
+    margin: 0;
+}
+
+/* Progress Tracker Bar */
+.questionnaire-progress-tracker {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.progress-tracker-text {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-tracker-badge {
+    background-color: rgba(2, 97, 153, 0.1);
+    color: var(--secondary-color, #026199);
+    padding: 0.25rem 0.65rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.progress-tracker-bar-wrap {
+    flex: 1;
+    min-width: 140px;
+    height: 8px;
+    background-color: #e2e8f0;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.progress-tracker-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #026199, #008fd7);
+    border-radius: 50px;
+    transition: width 0.3s ease;
+}
+
+/* Question Cards */
+.question-item-card {
+    background-color: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.95rem;
+    padding: 1.25rem 1.35rem;
+    margin-bottom: 1.15rem;
+    transition: var(--transition, all 0.25s ease);
+}
+
+.question-item-card:hover {
+    border-color: #cbd5e1;
+    background-color: #fafbfc;
+}
+
+.question-item-card.is-answered {
+    border-color: rgba(2, 97, 153, 0.35);
+    background-color: rgba(2, 97, 153, 0.015);
+}
+
+.question-text {
+    font-size: 0.975rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.85rem;
+    line-height: 1.5;
+}
+
+.question-number-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background-color: rgba(2, 97, 153, 0.08);
+    color: var(--secondary-color, #026199);
+    border-radius: 50%;
+    font-size: 0.775rem;
+    font-weight: 700;
+    margin-right: 0.45rem;
+    flex-shrink: 0;
+}
+
+/* Rating Pill Buttons */
+.rating-pill-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.65rem;
+}
+
+@media (max-width: 767.98px) {
+    .rating-pill-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.rating-pill-label {
+    cursor: pointer;
+    margin: 0;
+    display: block;
+}
+
+.rating-pill-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.rating-pill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 46px;
+    padding: 0.6rem 0.85rem;
+    border: 1.5px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 0.65rem;
+    transition: var(--transition, all 0.2s ease);
+    user-select: none;
+    line-height: 1.3;
+}
+
+.rating-pill-btn:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.rating-pill-input:checked + .rating-pill-btn {
+    background: linear-gradient(135deg, #026199 0%, #008fd7 100%);
+    border-color: #026199;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(2, 97, 153, 0.28);
+    transform: translateY(-1px);
+}
+
+/* Demography Pills */
+.demography-pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.demography-pill-label {
+    cursor: pointer;
+    margin: 0;
+}
+
+.demography-pill-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.demography-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    border: 1.5px solid #cbd5e1;
+    background-color: #f8fafc;
+    color: #334155;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 50px;
+    transition: var(--transition, all 0.25s ease);
+    user-select: none;
+}
+
+.demography-pill-btn:hover {
+    background-color: #e2e8f0;
+    border-color: #94a3b8;
+}
+
+.demography-pill-input:checked + .demography-pill-btn {
+    background-color: var(--secondary-color, #026199);
+    border-color: var(--secondary-color, #026199);
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(2, 97, 153, 0.25);
+}
+
+/* Inputs & Textareas */
+.questionnaire-textarea {
+    border: 1.5px solid #cbd5e1;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.15rem;
+    font-size: 0.95rem;
+    background-color: #f8fafc;
+    transition: var(--transition, all 0.3s ease);
+}
+
+.questionnaire-textarea:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-color, #008fd7);
+    box-shadow: 0 0 0 3.5px rgba(0, 143, 215, 0.15);
+    outline: none;
+}
+
+/* Dimmed / muted placeholder */
+.questionnaire-textarea::placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400;
+}
+
+.questionnaire-textarea::-webkit-input-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400;
+}
+
+.questionnaire-textarea::-moz-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400;
+}
+
+.questionnaire-textarea:-ms-input-placeholder {
+    color: #94a3b8 !important;
+    opacity: 0.55 !important;
+    font-weight: 400;
+}
+
+.char-counter {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 0.35rem;
+}
+
+/* Submit Button */
+.btn-submit-questionnaire {
+    background: linear-gradient(135deg, #026199 0%, #008fd7 100%);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.9rem 2.8rem;
+    border-radius: 50px;
+    border: none;
+    transition: var(--transition, all 0.3s ease);
+    box-shadow: 0 4px 15px rgba(2, 97, 153, 0.3);
+}
+
+.btn-submit-questionnaire:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(2, 97, 153, 0.4);
+    color: #ffffff;
+    filter: brightness(1.08);
+}
+
+.btn-submit-questionnaire:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Success Card (Warm and Friendly) */
+.questionnaire-success-card {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+}
+
+.success-heart-badge {
+    width: 86px;
+    height: 86px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+    margin-bottom: 1.5rem;
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes scaleIn {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Quick Nav Tabs */
+.questionnaire-nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.questionnaire-nav-tab {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.925rem;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: var(--transition, all 0.2s ease);
+}
+
+.questionnaire-nav-tab:hover {
+    color: var(--secondary-color, #026199);
+}
+
+.questionnaire-nav-tab.active {
+    color: var(--secondary-color, #026199);
+    border-bottom-color: var(--secondary-color, #026199);
+}
+
+/* Portal Hub Service Cards */
+.hub-service-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 1.25rem;
+    padding: 2rem 1.75rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition, all 0.3s ease);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.hub-service-card:hover {
+    border-color: var(--primary-color, #008fd7);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(2, 97, 153, 0.12);
+    color: inherit;
+}
+
+.hub-card-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.hub-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px dashed #e2e8f0;
+    font-size: 0.8rem;
+    color: #64748b;
+}
