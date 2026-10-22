@@ -220,7 +220,9 @@
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('customer-information.*') ? 'active' : '' }}" href="{{ route('customer-information.index') }}"><i class="fa-solid fa-circle-info me-2"></i>{{ __('Informasi Pelanggan') }}</a></li>
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('news.*') ? 'active' : '' }}" href="{{ route('news.index') }}"><i class="fa-solid fa-newspaper me-2"></i>{{ __('ElisaNews') }}</a></li>
                 <li><a class="offcanvas-nav-link {{ request()->routeIs('articles.*') ? 'active' : '' }}" href="{{ route('articles.index') }}"><i class="fa-solid fa-file-lines me-2"></i>{{ __('Artikel') }}</a></li>
+                <li><a class="offcanvas-nav-link {{ request()->routeIs('feedback.*') ? 'active' : '' }}" href="{{ route('feedback.index') }}"><i class="fa-solid fa-comment-dots me-2"></i>{{ __('Kritik & Saran') }}</a></li>
             </ul>
+
             <div class="offcanvas-cta-wrapper">
                 <a class="btn btn-accent w-100 rounded-pill py-3 offcanvas-cta-btn" href="https://regonline.rs-elisabeth.com">
                     <i class="far fa-calendar-check me-2"></i> {{ __('Buat Janji Sekarang') }}

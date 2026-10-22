@@ -25,6 +25,7 @@ export default defineConfig({
                 'resources/css/customer-information.css',
                 'resources/css/customer-info-section.css',
                 'resources/css/faq-section.css',
+                'resources/css/feedback.css',
                 'resources/css/top-bar.css',
                 'resources/css/promo-banner.css',
                 'resources/css/footer.css',

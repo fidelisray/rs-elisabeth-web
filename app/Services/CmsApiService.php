@@ -413,4 +413,47 @@ class CmsApiService
             }
         });
     }
+
+    /**
+     * Mengirimkan data kritik, saran, atau keluhan pelanggan ke CMS API.
+     * Menggunakan HTTP POST dengan HMAC signature otomatis.
+     */
+    public function submitFeedback(array $payload): array
+    {
+        try {
+            $response = $this->apiRequest()->post("{$this->baseUrl}/feedbacks", $payload);
+
+            if ($response->successful()) {
+                return [
+                    'status'        => 'success',
+                    'http_code'     => $response->status(),
+                    'ticket_number' => $response->json('ticket_number') ?? $response->json('data.ticket_number'),
+                    'message'       => $response->json('message', 'Feedback berhasil dikirimkan.'),
+                    'data'          => $response->json('data', []),
+                ];
+            }
+
+            Log::warning('CMS API - Gagal submit Feedback', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+
+            return [
+                'status'    => 'error',
+                'http_code' => $response->status(),
+                'message'   => $response->json('message', 'Gagal memproses pengiriman data ke server CMS.'),
+            ];
+        } catch (\Exception $e) {
+            Log::error('CMS API - Exception saat submit Feedback', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'status'    => 'exception',
+                'http_code' => 500,
+                'message'   => $e->getMessage(),
+            ];
+        }
+    }
 }
+
