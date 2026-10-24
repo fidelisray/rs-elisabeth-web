@@ -302,4 +302,42 @@ class QuestionnaireSubmissionTest extends TestCase
             'success' => true,
         ]);
     }
+
+    /**
+     * Test 14: CMS menyimpan kuesioner Rawat Jalan (201). Endpoint kebab-case dipanggil dengan benar.
+     */
+    public function test_rawat_jalan_submission_succeeds_when_cms_stores_it(): void
+    {
+        Http::fake([
+            '*/api/v1/cms/questionnaires/rawat-jalan' => Http::response(['success' => true], 201),
+        ]);
+
+        $response = $this->post('/kuesioner/rawat-jalan', $this->validRawatJalanPayload());
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('questionnaire_success', true);
+
+        Http::assertSent(function (Request $request) {
+            return str_ends_with($request->url(), '/questionnaires/rawat-jalan');
+        });
+    }
+
+    /**
+     * Test 15: CMS menyimpan kuesioner Rawat Inap (201). Endpoint kebab-case dipanggil dengan benar.
+     */
+    public function test_rawat_inap_submission_succeeds_when_cms_stores_it(): void
+    {
+        Http::fake([
+            '*/api/v1/cms/questionnaires/rawat-inap' => Http::response(['success' => true], 201),
+        ]);
+
+        $response = $this->post('/kuesioner/rawat-inap', $this->validRawatInapPayload());
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('questionnaire_success', true);
+
+        Http::assertSent(function (Request $request) {
+            return str_ends_with($request->url(), '/questionnaires/rawat-inap');
+        });
+    }
 }
