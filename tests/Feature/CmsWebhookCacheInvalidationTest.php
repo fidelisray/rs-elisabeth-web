@@ -9,7 +9,9 @@ use Tests\TestCase;
 class CmsWebhookCacheInvalidationTest extends TestCase
 {
     protected string $consId = 'WEB-FRONTEND';
+
     protected string $secretKey = 'test-secret-key-12345';
+
     protected string $endpoint = '/api/internal/webhook/cache-invalidate';
 
     protected function setUp(): void
@@ -35,14 +37,14 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         $consId = $customConsId ?? $this->consId;
         $secret = $customSecret ?? $this->secretKey;
 
-        $rawSignature = hash_hmac('sha256', $timestamp . $consId . json_encode($body), $secret, true);
+        $rawSignature = hash_hmac('sha256', $timestamp.$consId.json_encode($body), $secret, true);
         $signature = base64_encode($rawSignature);
 
         return [
-            'X-Cons-ID'    => $consId,
-            'X-Timestamp'  => $timestamp,
-            'X-Signature'  => $signature,
-            'Accept'       => 'application/json',
+            'X-Cons-ID' => $consId,
+            'X-Timestamp' => $timestamp,
+            'X-Signature' => $signature,
+            'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ];
     }
@@ -107,7 +109,7 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         // Signature dibuat untuk body A, tapi request dikirim dengan body B.
         // Membuktikan signature benar-benar mengikat isi body (anti-replay).
         $signedBody = ['module' => 'news'];
-        $sentBody  = ['module' => 'all'];
+        $sentBody = ['module' => 'all'];
 
         $headers = $this->generateHmacHeaders($signedBody);
 
@@ -145,7 +147,7 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
         $body = [
             'module' => 'news',
-            'event'  => 'content.updated',
+            'event' => 'content.updated',
         ];
         $headers = $this->generateHmacHeaders($body);
         $response = $this->postJson($this->endpoint, $body, $headers);
@@ -155,7 +157,7 @@ class CmsWebhookCacheInvalidationTest extends TestCase
                 'success' => true,
                 'data' => [
                     'module' => 'news',
-                    'event'  => 'content.updated',
+                    'event' => 'content.updated',
                 ],
             ]);
 
@@ -171,7 +173,7 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
         $body = [
             'module' => 'all',
-            'event'  => 'cache.flush_all',
+            'event' => 'cache.flush_all',
         ];
         $headers = $this->generateHmacHeaders($body);
         $response = $this->postJson($this->endpoint, $body, $headers);
@@ -187,6 +189,31 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         // Tag induk 'cms' di-flush, kedua cache harus bersih
         $this->assertNull(Cache::tags(['cms', 'cms_news'])->get('key_news'));
         $this->assertNull(Cache::tags(['cms', 'cms_promotions'])->get('key_promo'));
+    }
+
+    public function test_successfully_invalidates_doctors_module_cache(): void
+    {
+        Cache::tags(['cms', 'cms_doctors'])->put('test_doctor_key', 'old_doctor_data', 600);
+        Cache::tags(['cms', 'cms_news'])->put('test_news_key', 'news_data', 600);
+
+        $body = [
+            'module' => 'doctors',
+            'event' => 'content.updated',
+        ];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'module' => 'doctors',
+                    'event' => 'content.updated',
+                ],
+            ]);
+
+        $this->assertNull(Cache::tags(['cms', 'cms_doctors'])->get('test_doctor_key'));
+        $this->assertEquals('news_data', Cache::tags(['cms', 'cms_news'])->get('test_news_key'));
     }
 
     public function test_rejects_invalid_module_name(): void
