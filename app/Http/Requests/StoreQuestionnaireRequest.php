@@ -23,10 +23,10 @@ class StoreQuestionnaireRequest extends FormRequest
         if (str_contains($route, 'igd') || $this->input('questionnaire_type') === 'igd') {
             return 'igd';
         }
-        if (str_contains($route, 'rawat-jalan') || $this->input('questionnaire_type') === 'rawat_jalan') {
-            return 'rawat_jalan';
+        if (str_contains($route, 'rawat-jalan') || $this->input('questionnaire_type') === 'rawat-jalan') {
+            return 'rawat-jalan';
         }
-        return 'rawat_inap';
+        return 'rawat-inap';
     }
 
     /**
@@ -70,7 +70,7 @@ class StoreQuestionnaireRequest extends FormRequest
             $rules['information_accessibility'] = ['required', 'string', $mudah];
             $rules['recommend_igd']             = ['required', 'string', $setuju];
             $rules['suggestions']               = ['nullable', 'string', 'max:3000'];
-        } elseif ($type === 'rawat_jalan') {
+        } elseif ($type === 'rawat-jalan') {
             $rules['waiting_room_comfort']      = ['required', 'string', $puas];
             $rules['examination_room_comfort']  = ['required', 'string', $puas];
             $rules['parking_staff']             = ['required', 'string', $puas];

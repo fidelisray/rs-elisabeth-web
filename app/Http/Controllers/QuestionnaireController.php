@@ -297,7 +297,7 @@ class QuestionnaireController extends Controller
      */
     public function storeRawatJalan(StoreQuestionnaireRequest $request): JsonResponse|RedirectResponse
     {
-        return $this->handleStore('rawat_jalan', $request);
+        return $this->handleStore('rawat-jalan', $request);
     }
 
     /**
@@ -425,7 +425,7 @@ class QuestionnaireController extends Controller
      */
     public function storeRawatInap(StoreQuestionnaireRequest $request): JsonResponse|RedirectResponse
     {
-        return $this->handleStore('rawat_inap', $request);
+        return $this->handleStore('rawat-inap', $request);
     }
 
     /**
