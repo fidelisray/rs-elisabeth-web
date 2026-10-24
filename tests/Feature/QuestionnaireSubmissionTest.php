@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
@@ -14,26 +15,26 @@ class QuestionnaireSubmissionTest extends TestCase
     protected function validIgdPayload(): array
     {
         return [
-            'age_group'                 => '15 - 64 tahun',
-            'gender'                    => 'Laki-laki',
-            'payment_method'            => 'BPJS Kesehatan',
-            'speed_triage_arrival'      => 'Sangat Puas',
-            'triage_efficiency'         => 'Puas',
-            'post_triage_care_speed'    => 'Puas',
-            'waiting_time_acceptable'   => 'Setuju',
-            'medical_explanation'       => 'Puas',
-            'informed_procedure_risks'  => 'Setuju',
-            'staff_responsiveness'      => 'Sangat Setuju',
-            'calm_communication'        => 'Puas',
-            'emotional_support'         => 'Puas',
-            'family_support'            => 'Setuju',
-            'waiting_area_comfort'      => 'Puas',
-            'family_information_clarity'=> 'Puas',
-            'overall_igd_experience'    => 'Sangat Puas',
+            'age_group' => '15 - 64 tahun',
+            'gender' => 'Laki-laki',
+            'payment_method' => 'BPJS Kesehatan',
+            'speed_triage_arrival' => 'Sangat Puas',
+            'triage_efficiency' => 'Puas',
+            'post_triage_care_speed' => 'Puas',
+            'waiting_time_acceptable' => 'Setuju',
+            'medical_explanation' => 'Puas',
+            'informed_procedure_risks' => 'Setuju',
+            'staff_responsiveness' => 'Sangat Setuju',
+            'calm_communication' => 'Puas',
+            'emotional_support' => 'Puas',
+            'family_support' => 'Setuju',
+            'waiting_area_comfort' => 'Puas',
+            'family_information_clarity' => 'Puas',
+            'overall_igd_experience' => 'Sangat Puas',
             'information_accessibility' => 'Mudah',
-            'recommend_igd'             => 'Sangat Setuju',
-            'suggestions'               => 'Pelayanan IGD sangat cepat dan ramah.',
-            'hp_website'                => '',
+            'recommend_igd' => 'Sangat Setuju',
+            'suggestions' => 'Pelayanan IGD sangat cepat dan ramah.',
+            'hp_website' => '',
         ];
     }
 
@@ -43,22 +44,22 @@ class QuestionnaireSubmissionTest extends TestCase
     protected function validRawatJalanPayload(): array
     {
         return [
-            'age_group'                     => '15 - 64 tahun',
-            'gender'                        => 'Perempuan',
-            'payment_method'                => 'Asuransi',
-            'waiting_room_comfort'          => 'Puas',
-            'examination_room_comfort'      => 'Sangat Puas',
-            'parking_staff'                 => 'Puas',
-            'doctor_schedule_punctuality'   => 'Puas',
-            'doctor_explanation'            => 'Sangat Puas',
-            'nurse_responsiveness'          => 'Puas',
-            'staff_information_clarity'     => 'Puas',
-            'staff_friendliness'            => 'Sangat Puas',
-            'staff_problem_solving'         => 'Puas',
+            'age_group' => '15 - 64 tahun',
+            'gender' => 'Perempuan',
+            'payment_method' => 'Asuransi',
+            'waiting_room_comfort' => 'Puas',
+            'examination_room_comfort' => 'Sangat Puas',
+            'parking_staff' => 'Puas',
+            'doctor_schedule_punctuality' => 'Puas',
+            'doctor_explanation' => 'Sangat Puas',
+            'nurse_responsiveness' => 'Puas',
+            'staff_information_clarity' => 'Puas',
+            'staff_friendliness' => 'Sangat Puas',
+            'staff_problem_solving' => 'Puas',
             'overall_outpatient_experience' => 'Sangat Puas',
-            'recommend_hospital'            => 'Sangat Setuju',
-            'suggestions'                   => 'Ruang tunggu rawat jalan sangat nyaman dan rapi.',
-            'hp_website'                    => '',
+            'recommend_hospital' => 'Sangat Setuju',
+            'suggestions' => 'Ruang tunggu rawat jalan sangat nyaman dan rapi.',
+            'hp_website' => '',
         ];
     }
 
@@ -68,30 +69,30 @@ class QuestionnaireSubmissionTest extends TestCase
     protected function validRawatInapPayload(): array
     {
         return [
-            'age_group'                     => '15 - 64 tahun',
-            'gender'                        => 'Perempuan',
-            'payment_method'                => 'Tunai',
-            'room_bed_comfort'              => 'Sangat Puas',
-            'room_cleanliness'              => 'Sangat Puas',
-            'room_facilities'               => 'Puas',
-            'environment_peace'             => 'Puas',
-            'doctor_visit_frequency'        => 'Puas',
-            'doctor_explanation'            => 'Sangat Puas',
-            'nurse_responsiveness'          => 'Sangat Puas',
-            'nurse_care_quality'            => 'Sangat Puas',
-            'medical_staff_info'            => 'Puas',
-            'decision_involvement'          => 'Puas',
-            'procedure_adequacy'            => 'Memadai',
-            'family_communication'          => 'Puas',
-            'food_quality'                  => 'Puas',
-            'diet_menu_suitability'         => 'Setuju',
-            'diet_explanation'              => 'Puas',
-            'overall_food_service'          => 'Puas',
-            'overall_inpatient_experience'  => 'Sangat Puas',
-            'information_ease'              => 'Sangat Mudah',
-            'recommend_inpatient'           => 'Sangat Setuju',
-            'suggestions'                   => 'Perawat dan dokter sangat sigap melayani.',
-            'hp_website'                    => '',
+            'age_group' => '15 - 64 tahun',
+            'gender' => 'Perempuan',
+            'payment_method' => 'Tunai',
+            'room_bed_comfort' => 'Sangat Puas',
+            'room_cleanliness' => 'Sangat Puas',
+            'room_facilities' => 'Puas',
+            'environment_peace' => 'Puas',
+            'doctor_visit_frequency' => 'Puas',
+            'doctor_explanation' => 'Sangat Puas',
+            'nurse_responsiveness' => 'Sangat Puas',
+            'nurse_care_quality' => 'Sangat Puas',
+            'medical_staff_info' => 'Puas',
+            'decision_involvement' => 'Puas',
+            'procedure_adequacy' => 'Memadai',
+            'family_communication' => 'Puas',
+            'food_quality' => 'Puas',
+            'diet_menu_suitability' => 'Setuju',
+            'diet_explanation' => 'Puas',
+            'overall_food_service' => 'Puas',
+            'overall_inpatient_experience' => 'Sangat Puas',
+            'information_ease' => 'Sangat Mudah',
+            'recommend_inpatient' => 'Sangat Setuju',
+            'suggestions' => 'Perawat dan dokter sangat sigap melayani.',
+            'hp_website' => '',
         ];
     }
 
@@ -212,12 +213,12 @@ class QuestionnaireSubmissionTest extends TestCase
     }
 
     /**
-     * Test 9: Submit kuesioner IGD berhasil dengan mekanisme Mock / Logging Fallback saat CMS offline (404).
+     * Test 9: CMS menyimpan kuesioner IGD (201). Pasien mendapat pesan terima kasih.
      */
-    public function test_igd_submission_succeeds_with_mock_logging_fallback(): void
+    public function test_igd_submission_succeeds_when_cms_stores_it(): void
     {
         Http::fake([
-            '*/api/v1/questionnaires/*' => Http::response(['message' => 'Not Found'], 404),
+            '*/api/v1/cms/questionnaires/igd' => Http::response(['success' => true], 201),
         ]);
 
         $response = $this->post('/kuesioner/igd', $this->validIgdPayload());
@@ -227,45 +228,71 @@ class QuestionnaireSubmissionTest extends TestCase
     }
 
     /**
-     * Test 10: Submit kuesioner Rawat Jalan berhasil dengan mekanisme Mock / Logging Fallback.
+     * Test 10: CMS menolak atau tidak tersedia (404). Pasien mendapat error, bukan sukses palsu.
      */
-    public function test_rawat_jalan_submission_succeeds_with_mock_logging_fallback(): void
+    public function test_rawat_jalan_submission_fails_clearly_when_cms_does_not_store_it(): void
     {
         Http::fake([
-            '*/api/v1/questionnaires/*' => Http::response(['message' => 'Not Found'], 404),
+            '*/api/v1/cms/questionnaires/rawat-jalan' => Http::response(['message' => 'Not Found'], 404),
         ]);
 
         $response = $this->post('/kuesioner/rawat-jalan', $this->validRawatJalanPayload());
 
         $response->assertStatus(302);
-        $response->assertSessionHas('questionnaire_success', true);
+        $response->assertSessionHas('questionnaire_error');
+        $response->assertSessionMissing('questionnaire_success');
     }
 
     /**
-     * Test 11: Submit kuesioner Rawat Inap berhasil dengan mekanisme Mock / Logging Fallback.
+     * Test 11: CMS offline (500). Pasien mendapat error.
      */
-    public function test_rawat_inap_submission_succeeds_with_mock_logging_fallback(): void
+    public function test_rawat_inap_submission_fails_clearly_when_cms_is_offline(): void
     {
         Http::fake([
-            '*/api/v1/questionnaires/*' => Http::response(['message' => 'Not Found'], 404),
+            '*/api/v1/cms/questionnaires/rawat-inap' => Http::response(['message' => 'Server Error'], 500),
         ]);
 
         $response = $this->post('/kuesioner/rawat-inap', $this->validRawatInapPayload());
 
         $response->assertStatus(302);
-        $response->assertSessionHas('questionnaire_success', true);
+        $response->assertSessionHas('questionnaire_error');
+        $response->assertSessionMissing('questionnaire_success');
     }
 
     /**
-     * Test 12: Submit via AJAX JSON mengembalikan respons JSON yang sesuai.
+     * Test 12: Body POST ikut ditandatangani HMAC (X-Signature atas timestamp.consId.body).
+     */
+    public function test_questionnaire_post_body_is_signed(): void
+    {
+        Http::fake([
+            '*/api/v1/cms/questionnaires/igd' => Http::response(['success' => true], 201),
+        ]);
+
+        $this->post('/kuesioner/igd', $this->validIgdPayload())->assertStatus(302);
+
+        Http::assertSent(function (Request $request) {
+            $consId = $request->header('X-Cons-ID')[0] ?? '';
+            $timestamp = $request->header('X-Timestamp')[0] ?? '';
+            $signature = $request->header('X-Signature')[0] ?? '';
+            $body = $request->body();
+            $secret = config('cms_api.secret_key');
+
+            $expected = base64_encode(hash_hmac('sha256', $timestamp.$consId.$body, $secret, true));
+
+            return $expected === $signature && $body !== '';
+        });
+    }
+
+    /**
+     * Test 13: Submit via AJAX JSON mengembalikan 200 saat CMS menyimpan.
      */
     public function test_ajax_submission_returns_json_response(): void
     {
         Http::fake([
-            '*/api/v1/questionnaires/*' => Http::response([
-                'status'  => 'success',
+            '*/api/v1/cms/questionnaires/igd' => Http::response([
+                'status' => 'success',
                 'message' => 'Kuesioner diterima.',
-            ], 200),
+            ], 201),
         ]);
 
         $response = $this->postJson('/kuesioner/igd', $this->validIgdPayload());

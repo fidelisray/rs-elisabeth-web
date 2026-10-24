@@ -13,21 +13,17 @@ class CmsWebhookController extends Controller
     /**
      * Endpoint internal webhook untuk menerima sinyal invalidasi cache dari CMS.
      * Mengosongkan tag cache Redis secara instan saat data diubah di CMS.
-     *
-     * @param Request $request
-     * @param CmsApiService $cmsApiService
-     * @return JsonResponse
      */
     public function invalidate(Request $request, CmsApiService $cmsApiService): JsonResponse
     {
         $validated = $request->validate([
-            'module'    => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions',
-            'event'     => 'nullable|string|max:50',
+            'module' => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions,doctors',
+            'event' => 'nullable|string|max:50',
             // 'slug' disediakan sebagai metadata tambahan untuk keperluan logging/audit
             // di masa mendatang. Saat ini invalidasi bersifat granular per-modul
             // (cache tags), sehingga slug tidak dipakai untuk menargetkan satu entri.
             // Pertahankan field ini agar payload CMS tetap kompatibel ke depan.
-            'slug'      => 'nullable|string|max:255',
+            'slug' => 'nullable|string|max:255',
             'timestamp' => 'nullable|numeric',
         ]);
 
@@ -35,10 +31,10 @@ class CmsWebhookController extends Controller
         $event = $validated['event'] ?? 'content.updated';
 
         Log::info("CMS Webhook Received - Event: {$event}, Module: {$module}", [
-            'ip'     => $request->ip(),
+            'ip' => $request->ip(),
             'client' => $request->header('X-Cons-ID'),
             // Metadata tambahan: slug entitas yang berubah (jika dikirim oleh CMS).
-            'slug'   => $validated['slug'] ?? null,
+            'slug' => $validated['slug'] ?? null,
         ]);
 
         $result = $cmsApiService->invalidateCache($module);
@@ -47,7 +43,7 @@ class CmsWebhookController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "Modul '{$module}' tidak dikenali untuk invalidasi cache.",
-                'data'    => null,
+                'data' => null,
             ], 422);
         }
 
@@ -57,19 +53,19 @@ class CmsWebhookController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Invalidasi cache tidak dapat dilakukan: driver cache aktif tidak mendukung cache tags.',
-                'data'    => null,
+                'data' => null,
             ], 501);
         }
 
         return response()->json([
             'success' => true,
             'message' => "Cache CMS berhasil dibatalkan untuk modul: {$module}.",
-            'data'    => [
-                'module'       => $module,
-                'event'        => $event,
+            'data' => [
+                'module' => $module,
+                'event' => $event,
                 'tags_flushed' => $result['tags'],
-                'driver_status'=> $result['status'],
-                'timestamp'    => time(),
+                'driver_status' => $result['status'],
+                'timestamp' => time(),
             ],
         ], 200);
     }

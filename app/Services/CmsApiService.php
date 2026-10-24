@@ -2,15 +2,20 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class CmsApiService
 {
     protected string $baseUrl;
+
     protected string $consId;
+
     protected string $secretKey;
+
     protected int $timeout;
 
     public function __construct()
@@ -24,28 +29,43 @@ class CmsApiService
     }
 
     /**
-     * Membuat instance HTTP Request bawaan Laravel (PendingRequest) 
+     * Membuat instance HTTP Request bawaan Laravel (PendingRequest)
      * yang sudah di-inject dengan header HMAC secara otomatis.
      */
-    protected function apiRequest(): \Illuminate\Http\Client\PendingRequest
-    {   
+    protected function apiRequest(string $rawBody = ''): PendingRequest
+    {
         date_default_timezone_set('Asia/Jakarta');
 
         $consid = $this->consId;
         $secretKey = $this->secretKey;
 
-        // Logika pembuatan X-Signature yang identik dengan DoctorApiService
-        $tStamp = strval(time()); // Unix timestamp — strtotime('1970-01-01') selalu 0
-        $signature = hash_hmac('sha256', $tStamp . $consid, $secretKey, true);
+        // Signature menyertakan body mentah untuk POST. Body yang ditandatangani harus
+        // identik byte per byte dengan body yang dikirim, sehingga $rawBody dikirim
+        // apa adanya oleh pemanggil (lihat postSigned). GET memakai $rawBody kosong.
+        $tStamp = strval(time());
+        $signature = hash_hmac('sha256', $tStamp.$consid.$rawBody, $secretKey, true);
         $encodedSignature = base64_encode($signature);
 
         return Http::withHeaders([
             'X-Cons-ID' => $consid,
             'X-Timestamp' => $tStamp,
             'X-Signature' => $encodedSignature,
-            'Accept'  => 'application/json',
+            'Accept' => 'application/json',
             'Accept-Language' => app()->getLocale(),
         ])->timeout($this->timeout);
+    }
+
+    /**
+     * Kirim POST bertanda tangan HMAC yang mencakup body.
+     * Body di-encode sekali, lalu string itu yang ditandatangani dan dikirim.
+     */
+    protected function postSigned(string $url, array $payload): Response
+    {
+        $rawBody = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        return $this->apiRequest($rawBody)
+            ->withBody($rawBody, 'application/json')
+            ->post($url);
     }
 
     /**
@@ -84,16 +104,18 @@ class CmsApiService
             'facilities',
             'room_facilities',
             'banner_promotions',
+            'doctors',
         ];
 
         if (Cache::supportsTags()) {
             if ($module === 'all') {
                 Cache::tags(['cms'])->flush();
                 Log::info("CMS API Cache - Flushed all 'cms' tags.");
+
                 return [
                     'flushed' => 'all',
-                    'tags'    => ['cms'],
-                    'status'  => 'success',
+                    'tags' => ['cms'],
+                    'status' => 'success',
                 ];
             }
 
@@ -101,25 +123,27 @@ class CmsApiService
                 $tag = "cms_{$module}";
                 Cache::tags([$tag])->flush();
                 Log::info("CMS API Cache - Flushed tag: {$tag}.");
+
                 return [
                     'flushed' => $module,
-                    'tags'    => [$tag],
-                    'status'  => 'success',
+                    'tags' => [$tag],
+                    'status' => 'success',
                 ];
             }
 
             return [
                 'flushed' => null,
-                'status'  => 'unknown_module',
+                'status' => 'unknown_module',
             ];
         }
 
         // Fallback untuk driver tanpa tags di local development
         Log::info("CMS API Cache - Invalidate requested for '{$module}', but current driver does not support tags.");
+
         return [
             'flushed' => $module,
-            'tags'    => [],
-            'status'  => 'driver_unsupported_tags',
+            'tags' => [],
+            'status' => 'driver_unsupported_tags',
         ];
     }
 
@@ -138,7 +162,7 @@ class CmsApiService
     {
         $locale = app()->getLocale();
         // Parameter filters dan locale disertakan pada cache key agar spesifik
-        $cacheKey = "cms_news_{$locale}_" . md5(serialize($filters));
+        $cacheKey = "cms_news_{$locale}_".md5(serialize($filters));
         $ttl = $this->cacheTtl('news');
 
         return $this->rememberTagged('news', $cacheKey, $ttl, function () use ($filters) {
@@ -153,13 +177,14 @@ class CmsApiService
 
                 Log::warning('CMS API - Gagal mengambil daftar News', [
                     'status' => $response->status(),
-                    'body'   => $response->body(),
+                    'body' => $response->body(),
                 ]);
 
                 return [];
 
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch News', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -168,7 +193,7 @@ class CmsApiService
     /**
      * Mengambil single berita berdasarkan slug.
      */
-    public function getNewsBySlug(string $slug): array|null
+    public function getNewsBySlug(string $slug): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_news_slug_{$locale}_{$slug}";
@@ -185,6 +210,7 @@ class CmsApiService
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch News Slug {$slug}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -196,7 +222,7 @@ class CmsApiService
     public function getArticles(array $filters = []): array
     {
         $locale = app()->getLocale();
-        $cacheKey = "cms_articles_{$locale}_" . md5(serialize($filters));
+        $cacheKey = "cms_articles_{$locale}_".md5(serialize($filters));
         $ttl = $this->cacheTtl('articles');
 
         return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($filters) {
@@ -210,6 +236,7 @@ class CmsApiService
                 return [];
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch Articles', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -218,7 +245,7 @@ class CmsApiService
     /**
      * Mengambil single artikel berdasarkan ID.
      */
-    public function getArticleById(string $id): array|null
+    public function getArticleById(string $id): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_article_{$locale}_{$id}";
@@ -235,6 +262,7 @@ class CmsApiService
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Article ID {$id}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -245,7 +273,7 @@ class CmsApiService
      * PERBAIKAN: Digunakan oleh ArticleController::show() agar tidak perlu
      * fetch semua artikel hanya untuk menemukan satu artikel.
      */
-    public function getArticleBySlug(string $slug): array|null
+    public function getArticleBySlug(string $slug): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_article_slug_{$locale}_{$slug}";
@@ -262,6 +290,7 @@ class CmsApiService
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Article Slug {$slug}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -273,16 +302,20 @@ class CmsApiService
     public function getPromotions(array $filters = []): array
     {
         $locale = app()->getLocale();
-        $cacheKey = "cms_promotions_{$locale}_" . md5(serialize($filters));
+        $cacheKey = "cms_promotions_{$locale}_".md5(serialize($filters));
         $ttl = $this->cacheTtl('promotions');
 
         return $this->rememberTagged('promotions', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/promotions", $filters);
-                if ($response->successful()) return $response->json('data', []);
+                if ($response->successful()) {
+                    return $response->json('data', []);
+                }
+
                 return [];
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch Promotions', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -291,7 +324,7 @@ class CmsApiService
     /**
      * Mengambil single promosi berdasarkan ID.
      */
-    public function getPromotionById(string $id): array|null
+    public function getPromotionById(string $id): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_promotion_{$locale}_{$id}";
@@ -300,10 +333,14 @@ class CmsApiService
         return $this->rememberTagged('promotions', $cacheKey, $ttl, function () use ($id) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/promotions/{$id}");
-                if ($response->successful()) return $response->json('data', null);
+                if ($response->successful()) {
+                    return $response->json('data', null);
+                }
+
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Promotion ID {$id}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -315,16 +352,20 @@ class CmsApiService
     public function getFacilities(array $filters = []): array
     {
         $locale = app()->getLocale();
-        $cacheKey = "cms_facilities_{$locale}_" . md5(serialize($filters));
+        $cacheKey = "cms_facilities_{$locale}_".md5(serialize($filters));
         $ttl = $this->cacheTtl('facilities');
 
         return $this->rememberTagged('facilities', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/facilities", $filters);
-                if ($response->successful()) return $response->json('data', []);
+                if ($response->successful()) {
+                    return $response->json('data', []);
+                }
+
                 return [];
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch Facilities', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -333,7 +374,7 @@ class CmsApiService
     /**
      * Mengambil single fasilitas rumah sakit berdasarkan slug.
      */
-    public function getFacilityBySlug(string $slug): array|null
+    public function getFacilityBySlug(string $slug): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_facility_{$locale}_{$slug}";
@@ -342,10 +383,14 @@ class CmsApiService
         return $this->rememberTagged('facilities', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/facilities/{$slug}");
-                if ($response->successful()) return $response->json('data', null);
+                if ($response->successful()) {
+                    return $response->json('data', null);
+                }
+
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Facility Slug {$slug}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -357,16 +402,20 @@ class CmsApiService
     public function getRoomFacilities(array $filters = []): array
     {
         $locale = app()->getLocale();
-        $cacheKey = "cms_room_facilities_{$locale}_" . md5(serialize($filters));
+        $cacheKey = "cms_room_facilities_{$locale}_".md5(serialize($filters));
         $ttl = $this->cacheTtl('room_facilities');
 
         return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($filters) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/room-facilities", $filters);
-                if ($response->successful()) return $response->json('data', []);
+                if ($response->successful()) {
+                    return $response->json('data', []);
+                }
+
                 return [];
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch Room Facilities', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -375,7 +424,7 @@ class CmsApiService
     /**
      * Mengambil single fasilitas ruangan berdasarkan slug.
      */
-    public function getRoomFacilityBySlug(string $slug): array|null
+    public function getRoomFacilityBySlug(string $slug): ?array
     {
         $locale = app()->getLocale();
         $cacheKey = "cms_room_facility_{$locale}_{$slug}";
@@ -384,10 +433,14 @@ class CmsApiService
         return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($slug) {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/room-facilities/{$slug}");
-                if ($response->successful()) return $response->json('data', null);
+                if ($response->successful()) {
+                    return $response->json('data', null);
+                }
+
                 return null;
             } catch (\Exception $e) {
                 Log::error("CMS API - Error saat fetch Room Facility Slug {$slug}", ['error' => $e->getMessage()]);
+
                 return null;
             }
         });
@@ -405,10 +458,14 @@ class CmsApiService
         return $this->rememberTagged('banner_promotions', $cacheKey, $ttl, function () {
             try {
                 $response = $this->apiRequest()->get("{$this->baseUrl}/banner-promotions");
-                if ($response->successful()) return $response->json('data', []);
+                if ($response->successful()) {
+                    return $response->json('data', []);
+                }
+
                 return [];
             } catch (\Exception $e) {
                 Log::error('CMS API - Error saat fetch Banner Promotions', ['error' => $e->getMessage()]);
+
                 return [];
             }
         });
@@ -421,27 +478,27 @@ class CmsApiService
     public function submitFeedback(array $payload): array
     {
         try {
-            $response = $this->apiRequest()->post("{$this->baseUrl}/feedbacks", $payload);
+            $response = $this->postSigned("{$this->baseUrl}/feedbacks", $payload);
 
             if ($response->successful()) {
                 return [
-                    'status'        => 'success',
-                    'http_code'     => $response->status(),
+                    'status' => 'success',
+                    'http_code' => $response->status(),
                     'ticket_number' => $response->json('ticket_number') ?? $response->json('data.ticket_number'),
-                    'message'       => $response->json('message', 'Feedback berhasil dikirimkan.'),
-                    'data'          => $response->json('data', []),
+                    'message' => $response->json('message', 'Feedback berhasil dikirimkan.'),
+                    'data' => $response->json('data', []),
                 ];
             }
 
             Log::warning('CMS API - Gagal submit Feedback', [
                 'status' => $response->status(),
-                'body'   => $response->body(),
+                'body' => $response->body(),
             ]);
 
             return [
-                'status'    => 'error',
+                'status' => 'error',
                 'http_code' => $response->status(),
-                'message'   => $response->json('message', 'Gagal memproses pengiriman data ke server CMS.'),
+                'message' => $response->json('message', 'Gagal memproses pengiriman data ke server CMS.'),
             ];
         } catch (\Exception $e) {
             Log::error('CMS API - Exception saat submit Feedback', [
@@ -449,9 +506,9 @@ class CmsApiService
             ]);
 
             return [
-                'status'    => 'exception',
+                'status' => 'exception',
                 'http_code' => 500,
-                'message'   => $e->getMessage(),
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -463,26 +520,26 @@ class CmsApiService
     public function submitQuestionnaire(string $type, array $payload): array
     {
         try {
-            $response = $this->apiRequest()->post("{$this->baseUrl}/questionnaires/{$type}", $payload);
+            $response = $this->postSigned("{$this->baseUrl}/questionnaires/{$type}", $payload);
 
             if ($response->successful()) {
                 return [
-                    'status'    => 'success',
+                    'status' => 'success',
                     'http_code' => $response->status(),
-                    'message'   => $response->json('message', 'Kuesioner berhasil dikirimkan.'),
-                    'data'      => $response->json('data', []),
+                    'message' => $response->json('message', 'Kuesioner berhasil dikirimkan.'),
+                    'data' => $response->json('data', []),
                 ];
             }
 
             Log::warning("CMS API - Gagal submit Kuesioner {$type}", [
                 'status' => $response->status(),
-                'body'   => $response->body(),
+                'body' => $response->body(),
             ]);
 
             return [
-                'status'    => 'error',
+                'status' => 'error',
                 'http_code' => $response->status(),
-                'message'   => $response->json('message', 'Gagal memproses pengiriman data kuesioner ke server CMS.'),
+                'message' => $response->json('message', 'Gagal memproses pengiriman data kuesioner ke server CMS.'),
             ];
         } catch (\Exception $e) {
             Log::error("CMS API - Exception saat submit Kuesioner {$type}", [
@@ -490,12 +547,10 @@ class CmsApiService
             ]);
 
             return [
-                'status'    => 'exception',
+                'status' => 'exception',
                 'http_code' => 500,
-                'message'   => $e->getMessage(),
+                'message' => $e->getMessage(),
             ];
         }
     }
 }
-
-

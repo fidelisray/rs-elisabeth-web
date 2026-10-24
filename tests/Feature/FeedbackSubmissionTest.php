@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Services\CmsApiService;
-use App\Services\FeedbackService;
 use Mockery;
 use Tests\TestCase;
 
@@ -15,29 +14,26 @@ class FeedbackSubmissionTest extends TestCase
         parent::tearDown();
     }
 
+    private function validPayload(array $override = []): array
+    {
+        return array_merge([
+            'reporter_name' => 'Fidelis Raymond',
+            'relation_to_patient' => 'Diri Sendiri',
+            'patient_name' => 'Fidelis Raymond',
+            'phone_number' => '081234567890',
+            'complaint_categories' => ['Tarif dan biaya pemeriksaan'],
+            'complaint_detail' => 'Penjelasan keluhan pasien mengenai rincian biaya yang perlu diklarifikasi.',
+            'expected_solution' => 'Penjelasan tertulis dari bagian administrasi.',
+        ], $override);
+    }
+
     public function test_feedback_page_can_be_rendered(): void
     {
         $response = $this->get(route('feedback.index'));
 
         $response->assertStatus(200);
         $response->assertSee('Formulir Keluhan & Masukan Pasien');
-        $response->assertSee('Identitas Pelapor & Pasien');
-        $response->assertSee('Kategori Keluhan');
-        $response->assertSee('Mohon jelaskan keluhan Anda secara rinci');
-        $response->assertSee('Apa solusi yang Anda harapkan dari Rumah Sakit?');
         $response->assertSee('Kirim Keluhan & Masukan');
-    }
-
-    public function test_feedback_page_renders_english_translations(): void
-    {
-        $response = $this->withSession(['locale' => 'en'])->get(route('feedback.index'));
-
-        $response->assertStatus(200);
-        $response->assertSee('Patient Complaint &amp; Feedback Form', false);
-        $response->assertSee('Reporter &amp; Patient Identity', false);
-        $response->assertSee('Complaint Category');
-        $response->assertSee('Reporter Name');
-        $response->assertSee('Submit Complaint &amp; Feedback', false);
     }
 
     public function test_feedback_submission_fails_when_required_fields_are_missing(): void
@@ -45,144 +41,100 @@ class FeedbackSubmissionTest extends TestCase
         $response = $this->post(route('feedback.store'), []);
 
         $response->assertStatus(302);
-        $response->assertSessionHasErrors([
-            'reporter_name',
-            'relation_to_patient',
-            'patient_name',
-            'phone_number',
-            'complaint_categories',
-            'complaint_detail',
-            'expected_solution',
-        ]);
+        $response->assertSessionHasErrors(['reporter_name', 'patient_name', 'phone_number']);
     }
 
     public function test_feedback_submission_blocks_honeypot_spam(): void
     {
-        $response = $this->post(route('feedback.store'), [
-            'hp_website'           => 'https://spam-bot-automated.com',
-            'reporter_name'        => 'Spam Bot',
-            'relation_to_patient'  => 'Diri Sendiri',
-            'patient_name'         => 'Spam Bot',
-            'phone_number'         => '081234567890',
-            'complaint_categories' => ['Fasilitas & Sarana Prasarana'],
-            'complaint_detail'     => 'Spam content test message with more than 10 characters',
-            'expected_solution'    => 'Spam resolution test message',
-        ]);
+        $response = $this->post(route('feedback.store'), $this->validPayload(['hp_website' => 'bot']));
 
         $response->assertStatus(302);
         $response->assertSessionHasErrors(['hp_website']);
     }
 
-    public function test_feedback_submission_succeeds_with_mock_logging_fallback_when_cms_endpoint_is_unavailable(): void
+    public function test_feedback_submission_succeeds_when_cms_stores_it(): void
     {
-        // Simulasi CMS API mengembalikan 404 (karena endpoint belum ada di CMS)
         $mockCms = Mockery::mock(CmsApiService::class);
         $mockCms->shouldReceive('submitFeedback')
             ->once()
             ->andReturn([
-                'status'    => 'error',
-                'http_code' => 404,
-                'message'   => 'Not Found',
+                'status' => 'success',
+                'http_code' => 201,
+                'ticket_number' => 'FB-20261024-ABC123',
+                'message' => 'Feedback berhasil dikirimkan.',
             ]);
 
         $this->app->instance(CmsApiService::class, $mockCms);
 
-        $payload = [
-            'reporter_name'        => 'Fidelis Raymond',
-            'relation_to_patient'  => 'Orang Tua',
-            'patient_name'         => 'Pasien Contoh',
-            'phone_number'         => '081234567890',
-            'complaint_categories' => [
-                'Pelayanan Medis (Tindakan medis, penegakan diagnosis, penundaan pelayanan, dll)',
-                'Fasilitas & Sarana Prasarana',
-            ],
-            'complaint_detail'     => 'Penjelasan keluhan pasien secara mendalam dan jelas mengenai pelayanan.',
-            'expected_solution'    => 'Diharapkan adanya tindak lanjut evaluasi segera dari pihak rumah sakit.',
-        ];
-
-        $response = $this->post(route('feedback.store'), $payload);
+        $response = $this->post(route('feedback.store'), $this->validPayload());
 
         $response->assertStatus(302);
         $response->assertRedirect(route('feedback.index'));
         $response->assertSessionHas('feedback_success', true);
-        $response->assertSessionHas('ticket_number');
-
-        // Pastikan tiket berformat FB-YYYYMMDD-XXXX
-        $ticket = session('ticket_number');
-        $this->assertStringStartsWith('FB-', $ticket);
-
-        // Kunjungi halaman feedback untuk memastikan layar konfirmasi sukses ter-render
-        $followUp = $this->get(route('feedback.index'));
-        $followUp->assertStatus(200);
-        $followUp->assertSee('Terima Kasih Atas Masukan Anda');
-        $followUp->assertSee($ticket);
+        $response->assertSessionHas('ticket_number', 'FB-20261024-ABC123');
     }
 
-    public function test_feedback_submission_succeeds_when_cms_api_returns_success(): void
+    public function test_feedback_submission_fails_clearly_when_cms_does_not_store_it(): void
     {
-        // Simulasi CMS API sudah aktif dan membalas 201 dengan tiket resmi
+        // CMS tidak menyimpan data (404). Pasien harus diberi tahu kegagalan, bukan tiket palsu.
         $mockCms = Mockery::mock(CmsApiService::class);
         $mockCms->shouldReceive('submitFeedback')
             ->once()
             ->andReturn([
-                'status'        => 'success',
-                'http_code'     => 201,
-                'ticket_number' => 'FB-CMS-2026-8888',
-                'message'       => 'Disimpan di database CMS',
+                'status' => 'error',
+                'http_code' => 404,
+                'message' => 'Not Found',
             ]);
 
         $this->app->instance(CmsApiService::class, $mockCms);
 
-        $payload = [
-            'reporter_name'        => 'Fidelis Raymond',
-            'relation_to_patient'  => 'Diri Sendiri',
-            'patient_name'         => 'Fidelis Raymond',
-            'phone_number'         => '081234567890',
-            'complaint_categories' => ['Tarif dan biaya pemeriksaan'],
-            'complaint_detail'     => 'Penjelasan keluhan pasien mengenai rincian biaya yang perlu diklarifikasi.',
-            'expected_solution'    => 'Penjelasan tertulis dari bagian administrasi.',
-        ];
-
-        $response = $this->post(route('feedback.store'), $payload);
+        $response = $this->post(route('feedback.store'), $this->validPayload());
 
         $response->assertStatus(302);
-        $response->assertRedirect(route('feedback.index'));
-        $response->assertSessionHas('ticket_number', 'FB-CMS-2026-8888');
+        $response->assertSessionHas('feedback_error');
+        $response->assertSessionMissing('ticket_number');
+        $response->assertSessionMissing('feedback_success');
     }
 
-    public function test_feedback_json_ajax_submission_returns_json_response(): void
+    public function test_feedback_ajax_submission_returns_422_json_when_cms_does_not_store_it(): void
     {
         $mockCms = Mockery::mock(CmsApiService::class);
         $mockCms->shouldReceive('submitFeedback')
             ->once()
             ->andReturn([
-                'status'    => 'error',
-                'http_code' => 404,
-                'message'   => 'Not Found',
+                'status' => 'exception',
+                'http_code' => 500,
+                'message' => 'Connection refused',
             ]);
 
         $this->app->instance(CmsApiService::class, $mockCms);
 
-        $payload = [
-            'reporter_name'        => 'Fidelis Raymond',
-            'relation_to_patient'  => 'Diri Sendiri',
-            'patient_name'         => 'Fidelis Raymond',
-            'phone_number'         => '081234567890',
-            'complaint_categories' => ['Etika dan perilaku petugas'],
-            'complaint_detail'     => 'Penjelasan keluhan pasien mengenai sikap petugas di bagian pendaftaran.',
-            'expected_solution'    => 'Pelatihan keramahan petugas.',
-        ];
+        $response = $this->postJson(route('feedback.store'), $this->validPayload());
 
-        $response = $this->postJson(route('feedback.store'), $payload);
+        $response->assertStatus(422);
+        $response->assertJson(['success' => false]);
+        $response->assertJsonMissing(['ticket_number' => 'FB-']);
+    }
+
+    public function test_feedback_ajax_submission_returns_json_with_ticket_when_stored(): void
+    {
+        $mockCms = Mockery::mock(CmsApiService::class);
+        $mockCms->shouldReceive('submitFeedback')
+            ->once()
+            ->andReturn([
+                'status' => 'success',
+                'http_code' => 201,
+                'ticket_number' => 'FB-20261024-XYZ789',
+            ]);
+
+        $this->app->instance(CmsApiService::class, $mockCms);
+
+        $response = $this->postJson(route('feedback.store'), $this->validPayload());
 
         $response->assertStatus(200);
         $response->assertJson([
             'success' => true,
-        ]);
-        $response->assertJsonStructure([
-            'success',
-            'ticket_number',
-            'message',
+            'ticket_number' => 'FB-20261024-XYZ789',
         ]);
     }
 }

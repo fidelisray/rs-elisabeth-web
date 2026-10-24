@@ -44,3 +44,4 @@ HEADLESS_CMS_CONTEXT.md
 *.bak
 compose.yaml
 /docs
+/.codegraph
