@@ -5,6 +5,8 @@
 .env.production
 .env.docker
 .env-laptop
+.env.local
+.env.hospital
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -45,3 +47,4 @@ HEADLESS_CMS_CONTEXT.md
 compose.yaml
 /docs
 /.codegraph
+switch-env.*

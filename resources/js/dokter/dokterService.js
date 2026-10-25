@@ -9,7 +9,10 @@ export const state = {
 export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
     const doctorMap = new Map();
 
+    if (!Array.isArray(doctorData)) return [];
+
     doctorData.forEach((item) => {
+        if (!item || !item.ParamedicCode || !Number.isInteger(Number(item.DayNumber)) || Number(item.DayNumber) < 1 || Number(item.DayNumber) > 7) return;
         if (!doctorMap.has(item.ParamedicCode)) {
             const schedule = {};
             state.days.forEach((day) => {
@@ -18,7 +21,7 @@ export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
 
             doctorMap.set(item.ParamedicCode, {
                 entry_id: `${item.ServiceUnitCode}0823${item.ParamedicCode}9373`,
-                paramedicCode: item.ParamedicCode,
+                paramedicCode: String(item.ParamedicCode),
                 paramedicName: item.ParamedicName,
                 specialtyCode: item.SpecialityCode || knownSpecialtyCode,
                 specialtyName: item.SpecialtyName || "",
@@ -29,7 +32,7 @@ export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
 
         const doc = doctorMap.get(item.ParamedicCode);
         doc.schedule[item.DayNumber].push({
-            jam: item.OperationalTimeName.split("|"),
+            jam: typeof item.OperationalTimeName === 'string' ? item.OperationalTimeName.split("|") : [],
             serviceUnitCode: item.ServiceUnitCode,
             serviceUnitName: item.ServiceUnitName,
         });
@@ -101,10 +104,11 @@ export async function fetchAllDokter() {
 
 export async function fetchDokterBySpecialtyCode(specialtyCode) {
     try {
-        const response = await fetch(`/dokter/${specialtyCode}`);
+        const response = await fetch(`/dokter/${encodeURIComponent(specialtyCode)}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const data = await response.json();
+        if (data.Success === false) return false;
         const { ScheduleRoutine } = data;
 
         if (!ScheduleRoutine || ScheduleRoutine.length === 0) {
@@ -119,4 +123,19 @@ export async function fetchDokterBySpecialtyCode(specialtyCode) {
         console.error("Error fetching specialty doctors:", error);
         return false;
     }
+}
+
+// Browser memanggil server Web; server Web yang menyimpan secret dan menghubungi CMS.
+export async function fetchDoctorProfile(code, signal) {
+    const locale = document.documentElement.lang?.toLowerCase().startsWith('en') ? 'en' : 'id';
+    const response = await fetch(`/dokter/profil/${encodeURIComponent(code)}?lang=${locale}`, {
+        headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest', 'Accept-Language': locale },
+        cache: 'no-store',
+        signal,
+    });
+    if (response.status === 404) return { status: 'not_found', profile: null };
+    if (!response.ok) throw new Error('Profil tidak dapat dimuat');
+    const payload = await response.json();
+    if (!payload.success || payload.data?.paramedic_code !== String(code)) throw new Error('Profil tidak cocok');
+    return { status: 'ready', profile: payload.data };
 }

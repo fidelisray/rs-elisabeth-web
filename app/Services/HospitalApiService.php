@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class HospitalApiService
 {
@@ -47,6 +48,7 @@ class HospitalApiService
      */
     protected function generateNewToken(): string
     {
+        if (! config('rsapi.enabled', true)) throw new \RuntimeException('RS API dinonaktifkan pada environment ini.');
         $authEndpoint = config('rsapi.auth.endpoint');
         $buffer       = config('rsapi.token_ttl_buffer', 60);
 
@@ -138,6 +140,7 @@ class HospitalApiService
 
     protected function apiRequest(): \Illuminate\Http\Client\PendingRequest
     {   
+        if (! config('rsapi.enabled', true)) throw new \RuntimeException('RS API dinonaktifkan pada environment ini.');
         $token = $this->getValidToken();
 
         // dd($token);

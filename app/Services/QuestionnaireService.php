@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Support\QuestionnaireDefinition;
+use App\Support\PatientFormErrors;
 /**
  * Mengirim kuesioner kepuasan pasien ke CMS API.
  *
@@ -29,15 +31,8 @@ class QuestionnaireService
             'payment_method' => $data['payment_method'] ?? '',
         ];
 
-        // Semua field selain demografi, saran, dan kontrol formulir adalah jawaban rating.
-        $ratings = array_diff_key($data, array_flip([
-            'age_group',
-            'gender',
-            'payment_method',
-            'suggestions',
-            'hp_website',
-            '_token',
-        ]));
+        // Allowlist per layanan: hidden fields atau metadata tidak menjadi jawaban.
+        $ratings = array_intersect_key($data, QuestionnaireDefinition::QUESTIONS[$type] ?? []);
 
         $payload = [
             'questionnaire_type' => $type,
@@ -60,7 +55,10 @@ class QuestionnaireService
 
         return [
             'success' => false,
-            'message' => __('Terjadi kesalahan saat memproses data kuesioner Anda. Silakan coba beberapa saat lagi.'),
+            'http_code' => $response['http_code'] ?? 503,
+            'errors' => PatientFormErrors::map((array) ($response['errors'] ?? []), $type),
+            'retry_after' => $response['retry_after'] ?? null,
+            'message' => $response['message'] ?? __('Terjadi kesalahan saat memproses data kuesioner Anda. Silakan coba beberapa saat lagi.'),
         ];
     }
 }

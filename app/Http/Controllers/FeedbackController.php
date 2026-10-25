@@ -63,10 +63,13 @@ class FeedbackController extends Controller
                 ]);
             }
 
+            $status = match ($result['http_code'] ?? 503) { 422 => 422, 429 => 429, default => 503 };
+            $headers = isset($result['retry_after']) ? ['Retry-After' => (string) $result['retry_after']] : [];
             return response()->json([
                 'success' => false,
                 'message' => $result['message'] ?? __('Gagal memproses formulir keluhan Anda.'),
-            ], 422);
+                'errors' => $result['errors'] ?? [],
+            ], $status, $headers);
         }
 
         // Respons standar HTTP Redirect dengan Session Flash
@@ -81,6 +84,7 @@ class FeedbackController extends Controller
         return redirect()
             ->back()
             ->withInput()
+            ->withErrors($result['errors'] ?? [])
             ->with('feedback_error', $result['message'] ?? __('Gagal memproses formulir keluhan Anda. Silakan coba kembali.'));
     }
 }

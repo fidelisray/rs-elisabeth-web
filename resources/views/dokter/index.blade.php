@@ -197,9 +197,8 @@
                                                     <div class="section-title">
                                                         {{ __('Tentang Dokter') }}
                                                     </div>
-                                                    <p class="text-secondary">
-                                                        {{ __('Dokter berpengalaman yang siap memberikan pelayanan kesehatan terbaik.') }}
-                                                    </p>
+                                                    <p id="doctor-profile-status" class="text-secondary" role="status" aria-live="polite"></p>
+                                                    <p id="doctor-profile-bio" class="text-secondary" style="white-space: pre-line;"></p>
                                                 </div>
                                             </div>
                                             <div class="dokter-info row gx-3 gy-3">
@@ -211,7 +210,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="info-label">{{ __('Lokasi') }}</div>
-                                                            <div>Semarang, Indonesia</div>
+                                                            <div id="doctor-profile-location" style="white-space: pre-line;"></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -223,7 +222,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="info-label">{{ __('Pengalaman') }}</div>
-                                                            <strong>{{ __('Lebih Dari 5 Tahun') }}</strong>
+                                                            <strong id="doctor-profile-experience" style="white-space: pre-line;"></strong>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,7 +234,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="info-label">{{ __('Pendidikan') }}</div>
-                                                            <strong>{{ __('Universitas Terkemuka') }}</strong>
+                                                            <strong id="doctor-profile-education" style="white-space: pre-line;"></strong>
                                                         </div>
                                                     </div>
                                                 </div>

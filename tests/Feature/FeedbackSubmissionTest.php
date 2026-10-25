@@ -96,7 +96,7 @@ class FeedbackSubmissionTest extends TestCase
         $response->assertSessionMissing('feedback_success');
     }
 
-    public function test_feedback_ajax_submission_returns_422_json_when_cms_does_not_store_it(): void
+    public function test_feedback_ajax_submission_returns_503_json_when_cms_does_not_store_it(): void
     {
         $mockCms = Mockery::mock(CmsApiService::class);
         $mockCms->shouldReceive('submitFeedback')
@@ -111,7 +111,7 @@ class FeedbackSubmissionTest extends TestCase
 
         $response = $this->postJson(route('feedback.store'), $this->validPayload());
 
-        $response->assertStatus(422);
+        $response->assertStatus(503);
         $response->assertJson(['success' => false]);
         $response->assertJsonMissing(['ticket_number' => 'FB-']);
     }

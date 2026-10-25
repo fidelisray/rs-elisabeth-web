@@ -290,7 +290,7 @@ class QuestionnaireSubmissionTest extends TestCase
     {
         Http::fake([
             '*/api/v1/cms/questionnaires/igd' => Http::response([
-                'status' => 'success',
+                'success' => true,
                 'message' => 'Kuesioner diterima.',
             ], 201),
         ]);

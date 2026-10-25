@@ -1,5 +1,5 @@
-import { fetchAllDokter, fetchDokterBySpecialtyCode, filterDoctors, state } from './dokterService.js';
-import { renderDoctorPage, renderModal, showLoading, showError, t } from './dokterUI.js';
+import { fetchAllDokter, fetchDokterBySpecialtyCode, fetchDoctorProfile, filterDoctors, state } from './dokterService.js';
+import { renderDoctorPage, renderModal, renderProfile, showLoading, showError, t } from './dokterUI.js';
 
 // Elements
 const clinicSearch = document.getElementById("clinicSearch");
@@ -196,16 +196,37 @@ if (btnCari) {
 // Modal Event Listeners
 // ------------------------------
 if (detailDokterModal) {
-    detailDokterModal.addEventListener("show.bs.modal", (event) => {
+    let profileRequest = null;
+    let profileSequence = 0;
+    detailDokterModal.addEventListener("show.bs.modal", async (event) => {
+        profileRequest?.abort();
+        const sequence = ++profileSequence;
+        renderProfile('loading');
         const button = event.relatedTarget;
-        const id = button.dataset.id;
+        const id = button?.dataset.id;
         const doctor = state.filteredDoctorList.find((item) => item.entry_id === id);
         if (doctor) {
             renderModal(doctor);
+            const controller = new AbortController();
+            profileRequest = controller;
+            const timeout = setTimeout(() => controller.abort(), 10000);
+            try {
+                const result = await fetchDoctorProfile(doctor.paramedicCode, controller.signal);
+                if (sequence === profileSequence) renderProfile(result.status, result.profile);
+            } catch {
+                if (sequence === profileSequence) renderProfile('unavailable');
+            } finally {
+                clearTimeout(timeout);
+            }
+        } else {
+            renderProfile('not_found');
         }
     });
 
     detailDokterModal.addEventListener("hidden.bs.modal", function () {
+        ++profileSequence;
+        profileRequest?.abort();
+        renderProfile('loading');
         // Reset tabs
         document.getElementById("tentang-tab")?.classList.add("active");
         document.getElementById("jadwal-tab")?.classList.remove("active");

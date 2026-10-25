@@ -26,6 +26,10 @@ class FetchAllDoctor extends Command
      */
     public function handle(DoctorApiService $apiService)
     {
+        if (! config('rsapi.enabled', true)) {
+            $this->warn('RS API dinonaktifkan; tidak ada penarikan data.');
+            return Command::FAILURE;
+        }
         //
         $this->info('Memulai warm-up cache master data (Spesialisasi & Unit)...');
         $apiService->getDaftarSpesialisasi();
@@ -36,6 +40,10 @@ class FetchAllDoctor extends Command
         // dd($apiService->getDaftarSpesialisasi());
 
         $total = $apiService->fetchAndCacheAllDokter();
+        if ($total === 0) {
+            $this->error('Warm-up tidak memperoleh hasil lengkap. Cache sebelumnya dipertahankan.');
+            return Command::FAILURE;
+        }
 
         $this->info("Selesai. Total {$total} entri jadwal dokter berhasil di-cache.");
 

@@ -444,10 +444,13 @@ class QuestionnaireController extends Controller
                 ]);
             }
 
+            $status = match ($result['http_code'] ?? 503) { 422 => 422, 429 => 429, default => 503 };
+            $headers = isset($result['retry_after']) ? ['Retry-After' => (string) $result['retry_after']] : [];
             return response()->json([
                 'success' => false,
                 'message' => $result['message'] ?? __('Gagal memproses kuesioner Anda.'),
-            ], 422);
+                'errors' => $result['errors'] ?? [],
+            ], $status, $headers);
         }
 
         if ($result['success'] ?? false) {
@@ -459,6 +462,7 @@ class QuestionnaireController extends Controller
 
         return back()
             ->withInput()
+            ->withErrors($result['errors'] ?? [])
             ->with('questionnaire_error', $result['message'] ?? __('Terjadi kesalahan saat memproses data Anda. Silakan coba lagi.'));
     }
 }

@@ -22,7 +22,11 @@ export const I18N = {
         clinicResult: "Hasil Pencarian Klinik:",
         nameResult: "Hasil Pencarian Nama:",
         specialty: "Spesialisasi:",
-        selectSpecialty: "Pilih Spesialisasi"
+        selectSpecialty: "Pilih Spesialisasi",
+        profileLoading: "Memuat profil dokter...",
+        profileEmpty: "Informasi belum diisi.",
+        profileNotFound: "Profil dokter belum tersedia.",
+        profileUnavailable: "Profil belum dapat dimuat. Silakan coba lagi nanti."
     },
     en: {
         days: { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" },
@@ -41,7 +45,11 @@ export const I18N = {
         clinicResult: "Clinic Search Results:",
         nameResult: "Name Search Results:",
         specialty: "Specialty:",
-        selectSpecialty: "Select Specialty"
+        selectSpecialty: "Select Specialty",
+        profileLoading: "Loading doctor profile...",
+        profileEmpty: "Information has not been provided.",
+        profileNotFound: "Doctor profile is not available.",
+        profileUnavailable: "The profile could not be loaded. Please try again later."
     }
 };
 
@@ -50,10 +58,32 @@ export function t(key) {
     return I18N[locale]?.[key] ?? I18N['id'][key];
 }
 
+export function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+}
+
+export function renderProfile(status, profile = null) {
+    const notice = document.getElementById('doctor-profile-status');
+    if (notice) {
+        notice.textContent = status === 'ready' ? '' : t({ loading: 'profileLoading', not_found: 'profileNotFound', unavailable: 'profileUnavailable' }[status] ?? 'profileEmpty');
+        notice.hidden = status === 'ready';
+    }
+    for (const field of ['bio', 'location', 'experience', 'education']) {
+        const element = document.getElementById(`doctor-profile-${field}`);
+        if (element) element.textContent = status === 'ready' && typeof profile?.[field] === 'string' && profile[field].trim() ? profile[field] : t('profileEmpty');
+    }
+    if (status === 'ready' && profile) {
+        const name = document.getElementById('namaDokter');
+        if (name) name.textContent = profile.name;
+        const specialty = document.querySelector('#detailDokter .speciality-title');
+        if (specialty && profile.specialty_name) specialty.textContent = profile.specialty_name;
+    }
+}
+
 function getSpecialtyName(specialtyCode) {
     let name = t('generalSpecialist');
     if (specialtyCode) {
-        const option = document.querySelector(`.clinic-option[data-code="${specialtyCode}"]`);
+        const option = Array.from(document.querySelectorAll('.clinic-option')).find((item) => item.dataset.code === String(specialtyCode));
         if (option) name = option.dataset.value;
     }
     return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
@@ -86,8 +116,8 @@ export function createScheduleGrid(dokter) {
             item.jam.forEach((jam) => {
                 slotsHtml += `
                     <div class="jadwal-slot">
-                        <span class="slot-time">${jam}</span>
-                        <span class="slot-klinik">${item.serviceUnitName}</span>
+                        <span class="slot-time">${escapeHtml(jam)}</span>
+                        <span class="slot-klinik">${escapeHtml(item.serviceUnitName)}</span>
                     </div>
                 `;
             });
@@ -111,13 +141,13 @@ export function createDoctorCard(dokter) {
                     <div class="col-12 col-md-3 border-end">
                         <div class="p-4 text-center">
                             <img
-                                src="https://mobile.rs-elisabeth.com/paramedic/${dokter.paramedicCode}.png"
+                                src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(dokter.paramedicCode)}.png"
                                 class="rounded-circle img-fluid mb-3"
                                 style="width:180px;height:180px;object-fit:cover;"
                                 alt="${t('doctorPhoto')}"
                                 onerror="this.onerror=null; this.src='/images/default.png';">
                             <span class="badge bg-primary mb-3 d-none fw-bold">
-                                    ${getSpecialtyName(dokter.specialtyCode)}
+                                    ${escapeHtml(getSpecialtyName(dokter.specialtyCode))}
                             </span>
                             <div class="container my-3 group-btn">
                                 <a 
@@ -125,7 +155,7 @@ export function createDoctorCard(dokter) {
                                     class='btn-cek-profil'
                                     data-bs-toggle='modal'
                                     data-bs-target='#detailDokter'
-                                    data-id='${dokter.entry_id}'
+                                    data-id='${escapeHtml(dokter.entry_id)}'
                                     data-jadwal=''>${t('checkProfile')}</a>
                                 <a
                                     href='https://regonline.rs-elisabeth.com/'
@@ -137,9 +167,9 @@ export function createDoctorCard(dokter) {
                     <div class="col-12 col-md-9 mx-auto">
                         <div class="container py-4">
                             <div class="dokter-header mb-0">
-                                <h5 class="fw-bold mb-1">${dokter.paramedicName}</h5>
+                                <h5 class="fw-bold mb-1">${escapeHtml(dokter.paramedicName)}</h5>
                                 <span class="speciality-badge">
-                                    <p class="speciality-title fw-bold">${getSpecialtyName(dokter.specialtyCode)}</p>
+                                    <p class="speciality-title fw-bold">${escapeHtml(getSpecialtyName(dokter.specialtyCode))}</p>
                                 </span>
                             </div>
                             <div class="jadwal-wrapper">
@@ -148,7 +178,7 @@ export function createDoctorCard(dokter) {
                                     ${t('doctorSchedule')}
                                 </h2>
                                 <div class="jadwal-scroll">
-                                    <div class="jadwal-grid" id="jadwalGrid-${dokter.paramedicCode}">
+                                    <div class="jadwal-grid" id="jadwalGrid-${escapeHtml(dokter.paramedicCode)}">
                                     </div>
                                 </div>
                             </div>
@@ -329,7 +359,7 @@ export function renderModal(doctorData) {
 
     if (fotoDokter) {
         fotoDokter.innerHTML = `
-            <img src="https://mobile.rs-elisabeth.com/paramedic/${doctorData.paramedicCode}.png" 
+            <img src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(doctorData.paramedicCode)}.png"
             alt="${t('doctorPhoto')}"
             onerror="this.onerror=null; this.src='/images/default.png';">
         `;
@@ -366,8 +396,8 @@ export function renderModal(doctorData) {
                 data.jam.forEach((jam) => {
                     timeSlotsHtml += `
                         <div class="modal-time-slot">
-                            <span class="modal-slot-time">${jam}</span>
-                            <span class="modal-slot-unit">${data.serviceUnitName}</span>
+                            <span class="modal-slot-time">${escapeHtml(jam)}</span>
+                            <span class="modal-slot-unit">${escapeHtml(data.serviceUnitName)}</span>
                         </div>
                     `;
                 });
