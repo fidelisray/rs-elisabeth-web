@@ -5,13 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Services\DoctorApiService;
+use App\Services\CmsApiService;
+use App\DTOs\Cms\DoctorDto;
+use App\Exceptions\CmsApiException;
+use Illuminate\Http\JsonResponse;
 
 class DokterController extends Controller
 {
     //
     public function __construct(
-        protected DoctorApiService $apiService
+        protected DoctorApiService $apiService,
+        protected CmsApiService $cmsApiService
     ) {}
+
+    public function profile(Request $request, string $paramedicCode): JsonResponse
+    {
+        $validated = $request->validate(['lang' => ['nullable', 'in:id,en']]);
+        if (isset($validated['lang'])) {
+            app()->setLocale($validated['lang']);
+        }
+        try {
+            $profile = $this->cmsApiService->getDoctorByCode($paramedicCode);
+            if ($profile === null || ! ($profile['is_active'] ?? false)) {
+                return response()->json(['success' => false, 'message' => __('Profil dokter belum tersedia.')], 404)
+                    ->header('Cache-Control', 'no-store');
+            }
+
+            return response()->json(['success' => true, 'data' => DoctorDto::fromArray($profile)->toArray()])
+                ->header('Cache-Control', 'no-store');
+        } catch (CmsApiException $e) {
+            return response()->json(['success' => false, 'message' => __('Profil dokter belum dapat dimuat.')], 503)
+                ->header('Cache-Control', 'no-store');
+        }
+    }
 
     public function index(Request $request)
     {

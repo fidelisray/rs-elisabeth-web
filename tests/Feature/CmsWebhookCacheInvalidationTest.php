@@ -225,10 +225,9 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_returns_501_when_cache_driver_does_not_support_tags(): void
+    public function test_versioned_cache_invalidates_without_cache_tags(): void
     {
-        // FileStore tidak mendukung cache tags → endpoint wajib membalas non-200
-        // agar pengirim tidak keliru mengira cache sudah dibersihkan.
+        // FileStore tidak mendukung tags; webhook mengganti generasi cache modul.
         Config::set('cache.default', 'file');
 
         $body = ['module' => 'news'];
@@ -236,9 +235,9 @@ class CmsWebhookCacheInvalidationTest extends TestCase
 
         $response = $this->postJson($this->endpoint, $body, $headers);
 
-        $response->assertStatus(501)
+        $response->assertStatus(200)
             ->assertJson([
-                'success' => false,
+                'success' => true,
             ]);
     }
 }

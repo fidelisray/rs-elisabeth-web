@@ -47,16 +47,6 @@ class CmsWebhookController extends Controller
             ], 422);
         }
 
-        // Driver cache tidak mendukung tags (misal file/database) → cache TIDAK terhapus.
-        // Jangan balas 200 agar pengirim tidak keliru mengira cache sudah dibersihkan.
-        if ($result['status'] === 'driver_unsupported_tags') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalidasi cache tidak dapat dilakukan: driver cache aktif tidak mendukung cache tags.',
-                'data' => null,
-            ], 501);
-        }
-
         return response()->json([
             'success' => true,
             'message' => "Cache CMS berhasil dibatalkan untuk modul: {$module}.",

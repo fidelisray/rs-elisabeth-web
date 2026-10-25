@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\CmsApiException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CmsApiService
 {
@@ -34,8 +36,6 @@ class CmsApiService
      */
     protected function apiRequest(string $rawBody = ''): PendingRequest
     {
-        date_default_timezone_set('Asia/Jakarta');
-
         $consid = $this->consId;
         $secretKey = $this->secretKey;
 
@@ -61,7 +61,7 @@ class CmsApiService
      */
     protected function postSigned(string $url, array $payload): Response
     {
-        $rawBody = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $rawBody = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
 
         return $this->apiRequest($rawBody)
             ->withBody($rawBody, 'application/json')
@@ -84,11 +84,22 @@ class CmsApiService
      */
     protected function rememberTagged(string $module, string $key, int $ttl, \Closure $callback)
     {
+        $key = hash('sha256', $this->baseUrl.'|'.$this->consId).':'.$key;
         if (Cache::supportsTags()) {
             return Cache::tags(['cms', "cms_{$module}"])->remember($key, $ttl, $callback);
         }
 
-        return Cache::remember($key, $ttl, $callback);
+        return Cache::remember($this->versionKey($module).':'.$this->moduleVersion($module).':'.$key, $ttl, $callback);
+    }
+
+    protected function versionKey(string $module): string
+    {
+        return 'cms_generation:'.hash('sha256', $this->baseUrl.'|'.$this->consId).':'.$module;
+    }
+
+    protected function moduleVersion(string $module): string
+    {
+        return Cache::rememberForever($this->versionKey($module), fn () => (string) Str::uuid());
     }
 
     /**
@@ -106,6 +117,10 @@ class CmsApiService
             'banner_promotions',
             'doctors',
         ];
+
+        if ($module !== 'all' && ! in_array($module, $supportedModules, true)) {
+            return ['flushed' => null, 'tags' => [], 'status' => 'unknown_module'];
+        }
 
         if (Cache::supportsTags()) {
             if ($module === 'all') {
@@ -137,14 +152,74 @@ class CmsApiService
             ];
         }
 
-        // Fallback untuk driver tanpa tags di local development
-        Log::info("CMS API Cache - Invalidate requested for '{$module}', but current driver does not support tags.");
+        // Store database/file: ganti generasi seluruh varian bahasa/filter/detail.
+        foreach ($module === 'all' ? $supportedModules : [$module] as $target) {
+            Cache::forever($this->versionKey($target), (string) Str::uuid());
+        }
 
         return [
             'flushed' => $module,
             'tags' => [],
-            'status' => 'driver_unsupported_tags',
+            'status' => 'success',
         ];
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function getDoctors(array $filters = []): array
+    {
+        $locale = in_array(app()->getLocale(), ['id', 'en'], true) ? app()->getLocale() : 'id';
+        $filters = array_intersect_key($filters, ['specialty' => true]);
+        $filters['lang'] = $locale;
+        $key = 'cms_doctors_'.$locale.'_'.hash('sha256', json_encode($filters, JSON_THROW_ON_ERROR));
+
+        return $this->rememberTagged('doctors', $key, $this->cacheTtl('doctors'), function () use ($filters) {
+            try {
+                $response = $this->apiRequest()->get("{$this->baseUrl}/doctors", $filters);
+                $rows = $response->json('data');
+                if (! $response->successful() || ! is_array($rows)) {
+                    throw new CmsApiException($response->status());
+                }
+                foreach ($rows as $row) {
+                    if (! is_array($row) || ! is_string($row['paramedic_code'] ?? null) || ! is_string($row['name'] ?? null)) {
+                        throw new CmsApiException(502);
+                    }
+                }
+
+                return array_values($rows);
+            } catch (CmsApiException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                Log::warning('CMS doctor list unavailable', ['exception_type' => get_class($e)]);
+                throw new CmsApiException;
+            }
+        });
+    }
+
+    /** NULL berarti 404, bukan kegagalan koneksi. Kegagalan tidak disimpan ke cache. */
+    public function getDoctorByCode(string $code): ?array
+    {
+        $locale = in_array(app()->getLocale(), ['id', 'en'], true) ? app()->getLocale() : 'id';
+        $key = 'cms_doctor_'.$locale.'_'.hash('sha256', $code);
+
+        return $this->rememberTagged('doctors', $key, $this->cacheTtl('doctors'), function () use ($code, $locale) {
+            try {
+                $response = $this->apiRequest()->get("{$this->baseUrl}/doctors/".rawurlencode($code), ['lang' => $locale]);
+                if ($response->status() === 404) {
+                    return null;
+                }
+                $row = $response->json('data');
+                if (! $response->successful() || ! is_array($row) || ($row['paramedic_code'] ?? null) !== $code || ! is_string($row['name'] ?? null)) {
+                    throw new CmsApiException($response->status());
+                }
+
+                return $row;
+            } catch (CmsApiException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                Log::warning('CMS doctor detail unavailable', ['exception_type' => get_class($e)]);
+                throw new CmsApiException;
+            }
+        });
     }
 
     /**
@@ -477,40 +552,7 @@ class CmsApiService
      */
     public function submitFeedback(array $payload): array
     {
-        try {
-            $response = $this->postSigned("{$this->baseUrl}/feedbacks", $payload);
-
-            if ($response->successful()) {
-                return [
-                    'status' => 'success',
-                    'http_code' => $response->status(),
-                    'ticket_number' => $response->json('ticket_number') ?? $response->json('data.ticket_number'),
-                    'message' => $response->json('message', 'Feedback berhasil dikirimkan.'),
-                    'data' => $response->json('data', []),
-                ];
-            }
-
-            Log::warning('CMS API - Gagal submit Feedback', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
-            return [
-                'status' => 'error',
-                'http_code' => $response->status(),
-                'message' => $response->json('message', 'Gagal memproses pengiriman data ke server CMS.'),
-            ];
-        } catch (\Exception $e) {
-            Log::error('CMS API - Exception saat submit Feedback', [
-                'error' => $e->getMessage(),
-            ]);
-
-            return [
-                'status' => 'exception',
-                'http_code' => 500,
-                'message' => $e->getMessage(),
-            ];
-        }
+        return $this->submitPatientForm('feedbacks', $payload, true);
     }
 
     /**
@@ -519,37 +561,45 @@ class CmsApiService
      */
     public function submitQuestionnaire(string $type, array $payload): array
     {
-        try {
-            $response = $this->postSigned("{$this->baseUrl}/questionnaires/{$type}", $payload);
+        if (! in_array($type, ['igd', 'rawat-jalan', 'rawat-inap'], true)) {
+            return ['status' => 'error', 'http_code' => 422, 'message' => __('Jenis kuesioner tidak dikenal.')];
+        }
 
-            if ($response->successful()) {
+        return $this->submitPatientForm('questionnaires/'.$type, $payload);
+    }
+
+    /** Jangan retry POST otomatis: belum ada kontrak idempotency lintas aplikasi. */
+    private function submitPatientForm(string $path, array $payload, bool $requiresTicket = false): array
+    {
+        try {
+            $response = $this->postSigned("{$this->baseUrl}/{$path}", $payload);
+            $ticket = $response->json('ticket_number') ?? $response->json('data.ticket_number');
+            if ($response->successful() && $response->json('success') === true && (! $requiresTicket || (is_string($ticket) && trim($ticket) !== ''))) {
                 return [
                     'status' => 'success',
                     'http_code' => $response->status(),
-                    'message' => $response->json('message', 'Kuesioner berhasil dikirimkan.'),
-                    'data' => $response->json('data', []),
+                    'ticket_number' => $ticket,
+                    'message' => __('Data berhasil dikirimkan.'),
                 ];
             }
-
-            Log::warning("CMS API - Gagal submit Kuesioner {$type}", [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
+            Log::warning('CMS patient submission was not confirmed', ['endpoint' => $path, 'http_code' => $response->status()]);
+            $status = in_array($response->status(), [422, 429], true) ? $response->status() : 503;
             return [
                 'status' => 'error',
-                'http_code' => $response->status(),
-                'message' => $response->json('message', 'Gagal memproses pengiriman data kuesioner ke server CMS.'),
+                'http_code' => $status,
+                'errors' => $status === 422 && is_array($response->json('errors')) ? $response->json('errors') : [],
+                'retry_after' => $status === 429 ? max(1, min(3600, (int) $response->header('Retry-After', '60'))) : null,
+                'message' => $status === 429 ? __('Terlalu banyak pengiriman. Silakan coba lagi nanti.')
+                    : ($status === 422 ? __('Data belum dapat diterima. Periksa isian formulir Anda.') : __('Layanan formulir belum tersedia. Silakan coba lagi nanti.')),
             ];
         } catch (\Exception $e) {
-            Log::error("CMS API - Exception saat submit Kuesioner {$type}", [
-                'error' => $e->getMessage(),
-            ]);
-
+            // Pesan exception/body HTTP bisa berisi data pasien. Catat jenis kegagalan saja.
+            Log::warning('CMS patient submission unavailable', ['endpoint' => $path, 'exception_type' => get_class($e)]);
             return [
                 'status' => 'exception',
-                'http_code' => 500,
-                'message' => $e->getMessage(),
+                'http_code' => 503,
+                'errors' => [],
+                'message' => __('Layanan formulir belum tersedia. Silakan coba lagi nanti.'),
             ];
         }
     }

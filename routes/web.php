@@ -19,6 +19,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
 // Halaman Dokter
 Route::prefix('dokter')->name('dokter.')->group(function () {
+    Route::get('/profil/{paramedicCode}', [DokterController::class, 'profile'])->name('profile')->middleware('throttle:60,1');
     // Route::get('/',       [DokterController::class, 'index'])->name('index');
     Route::get('/', [DokterController::class, 'spesialisasi'])->name('index');
     Route::get('/init', [DokterController::class, 'dokterInit'])->name('dokterInit');

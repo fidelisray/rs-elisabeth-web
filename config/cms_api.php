@@ -42,6 +42,7 @@ return [
         'facilities'        => (int) env('CMS_CACHE_TTL_FACILITIES', 600),
         'room_facilities'   => (int) env('CMS_CACHE_TTL_ROOM_FACILITIES', 600),
         'banner_promotions' => (int) env('CMS_CACHE_TTL_BANNER_PROMOTIONS', 600),
+        'doctors' => (int) env('CMS_CACHE_TTL_DOCTORS', 600),
     ],
 
     /*

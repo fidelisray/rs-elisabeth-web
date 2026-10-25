@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class DoctorApiService
 {
@@ -21,6 +22,11 @@ class DoctorApiService
     protected const TOKEN_CACHE_KEY = null;
     // protected const TOKEN_CACHE_KEY = 'hospital_api_token';
 
+    protected function decodeData(mixed $data): mixed
+    {
+        return is_string($data) ? json_decode($data) : $data;
+    }
+
     public function __construct()
     {
         $this->baseUrl = config('rsapi.base_url') ?? '';
@@ -33,11 +39,10 @@ class DoctorApiService
 
     protected function apiRequest(): \Illuminate\Http\Client\PendingRequest
     {   
+        if (! config('rsapi.enabled', true)) throw new \RuntimeException('RS API dinonaktifkan pada environment ini.');
         // $token = $this->getValidToken();
 
         // dd($token);
-
-        date_default_timezone_set('Asia/Jakarta');
 
         $consid = $this->consId;
         $secretKey = $this->secretKey;
@@ -75,18 +80,19 @@ class DoctorApiService
                     // echo gettype(json_decode($response->json('Data')));
                     // dd(json_decode($response->json('Data')));
                     
-                    return json_decode($response->json('Data', []));
+                    $data = $this->decodeData($response->json('Data'));
+                    return is_array($data) ? $data : [];
                 }
 
                 Log::warning('API dokter gagal', [
                     'status' => $response->status(),
                     'body'   => $response->body(),
                 ]);
-                return [$response->status(), $response->body()];
+                return [];
 
             } catch (\Exception $e) {
                 Log::error('Gagal connect ke API RS', ['error' => $e->getMessage()]);
-                return ["Gagal conncect ke API RS -request DaftarUnits"];
+                return [];
             }
         });
     }
@@ -135,18 +141,19 @@ class DoctorApiService
                 // dd($response->json());
 
                 if ($response->successful()) {
-                    return $response->json('Data', []);
+                    $data = $this->decodeData($response->json('Data'));
+                    return is_array($data) ? $data : [];
                 }
 
                 Log::warning('API dokter gagal', [
                     'status' => $response->status(),
                     'body'   => $response->body(),
                 ]);
-                return [$response->status(), $response->body()];
+                return [];
 
             } catch (\Exception $e) {
                 Log::error('Gagal connect ke API RS', ['error' => $e->getMessage()]);
-                return ["Gagal conncect ke API RS -request DaftarDokterByUnitId"];
+                return [];
             }
         });
     }
@@ -169,7 +176,7 @@ class DoctorApiService
             // dd(json_decode($response->json('Data')));
 
             if ($response->successful()) {
-                $data = json_decode($response->json('Data', '[]')) ?? [];
+                $data = $this->decodeData($response->json('Data')) ?? [];
                 if (!is_array($data)) {
                     $data = [];
                 }
@@ -219,7 +226,10 @@ class DoctorApiService
                 if ($response->successful()) {
                     // dd(json_decode($response->json('Data', [])));
 
-                    $data = json_decode($response->json('Data'));
+                    $data = $this->decodeData($response->json('Data'));
+                    if (! is_object($data) || ! is_array($data->ScheduleRoutine ?? null)) {
+                        return ['Success' => false, 'Message' => 'Struktur jadwal tidak valid.'];
+                    }
 
                     $response_data = [
                         "Success" => true,
@@ -261,12 +271,14 @@ class DoctorApiService
 
     public function fetchAndCacheAllDokter(): int
     {
+    if (! config('rsapi.enabled', true)) return 0;
     // Ambil specialty codes secara dinamis dari API
     $spesialisasiList = [];
 
 
     foreach ($this->getDaftarSpesialisasi() as $items) {
-        $spesialisasiList[] = $items->Code;
+        $code = ((array) $items)['Code'] ?? null;
+        if (is_string($code) && $code !== '') $spesialisasiList[] = $code;
     }
 
     if (empty($spesialisasiList)) {
@@ -277,6 +289,7 @@ class DoctorApiService
     // dd($spesialisasiList);
 
     $allDoctors = [];
+    $failed = [];
     $i = 1;
     $specialityLength = count($spesialisasiList);
 
@@ -286,7 +299,8 @@ class DoctorApiService
             $data = $this->getDokterBySpesialisasi($code);
             
             
-            if (!$data['Success']) {
+            if (!($data['Success'] ?? false) || ! is_array($data['ScheduleRoutine'] ?? null)) {
+                $failed[] = $code;
                 $i++;
                 continue;
             }
@@ -303,15 +317,18 @@ class DoctorApiService
 
             // dd($allDoctors);
         } catch (\Exception $e) {
-            Log::warning("Gagal fetch specialty {$code}", ['error' => $e->getMessage()]);
-
-            echo "\t" . "Gagal fetch speciality {$code}";
-            echo "\n\n";
+            $failed[] = $code;
+            Log::warning("Gagal fetch specialty {$code}", ['exception_type' => get_class($e)]);
             $i++;
             continue;
         }
 
         sleep(1);
+    }
+
+    if ($failed !== [] || $allDoctors === []) {
+        Log::warning('Warm-up dokter tidak lengkap; cache lama dipertahankan.', ['failed_specialties' => $failed]);
+        return 0;
     }
 
     Cache::put('all_doctors_list', $allDoctors, now()->addHours(12));

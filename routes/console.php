@@ -18,6 +18,7 @@ Artisan::command('inspire', function () {
 // 1. Fetch Data Dokter (Jadwal, Unit, Spesialisasi) 
 // Karena jadwal dokter bisa berubah sewaktu-waktu, kita set tiap jam.
 Schedule::command('dokter:fetch-all')
+    ->when(fn () => config('rsapi.enabled', true))
     ->hourly()
     ->withoutOverlapping();
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\PatientFormErrors;
 /**
  * Mengirim kritik dan saran pasien ke CMS API.
  *
@@ -40,7 +41,7 @@ class FeedbackService
 
         $response = $this->cmsApi->submitFeedback($payload);
 
-        if (($response['status'] ?? '') === 'success') {
+        if (($response['status'] ?? '') === 'success' && is_string($response['ticket_number'] ?? null) && trim($response['ticket_number']) !== '') {
             return [
                 'success' => true,
                 'ticket_number' => (string) ($response['ticket_number'] ?? ''),
@@ -50,7 +51,10 @@ class FeedbackService
 
         return [
             'success' => false,
-            'message' => __('Keluhan Anda belum dapat dikirimkan saat ini. Silakan coba beberapa saat lagi.'),
+            'http_code' => $response['http_code'] ?? 503,
+            'errors' => PatientFormErrors::map((array) ($response['errors'] ?? [])),
+            'retry_after' => $response['retry_after'] ?? null,
+            'message' => $response['message'] ?? __('Keluhan Anda belum dapat dikirimkan saat ini. Silakan coba beberapa saat lagi.'),
         ];
     }
 }
