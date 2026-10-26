@@ -4,6 +4,8 @@
     'headingTag' => 'h1',
     'breadcrumbs' => null,
     'customClass' => '',
+    'badgeText' => null,
+    'badgeIcon' => null,
     'rightCol' => null,
 ])
 
@@ -21,7 +23,7 @@
     <div class="container">
         @if(!empty($breadcrumbs))
             <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                <ol class="breadcrumb flex-wrap">
+                <ol class="breadcrumb flex-wrap mb-0">
                     @foreach($breadcrumbs as $crumb)
                         @if($loop->last || empty($crumb['url']))
                             <li class="breadcrumb-item active" aria-current="page">{{ $crumb['label'] }}</li>
@@ -33,10 +35,19 @@
             </nav>
         @endif
 
-        @if(!empty($title) || !empty($slot) || !empty($rightCol))
+        @if(!empty($badgeText) || !empty($title) || !empty($slot) || !empty($rightCol))
             <div class="row align-items-center">
-                {{-- Kolom Kiri: Judul, Subjudul, Konten Tambahan --}}
+                {{-- Kolom Kiri: Badge, Judul, Subjudul, Konten Tambahan --}}
                 <div class="{{ !empty($rightCol) ? 'col-12 col-lg-6' : 'col-12 col-lg-8' }}">
+                    @if(!empty($badgeText))
+                        <div class="hero-badge">
+                            @if(!empty($badgeIcon))
+                                <i class="{{ $badgeIcon }}"></i>
+                            @endif
+                            <span>{{ $badgeText }}</span>
+                        </div>
+                    @endif
+
                     @if(!empty($title))
                         <{{ $headingTag }} class="hero-title">{{ $title }}</{{ $headingTag }}>
                     @endif

@@ -26,6 +26,8 @@
 
     <main class="tentang-kami-canvas">
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-heart-pulse',
+            'badgeText' => __('Profil & Sejarah Rumah Sakit'),
             'title' => __('Tentang Kami'),
             'subtitle' => __('Mengenal lebih dekat Rumah Sakit St. Elisabeth Semarang, sejarah, visi, dan misi kami dalam memberikan pelayanan kesehatan terbaik.'),
             'breadcrumbs' => [

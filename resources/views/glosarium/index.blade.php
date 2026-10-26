@@ -35,6 +35,8 @@
     @endphp
 
     <x-hero-section
+        badgeIcon="fa-solid fa-spell-check"
+        :badgeText="__('Kamus Istilah Medis')"
         :title="__('Ensiklopedia Istilah Medis & Kesehatan')"
         :subtitle="__('Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya')"
         :breadcrumbs="$glossaryBreadcrumbs"

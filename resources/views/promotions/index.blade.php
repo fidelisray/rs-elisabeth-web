@@ -22,6 +22,8 @@
 
 <main>
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-tag',
+            'badgeText' => __('Penawaran & Promo'),
             'title' => __('Promo & Penawaran Spesial'),
             'subtitle' => __('Temukan penawaran menarik layanan kesehatan unggulan dari RS St. Elisabeth Semarang.'),
             'breadcrumbs' => [

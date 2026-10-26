@@ -25,6 +25,8 @@
 
     <main class="doctor-page-canvas">
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-user-doctor',
+            'badgeText' => __('Tenaga Medis Profesional'),
             'title' => __('Dokter Kami'),
             'subtitle' => __('Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.'),
             'headingTag' => 'h2',

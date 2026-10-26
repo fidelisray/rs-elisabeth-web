@@ -23,6 +23,8 @@
     @include('components.navbar')
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-file-medical',
+            'badgeText' => __('Definisi Istilah Medis'),
             'title' => $item['istilah'] ?? '',
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],

@@ -22,26 +22,17 @@
 
     <main class="questionnaire-page-wrapper">
 
-        <!-- 1. Hero Header Section -->
-        <section class="questionnaire-hero text-center">
-            <div class="container position-relative">
-                <nav class="questionnaire-breadcrumb mb-3" aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('questionnaire.index') }}">{{ __('Kuesioner') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __($badge) }}</li>
-                    </ol>
-                </nav>
-
-                <div class="questionnaire-eyebrow">
-                    <i class="{{ $badgeIcon }}"></i> {{ __($badge) }}
-                </div>
-                <h1 class="questionnaire-title">{{ __($title) }}</h1>
-                <p class="questionnaire-subtitle">
-                    {{ __('Pelanggan yang terhormat, demi perbaikan mutu pelayanan kami, mohon Bapak/Ibu/Sdr dapat meluangkan waktu untuk mengisi kuesioner kepuasan pasien kami berikut ini. Terima kasih atas partisipasinya.') }}
-                </p>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'badgeIcon' => $badgeIcon,
+            'badgeText' => __($badge),
+            'title' => __($title),
+            'subtitle' => __('Pelanggan yang terhormat, demi perbaikan mutu pelayanan kami, mohon Bapak/Ibu/Sdr dapat meluangkan waktu untuk mengisi kuesioner kepuasan pasien kami berikut ini. Terima kasih atas partisipasinya.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Kuesioner'), 'url' => route('questionnaire.index')],
+                ['label' => __($badge)],
+            ],
+        ])
 
         <!-- 2. Form Container Section -->
         <section class="questionnaire-container">

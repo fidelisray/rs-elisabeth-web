@@ -23,6 +23,8 @@
     @include('components.navbar')
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-book-medical',
+            'badgeText' => __('Edukasi & Tips Kesehatan'),
             'title' => __('Artikel Kesehatan'),
             'subtitle' => __('Kumpulan artikel kesehatan, tips medis, dan info penyakit dari dokter Rumah Sakit St. Elisabeth Semarang.'),
             'breadcrumbs' => [

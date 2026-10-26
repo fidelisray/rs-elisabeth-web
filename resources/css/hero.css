@@ -10,16 +10,23 @@ section#hero-section {
         var(--secondary-darker-color) 100%
     );
     color: #fff;
-    padding: 2rem 0 3rem;
+    padding: 3.5rem 0 4.5rem;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
 section#hero-section.hero-compact {
     padding: 2rem 0;
+    min-height: auto;
 }
 
 /* Breadcrumb */
 section#hero-section .hero-breadcrumb .breadcrumb {
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
 }
 
 section#hero-section .hero-breadcrumb .breadcrumb-item,
@@ -45,26 +52,54 @@ section#hero-section .hero-breadcrumb .breadcrumb-item + .breadcrumb-item::befor
     font-family: var(--font-secondary);
 }
 
+/* Hero Badge (Pill Glassmorphism) */
+section#hero-section .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    padding: 0.4rem 1.15rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
 /* Hero Typography */
 section#hero-section .hero-title {
+    color: #ffffff !important;
     font-family: var(--font-primary);
     font-weight: 700;
     font-size: 2.25rem;
-    line-height: 1.2;
+    line-height: 1.25;
     letter-spacing: -0.02em;
-    margin-top: 1.25rem;
+    margin-top: 0.35rem;
+    margin-bottom: 0.5rem;
 }
 
 section#hero-section .hero-subtitle {
     font-size: 1.05rem;
     font-weight: 400;
     line-height: 1.6;
-    color: rgba(255, 255, 255, 0.9);
-    margin-top: 0.75rem;
+    color: rgba(255, 255, 255, 0.92);
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    max-width: 780px;
 }
 
 /* Responsive Scaling */
 @media (max-width: 767.98px) {
+    section#hero-section {
+        padding: 2.5rem 0 3.5rem;
+        min-height: 220px;
+    }
+
     section#hero-section .hero-title {
         font-size: 1.85rem;
     }

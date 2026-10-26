@@ -23,6 +23,8 @@
     @include('components.navbar')
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-newspaper',
+            'badgeText' => __('Berita Terkini'),
             'title' => $news->title,
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],
