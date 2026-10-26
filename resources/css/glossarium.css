@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
 :root {
     --brand-blue-dark: #124f8c;
@@ -10,7 +9,7 @@
 }
 
 body {
-    font-family: "Outfit", sans-serif;
+    font-family: var(--font-secondary);
 }
 
 section#hero-section {
@@ -44,12 +43,12 @@ section#hero-section
     + .breadcrumb-item::before {
     content: ">";
     color: rgba(255, 255, 255, 0.6);
-    font-family: "Outfit", sans-serif;
+    font-family: var(--font-secondary);
 }
 
 /* Title */
 section#hero-section .hero-title {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-primary);
     font-weight: 800;
     font-size: 2.75rem;
     line-height: 1.15;

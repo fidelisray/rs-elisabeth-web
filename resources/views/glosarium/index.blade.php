@@ -222,7 +222,7 @@
 
                         <!-- Intro -->
                         <div class="text-center mb-5">
-                            <h2 class="fw-bold mb-2" style="font-family:'Playfair Display', serif; color: var(--brand-blue-dark); font-size: 2rem;">
+                            <h2 class="fw-bold mb-2" style="font-family: var(--font-primary); color: var(--brand-blue-dark); font-size: 2rem;">
                                 {{ __('Jelajahi Kamus Medis Elisabeth') }}
                             </h2>
                             <p class="text-muted mx-auto" style="max-width: 640px;">

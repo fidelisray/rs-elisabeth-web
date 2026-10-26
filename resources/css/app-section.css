@@ -2,7 +2,7 @@
 #app-section {
     padding: 120px 0;
     background: linear-gradient(135deg, var(--background-color) 0%, #ffffff 100%);
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-secondary);
     position: relative;
     overflow: hidden;
 }
