@@ -18,7 +18,9 @@ class RoomFacilityDto
         public readonly ?string $image_url,
         public readonly ?array $amenities,
         public readonly ?array $highlight_tags,
-        public readonly int $sort_order
+        public readonly int $sort_order,
+        public readonly ?string $whatsapp_text = null,
+        public readonly ?array $alternate_slugs = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -38,6 +40,8 @@ class RoomFacilityDto
             amenities: isset($data['amenities']) && is_string($data['amenities']) ? json_decode($data['amenities'], true) : ($data['amenities'] ?? []),
             highlight_tags: isset($data['highlight_tags']) && is_string($data['highlight_tags']) ? json_decode($data['highlight_tags'], true) : ($data['highlight_tags'] ?? []),
             sort_order: (int) ($data['sort_order'] ?? 0),
+            whatsapp_text: $data['whatsapp_text'] ?? null,
+            alternate_slugs: $data['alternate_slugs'] ?? null,
         );
     }
 }

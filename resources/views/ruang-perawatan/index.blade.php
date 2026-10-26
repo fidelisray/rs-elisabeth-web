@@ -51,7 +51,103 @@
         ])
 
         <section id="inpatient-room-facilities">
-            
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-badge">
+                        <i class="fa-solid fa-bed-pulse"></i> {{ __('Akomodasi & Rawat Inap') }}
+                    </span>
+                    <h2 class="section-title">{{ __('Pilihan Ruang Rawat Inap') }}</h2>
+                    <div class="divider"></div>
+                    <p class="section-desc">
+                        {{ __('RS Santa Elisabeth menyediakan beragam pilihan ruang perawatan untuk kenyamanan dan pemulihan kesehatan optimal Anda dengan standar mutu pelayanan prima.') }}
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    @forelse($roomsData as $room)
+                        <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
+                            <div class="inpatient-room-card">
+                                <div class="card-accent-bar"></div>
+                                <div class="room-thumb-wrapper">
+                                    <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
+                                        <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang" loading="lazy">
+                                    </a>
+                                    <span class="room-class-badge">
+                                        <i class="fa-solid fa-bed"></i> {{ $room->name }}
+                                    </span>
+                                </div>
+                                <div class="room-card-body">
+                                    <h3 class="room-name">{{ $room->name }}</h3>
+
+                                    @if($room->room_size || $room->bed_count || $room->max_companion)
+                                    <div class="room-specs">
+                                        @if($room->room_size)
+                                        <span class="spec-chip">
+                                            <i class="fa-solid fa-vector-square"></i> {{ $room->room_size }} m²
+                                        </span>
+                                        @endif
+                                        @if($room->bed_count)
+                                        <span class="spec-chip">
+                                            <i class="fa-solid fa-bed"></i> {{ $room->bed_count }} Bed
+                                        </span>
+                                        @endif
+                                        @if($room->max_companion)
+                                        <span class="spec-chip">
+                                            <i class="fa-solid fa-user-group"></i> {{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}
+                                        </span>
+                                        @endif
+                                    </div>
+                                    @endif
+
+                                    @if($room->tagline || $room->description)
+                                    <p class="room-description">
+                                        {{ $room->tagline ?? Str::limit(strip_tags($room->description), 140) }}
+                                    </p>
+                                    @endif
+
+                                    @if(!empty($room->highlight_tags) && is_array($room->highlight_tags))
+                                    <div class="room-tags">
+                                        @foreach(array_slice($room->highlight_tags, 0, 3) as $tag)
+                                            <span class="tag-pill">
+                                                @if(!empty($tag['icon'])) <i class="{{ $tag['icon'] }}"></i> @endif
+                                                {{ $tag['label'] ?? '' }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
+                                    <div class="room-card-cta">
+                                        <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn-detail">
+                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail') }}
+                                        </a>
+                                        @php
+                                            $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
+                                        @endphp
+                                        <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-wa">
+                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya Ketersediaan') }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12 reveal-on-scroll">
+                            <div class="empty-state-card">
+                                <div class="empty-icon-wrapper">
+                                    <i class="fa-solid fa-bed-pulse"></i>
+                                </div>
+                                <h4 class="empty-title">{{ __('Data Ruangan Sedang Diperbarui') }}</h4>
+                                <p class="empty-desc">
+                                    {{ __('Informasi pilihan ruang perawatan saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk informasi ketersediaan kamar secara langsung.') }}
+                                </p>
+                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan Ruang Perawatan RS St. Elisabeth')) }}" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold">
+                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Hubungi via WhatsApp') }}
+                                </a>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
         </section>
 
         {{-- ===== INTRO ===== --}}
@@ -601,7 +697,7 @@
         </section>
         --}}
 
-        {{-- ===== COMPARISON TABLE (DYNAMIC) ===== --}}
+        {{-- ===== COMPARISON TABLE (DYNAMIC) =====
         @php
             // Menggabungkan Premium dan Standar agar Premium selalu di depan.
             // Masing-masing kelompok sudah diurutkan berdasarkan sort_order dari controller.
@@ -699,6 +795,7 @@
             </div>
         </section>
         @endif
+        --}}
 
         {{-- OLD ROOM-COMPARISON SECTION FOR BACKUP --}}
         @if(false)

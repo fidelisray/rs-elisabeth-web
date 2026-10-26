@@ -5,34 +5,36 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ---- Room Filter Tabs ---- */
+    /* ---- Room Filter Tabs (with null safety) ---- */
     const filterBtns = document.querySelectorAll('[data-room-filter]');
-    const premiumSection  = document.getElementById('premium-rooms');
+    const premiumSection = document.getElementById('premium-rooms');
     const standardSection = document.getElementById('standard-rooms');
     const comparisonSection = document.getElementById('room-comparison');
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    if (filterBtns.length > 0) {
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
 
-            const filter = btn.getAttribute('data-room-filter');
+                const filter = btn.getAttribute('data-room-filter');
 
-            if (filter === 'all') {
-                premiumSection.style.display  = '';
-                standardSection.style.display = '';
-                comparisonSection.style.display = '';
-            } else if (filter === 'premium') {
-                premiumSection.style.display  = '';
-                standardSection.style.display = 'none';
-                comparisonSection.style.display = '';
-            } else if (filter === 'standard') {
-                premiumSection.style.display  = 'none';
-                standardSection.style.display = '';
-                comparisonSection.style.display = '';
-            }
+                if (filter === 'all') {
+                    if (premiumSection) premiumSection.style.display = '';
+                    if (standardSection) standardSection.style.display = '';
+                    if (comparisonSection) comparisonSection.style.display = '';
+                } else if (filter === 'premium') {
+                    if (premiumSection) premiumSection.style.display = '';
+                    if (standardSection) standardSection.style.display = 'none';
+                    if (comparisonSection) comparisonSection.style.display = '';
+                } else if (filter === 'standard') {
+                    if (premiumSection) premiumSection.style.display = 'none';
+                    if (standardSection) standardSection.style.display = '';
+                    if (comparisonSection) comparisonSection.style.display = '';
+                }
+            });
         });
-    });
+    }
 
     /* ---- Scroll reveal animation ---- */
     const revealItems = document.querySelectorAll('.reveal-on-scroll');
