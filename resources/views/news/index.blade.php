@@ -22,24 +22,14 @@
 
     @include('components.navbar')
 
-<section id="hero-section">
-            <div class="container">
-                <!-- Breadcrumb -->
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Berita & Artikel') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <h1 class="hero-title">ElisaNews</h1>
-                        <p class="hero-subtitle">{{ __('Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => 'ElisaNews',
+            'subtitle' => __('Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Berita & Artikel')],
+            ],
+        ])
         
         <section class="news-section">
             <div class="container">

@@ -38,26 +38,22 @@
 <main>
         <h1 class="visually-hidden">{{ __('Ruang Perawatan RS Santa Elisabeth Semarang') }}</h1>
 
-        {{-- ===== HERO SECTION ===== --}}
-        <section id="hero-section">
-            <div class="container">
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Ruang Perawatan') }}</li>
-                    </ol>
-                </nav>
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">{{ __('Ruang Perawatan') }}</h2>
-                        <p class="hero-subtitle">{{ __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.') }}</p>
-                    </div>
-                </div>
-            </div>
+        @include('components.hero-section', [
+            'title' => __('Ruang Perawatan'),
+            'subtitle' => __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.'),
+            'headingTag' => 'h2',
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Ruang Perawatan')],
+            ],
+        ])
+
+        <section id="inpatient-room-facilities">
+            
         </section>
 
         {{-- ===== INTRO ===== --}}
-        <section id="room-intro">
+        {{-- <section id="room-intro">
             <div class="container text-center">
                 <div class="section-title text-center mb-4">
                     <h2 class="fw-bold">{{ __('Temukan Ruangan yang Tepat untuk Anda') }}</h2>
@@ -65,7 +61,7 @@
                     <p class="text-muted mt-3">{{ __('RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.') }}</p>
                 </div>
 
-                {{-- Filter Tabs --}}
+                <!-- Filter Tabs -->
                 <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
                     <button class="btn btn-sm px-4 py-2 rounded-pill fw-600 active"
                             data-room-filter="all"
@@ -84,10 +80,10 @@
                     </button>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
         {{-- ===== PREMIUM ROOMS (President Suite / Suites / Executive) ===== --}}
-        <section id="premium-rooms">
+        {{-- <section id="premium-rooms">
             <div class="container position-relative">
                 <div class="premium-section-header">
                     <div class="premium-badge">
@@ -97,7 +93,7 @@
                     <p class="premium-subtitle">{{ __('Rasakan pengalaman perawatan setara hotel bintang lima dengan privasi penuh, desain interior elegan, dan layanan personal yang tak tertandingi.') }}</p>
                 </div>
 
-                {{-- Grid: Dynamic Premium Cards --}}
+                <!-- Grid: Dynamic Premium Cards -->
                 <div class="row g-4 pb-5">
                     @forelse($premiumRooms as $room)
                         <div class="col-12 col-lg-4 reveal-on-scroll">
@@ -197,8 +193,8 @@
                         </div>
                     @endforelse
 
-                    @if(false) {{-- OLD HARDCODED PREMIUM ROOMS --}}
-                    {{-- 1. PRESIDENT SUITE --}}
+                    @if(false) <!-- OLD HARDCODED PREMIUM ROOMS -->
+                    <!-- 1. PRESIDENT SUITE -->
                     <div class="col-12 col-lg-4 reveal-on-scroll">
                         <div class="premium-room-card card-featured h-100">
                             <div class="premium-ribbon"></div>
@@ -258,7 +254,7 @@
                         </div>
                     </div>
 
-                    {{-- 2. SUITES --}}
+                    <!-- 2. SUITES -->
                     <div class="col-12 col-lg-4 reveal-on-scroll">
                         <div class="premium-room-card h-100">
                             <div class="premium-ribbon"></div>
@@ -318,7 +314,7 @@
                         </div>
                     </div>
 
-                    {{-- 3. EXECUTIVE --}}
+                    <!-- 3. EXECUTIVE -->
                     <div class="col-12 col-lg-4 reveal-on-scroll">
                         <div class="premium-room-card h-100">
                             <div class="premium-ribbon"></div>
@@ -378,12 +374,12 @@
                         </div>
                     </div>
 
-                    @endif {{-- END OLD HARDCODED PREMIUM ROOMS --}}
-                </div>{{-- end row premium --}}
-            </div>{{-- end container --}}
+                    @endif <!-- END OLD HARDCODED PREMIUM ROOMS -->
+                </div><!-- end row premium -->
+            </div><!-- end container -->
         </section>
 
-        {{-- ===== STANDARD ROOMS (VIP / Kelas I / II / III) ===== --}}
+        <!-- ===== STANDARD ROOMS (VIP / Kelas I / II / III) ===== -->
         <section id="standard-rooms">
             <div class="container">
                 <div class="section-title text-center mb-5">
@@ -458,8 +454,8 @@
                         </div>
                     @endforelse
 
-                    @if(false) {{-- OLD HARDCODED STANDARD ROOMS --}}
-                    {{-- VIP --}}
+                    @if(false) <!-- OLD HARDCODED STANDARD ROOMS -->
+                    <!-- VIP -->
                     <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
                         <div class="standard-room-card room-vip">
                             <div class="card-top-bar"></div>
@@ -494,7 +490,7 @@
                         </div>
                     </div>
 
-                    {{-- Kelas I --}}
+                    <!-- Kelas I -->
                     <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
                         <div class="standard-room-card room-kelas1">
                             <div class="card-top-bar"></div>
@@ -529,7 +525,7 @@
                         </div>
                     </div>
 
-                    {{-- Kelas II --}}
+                    <!-- Kelas II -->
                     <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
                         <div class="standard-room-card room-kelas2">
                             <div class="card-top-bar"></div>
@@ -563,7 +559,7 @@
                         </div>
                     </div>
 
-                    {{-- Kelas III --}}
+                    <!-- Kelas III -->
                     <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
                         <div class="standard-room-card room-kelas3">
                             <div class="card-top-bar"></div>
@@ -597,10 +593,11 @@
                         </div>
                     </div>
 
-                    @endif {{-- END OLD HARDCODED STANDARD ROOMS --}}
-                </div>{{-- end row standard --}}
-            </div>{{-- end container --}}
+                    @endif <!-- END OLD HARDCODED STANDARD ROOMS -->
+                </div><!-- end row standard -->
+            </div><!-- end container -->
         </section>
+        --}}
 
         {{-- ===== COMPARISON TABLE (DYNAMIC) ===== --}}
         @php

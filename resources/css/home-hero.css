@@ -11,6 +11,7 @@ h5,
 h6 {
     font-family: var(--font-primary);
     font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 
@@ -76,15 +77,17 @@ h6 {
 }
 
 #home-hero h1 {
-    font-size: 3.5rem;
+    font-size: 3rem;
     margin-bottom: 20px;
-    line-height: 1.2;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
 }
 
 #home-hero p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 30px;
-    opacity: 0.9;
+    line-height: 1.6;
+    opacity: 0.95;
 }
 
 @keyframes fadeInUp {
@@ -99,9 +102,12 @@ h6 {
 }
 
 .btn-hero-outline {
+    font-family: var(--font-primary);
     border-radius: 50px;
     padding: 12px 30px;
+    font-size: 0.95rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 /* Base Carousel Controls (Copied from style.css for safety on other components) */

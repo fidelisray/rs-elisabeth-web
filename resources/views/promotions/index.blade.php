@@ -21,25 +21,14 @@
     @include('components.navbar')
 
 <main>
-        <section id="hero-section">
-            <div class="container">
-                <!-- Breadcrumb -->
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Promo dan Penawaran') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="row">
-                    <!-- Kolom kiri: Judul, subjudul -->
-                    <div class="col-12 col-lg-8">
-                        <h1 class="hero-title">{{ __('Promo & Penawaran Spesial') }}</h1>
-                        <p class="hero-subtitle">{{ __('Temukan penawaran menarik layanan kesehatan unggulan dari RS St. Elisabeth Semarang.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => __('Promo & Penawaran Spesial'),
+            'subtitle' => __('Temukan penawaran menarik layanan kesehatan unggulan dari RS St. Elisabeth Semarang.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Promo dan Penawaran')],
+            ],
+        ])
 
         <section id="promotions-list" style="background: radial-gradient(circle 360px at 12% 20%, rgba(0, 143, 215, 0.08), rgba(0, 143, 215, 0) 70%), linear-gradient(180deg, #ffffff 0%, #ecf4fb 100%);">
             <div class="container py-5">

@@ -43,7 +43,9 @@
 .nav-link-animated {
     position: relative;
     color: #2d3748;
-    font-size: 0.91rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
     padding: 0.35rem 0.65rem;
     border-radius: 0.4rem;
     white-space: nowrap;
@@ -81,7 +83,8 @@
 /* Kompresi proporsional pada laptop menengah (1200px - 1399.98px) agar 9 menu tetap 1 baris */
 @media (min-width: 1200px) and (max-width: 1399.98px) {
     .nav-link-animated {
-        font-size: 0.84rem;
+        font-size: 0.82rem;
+        letter-spacing: -0.015em;
         padding: 0.3rem 0.45rem;
     }
     .nav-link-animated:hover::before,
