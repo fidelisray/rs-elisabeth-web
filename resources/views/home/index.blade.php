@@ -555,7 +555,7 @@
                                 <div class="faq-help-icon">
                                     <i class="fa-solid fa-headset"></i>
                                 </div>
-                                <h3 class="faq-help-title">{{ __('Butuh Bantuan Lainnya?') }}</h3>
+                                <h3 class="faq-help-title text-white">{{ __('Butuh Bantuan Lainnya?') }}</h3>
                                 <p class="faq-help-desc">
                                     {{ __('Tim customer care kami siap memberikan informasi seputar layanan medis, rawat inap, dan pendaftaran 24 jam sehari.') }}
                                 </p>
