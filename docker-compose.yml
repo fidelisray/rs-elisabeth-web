@@ -7,7 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: fpm_app
-    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    image: fidelisray/rs-elisabeth-web:latest
+    # image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
     container_name: rses_web_app
     restart: unless-stopped
     env_file:
@@ -51,7 +52,8 @@ services:
   # 2. SCHEDULER (Laravel Cron / Schedule Worker)
   # ---------------------------------------------------------
   web_scheduler:
-    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    image: fidelisray/rs-elisabeth-web:latest
+    # image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
     container_name: rses_web_scheduler
     restart: unless-stopped
     env_file:
@@ -134,19 +136,32 @@ services:
     image: redis:7-alpine
     container_name: rses_web_redis
     restart: unless-stopped
-    command: [
-      "redis-server",
-      "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD belum diset (isi di .env atau environment)}",
-      "--maxmemory", "256mb",
-      "--maxmemory-policy", "volatile-lru",
-      "--appendonly", "yes"
-    ]
+    command:
+      [
+        "redis-server",
+        "--requirepass",
+        "${REDIS_PASSWORD:?REDIS_PASSWORD belum diset (isi di .env atau environment)}",
+        "--maxmemory",
+        "256mb",
+        "--maxmemory-policy",
+        "volatile-lru",
+        "--appendonly",
+        "yes",
+      ]
     volumes:
       - rses_web_redisdata:/data
     networks:
       - rses_web_network
     healthcheck:
-      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD:?REDIS_PASSWORD belum diset (isi di .env atau environment)}", "ping"]
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "--no-auth-warning",
+          "-a",
+          "${REDIS_PASSWORD:?REDIS_PASSWORD belum diset (isi di .env atau environment)}",
+          "ping",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

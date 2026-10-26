@@ -12,7 +12,7 @@ class FetchAllDoctor extends Command
      *
      * @var string
      */
-    protected $signature = 'dokter:fetch-all';
+    protected $signature = 'dokter:fetch-all {--force : Paksa refresh semua cache dokter langsung dari API MedInfras}';
 
     /**
      * The console command description.
@@ -30,16 +30,19 @@ class FetchAllDoctor extends Command
             $this->warn('RS API dinonaktifkan; tidak ada penarikan data.');
             return Command::FAILURE;
         }
-        //
+
+        $force = (bool) $this->option('force');
+
         $this->info('Memulai warm-up cache master data (Spesialisasi & Unit)...');
         $apiService->getDaftarSpesialisasi();
         $apiService->getDaftarUnits();
 
         $this->info('Memulai fetch data dokter...');
+        if ($force) {
+            $this->info('Mode force-refresh aktif: mengabaikan cache intermediate dan menarik data segar dari MedInfras...');
+        }
 
-        // dd($apiService->getDaftarSpesialisasi());
-
-        $total = $apiService->fetchAndCacheAllDokter();
+        $total = $apiService->fetchAndCacheAllDokter($force);
         if ($total === 0) {
             $this->error('Warm-up tidak memperoleh hasil lengkap. Cache sebelumnya dipertahankan.');
             return Command::FAILURE;
