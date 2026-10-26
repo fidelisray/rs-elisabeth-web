@@ -3,7 +3,7 @@
 # Menggunakan dedicated stage agar Node.js & node_modules TIDAK ikut
 # masuk ke final image PHP, menghemat ratusan MB.
 # ==============================================================================
-FROM node:20-alpine AS node_builder
+FROM node:22.23.4-alpine AS node_builder
 
 WORKDIR /app
 
@@ -20,7 +20,7 @@ RUN npm run build
 # STAGE 1: PHP-FPM Application Server
 # Menggunakan Alpine untuk image yang jauh lebih kecil vs Debian.
 # ==============================================================================
-FROM php:8.4-fpm-alpine AS fpm_app
+FROM php:8.4.27-fpm-alpine AS fpm_app
 
 LABEL maintainer="RS Elisabeth" \
       description="PHP-FPM Application Image for RS Elisabeth Web Frontend"
