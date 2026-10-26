@@ -240,4 +240,30 @@ class CmsWebhookCacheInvalidationTest extends TestCase
                 'success' => true,
             ]);
     }
+
+    public function test_cache_keys_do_not_exceed_database_varchar_limit(): void
+    {
+        Config::set('cache.default', 'file');
+        \Illuminate\Support\Facades\Http::fake([
+            '*' => \Illuminate\Support\Facades\Http::response(['data' => [['id' => 1, 'title' => 'Sample Article']]], 200),
+        ]);
+
+        $service = app(\App\Services\CmsApiService::class);
+        $articles = $service->getArticles(['id' => 'sample-long-filter-parameter-test']);
+        $this->assertNotEmpty($articles);
+
+        $reflection = new \ReflectionClass($service);
+        $method = $reflection->getMethod('rememberTagged');
+        $method->setAccessible(true);
+
+        // Uji dengan key yang sangat panjang
+        $longKey = str_repeat('very_long_article_slug_parameter_', 5);
+        $executed = false;
+        $method->invokeArgs($service, ['articles', $longKey, 60, function () use (&$executed) {
+            $executed = true;
+            return ['ok'];
+        }]);
+
+        $this->assertTrue($executed);
+    }
 }

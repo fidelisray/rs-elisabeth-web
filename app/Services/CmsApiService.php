@@ -78,23 +78,42 @@ class CmsApiService
     }
 
     /**
+     * Hash identitas endpoint & credential CMS (16 karakter hex)
+     * untuk isolasi multi-tenant/environment tanpa membuat cache key terlalu panjang.
+     */
+    protected function scopeKey(): string
+    {
+        return substr(hash('sha256', $this->baseUrl.'|'.$this->consId), 0, 16);
+    }
+
+    /**
      * Menyimpan respon ke cache dengan dukungan Cache Tags (Redis).
      * Jika store cache tidak mendukung tags (misal di local development),
      * method ini secara aman fallback ke Cache::remember() standar.
      */
     protected function rememberTagged(string $module, string $key, int $ttl, \Closure $callback)
     {
-        $key = hash('sha256', $this->baseUrl.'|'.$this->consId).':'.$key;
+        $scopedKey = $this->scopeKey().':'.$key;
         if (Cache::supportsTags()) {
-            return Cache::tags(['cms', "cms_{$module}"])->remember($key, $ttl, $callback);
+            return Cache::tags(['cms', "cms_{$module}"])->remember($scopedKey, $ttl, $callback);
         }
 
-        return Cache::remember($this->versionKey($module).':'.$this->moduleVersion($module).':'.$key, $ttl, $callback);
+        $version = $this->moduleVersion($module);
+        $fallbackKey = "cms_gen:{$this->scopeKey()}:{$module}:{$version}:{$key}";
+
+        // Pengaman: Jika kombinasi key melebihi 150 karakter (misal slug/filter panjang),
+        // hash bagian key spesifik agar total panjang (termasuk prefix cache Laravel)
+        // tidak akan pernah melebihi batas 255 karakter VARCHAR database.
+        if (strlen($fallbackKey) > 150) {
+            $fallbackKey = "cms_gen:{$this->scopeKey()}:{$module}:{$version}:".md5($key);
+        }
+
+        return Cache::remember($fallbackKey, $ttl, $callback);
     }
 
     protected function versionKey(string $module): string
     {
-        return 'cms_generation:'.hash('sha256', $this->baseUrl.'|'.$this->consId).':'.$module;
+        return "cms_gen:{$this->scopeKey()}:{$module}";
     }
 
     protected function moduleVersion(string $module): string
