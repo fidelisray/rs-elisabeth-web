@@ -1,6 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..900;1,300..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Crimson+Text:ital,wght@0,600;1,600&display=swap");
 
 :root {
     /* --primary-color: #2F9DFE; */
@@ -26,6 +24,10 @@
     /* --bg-soft-beige: #fbf0e6; */
     --bg-warm-beige: #f9efe6; /* Lebih muda dari #f8e7d8 */
     /* --bg-warm-beige: #f8e7d8; */
+
+    --font-primary: "Montserrat", sans-serif;
+    --font-secondary: "Poppins", sans-serif;
+    --font-tertiary: "Outfit", sans-serif;
 }
 
 .btn-primary-custom {
@@ -82,7 +84,16 @@ section[id] {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Outfit", sans-serif;
+    font-family: var(--font-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-primary);
 }
 
 .ambulance-call {
@@ -228,10 +239,11 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
 }
 
 .about-content .about-rs p {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     margin-right: 8px;
-    font-family: "Crimson Text", sans-serif;
-    font-weight: 600;
+    font-family: var(--font-secondary);
+    font-weight: 400;
+    line-height: 1.7;
     text-indent: 1.8ch;
     text-align: justify;
 }
@@ -407,7 +419,6 @@ span.carousel-control-next-icon {
 .promo-card:nth-child(6) {
     animation-delay: 0.6s;
 }
-
 
 /* Bouncing Button Animation */
 @keyframes bounce-y {

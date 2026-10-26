@@ -12,7 +12,7 @@
 }
 
 .stat-number {
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-primary);
     font-size: 3.5rem;
     font-weight: 700;
     color: var(--accent-color);

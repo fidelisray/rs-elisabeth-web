@@ -9,7 +9,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Outfit", sans-serif;
+    font-family: var(--font-primary);
     font-weight: 700;
 }
 

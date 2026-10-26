@@ -20,7 +20,7 @@ section#hero-section .hero-breadcrumb .breadcrumb-item + .breadcrumb-item::befor
     color: rgba(255,255,255,0.6);
 }
 section#hero-section .hero-title {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-primary);
     font-weight: 800;
     font-size: 2.75rem;
     line-height: 1.15;
@@ -40,7 +40,7 @@ section#hero-section .hero-subtitle {
 
 /* ---------- Customer Information Content ---------- */
 #customer-info .section-heading h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-primary);
     color: #026199;
 }
 #customer-info .card {
