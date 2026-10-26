@@ -93,13 +93,30 @@ class DokterController extends Controller
 
     public function allDokter(Request $request): \Illuminate\Http\JsonResponse
     {
-
         // Tolak jika bukan AJAX request
         if (!$request->ajax()) {
             abort(403, 'Forbidden');
         }
 
         $data = Cache::get('all_doctors_list', []);
+
+        if (empty($data)) {
+            // Gunakan cache lock untuk mencegah race condition (multiple simultaneous warm-up)
+            $lock = Cache::lock('lock:warmup_doctors', 60);
+            if ($lock->get()) {
+                try {
+                    @set_time_limit(120);
+                    $this->apiService->fetchAndCacheAllDokter();
+                } finally {
+                    $lock->release();
+                }
+                $data = Cache::get('all_doctors_list', []);
+            } else {
+                // Tunggu proses warm-up yang sedang berjalan oleh thread lain (maks 15 detik)
+                $lock->block(15);
+                $data = Cache::get('all_doctors_list', []);
+            }
+        }
 
         if (empty($data)) {
             return response()->json([

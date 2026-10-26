@@ -206,26 +206,36 @@ class DoctorApiService
         return Cache::get($cacheKey, []);
     }
 
-    public function getDokterBySpesialisasi(string $specialtyCode): array
+    public function getDokterBySpesialisasi(string $specialtyCode, bool $forceRefresh = false): array
     {
         $cacheKey = 'doctor_specialty_' . $specialtyCode;
         $ttl      = config('rsapi.cache_ttl.dokter_by_speciality');
 
+        if ($forceRefresh) {
+            Cache::forget($cacheKey);
+        }
+
         return Cache::remember($cacheKey, $ttl, function () use($specialtyCode) {
             try {
+                $encodedCode = rawurlencode($specialtyCode);
                 $response = $this->apiRequest()
-                    ->get("{$this->baseUrl}{$this->medinEndpoint}/api/paramedicschedule/base/list/specialty/{$specialtyCode}");
-
-                // Dump struktur response, lalu stop eksekusi
-                // dd($response->json('Data'));
-                // dd(json_decode($response->json('Data')));
-
-                // dd($response->status());
+                    ->get("{$this->baseUrl}{$this->medinEndpoint}/api/paramedicschedule/base/list/specialty/{$encodedCode}");
 
                 if ($response->successful()) {
-                    // dd(json_decode($response->json('Data', [])));
+                    $status = $response->json('Status');
+                    $rawData = $response->json('Data');
 
-                    $data = $this->decodeData($response->json('Data'));
+                    // Jika spesialisasi belum memiliki dokter terdaftar di HIS
+                    if ($status === 'NOT FOUND' || $rawData === null || $rawData === '') {
+                        return [
+                            "Success" => true,
+                            "LeaveSchedule" => [],
+                            "ScheduleByDate" => [],
+                            "ScheduleRoutine" => [],
+                        ];
+                    }
+
+                    $data = $this->decodeData($rawData);
                     if (! is_object($data) || ! is_array($data->ScheduleRoutine ?? null)) {
                         return ['Success' => false, 'Message' => 'Struktur jadwal tidak valid.'];
                     }
@@ -245,18 +255,17 @@ class DoctorApiService
                     'body'   => $response->body(),
                 ]);
 
-
                 return [
                     "Success" => false,
                     "Message" => "Data gagal diambil dari API Medin -request DokterBySpesialisasi"
                 ];
-                // return [$response->status(), $response->body()];
 
             } catch (\Exception $e) {
                 Log::error('Gagal connect ke API RS', ['error' => $e->getMessage()]);
                 return [
                     "Success" => false, 
-                    "Message" => "Gagal conncect ke API RS -request DokterBySpesialisasi"];
+                    "Message" => "Gagal conncect ke API RS -request DokterBySpesialisasi"
+                ];
             }
         });
     }
@@ -268,75 +277,88 @@ class DoctorApiService
      * hasil merge disimpan di cache terpisah.
      */
 
-    public function fetchAndCacheAllDokter(): int
+    public function fetchAndCacheAllDokter(bool $forceRefresh = false): int
     {
-    if (! config('rsapi.enabled', true)) return 0;
-    // Ambil specialty codes secara dinamis dari API
-    $spesialisasiList = [];
+        if (! config('rsapi.enabled', true)) return 0;
 
+        if ($forceRefresh) {
+            Cache::forget('specialty_list_');
+        }
 
-    foreach ($this->getDaftarSpesialisasi() as $items) {
-        $code = ((array) $items)['Code'] ?? null;
-        if (is_string($code) && $code !== '') $spesialisasiList[] = $code;
-    }
+        $blacklist = config('rsapi.blacklist_specialties', []);
+        $delay = config('rsapi.fetch_delay_microseconds', 150000);
 
-    if (empty($spesialisasiList)) {
-        Log::error('Gagal fetch daftar spesialisasi, fetchAndCacheAllDokter dibatalkan.');
-        return 0;
-    }
+        // Ambil specialty codes secara dinamis dari API
+        $spesialisasiList = [];
 
-    // dd($spesialisasiList);
+        foreach ($this->getDaftarSpesialisasi() as $items) {
+            $code = ((array) $items)['Code'] ?? null;
+            if (is_string($code) && $code !== '' && !in_array($code, $blacklist, true)) {
+                $spesialisasiList[] = $code;
+            }
+        }
 
-    $allDoctors = [];
-    $failed = [];
-    $i = 1;
-    $specialityLength = count($spesialisasiList);
+        if (empty($spesialisasiList)) {
+            Log::error('Gagal fetch daftar spesialisasi, fetchAndCacheAllDokter dibatalkan.');
+            return 0;
+        }
 
-    foreach ($spesialisasiList as $code) {
+        $allDoctors = [];
+        $failed = [];
+        $i = 1;
 
-        try {
-            $data = $this->getDokterBySpesialisasi($code);
-            
-            
-            if (!($data['Success'] ?? false) || ! is_array($data['ScheduleRoutine'] ?? null)) {
+        foreach ($spesialisasiList as $code) {
+            try {
+                $data = $this->getDokterBySpesialisasi($code, $forceRefresh);
+
+                if (!($data['Success'] ?? false) || ! is_array($data['ScheduleRoutine'] ?? null)) {
+                    $failed[] = $code;
+                    $i++;
+                    continue;
+                }
+
+                $i++;
+
+                if (!empty($data['ScheduleRoutine']) && is_array($data['ScheduleRoutine'])) {
+                    foreach ($data['ScheduleRoutine'] as $item) {
+                        $itemArray = is_object($item) ? (array) $item : $item;
+                        $itemArray['SpecialityCode'] = $code;
+                        $allDoctors[] = $itemArray;
+                    }
+                }
+            } catch (\Exception $e) {
                 $failed[] = $code;
+                Log::warning("Gagal fetch specialty {$code}", ['exception_type' => get_class($e)]);
                 $i++;
                 continue;
             }
-            
-            $i++;
 
-            if (!empty($data['ScheduleRoutine']) && is_array($data['ScheduleRoutine'])) {
-                foreach ($data['ScheduleRoutine'] as $item) {
-                    $itemArray = is_object($item) ? (array) $item : $item;
-                    $itemArray['SpecialityCode'] = $code;
-                    $allDoctors[] = $itemArray;
-                }
+            if ($delay > 0) {
+                usleep($delay);
             }
-
-            // dd($allDoctors);
-        } catch (\Exception $e) {
-            $failed[] = $code;
-            Log::warning("Gagal fetch specialty {$code}", ['exception_type' => get_class($e)]);
-            $i++;
-            continue;
         }
 
-        sleep(1);
+        if ($allDoctors === []) {
+            Log::error('Warm-up dokter gagal total: tidak ada data dokter yang berhasil ditarik.', [
+                'failed_specialties' => $failed,
+            ]);
+            return 0;
+        }
+
+        if ($failed !== []) {
+            Log::warning('Warm-up dokter selesai dengan beberapa spesialisasi gagal.', [
+                'failed_specialties' => $failed,
+                'total_doctors_cached' => count($allDoctors),
+            ]);
+        }
+
+        Cache::put('all_doctors_list', $allDoctors, now()->addHours(12));
+        Cache::put('all_doctors_grouped', collect($allDoctors)
+            ->groupBy('SpecialityCode')
+            ->toArray(), now()->addHours(12));
+
+        return count($allDoctors);
     }
-
-    if ($failed !== [] || $allDoctors === []) {
-        Log::warning('Warm-up dokter tidak lengkap; cache lama dipertahankan.', ['failed_specialties' => $failed]);
-        return 0;
-    }
-
-    Cache::put('all_doctors_list', $allDoctors, now()->addHours(12));
-    Cache::put('all_doctors_grouped', collect($allDoctors)                       // grouped → jika perlu
-    ->groupBy('SpecialityCode')
-    ->toArray(), now()->addHours(12));
-
-    return count($allDoctors);
-}
 
 
 

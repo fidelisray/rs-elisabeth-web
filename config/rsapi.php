@@ -9,6 +9,14 @@ return [
     'medin_consid' => env('RS_MEDIN_API_CONSID'),
     'medin_secretkey' => env('RS_MEDIN_API_SECRETKEY'),
 
+    // Daftar kode spesialisasi yang di-blacklist (bermasalah atau tidak aktif di API MedInfras)
+    'blacklist_specialties' => array_filter(
+        array_map('trim', explode(',', (string) env('RS_API_BLACKLIST_SPECIALTIES', 'KSM 37')))
+    ),
+
+    // Jeda delay (microsecond) per request spesialisasi saat warm-up (150000 = 150ms)
+    'fetch_delay_microseconds' => (int) env('RS_API_FETCH_DELAY_MICROSECONDS', 150000),
+
     // Kredensial untuk generate token
     'auth' => [
         'endpoint' => env('RS_API_AUTH_ENDPOINT'),
