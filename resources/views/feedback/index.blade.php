@@ -22,26 +22,16 @@
 
     <main class="feedback-page-wrapper">
 
-        <!-- 1. Hero Header Section -->
-        <section class="feedback-hero text-center">
-            <div class="container position-relative">
-                <!-- Breadcrumb -->
-                <nav class="feedback-breadcrumb mb-3" aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Kritik & Saran') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="feedback-eyebrow">
-                    <i class="fa-solid fa-comment-medical"></i> {{ __('Suara Pelanggan') }}
-                </div>
-                <h1 class="feedback-title">{{ __('Formulir Keluhan & Masukan Pasien') }}</h1>
-                <p class="feedback-subtitle">
-                    {{ __('Kritik, saran, dan masukan Anda sangat berharga bagi kami dalam menjaga komitmen mutu pelayanan medis dan kenyamanan pasien di RS St. Elisabeth Semarang.') }}
-                </p>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-comment-medical',
+            'badgeText' => __('Suara Pelanggan'),
+            'title' => __('Formulir Keluhan & Masukan Pasien'),
+            'subtitle' => __('Kritik, saran, dan masukan Anda sangat berharga bagi kami dalam menjaga komitmen mutu pelayanan medis dan kenyamanan pasien di RS St. Elisabeth Semarang.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Kritik & Saran')],
+            ],
+        ])
 
         <!-- 2. Form Container Section -->
         <section class="feedback-container">

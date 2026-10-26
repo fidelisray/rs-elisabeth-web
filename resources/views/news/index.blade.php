@@ -23,6 +23,8 @@
     @include('components.navbar')
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-newspaper',
+            'badgeText' => __('Kabar & Informasi'),
             'title' => 'ElisaNews',
             'subtitle' => __('Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.'),
             'breadcrumbs' => [

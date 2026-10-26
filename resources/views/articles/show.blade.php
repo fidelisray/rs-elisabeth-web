@@ -23,6 +23,8 @@
     @include('components.navbar')
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-book-medical',
+            'badgeText' => __('Artikel Medis'),
             'title' => $article->title,
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],

@@ -22,6 +22,8 @@
 
 <main>
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-circle-info',
+            'badgeText' => __('Panduan Pasien & Pengunjung'),
             'title' => __('Informasi Pelanggan'),
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],

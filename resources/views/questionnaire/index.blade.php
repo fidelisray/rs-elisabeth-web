@@ -22,25 +22,16 @@
 
     <main class="questionnaire-page-wrapper">
 
-        <!-- 1. Hero Header Section -->
-        <section class="questionnaire-hero text-center">
-            <div class="container position-relative">
-                <nav class="questionnaire-breadcrumb mb-3" aria-label="breadcrumb">
-                    <ol class="breadcrumb justify-content-center mb-0">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Kuesioner Kepuasan Pasien') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="questionnaire-eyebrow">
-                    <i class="fa-solid fa-clipboard-check"></i> {{ __('Evaluasi Mutu Pelayanan') }}
-                </div>
-                <h1 class="questionnaire-title">{{ __('Kuesioner Kepuasan Pasien') }}</h1>
-                <p class="questionnaire-subtitle">
-                    {{ __('Pelanggan yang terhormat, demi perbaikan mutu pelayanan kami, mohon Bapak/Ibu/Sdr dapat meluangkan waktu untuk mengisi kuesioner kepuasan pasien berikut ini. Terima kasih atas partisipasinya.') }}
-                </p>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-clipboard-check',
+            'badgeText' => __('Evaluasi Mutu Pelayanan'),
+            'title' => __('Kuesioner Kepuasan Pasien'),
+            'subtitle' => __('Pelanggan yang terhormat, demi perbaikan mutu pelayanan kami, mohon Bapak/Ibu/Sdr dapat meluangkan waktu untuk mengisi kuesioner kepuasan pasien berikut ini. Terima kasih atas partisipasinya.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Kuesioner Kepuasan Pasien')],
+            ],
+        ])
 
         <!-- 2. Portal Hub Cards Section -->
         <section class="questionnaire-container">

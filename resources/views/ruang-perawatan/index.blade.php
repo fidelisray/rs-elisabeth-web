@@ -39,6 +39,8 @@
         <h1 class="visually-hidden">{{ __('Ruang Perawatan RS Santa Elisabeth Semarang') }}</h1>
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-bed-pulse',
+            'badgeText' => __('Akomodasi & Rawat Inap'),
             'title' => __('Ruang Perawatan'),
             'subtitle' => __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.'),
             'headingTag' => 'h2',

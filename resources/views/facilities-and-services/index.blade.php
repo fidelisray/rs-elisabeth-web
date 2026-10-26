@@ -25,6 +25,8 @@
         <h1 class="visually-hidden">{{ __('Fasilitas dan Layanan RS Santa Elisabeth Semarang') }}</h1>
 
         @include('components.hero-section', [
+            'badgeIcon' => 'fa-solid fa-hospital',
+            'badgeText' => __('Fasilitas & Layanan Unggulan'),
             'title' => __('Fasilitas & Layanan Unggulan'),
             'subtitle' => __('Kami menyediakan fasilitas dan layanan berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna kepada setiap pasien.'),
             'headingTag' => 'h2',
