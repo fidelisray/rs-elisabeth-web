@@ -25,18 +25,14 @@
 <main>
         <h1 class="visually-hidden">{{ __('Detail Ruang Perawatan') }} {{ $room->name }} - RS Santa Elisabeth Semarang</h1>
 
-        {{-- ===== HERO SECTION & BREADCRUMBS ===== --}}
-        <section id="hero-section" style="padding: 2rem 0;">
-            <div class="container">
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('ruang-perawatan.index') }}">{{ __('Ruang Perawatan') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ $room->name }}</li>
-                    </ol>
-                </nav>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'customClass' => 'hero-compact',
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Ruang Perawatan'), 'url' => route('ruang-perawatan.index')],
+                ['label' => $room->name],
+            ],
+        ])
 
         {{-- ===== DETAIL CONTENT ===== --}}
         <section id="room-detail" class="py-5" style="background: radial-gradient(circle 340px at 88% 10%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef7fd 100%);">

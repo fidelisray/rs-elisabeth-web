@@ -25,25 +25,14 @@
     @include('components.navbar')
 
     <main class="tentang-kami-canvas">
-        <!-- Hero Section -->
-        <section id="hero-section">
-            <div class="container">
-                <!-- Breadcrumb -->
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Tentang Kami') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <h1 class="hero-title">{{ __('Tentang Kami') }}</h1>
-                        <p class="hero-subtitle">{{ __('Mengenal lebih dekat Rumah Sakit St. Elisabeth Semarang, sejarah, visi, dan misi kami dalam memberikan pelayanan kesehatan terbaik.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => __('Tentang Kami'),
+            'subtitle' => __('Mengenal lebih dekat Rumah Sakit St. Elisabeth Semarang, sejarah, visi, dan misi kami dalam memberikan pelayanan kesehatan terbaik.'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Tentang Kami')],
+            ],
+        ])
 
         <section id="motto" class="py-5">
             <div class="container">

@@ -24,22 +24,11 @@
     @include('components.navbar')
 
     <main class="doctor-page-canvas">
-        <section id="hero-section">
-            <div class="container">
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Dokter Kami') }}</li>
-                    </ol>
-                </nav>
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">{{ __('Dokter Kami') }}</h2>
-                        <p class="hero-subtitle">{{ __('Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => __('Dokter Kami'),
+            'subtitle' => __('Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.'),
+            'headingTag' => 'h2',
+        ])
     <section id="doctor-filter-selection">
         <!-- Toolbar / Search Widget -->
         <div class="container">

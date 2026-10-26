@@ -12,53 +12,6 @@ body {
     font-family: var(--font-secondary);
 }
 
-section#hero-section {
-    background: linear-gradient(
-        145deg,
-        var(--brand-blue-light) 25%,
-        var(--brand-blue) 65%,
-        var(--brand-blue-dark) 100%
-    );
-    color: #fff;
-    padding: 2rem 0 3rem;
-}
-
-/* Breadcrumb */
-section#hero-section .hero-breadcrumb .breadcrumb {
-    margin-bottom: 0;
-}
-section#hero-section .hero-breadcrumb .breadcrumb-item,
-section#hero-section .hero-breadcrumb .breadcrumb-item a {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 0.9rem;
-    text-decoration: none;
-}
-section#hero-section .hero-breadcrumb .breadcrumb-item.active {
-    color: #fff;
-    font-weight: 500;
-}
-section#hero-section
-    .hero-breadcrumb
-    .breadcrumb-item
-    + .breadcrumb-item::before {
-    content: ">";
-    color: rgba(255, 255, 255, 0.6);
-    font-family: var(--font-secondary);
-}
-
-/* Title */
-section#hero-section .hero-title {
-    font-family: var(--font-primary);
-    font-weight: 800;
-    font-size: 2.75rem;
-    line-height: 1.15;
-    margin-top: 1.5rem;
-}
-section#hero-section .hero-subtitle {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin-top: 0.75rem;
-}
 
 /* Search */
 section#hero-section .search-label {
@@ -133,11 +86,7 @@ section#hero-section .letter-btn.active {
     color: var(--brand-blue-dark);
 }
 
-/* Responsive tweaks */
 @media (max-width: 767.98px) {
-    section#hero-section .hero-title {
-        font-size: 2rem;
-    }
     section#hero-section .letter-grid {
         grid-template-columns: repeat(6, 1fr);
         max-width: 100%;
@@ -154,9 +103,6 @@ section#hero-section .letter-btn.active {
 }
 
 @media (min-width: 1200px) {
-    section#hero-section .hero-title {
-        font-size: 3.25rem;
-    }
     section#hero-section .letter-grid {
         grid-template-columns: repeat(8, 1fr);
         gap: 0.75rem;

@@ -33,9 +33,12 @@
 
 /* Typography */
 #app-section h2 {
+    font-family: var(--font-primary);
     color: var(--secondary-darker-color);
-    font-weight: 800;
-    letter-spacing: -1px;
+    font-weight: 700;
+    font-size: 2.25rem;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
 }
 
 /* Store Buttons */

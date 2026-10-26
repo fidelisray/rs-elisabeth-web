@@ -22,86 +22,66 @@
 
     @include('components.navbar')
 
-    <section id="hero-section">
-            <div class="container">
+    @php
+        $glossaryBreadcrumbs = [
+            ['label' => __('Beranda'), 'url' => url('/')],
+        ];
+        if (preg_match('/^[A-Z]$/', $activeLetter)) {
+            $glossaryBreadcrumbs[] = ['label' => __('Kamus Medis'), 'url' => route('glossary.index')];
+            $glossaryBreadcrumbs[] = ['label' => __('Awalan') . " '{$activeLetter}'"];
+        } else {
+            $glossaryBreadcrumbs[] = ['label' => __('Kamus Medis')];
+        }
+    @endphp
 
-                <!-- Breadcrumb -->
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        @if (preg_match('/^[A-Z]$/', $activeLetter))
-                            <li class="breadcrumb-item"><a href="{{{ route('glossary.index') }}}">{{ __('Kamus Medis') }}</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ __('Awalan') }} '{{ $activeLetter }}'</li>
-                        @else    
-                            <li class="breadcrumb-item active"><a href="{{{ route('glossary.index') }}}">{{ __('Kamus Medis') }}</a></li>
-                        @endif
-                    </ol>
-                </nav>
+    <x-hero-section
+        :title="__('Ensiklopedia Istilah Medis & Kesehatan')"
+        :subtitle="__('Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya')"
+        :breadcrumbs="$glossaryBreadcrumbs"
+    >
+        <p class="search-label fw-medium mb-2">{{ __('Pencarian Istilah Medis') }}</p>
 
-                <div class="row">
-                    <!-- Kolom kiri: Judul, subjudul, search -->
-                    <div class="col-12 col-lg-6">
-                        <h1 class="hero-title">{{ __('Ensiklopedia Istilah Medis & Kesehatan') }}</h1>
-                        <p class="hero-subtitle">{{ __('Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya') }}</p>
+        <div class="search-box d-flex align-items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
+            <form action="{{ route('glossary.index') }}" method="GET" id="glossarySearchForm" role="search" autocomplete="off" class="d-flex w-100 align-items-center gap-2">
+                <input
+                    type="text"
+                    id="glossarySearchInput"
+                    name="q"
+                    value="{{ request('q') }}"
+                    class="form-control"
+                    placeholder="{{ __('Cari istilah medis...') }}"
+                    minlength="2"
+                    autocomplete="off"
+                >
+                @if(request('q'))
+                    <a href="{{ route('glossary.index') }}" id="resetSearchBtn" class="btn btn-outline-danger">
+                        {{ __('Reset') }}
+                    </a>
+                @else
+                    <button type="submit" class="btn btn-outline-success">
+                        {{ __('Cari') }}
+                    </button>
+                @endif
+            </form>
+        </div>
 
-                        <p class="search-label fw-medium mb-2">{{ __('Pencarian Istilah Medis') }}</p>
-
-
-                        <div class="search-box d-flex align-items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                            </svg>
-                            <form action="{{{ route('glossary.index') }}}" method="GET" id="glossarySearchForm" role="search" autocomplete="off" class="d-flex w-100 align-items-center gap-2">
-                                <input
-                                    type="text"
-                                    id="glossarySearchInput"
-                                    name="q"
-                                    value="{{ request('q') }}"
-                                    class="form-control"
-                                    placeholder="{{ __('Cari istilah medis...') }}"
-                                    minlength="2"
-                                    autocomplete="off"
-                                >
-                                @if(request('q'))
-                                    <a href="{{{ route('glossary.index') }}}" id="resetSearchBtn" class="btn btn-outline-danger">
-                                        {{ __('Reset') }}
-                                    </a>
-                                @else
-                                    <button type="submit" class="btn btn-outline-success">
-                                        {{ __('Cari') }}
-                                    </button>
-                                @endif
-                            </form>
-                        </div>
-
-
-
-                    </div>
-                    
-                    <!-- Kolom kanan: Grid huruf A-Z -->
-                    <div class="col-12 col-lg-6 mt-4 mt-lg-0 d-flex flex-column align-items-start align-items-lg-end">
-                        <div class="letter-panel-label fw-medium mb-2">{{ __('Telusuri Cepat Berdasarkan Abjad') }}</div>
-                            <div class="letter-grid">
-                                {{-- <a href="#" class="letter-btn active">A</a> --}}
-                                {{-- <a href="{{{ route('glossary.index') }}}"
-                                    class="letter-btn {{ $activeLetter === 'ALL' ? 'btn-primary' : 'btn-outline-secondary' }}">
-                                    All
-                                </a> --}}
-                                @foreach(range('A', 'Z') as $letter)
-                                    @php $hasItems = in_array($letter, $availableLetters); @endphp
-                                    <a href="{{ $hasItems ? route('glossary.index', ['letter' => $letter]) : '#' }}"
-                                    class="letter-btn
-                                        {{ $activeLetter === $letter ? 'active' : (!$hasItems ? 'btn-muted' : '') }}"
-                                        {{ !$hasItems ? 'aria-disabled=true' : '' }}>
-                                        {{ $letter }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <x-slot:rightCol>
+            <div class="letter-panel-label fw-medium mb-2">{{ __('Telusuri Cepat Berdasarkan Abjad') }}</div>
+            <div class="letter-grid">
+                @foreach(range('A', 'Z') as $letter)
+                    @php $hasItems = in_array($letter, $availableLetters); @endphp
+                    <a href="{{ $hasItems ? route('glossary.index', ['letter' => $letter]) : '#' }}"
+                       class="letter-btn {{ $activeLetter === $letter ? 'active' : (!$hasItems ? 'btn-muted' : '') }}"
+                       {{ !$hasItems ? 'aria-disabled=true' : '' }}>
+                        {{ $letter }}
+                    </a>
+                @endforeach
             </div>
-        </section>
+        </x-slot:rightCol>
+    </x-hero-section>
 
         
         

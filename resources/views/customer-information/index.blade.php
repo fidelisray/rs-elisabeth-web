@@ -21,23 +21,13 @@
     @include('components.navbar')
 
 <main>
-        <section id="hero-section">
-            <div class="container">
-                <!-- Breadcrumb -->
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Informasi Pelanggan') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="row">
-                    <div class="col-12 col-lg-8">
-                        <h1 class="hero-title">{{ __('Informasi Pelanggan') }}</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => __('Informasi Pelanggan'),
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Informasi Pelanggan')],
+            ],
+        ])
 
         <section id="customer-info" class="py-5" style="background: radial-gradient(circle 340px at 10% 15%, rgba(183, 228, 229, 0.45), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef7fd 55%, #f8fafc 100%);">
             <div class="container">

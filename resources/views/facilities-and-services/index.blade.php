@@ -24,26 +24,15 @@
     <main class="facilities-page-canvas">
         <h1 class="visually-hidden">{{ __('Fasilitas dan Layanan RS Santa Elisabeth Semarang') }}</h1>
 
-        {{-- ===== HERO SECTION (diambil dari promotions/index.blade.php) ===== --}}
-        <section id="hero-section">
-            <div class="container">
-                {{-- Breadcrumb --}}
-                <nav class="hero-breadcrumb" aria-label="breadcrumb">
-                    <ol class="breadcrumb flex-wrap">
-                        <li class="breadcrumb-item"><a href="{{ url('/') }}">{{ __('Beranda') }}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Fasilitas & Layanan') }}</li>
-                    </ol>
-                </nav>
-
-                <div class="row">
-                    {{-- Kolom kiri: Judul, subjudul --}}
-                    <div class="col-12 col-lg-8">
-                        <h2 class="hero-title">{{ __('Fasilitas & Layanan Unggulan') }}</h2>
-                        <p class="hero-subtitle">{{ __('Kami menyediakan fasilitas dan layanan berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna kepada setiap pasien.') }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('components.hero-section', [
+            'title' => __('Fasilitas & Layanan Unggulan'),
+            'subtitle' => __('Kami menyediakan fasilitas dan layanan berteknologi canggih demi memberikan pelayanan yang berkualitas dan paripurna kepada setiap pasien.'),
+            'headingTag' => 'h2',
+            'breadcrumbs' => [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Fasilitas & Layanan')],
+            ],
+        ])
 
         {{-- ===== INTRO SECTION ===== --}}
         <section id="facilities-intro">
