@@ -53,7 +53,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
     && docker-php-ext-enable redis \
     && apk del .build-deps \
     && rm -rf /tmp/pear \
-    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && echo "session.upload_progress.enabled = 0" > "$PHP_INI_DIR/conf.d/security-hardening.ini"
 
 # 3. Install Composer dari official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
