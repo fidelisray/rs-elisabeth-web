@@ -28,6 +28,8 @@ return [
 
     'cache_ttl' => [
         // External RS API
+        'doctors_fresh'        => (int) env('RS_API_CACHE_FRESH', 3600),   // 1 jam fresh window
+        'doctors_stale'        => (int) env('RS_API_CACHE_STALE', 86400),  // 24 jam stale window toleransi
         'dokter'               => 3600,
         'units'                => 3600,
         'specialty'            => 3600,

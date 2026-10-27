@@ -56,7 +56,12 @@ class DoctorApiService
             'X-Timestamp' => $tStamp,
             'X-Signature' => $encodedSignature,
             'Accept'  => 'application/json',
-        ])->timeout($this->timeout);
+        ])->timeout($this->timeout)
+          ->connectTimeout(3)
+          ->retry(2, 100, function ($exception, $request) {
+              return $exception instanceof \Throwable
+                  || ($request->response() && $request->response()->serverError());
+          }, throw: false);
     }
 
     /**
@@ -358,6 +363,23 @@ class DoctorApiService
             ->toArray(), now()->addHours(12));
 
         return count($allDoctors);
+    }
+
+    /**
+     * Menarik seluruh data dokter segar dari API MedInfras dengan perlindungan fail-safe.
+     *
+     * @throws \RuntimeException jika penarikan data gagal total (agar SWR mempertahankan cache lama)
+     */
+    public function getFreshDoctorsList(bool $forceRefresh = false): array
+    {
+        $count = $this->fetchAndCacheAllDokter($forceRefresh);
+        $data = Cache::get('all_doctors_list', []);
+
+        if (empty($data)) {
+            throw new \RuntimeException('Gagal menarik data dokter dari MedInfras; mempertahankan data cache sebelumnya.');
+        }
+
+        return $data;
     }
 
 
