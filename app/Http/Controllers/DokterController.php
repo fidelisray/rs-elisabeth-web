@@ -98,24 +98,38 @@ class DokterController extends Controller
             abort(403, 'Forbidden');
         }
 
-        $data = Cache::get('all_doctors_list', []);
+        // $data = Cache::get('all_doctors_list', []);
 
-        if (empty($data)) {
-            // Gunakan cache lock untuk mencegah race condition (multiple simultaneous warm-up)
-            $lock = Cache::lock('lock:warmup_doctors', 60);
-            if ($lock->get()) {
-                try {
-                    @set_time_limit(120);
-                    $this->apiService->fetchAndCacheAllDokter();
-                } finally {
-                    $lock->release();
-                }
-                $data = Cache::get('all_doctors_list', []);
-            } else {
-                // Tunggu proses warm-up yang sedang berjalan oleh thread lain (maks 15 detik)
-                $lock->block(15);
-                $data = Cache::get('all_doctors_list', []);
-            }
+        // if (empty($data)) {
+        //     // Gunakan cache lock untuk mencegah race condition (multiple simultaneous warm-up)
+        //     $lock = Cache::lock('lock:warmup_doctors', 60);
+        //     if ($lock->get()) {
+        //         try {
+        //             @set_time_limit(120);
+        //             $this->apiService->fetchAndCacheAllDokter();
+        //         } finally {
+        //             $lock->release();
+        //         }
+        //         $data = Cache::get('all_doctors_list', []);
+        //     } else {
+        //         // Tunggu proses warm-up yang sedang berjalan oleh thread lain (maks 15 detik)
+        //         $lock->block(15);
+
+        //     }
+        // }
+
+        $freshTtl = (int) config('rsapi.cache_ttl.doctors_fresh', 3600);
+        $staleTtl = (int) config('rsapi.cache_ttl.doctors_stale', 86400);
+
+        try {
+            $data = Cache::flexible('all_doctors_list', [$freshTtl, $staleTtl], function () {
+                return $this->apiService->getFreshDoctorsList();
+            });
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal revalidasi data dokter di background', [
+                'error' => $e->getMessage(),
+            ]);
+            $data = Cache::get('all_doctors_list', []);
         }
 
         if (empty($data)) {

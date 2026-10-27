@@ -7,8 +7,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: fpm_app
-    image: fidelisray/rs-elisabeth-web:latest
-    # image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    # image: fidelisray/rs-elisabeth-web:latest
+    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
     container_name: rses_web_app
     restart: unless-stopped
     env_file:
@@ -52,8 +52,8 @@ services:
   # 2. SCHEDULER (Laravel Cron / Schedule Worker)
   # ---------------------------------------------------------
   web_scheduler:
-    image: fidelisray/rs-elisabeth-web:latest
-    # image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
+    # image: fidelisray/rs-elisabeth-web:latest
+    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
     container_name: rses_web_scheduler
     restart: unless-stopped
     env_file:
