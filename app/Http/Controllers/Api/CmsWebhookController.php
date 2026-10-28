@@ -17,7 +17,7 @@ class CmsWebhookController extends Controller
     public function invalidate(Request $request, CmsApiService $cmsApiService): JsonResponse
     {
         $validated = $request->validate([
-            'module' => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions,doctors',
+            'module' => 'nullable|string|in:all,news,articles,promotions,facilities,room_facilities,banner_promotions,doctors,online_libraries',
             'event' => 'nullable|string|max:50',
             // 'slug' disediakan sebagai metadata tambahan untuk keperluan logging/audit
             // di masa mendatang. Saat ini invalidasi bersifat granular per-modul

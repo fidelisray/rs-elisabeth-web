@@ -13,6 +13,7 @@ export default defineConfig({
                 'resources/css/facilities-and-services.css',
                 'resources/css/ruang-perawatan.css',
                 'resources/css/news.css',
+                'resources/css/online-library.css',
                 'resources/css/stats-section.css',
                 'resources/css/app-section.css',
                 'resources/css/glossarium.css',

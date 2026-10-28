@@ -135,6 +135,7 @@ class CmsApiService
             'room_facilities',
             'banner_promotions',
             'doctors',
+            'online_libraries',
         ];
 
         if ($module !== 'all' && ! in_array($module, $supportedModules, true)) {
@@ -561,6 +562,59 @@ class CmsApiService
                 Log::error('CMS API - Error saat fetch Banner Promotions', ['error' => $e->getMessage()]);
 
                 return [];
+            }
+        });
+    }
+
+    /**
+     * Mengambil daftar dokumen Perpustakaan Online (Online Libraries).
+     */
+    public function getOnlineLibraries(array $filters = []): array
+    {
+        $locale = app()->getLocale();
+        $cacheKey = "cms_online_libraries_{$locale}_".md5(serialize($filters));
+        $ttl = $this->cacheTtl('online_libraries');
+
+        return $this->rememberTagged('online_libraries', $cacheKey, $ttl, function () use ($filters) {
+            try {
+                $response = $this->apiRequest()->get("{$this->baseUrl}/online-libraries", $filters);
+                if ($response->successful()) {
+                    return $response->json('data', []);
+                }
+
+                return [];
+            } catch (\Exception $e) {
+                Log::error('CMS API - Error saat fetch Online Libraries', ['error' => $e->getMessage()]);
+
+                return [];
+            }
+        });
+    }
+
+    /**
+     * Mengambil detail dokumen Perpustakaan Online berdasarkan slug.
+     */
+    public function getOnlineLibraryBySlug(string $slug, ?string $localeOverride = null): ?array
+    {
+        $locale = $localeOverride ?? app()->getLocale();
+        $cacheKey = "cms_online_library_slug_{$locale}_{$slug}";
+        $ttl = $this->cacheTtl('online_libraries');
+
+        return $this->rememberTagged('online_libraries', $cacheKey, $ttl, function () use ($slug, $locale) {
+            try {
+                $response = $this->apiRequest()
+                    ->withHeaders(['Accept-Language' => $locale])
+                    ->get("{$this->baseUrl}/online-libraries/{$slug}", ['lang' => $locale]);
+
+                if ($response->successful()) {
+                    return $response->json('data', null);
+                }
+
+                return null;
+            } catch (\Exception $e) {
+                Log::error("CMS API - Error saat fetch Online Library Slug {$slug}", ['error' => $e->getMessage()]);
+
+                return null;
             }
         });
     }
