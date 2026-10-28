@@ -100,7 +100,83 @@ class OnlineLibraryPageTest extends TestCase
         $response->assertSee('Isi panduan lengkap kesehatan jantung Anda.', false);
         $response->assertSee('panduan-jantung.pdf');
         $response->assertSee('500 KB');
-        $response->assertSee('http://cms.test/storage/online-libraries/jantung.pdf');
+        $response->assertSee(route('online-library.file', ['slug' => 'panduan-kesehatan']));
+        $response->assertSee(route('online-library.file', ['slug' => 'panduan-kesehatan', 'download' => 1]));
+    }
+
+    public function test_file_endpoint_streams_pdf_inline_with_sameorigin_header(): void
+    {
+        Http::fake([
+            'http://cms.test/api/v1/cms/online-libraries/panduan-kesehatan*' => Http::response([
+                'data' => [
+                    'id' => 2,
+                    'title' => 'Panduan Kesehatan Jantung',
+                    'slug' => 'panduan-kesehatan',
+                    'alternate_slugs' => [
+                        'id' => 'panduan-kesehatan',
+                        'en' => 'heart-health-guide',
+                    ],
+                    'category' => 'Edukasi Medis',
+                    'description' => '<p>Isi panduan lengkap.</p>',
+                    'file_path' => 'online-libraries/jantung.pdf',
+                    'file_name' => '1. KESEHATAN KERJA.pdf',
+                    'file_size' => 512000,
+                    'file_url' => 'https://latu.rs-elisabeth.com/media/rs-web-cms-media-bucket-staging/online-libraries/jantung.pdf',
+                    'is_published' => true,
+                    'created_at' => '2026-10-28T08:00:00Z',
+                ],
+            ], 200),
+            'https://latu.rs-elisabeth.com/media/rs-web-cms-media-bucket-staging/online-libraries/jantung.pdf' => Http::response(
+                '%PDF-1.4 fake pdf content',
+                200,
+                ['Content-Type' => 'application/pdf']
+            ),
+        ]);
+
+        $response = $this->get(route('online-library.file', ['slug' => 'panduan-kesehatan']));
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/pdf');
+        $response->assertHeader('X-Frame-Options', 'SAMEORIGIN');
+        $this->assertStringContainsString('inline;', (string) $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('1. KESEHATAN KERJA.pdf', (string) $response->headers->get('Content-Disposition'));
+    }
+
+    public function test_file_endpoint_forces_attachment_download_when_download_param_is_present(): void
+    {
+        Http::fake([
+            'http://cms.test/api/v1/cms/online-libraries/panduan-kesehatan*' => Http::response([
+                'data' => [
+                    'id' => 2,
+                    'title' => 'Panduan Kesehatan Jantung',
+                    'slug' => 'panduan-kesehatan',
+                    'alternate_slugs' => [
+                        'id' => 'panduan-kesehatan',
+                        'en' => 'heart-health-guide',
+                    ],
+                    'category' => 'Edukasi Medis',
+                    'description' => '<p>Isi panduan lengkap.</p>',
+                    'file_path' => 'online-libraries/jantung.pdf',
+                    'file_name' => '1. KESEHATAN KERJA.pdf',
+                    'file_size' => 512000,
+                    'file_url' => 'https://latu.rs-elisabeth.com/media/rs-web-cms-media-bucket-staging/online-libraries/jantung.pdf',
+                    'is_published' => true,
+                    'created_at' => '2026-10-28T08:00:00Z',
+                ],
+            ], 200),
+            'https://latu.rs-elisabeth.com/media/rs-web-cms-media-bucket-staging/online-libraries/jantung.pdf' => Http::response(
+                '%PDF-1.4 fake pdf content',
+                200,
+                ['Content-Type' => 'application/pdf']
+            ),
+        ]);
+
+        $response = $this->get(route('online-library.file', ['slug' => 'panduan-kesehatan', 'download' => 1]));
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/pdf');
+        $this->assertStringContainsString('attachment;', (string) $response->headers->get('Content-Disposition'));
+        $this->assertStringContainsString('1. KESEHATAN KERJA.pdf', (string) $response->headers->get('Content-Disposition'));
     }
 
     public function test_show_redirects_to_translated_slug_when_locale_switches(): void

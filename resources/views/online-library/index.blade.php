@@ -123,12 +123,9 @@
                                                 <i class="fa-solid fa-book-open"></i>
                                                 <span>{{ __('Baca & Detail') }}</span>
                                             </a>
-                                            @if($item->file_url)
+                                            @if($item->file_path || $item->file_url)
                                                 <a
-                                                    href="{{ $item->file_url }}"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    download="{{ $item->file_name ?: ($item->slug . '.pdf') }}"
+                                                    href="{{ route('online-library.file', ['slug' => $item->slug, 'download' => 1]) }}"
                                                     class="btn-library-download"
                                                     title="{{ __('Unduh PDF') }}"
                                                     aria-label="{{ __('Unduh PDF') }} - {{ $item->title }}"
