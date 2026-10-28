@@ -34,9 +34,10 @@
         <section id="customer-info" class="py-5" style="background: radial-gradient(circle 340px at 10% 15%, rgba(183, 228, 229, 0.45), rgba(183, 228, 229, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef7fd 55%, #f8fafc 100%);">
             <div class="container">
                 <!-- JAM KUNJUNGAN PASIEN -->
-                <div class="section-heading text-center mb-5">
-                    <h2 class="d-inline-block position-relative pb-2 border-bottom border-primary border-2">{{ __('Jam Kunjungan Pasien') }}</h2>
-                    <p class="mt-3 text-muted">{{ __('Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:') }}</p>
+                <div class="section-title text-center mb-5">
+                    <h2 class="fw-bold">{{ __('Jam Kunjungan Pasien') }}</h2>
+                    <div class="divider"></div>
+                    <p class="text-muted mt-3">{{ __('Untuk menjaga ketenangan dan kenyamanan pasien, kami mohon Anda dapat melakukan kunjungan sesuai dengan ketentuan berikut:') }}</p>
                 </div>
                 
                 <div class="row g-4 justify-content-center mb-5">
@@ -77,8 +78,9 @@
                 </div>
 
                 <!-- KETENTUAN PENGUNJUNG -->
-                <div class="section-heading text-center mb-5 mt-5">
-                    <h2 class="d-inline-block position-relative pb-2 border-bottom border-primary border-2">{{ __('Ketentuan Pengunjung') }}</h2>
+                <div class="section-title text-center mb-5 mt-5">
+                    <h2 class="fw-bold">{{ __('Ketentuan Pengunjung') }}</h2>
+                    <div class="divider"></div>
                 </div>
 
                 <div class="row justify-content-center">
@@ -109,6 +111,27 @@
                         </div>
                         <div class="text-center mt-5 text-muted fst-italic">
                             <p>{{ __('Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama di rawat di Rumah Sakit St. Elisabeth Semarang.') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOKASI RUMAH SAKIT -->
+                <div class="section-title text-center mb-4 mt-5">
+                    <h2 class="fw-bold">{{ __('Lokasi Rumah Sakit') }}</h2>
+                    <div class="divider"></div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm">
+                            <iframe
+                                src="https://www.google.com/maps?q=Rumah+Sakit+St.+Elisabeth+Semarang&output=embed"
+                                title="{{ __('Lokasi Rumah Sakit St. Elisabeth Semarang') }}"
+                                style="border: 0;"
+                                allowfullscreen
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
                         </div>
                     </div>
                 </div>

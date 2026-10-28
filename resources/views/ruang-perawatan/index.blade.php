@@ -52,20 +52,15 @@
 
         <section id="inpatient-room-facilities">
             <div class="container">
-                <div class="section-header">
-                    <span class="section-badge">
-                        <i class="fa-solid fa-bed-pulse"></i> {{ __('Akomodasi & Rawat Inap') }}
-                    </span>
-                    <h2 class="section-title">{{ __('Pilihan Ruang Rawat Inap') }}</h2>
+                <div class="section-title text-center mb-4">
+                    <h2 class="fw-bold">{{ __('Ruang Rawat Inap') }}</h2>
                     <div class="divider"></div>
-                    <p class="section-desc">
-                        {{ __('RS Santa Elisabeth menyediakan beragam pilihan ruang perawatan untuk kenyamanan dan pemulihan kesehatan optimal Anda dengan standar mutu pelayanan prima.') }}
-                    </p>
+                    <p class="text-muted mt-3">{{ __('RS Santa Elisabeth menyediakan beragam pilihan ruang perawatan untuk kenyamanan dan pemulihan kesehatan optimal Anda dengan standar mutu pelayanan prima.') }}</p>
                 </div>
 
                 <div class="row g-4">
                     @forelse($roomsData as $room)
-                        <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
+                        <div class="col-12 col-md-6 col-lg-4 room-card-col reveal-on-scroll">
                             <div class="inpatient-room-card">
                                 <div class="card-accent-bar"></div>
                                 <div class="room-thumb-wrapper">
@@ -123,8 +118,8 @@
                                         @php
                                             $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
                                         @endphp
-                                        <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-wa">
-                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya Ketersediaan') }}
+                                        <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-wa-icon" title="{{ __('Tanya Ketersediaan via WhatsApp') }}" aria-label="{{ __('Tanya Ketersediaan via WhatsApp') }}">
+                                            <i class="fa-brands fa-whatsapp"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -488,7 +483,7 @@
 
                 <div class="row g-4">
                     @forelse($standardRooms as $room)
-                        <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3 reveal-on-scroll">
                             <div class="standard-room-card room-{{ strtolower(str_replace(' ', '', $room->name)) }}">
                                 <div class="card-top-bar"></div>
                                 <div class="std-img-wrapper">
