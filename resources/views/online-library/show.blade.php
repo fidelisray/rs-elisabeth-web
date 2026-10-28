@@ -37,6 +37,9 @@
             @php
                 $formattedSize = $document->formattedFileSize();
                 $fileName = $document->file_name ?: ($document->slug . '.pdf');
+                $hasDocumentFile = !empty($document->file_path) || !empty($document->file_url);
+                $inlineFileUrl = route('online-library.file', ['slug' => $document->slug]);
+                $downloadFileUrl = route('online-library.file', ['slug' => $document->slug, 'download' => 1]);
             @endphp
 
             <section class="library-section">
@@ -86,10 +89,10 @@
                                         </div>
                                     </div>
 
-                                    @if($document->file_url)
+                                    @if($hasDocumentFile)
                                         <div class="library-file-actions">
                                             <a
-                                                href="{{ $document->file_url }}"
+                                                href="{{ $inlineFileUrl }}"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 class="btn btn-outline-primary"
@@ -98,10 +101,7 @@
                                                 <span>{{ __('Buka Layar Penuh') }}</span>
                                             </a>
                                             <a
-                                                href="{{ $document->file_url }}"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                download="{{ $fileName }}"
+                                                href="{{ $downloadFileUrl }}"
                                                 class="btn btn-primary"
                                                 style="background-color: var(--secondary-color, #026199); border-color: var(--secondary-color, #026199);"
                                             >
@@ -113,8 +113,8 @@
                                 </div>
                             </div>
 
-                            <!-- Penampil Isi Dokumen PDF (Embedded PDF Viewer) -->
-                            @if($document->file_url)
+                            <!-- Penampil Isi Dokumen PDF (Embedded PDF Viewer via Same-Origin Stream) -->
+                            @if($hasDocumentFile)
                                 <div class="library-viewer-wrapper">
                                     <div class="library-viewer-header">
                                         <div class="d-flex align-items-center gap-2 text-truncate">
@@ -122,7 +122,7 @@
                                             <span class="fw-semibold text-truncate">{{ __('Pratinjau Isi Dokumen') }}: {{ $document->title }}</span>
                                         </div>
                                         <a
-                                            href="{{ $document->file_url }}"
+                                            href="{{ $inlineFileUrl }}"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             class="btn btn-sm btn-outline-light rounded-pill px-3 flex-shrink-0"
@@ -137,30 +137,17 @@
                                             <i class="fa-solid fa-circle-info text-primary me-1"></i>
                                             {{ __('Jika pratinjau dokumen tidak tampil penuh pada layar ponsel Anda, silakan buka atau unduh PDF secara langsung.') }}
                                         </p>
-                                        <a href="{{ $document->file_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">
+                                        <a href="{{ $inlineFileUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">
                                             <i class="fa-solid fa-file-pdf me-1"></i> {{ __('Buka PDF di Perangkat Anda') }}
                                         </a>
                                     </div>
 
-                                    <object
-                                        data="{{ $document->file_url }}#toolbar=1&navpanes=0&scrollbar=1&view=FitH"
-                                        type="application/pdf"
+                                    <iframe
+                                        src="{{ $inlineFileUrl }}#toolbar=1&navpanes=0&scrollbar=1&view=FitH"
                                         class="library-pdf-frame"
-                                        aria-label="{{ $document->title }}"
-                                    >
-                                        <iframe
-                                            src="{{ $document->file_url }}#toolbar=1&navpanes=0&scrollbar=1&view=FitH"
-                                            class="library-pdf-frame"
-                                            title="{{ $document->title }}"
-                                        >
-                                            <div class="p-5 text-center text-white">
-                                                <p class="mb-3">{{ __('Browser Anda tidak mendukung penampil PDF secara langsung.') }}</p>
-                                                <a href="{{ $document->file_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-light rounded-pill px-4 fw-bold">
-                                                    <i class="fa-solid fa-download me-2"></i> {{ __('Unduh Dokumen PDF') }}
-                                                </a>
-                                            </div>
-                                        </iframe>
-                                    </object>
+                                        title="{{ $document->title }}"
+                                        loading="lazy"
+                                    ></iframe>
                                 </div>
                             @else
                                 <div class="empty-state-card p-5 text-center rounded-4" style="background-color: rgba(2, 97, 153, 0.03); border: 2px dashed rgba(2, 97, 153, 0.2);">

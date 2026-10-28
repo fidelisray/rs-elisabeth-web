@@ -103,6 +103,7 @@ Route::prefix('news')->name('news.')->group(function () {
 // Perpustakaan Online (Online Library)
 Route::prefix('perpustakaan-online')->name('online-library.')->group(function () {
     Route::get('/', [OnlineLibraryController::class, 'index'])->name('index');
+    Route::get('/{slug}/file', [OnlineLibraryController::class, 'file'])->name('file');
     Route::get('/{slug}', [OnlineLibraryController::class, 'show'])->name('show');
 });
 
