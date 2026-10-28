@@ -7,6 +7,7 @@ use App\Http\Controllers\PromotionsController;
 use App\Http\Controllers\GlossaryController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OnlineLibraryController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -97,6 +98,12 @@ Route::prefix('articles')->name('articles.')->group(function () {
 Route::prefix('news')->name('news.')->group(function () {
     Route::get('/', [NewsController::class, 'index'])->name('index');
     Route::get('/{slug}', [NewsController::class, 'show'])->name('show');
+});
+
+// Perpustakaan Online (Online Library)
+Route::prefix('perpustakaan-online')->name('online-library.')->group(function () {
+    Route::get('/', [OnlineLibraryController::class, 'index'])->name('index');
+    Route::get('/{slug}', [OnlineLibraryController::class, 'show'])->name('show');
 });
 
 // Route Language Switcher

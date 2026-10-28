@@ -44,6 +44,7 @@
                             <li class="footer-list mb-3"><a href="{{{ route('tentang-kami.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Tentang Kami') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('news.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('ElisaNews') }}</a></li>
                             <li class="footer-list mb-3"><a href="{{{ route('promotions.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Promo Menarik') }}</a></li>
+                            <li class="footer-list mb-3"><a href="{{{ route('online-library.index') }}}"><i class="fa-solid fa-angle-right me-2" style="color: var(--accent-color); font-size: 0.8rem;"></i> {{ __('Perpustakaan Online') }}</a></li>
                         </ul>
                     </div>
                     <div class="col-6">
