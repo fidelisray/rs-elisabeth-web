@@ -1,4 +1,4 @@
-import { state } from './dokterService.js';
+import { state, getSpecialtyMap } from './dokterService.js';
 
 export function getLocale() {
     return document.documentElement.lang?.toLowerCase().startsWith('en') ? 'en' : 'id';
@@ -21,8 +21,12 @@ export const I18N = {
         paginationInputTitle: "Ketik halaman lalu Enter",
         clinicResult: "Hasil Pencarian Klinik:",
         nameResult: "Hasil Pencarian Nama:",
+        searchResult: "Hasil Pencarian:",
         specialty: "Spesialisasi:",
         selectSpecialty: "Pilih Spesialisasi",
+        doctorsAvailable: "dokter tersedia",
+        removeFilter: "Hapus filter",
+        clearKeyword: "Hapus kata kunci",
         profileLoading: "Memuat profil dokter...",
         profileEmpty: "Informasi belum diisi.",
         profileNotFound: "Profil dokter belum tersedia.",
@@ -44,8 +48,12 @@ export const I18N = {
         paginationInputTitle: "Type page and press Enter",
         clinicResult: "Clinic Search Results:",
         nameResult: "Name Search Results:",
+        searchResult: "Search Results:",
         specialty: "Specialty:",
         selectSpecialty: "Select Specialty",
+        doctorsAvailable: "doctors available",
+        removeFilter: "Remove filter",
+        clearKeyword: "Clear keyword",
         profileLoading: "Loading doctor profile...",
         profileEmpty: "Information has not been provided.",
         profileNotFound: "Doctor profile is not available.",
@@ -80,11 +88,16 @@ export function renderProfile(status, profile = null) {
     }
 }
 
-function getSpecialtyName(specialtyCode) {
+export function getSpecialtyName(specialtyCode) {
     let name = t('generalSpecialist');
     if (specialtyCode) {
-        const option = Array.from(document.querySelectorAll('.clinic-option')).find((item) => item.dataset.code === String(specialtyCode));
-        if (option) name = option.dataset.value;
+        const map = getSpecialtyMap();
+        if (map && map.has(String(specialtyCode))) {
+            name = map.get(String(specialtyCode));
+        } else {
+            const option = Array.from(document.querySelectorAll('.clinic-option')).find((item) => item.dataset.code === String(specialtyCode));
+            if (option) name = option.dataset.value;
+        }
     }
     return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
@@ -135,21 +148,21 @@ export function createScheduleGrid(dokter) {
 
 export function createDoctorCard(dokter) {
     return `
-        <div class="card shadow-sm border-0 mb-3">
-            <div class="card-body">
+        <div class="card shadow-sm border-0 mb-3 rounded-4 doctor-card-item">
+            <div class="card-body p-3 p-md-4">
                 <div class="row align-items-center">
-                    <div class="col-12 col-md-3 border-end">
-                        <div class="p-4 text-center">
+                    <div class="col-12 col-md-4 col-xl-2 border-end text-center mb-3 mb-md-0 doctor-card-photo">
+                        <div class="p-2 text-center">
                             <img
                                 src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(dokter.paramedicCode)}.png"
-                                class="rounded-circle img-fluid mb-3"
-                                style="width:180px;height:180px;object-fit:cover;"
+                                class="rounded-circle img-fluid mb-3 shadow-sm doctor-profile-thumb"
+                                style="width:145px;height:145px;object-fit:cover;"
                                 alt="${t('doctorPhoto')}"
                                 onerror="this.onerror=null; this.src='/images/default.png';">
                             <span class="badge bg-primary mb-3 d-none fw-bold">
                                     ${escapeHtml(getSpecialtyName(dokter.specialtyCode))}
                             </span>
-                            <div class="container my-3 group-btn">
+                            <div class="container my-2 group-btn px-0">
                                 <a 
                                     href='#' 
                                     class='btn-cek-profil'
@@ -164,8 +177,8 @@ export function createDoctorCard(dokter) {
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-9 mx-auto">
-                        <div class="container py-4">
+                    <div class="col-12 col-md-8 col-xl-10 doctor-card-main">
+                        <div class="container-fluid px-2 py-2">
                             <div class="dokter-header mb-0">
                                 <h5 class="fw-bold mb-1">${escapeHtml(dokter.paramedicName)}</h5>
                                 <span class="speciality-badge">
@@ -325,7 +338,7 @@ export function showLoading() {
     const container = document.getElementById("daftar-dokter");
     if (container) {
         container.innerHTML = `
-            <div class="container text-center py-5">
+            <div class="doctor-state container text-center py-5">
                 <div class="spinner-border text-primary" role="status"></div>
                 <p class="mt-2 text-muted">${t('loadingDoctors')}</p>
             </div>
@@ -339,7 +352,7 @@ export function showError() {
     const container = document.getElementById("daftar-dokter");
     if (container) {
         container.innerHTML = `
-            <div class="empty-state-container container text-center py-5 my-4 bg-white rounded-4 shadow-sm" style="max-width: 600px; border: 1px solid rgba(0,0,0,0.05);">
+            <div class="doctor-state empty-state-container container text-center py-5 my-4 bg-white rounded-4 shadow-sm" style="max-width: 600px; border: 1px solid rgba(0,0,0,0.05);">
                 <div class="empty-state-icon mb-4">
                     <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
                 </div>
