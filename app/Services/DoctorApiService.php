@@ -162,14 +162,17 @@ class DoctorApiService
         });
     }
 
-    public function getDaftarSpesialisasi(): array
+    public function getDaftarSpesialisasi(bool $forceRefresh = false): array
     {
         $cacheKey = 'specialty_list_';
-        $ttl      = config('rsapi.cache_ttl.specialty');
+        $fallbackKey = 'specialty_list_fallback';
+        $ttl = (int) config('rsapi.cache_ttl.specialty', 3600);
 
-        $cached = Cache::get($cacheKey);
-        if ($cached !== null) {
-            return $cached;
+        if (! $forceRefresh) {
+            $cached = Cache::get($cacheKey);
+            if (is_array($cached) && ! empty($cached)) {
+                return $cached;
+            }
         }
 
         try {
@@ -181,28 +184,43 @@ class DoctorApiService
 
             if ($response->successful()) {
                 $data = $this->decodeData($response->json('Data')) ?? [];
-                if (!is_array($data)) {
+                if (! is_array($data)) {
                     $data = [];
                 }
-                Cache::put($cacheKey, $data, $ttl);
-                return $data;
+                if (! empty($data)) {
+                    Cache::put($cacheKey, $data, $ttl);
+                    Cache::forever($fallbackKey, $data);
+
+                    return $data;
+                }
             }
 
             Log::warning('API dokter gagal', [
                 'status' => $response->status(),
                 'body'   => $response->body(),
             ]);
-            return [];
-
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error('Gagal connect ke API RS', ['error' => $e->getMessage()]);
-            return [];
         }
+
+        $fallback = Cache::get($fallbackKey, []);
+        if (is_array($fallback) && ! empty($fallback)) {
+            Cache::put($cacheKey, $fallback, min(max($ttl, 60), 300));
+
+            return $fallback;
+        }
+
+        return [];
     }
 
     public function getCachedSpesialisasi(): array
     {
-        return Cache::get('specialty_list_', []);
+        $cached = Cache::get('specialty_list_');
+        if (is_array($cached) && ! empty($cached)) {
+            return $cached;
+        }
+
+        return $this->getDaftarSpesialisasi();
     }
 
     public function getCachedUnits(array $filters = []): array
@@ -286,17 +304,13 @@ class DoctorApiService
     {
         if (! config('rsapi.enabled', true)) return 0;
 
-        if ($forceRefresh) {
-            Cache::forget('specialty_list_');
-        }
-
         $blacklist = config('rsapi.blacklist_specialties', []);
         $delay = config('rsapi.fetch_delay_microseconds', 150000);
 
         // Ambil specialty codes secara dinamis dari API
         $spesialisasiList = [];
 
-        foreach ($this->getDaftarSpesialisasi() as $items) {
+        foreach ($this->getDaftarSpesialisasi($forceRefresh) as $items) {
             $code = ((array) $items)['Code'] ?? null;
             if (is_string($code) && $code !== '' && !in_array($code, $blacklist, true)) {
                 $spesialisasiList[] = $code;
