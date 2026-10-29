@@ -705,9 +705,9 @@
     }
 
     #daftar-dokter .doctor-card-photo {
-        flex: 0 0 190px;
-        width: 190px;
-        max-width: 190px;
+        flex: 0 0 210px;
+        width: 210px;
+        max-width: 210px;
     }
 
     #daftar-dokter .doctor-card-main {
@@ -738,11 +738,6 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
 }
 
-.doctor-profile-thumb {
-    border: 3px solid rgba(0, 143, 215, 0.12);
-    padding: 3px;
-    background: #ffffff;
-}
 
 /* main.nav {
     width: 100vw;
@@ -864,39 +859,46 @@ div.schedule.off-day h5.schedule-title {
 .group-btn {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
+    width: 100%;
 }
 
 .group-btn a {
-    font-weight: 550;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 155px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
     text-decoration: none;
-    transition: all 0.28s ease-in-out;
+    white-space: nowrap;
+    transition: all 0.25s ease-in-out;
+    box-sizing: border-box;
 }
 
 a.btn-cek-profil {
-    padding: 2px 1.8rem;
     background-color: var(--accent-color);
     color: #124f8c;
-    border-radius: 1.1rem;
 }
 
 a.btn-buat-janji {
-    margin-top: 8px;
-    padding: 2px 1.8rem;
     background-color: var(--primary-color);
     color: var(--accent-color);
-    border-radius: 1.1rem;
 }
 
 a.btn-cek-profil:hover {
-    /* background-color: #f8c704; */
     background-color: #123f8c;
     color: var(--accent-color);
 }
 
 a.btn-buat-janji:hover {
-    /* background-color: #0c61ea; */
     color: #edda0f;
     background-color: #123f8c;
 }
@@ -974,6 +976,10 @@ div#detailDokter .doctor-card .profile-header {
     color: #fff;
     padding: 24px;
     position: relative;
+}
+
+div#detailDokter #namaDokter {
+    color: #ffffff;
 }
 
 div#detailDokter .close-btn {

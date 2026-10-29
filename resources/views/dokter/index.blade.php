@@ -193,7 +193,7 @@
                                         
                                     </div>
                                     <div>
-                                        <h5 class="mb-1 fw-bold" id="namaDokter">
+                                        <h5 class="mb-1 fw-bold text-white" id="namaDokter">
                                         </h5>
                                         <span class="speciality-badge">
                                             <p class="speciality-title fw-bold"></p>
