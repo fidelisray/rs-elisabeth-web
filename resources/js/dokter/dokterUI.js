@@ -1,13 +1,31 @@
-import { state, getSpecialtyMap } from './dokterService.js';
+import { state, getSpecialtyMap } from "./dokterService.js";
 
 export function getLocale() {
-    return document.documentElement.lang?.toLowerCase().startsWith('en') ? 'en' : 'id';
+    return document.documentElement.lang?.toLowerCase().startsWith("en")
+        ? "en"
+        : "id";
 }
 
 export const I18N = {
     id: {
-        days: { 1: "Senin", 2: "Selasa", 3: "Rabu", 4: "Kamis", 5: "Jumat", 6: "Sabtu", 7: "Minggu" },
-        dayList: ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"],
+        days: {
+            1: "Senin",
+            2: "Selasa",
+            3: "Rabu",
+            4: "Kamis",
+            5: "Jumat",
+            6: "Sabtu",
+            7: "Minggu",
+        },
+        dayList: [
+            "Senin",
+            "Selasa",
+            "Rabu",
+            "Kamis",
+            "Jumat",
+            "Sabtu",
+            "Minggu",
+        ],
         generalSpecialist: "Spesialis Umum",
         scheduleNotAvailable: "Jadwal belum tersedia",
         doctorPhoto: "Foto Dokter",
@@ -15,9 +33,11 @@ export const I18N = {
         makeAppointment: "Buat Janji",
         doctorSchedule: "Jadwal Dokter",
         doctorNotFoundTitle: "Dokter Tidak Ditemukan",
-        doctorNotFoundDesc: "Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.",
+        doctorNotFoundDesc:
+            "Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.",
         loadingDoctors: "Memuat data dokter...",
-        modalScheduleNotAvailable: "Jadwal praktik belum tersedia untuk saat ini.",
+        modalScheduleNotAvailable:
+            "Jadwal praktik belum tersedia untuk saat ini.",
         paginationInputTitle: "Ketik halaman lalu Enter",
         clinicResult: "Hasil Pencarian Klinik:",
         nameResult: "Hasil Pencarian Nama:",
@@ -30,11 +50,28 @@ export const I18N = {
         profileLoading: "Memuat profil dokter...",
         profileEmpty: "Informasi belum diisi.",
         profileNotFound: "Profil dokter belum tersedia.",
-        profileUnavailable: "Profil belum dapat dimuat. Silakan coba lagi nanti."
+        profileUnavailable:
+            "Profil belum dapat dimuat. Silakan coba lagi nanti.",
     },
     en: {
-        days: { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" },
-        dayList: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        days: {
+            1: "Monday",
+            2: "Tuesday",
+            3: "Wednesday",
+            4: "Thursday",
+            5: "Friday",
+            6: "Saturday",
+            7: "Sunday",
+        },
+        dayList: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+        ],
         generalSpecialist: "General Practitioner",
         scheduleNotAvailable: "Schedule not available",
         doctorPhoto: "Doctor's Photo",
@@ -42,9 +79,11 @@ export const I18N = {
         makeAppointment: "Book Appointment",
         doctorSchedule: "Doctor Schedule",
         doctorNotFoundTitle: "Doctor Not Found",
-        doctorNotFoundDesc: "Sorry, we could not find any doctors or clinics matching your search keywords. Please try a different specialty or doctor name.",
+        doctorNotFoundDesc:
+            "Sorry, we could not find any doctors or clinics matching your search keywords. Please try a different specialty or doctor name.",
         loadingDoctors: "Loading doctors data...",
-        modalScheduleNotAvailable: "Practice schedule is not available at the moment.",
+        modalScheduleNotAvailable:
+            "Practice schedule is not available at the moment.",
         paginationInputTitle: "Type page and press Enter",
         clinicResult: "Clinic Search Results:",
         nameResult: "Name Search Results:",
@@ -57,49 +96,84 @@ export const I18N = {
         profileLoading: "Loading doctor profile...",
         profileEmpty: "Information has not been provided.",
         profileNotFound: "Doctor profile is not available.",
-        profileUnavailable: "The profile could not be loaded. Please try again later."
-    }
+        profileUnavailable:
+            "The profile could not be loaded. Please try again later.",
+    },
 };
 
 export function t(key) {
     const locale = getLocale();
-    return I18N[locale]?.[key] ?? I18N['id'][key];
+    return I18N[locale]?.[key] ?? I18N["id"][key];
 }
 
 export function escapeHtml(value) {
-    return String(value ?? '').replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+    return String(value ?? "").replace(
+        /[&<>"']/g,
+        (character) =>
+            ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+            })[character],
+    );
 }
 
 export function renderProfile(status, profile = null) {
-    const notice = document.getElementById('doctor-profile-status');
+    const notice = document.getElementById("doctor-profile-status");
     if (notice) {
-        notice.textContent = status === 'ready' ? '' : t({ loading: 'profileLoading', not_found: 'profileNotFound', unavailable: 'profileUnavailable' }[status] ?? 'profileEmpty');
-        notice.hidden = status === 'ready';
+        notice.textContent =
+            status === "ready"
+                ? ""
+                : t(
+                      {
+                          loading: "profileLoading",
+                          not_found: "profileNotFound",
+                          unavailable: "profileUnavailable",
+                      }[status] ?? "profileEmpty",
+                  );
+        notice.hidden = status === "ready";
     }
-    for (const field of ['bio', 'location', 'experience', 'education']) {
+    for (const field of ["bio", "location", "experience", "education"]) {
         const element = document.getElementById(`doctor-profile-${field}`);
-        if (element) element.textContent = status === 'ready' && typeof profile?.[field] === 'string' && profile[field].trim() ? profile[field] : t('profileEmpty');
+        if (element)
+            element.textContent =
+                status === "ready" &&
+                typeof profile?.[field] === "string" &&
+                profile[field].trim()
+                    ? profile[field]
+                    : t("profileEmpty");
     }
-    if (status === 'ready' && profile) {
-        const name = document.getElementById('namaDokter');
+    if (status === "ready" && profile) {
+        const name = document.getElementById("namaDokter");
         if (name) name.textContent = profile.name;
-        const specialty = document.querySelector('#detailDokter .speciality-title');
-        if (specialty && profile.specialty_name) specialty.textContent = profile.specialty_name;
+        const specialty = document.querySelector(
+            "#detailDokter .speciality-title",
+        );
+        if (specialty && profile.specialty_name)
+            specialty.textContent = profile.specialty_name;
     }
 }
 
 export function getSpecialtyName(specialtyCode) {
-    let name = t('generalSpecialist');
+    let name = t("generalSpecialist");
     if (specialtyCode) {
         const map = getSpecialtyMap();
         if (map && map.has(String(specialtyCode))) {
             name = map.get(String(specialtyCode));
         } else {
-            const option = Array.from(document.querySelectorAll('.clinic-option')).find((item) => item.dataset.code === String(specialtyCode));
+            const option = Array.from(
+                document.querySelectorAll(".clinic-option"),
+            ).find((item) => item.dataset.code === String(specialtyCode));
             if (option) name = option.dataset.value;
         }
     }
-    return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return name
+        .toLowerCase()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
 }
 
 /**
@@ -115,16 +189,16 @@ export function createScheduleGrid(dokter) {
             html: `
                 <div class="d-flex align-items-center justify-content-center flex-column py-4 bg-light rounded-3 w-100 h-100" style="border: 2px dashed rgba(0,0,0,0.05);">
                     <i class="fa-regular fa-calendar-xmark mb-2" style="font-size: 1.5rem; color: var(--secondary-color); opacity: 0.3;"></i>
-                    <span class="text-muted small fw-medium">${t('scheduleNotAvailable')}</span>
+                    <span class="text-muted small fw-medium">${t("scheduleNotAvailable")}</span>
                 </div>
             `,
-            gridStyle: ''
+            gridStyle: "",
         };
     }
 
-    let html = '';
+    let html = "";
     activeDays.forEach((day) => {
-        let slotsHtml = '';
+        let slotsHtml = "";
         schedule[day].forEach((item) => {
             item.jam.forEach((jam) => {
                 slotsHtml += `
@@ -137,13 +211,13 @@ export function createScheduleGrid(dokter) {
         });
         html += `
             <div class="jadwal-day-col">
-                <div class="jadwal-day-name">${t('days')[day]}</div>
+                <div class="jadwal-day-name">${t("days")[day]}</div>
                 <div class="jadwal-slots">${slotsHtml}</div>
             </div>
         `;
     });
 
-    return { html, gridStyle: '' };
+    return { html, gridStyle: "" };
 }
 
 export function createDoctorCard(dokter) {
@@ -155,9 +229,9 @@ export function createDoctorCard(dokter) {
                         <div class="p-2 text-center">
                             <img
                                 src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(dokter.paramedicCode)}.png"
-                                class="rounded-circle img-fluid mb-3 shadow-sm doctor-profile-thumb"
-                                style="width:145px;height:145px;object-fit:cover;"
-                                alt="${t('doctorPhoto')}"
+                                class="img-fluid mb-3 rounded-3"
+                                style="width:165px;height:200px;object-fit:cover;object-position:top center;"
+                                alt="${t("doctorPhoto")}"
                                 onerror="this.onerror=null; this.src='/images/default.png';">
                             <span class="badge bg-primary mb-3 d-none fw-bold">
                                     ${escapeHtml(getSpecialtyName(dokter.specialtyCode))}
@@ -169,11 +243,17 @@ export function createDoctorCard(dokter) {
                                     data-bs-toggle='modal'
                                     data-bs-target='#detailDokter'
                                     data-id='${escapeHtml(dokter.entry_id)}'
-                                    data-jadwal=''>${t('checkProfile')}</a>
+                                    data-jadwal=''>
+                                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                                    <span>${t("checkProfile")}</span>
+                                </a>
                                 <a
                                     href='https://regonline.rs-elisabeth.com/'
                                     class='btn-buat-janji'
-                                    target='_blank'>${t('makeAppointment')}</a>
+                                    target='_blank'>
+                                    <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+                                    <span>${t("makeAppointment")}</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -188,7 +268,7 @@ export function createDoctorCard(dokter) {
                             <div class="jadwal-wrapper">
                                 <h2 class="jadwal-title">
                                     <i class="fa-regular fa-calendar"></i>
-                                    ${t('doctorSchedule')}
+                                    ${t("doctorSchedule")}
                                 </h2>
                                 <div class="jadwal-scroll">
                                     <div class="jadwal-grid" id="jadwalGrid-${escapeHtml(dokter.paramedicCode)}">
@@ -212,9 +292,9 @@ export function renderDoctorPage(onPageChange) {
                 <div class="empty-state-icon mb-4">
                     <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
                 </div>
-                <h4 class="fw-bold text-dark mb-3">${t('doctorNotFoundTitle')}</h4>
+                <h4 class="fw-bold text-dark mb-3">${t("doctorNotFoundTitle")}</h4>
                 <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
-                    ${t('doctorNotFoundDesc')}
+                    ${t("doctorNotFoundDesc")}
                 </p>
             </div>
         `;
@@ -222,17 +302,24 @@ export function renderDoctorPage(onPageChange) {
         return;
     }
 
-    const totalPages = Math.ceil(state.filteredDoctorList.length / state.itemsPerPage);
+    const totalPages = Math.ceil(
+        state.filteredDoctorList.length / state.itemsPerPage,
+    );
     if (state.currentPage > totalPages) state.currentPage = totalPages;
     if (state.currentPage < 1) state.currentPage = 1;
 
     const startIndex = (state.currentPage - 1) * state.itemsPerPage;
-    const pageItems = state.filteredDoctorList.slice(startIndex, startIndex + state.itemsPerPage);
+    const pageItems = state.filteredDoctorList.slice(
+        startIndex,
+        startIndex + state.itemsPerPage,
+    );
 
     container.innerHTML = pageItems.map(createDoctorCard).join("");
 
     pageItems.forEach((doctor) => {
-        const grid = document.getElementById(`jadwalGrid-${doctor.paramedicCode}`);
+        const grid = document.getElementById(
+            `jadwalGrid-${doctor.paramedicCode}`,
+        );
         if (grid) {
             const { html } = createScheduleGrid(doctor);
             grid.innerHTML = html;
@@ -249,7 +336,9 @@ export function renderPagination(totalPages, onPageChange) {
     if (!paginationContainer) {
         paginationContainer = document.createElement("nav");
         paginationContainer.id = "doctorPagination";
-        document.getElementById("daftar-dokter").insertAdjacentElement("afterend", paginationContainer);
+        document
+            .getElementById("daftar-dokter")
+            .insertAdjacentElement("afterend", paginationContainer);
     }
 
     if (totalPages <= 1) {
@@ -263,20 +352,28 @@ export function renderPagination(totalPages, onPageChange) {
         for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
         if (state.currentPage <= 3) {
-            pages = [1, 2, 3, 'INPUT', totalPages - 1, totalPages];
+            pages = [1, 2, 3, "INPUT", totalPages - 1, totalPages];
         } else if (state.currentPage >= totalPages - 2) {
-            pages = [1, 2, 'INPUT', totalPages - 2, totalPages - 1, totalPages];
+            pages = [1, 2, "INPUT", totalPages - 2, totalPages - 1, totalPages];
         } else {
-            pages = [1, 'INPUT', state.currentPage - 1, state.currentPage, state.currentPage + 1, 'INPUT_2', totalPages];
+            pages = [
+                1,
+                "INPUT",
+                state.currentPage - 1,
+                state.currentPage,
+                state.currentPage + 1,
+                "INPUT_2",
+                totalPages,
+            ];
         }
     }
 
     let pagesHtml = "";
-    pages.forEach(p => {
-        if (p === 'INPUT' || p === 'INPUT_2') {
+    pages.forEach((p) => {
+        if (p === "INPUT" || p === "INPUT_2") {
             pagesHtml += `
                 <li class="page-item">
-                    <input type="number" class="page-link pagination-input jump-page-input" placeholder="..." min="1" max="${totalPages}" title="${t('paginationInputTitle')}">
+                    <input type="number" class="page-link pagination-input jump-page-input" placeholder="..." min="1" max="${totalPages}" title="${t("paginationInputTitle")}">
                 </li>
             `;
         } else {
@@ -304,34 +401,41 @@ export function renderPagination(totalPages, onPageChange) {
     paginationContainer.querySelectorAll("button.page-link").forEach((btn) => {
         btn.addEventListener("click", (e) => {
             const targetPage = parseInt(e.currentTarget.dataset.page);
-            if (!targetPage || targetPage < 1 || targetPage > totalPages) return;
+            if (!targetPage || targetPage < 1 || targetPage > totalPages)
+                return;
             onPageChange(targetPage);
         });
     });
 
     // Enter event for inputs
-    paginationContainer.querySelectorAll(".jump-page-input").forEach((input) => {
-        input.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                const targetPage = parseInt(e.target.value);
-                if (targetPage && targetPage >= 1 && targetPage <= totalPages) {
-                    onPageChange(targetPage);
-                } else if (targetPage) {
-                    // Reset to empty if invalid page
-                    e.target.value = ""; 
+    paginationContainer
+        .querySelectorAll(".jump-page-input")
+        .forEach((input) => {
+            input.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const targetPage = parseInt(e.target.value);
+                    if (
+                        targetPage &&
+                        targetPage >= 1 &&
+                        targetPage <= totalPages
+                    ) {
+                        onPageChange(targetPage);
+                    } else if (targetPage) {
+                        // Reset to empty if invalid page
+                        e.target.value = "";
+                    }
                 }
-            }
+            });
+            // Clear placeholder on focus for cleaner UX
+            input.addEventListener("focus", (e) => {
+                e.target.placeholder = "";
+            });
+            input.addEventListener("blur", (e) => {
+                e.target.placeholder = "...";
+                e.target.value = ""; // clear typed text if they didn't press enter
+            });
         });
-        // Clear placeholder on focus for cleaner UX
-        input.addEventListener("focus", (e) => {
-            e.target.placeholder = "";
-        });
-        input.addEventListener("blur", (e) => {
-            e.target.placeholder = "...";
-            e.target.value = ""; // clear typed text if they didn't press enter
-        });
-    });
 }
 
 export function showLoading() {
@@ -340,7 +444,7 @@ export function showLoading() {
         container.innerHTML = `
             <div class="doctor-state container text-center py-5">
                 <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2 text-muted">${t('loadingDoctors')}</p>
+                <p class="mt-2 text-muted">${t("loadingDoctors")}</p>
             </div>
         `;
     }
@@ -356,9 +460,9 @@ export function showError() {
                 <div class="empty-state-icon mb-4">
                     <i class="fa-solid fa-user-doctor" style="font-size: 4.5rem; color: var(--secondary-color); opacity: 0.2;"></i>
                 </div>
-                <h4 class="fw-bold text-dark mb-3">${t('doctorNotFoundTitle')}</h4>
+                <h4 class="fw-bold text-dark mb-3">${t("doctorNotFoundTitle")}</h4>
                 <p class="text-muted mb-0 mx-auto" style="max-width: 80%;">
-                    ${t('doctorNotFoundDesc')}
+                    ${t("doctorNotFoundDesc")}
                 </p>
             </div>
         `;
@@ -373,7 +477,7 @@ export function renderModal(doctorData) {
     if (fotoDokter) {
         fotoDokter.innerHTML = `
             <img src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(doctorData.paramedicCode)}.png"
-            alt="${t('doctorPhoto')}"
+            alt="${t("doctorPhoto")}"
             onerror="this.onerror=null; this.src='/images/default.png';">
         `;
     }
@@ -383,28 +487,32 @@ export function renderModal(doctorData) {
         namaDokter.textContent = doctorData.paramedicName;
     }
 
-    const specialtyBadge = document.querySelector("#detailDokter .speciality-title");
+    const specialtyBadge = document.querySelector(
+        "#detailDokter .speciality-title",
+    );
     if (specialtyBadge) {
         specialtyBadge.textContent = getSpecialtyName(doctorData.specialtyCode);
     }
 
     // Render schedule cards in modal — clean responsive grid layout
-    let scheduleHtml = '';
+    let scheduleHtml = "";
     const schedule = doctorData.schedule;
-    const activeDays = Object.entries(schedule).filter(([, detail]) => detail.length > 0);
+    const activeDays = Object.entries(schedule).filter(
+        ([, detail]) => detail.length > 0,
+    );
 
     if (activeDays.length === 0) {
         scheduleHtml = `
             <div class="col-12">
                 <div class="d-flex align-items-center justify-content-center flex-column py-5 bg-light rounded-3 w-100" style="border: 2px dashed rgba(0,0,0,0.05);">
                     <i class="fa-regular fa-calendar-xmark mb-3" style="font-size: 2rem; color: var(--secondary-color); opacity: 0.3;"></i>
-                    <span class="text-muted fw-medium">${t('modalScheduleNotAvailable')}</span>
+                    <span class="text-muted fw-medium">${t("modalScheduleNotAvailable")}</span>
                 </div>
             </div>
         `;
     } else {
         activeDays.forEach(([day, detail]) => {
-            let timeSlotsHtml = '';
+            let timeSlotsHtml = "";
             detail.forEach((data) => {
                 data.jam.forEach((jam) => {
                     timeSlotsHtml += `
@@ -419,7 +527,7 @@ export function renderModal(doctorData) {
             scheduleHtml += `
                 <div class="col-6 col-md-4 col-lg-3 mb-3">
                     <div class="modal-schedule-card">
-                        <div class="modal-day-header">${t('dayList')[parseInt(day) - 1]}</div>
+                        <div class="modal-day-header">${t("dayList")[parseInt(day) - 1]}</div>
                         <div class="modal-time-list">
                             ${timeSlotsHtml}
                         </div>
