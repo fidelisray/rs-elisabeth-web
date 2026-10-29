@@ -15,8 +15,7 @@
         'resources/css/navbar-dropdown.css',
         'resources/css/top-bar.css',
         'resources/css/dokter.css',
-        'resources/css/jadwal_dokter.css',
-        'resources/css/search-and-quick-access.css'
+        'resources/css/jadwal_dokter.css'
     ])
 </head>
 <body>
@@ -31,89 +30,141 @@
             'subtitle' => __('Tim Dokter Berpengalaman kami akan selalu siap sedia untuk memberikan pelayanan kesehatan terbaik dan professional untuk anda dan keluarga.'),
             'headingTag' => 'h2',
         ])
-    <section id="doctor-filter-selection">
-        <!-- Toolbar / Search Widget -->
-        <div class="container">
-            <div class="search-widget shadow-sm">
-                <ul class="nav nav-tabs" id="searchTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link {{ request('klinik') ? '' : 'active' }}" data-bs-toggle="tab" data-bs-target="#doctor"
-                            type="button"><i class="fas fa-user-md me-2"></i>{{ __('Cari Spesialisasi & Dokter') }}</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link {{ request('klinik') ? 'active' : '' }}" data-bs-toggle="tab" data-bs-target="#clinic" type="button"><i
-                                class="fas fa-hospital me-2"></i>{{ __('Cari Klinik') }}</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="searchTabsContent">
-                    <!-- Tab Spesialisasi & Dokter -->
-                    <div class="tab-pane fade {{ request('klinik') ? '' : 'show active' }}" id="doctor">
-                        <div class="row g-3 align-items-center">
-                            <!-- Dropdown Spesialisasi -->
-                            <div class="col-md-4">
-                                <div class="dropdown w-100">
-                                    <button class="btn form-select text-start" style="height: 45px;" type="button" id="clinicDropdown" data-bs-toggle="dropdown" data-selected="">
-                                        {{ __('Pilih Spesialisasi') }}
+    {{-- Data spesialisasi untuk mapping dan pencarian client-side --}}
+    <script id="specialties-json" type="application/json">@json($spesialisasi ?? [])</script>
+
+    <div class="doctor-layout main-content py-4">
+        <section id="dokter-container" aria-label="{{ __('Daftar dokter') }}">
+            <div class="doctor-grid">
+
+                <!-- ========================================== -->
+                <!-- SIDEBAR FILTER                             -->
+                <!-- Mobile <768: bottom sheet | 768-1199: drawer | >=1200: sidebar sticky -->
+                <!-- ========================================== -->
+                <aside class="doctor-sidebar-col" aria-label="{{ __('Filter dokter') }}">
+                    <div class="offcanvas-xl offcanvas-start doctor-filter-panel" tabindex="-1" id="doctorFilterOffcanvas" aria-labelledby="doctorFilterOffcanvasLabel">
+                        <div class="doctor-sheet-handle d-md-none" aria-hidden="true"></div>
+                        <div class="offcanvas-header doctor-sheet-header">
+                            <h2 class="offcanvas-title doctor-sheet-title" id="doctorFilterOffcanvasLabel">
+                                <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                                {{ __('Filter Dokter') }}
+                            </h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#doctorFilterOffcanvas" aria-label="{{ __('Tutup') }}"></button>
+                        </div>
+
+                        <div class="offcanvas-body">
+                            <form class="doctor-filter-card" role="search" id="doctorFilterForm" novalidate>
+                                <header class="doctor-filter-head">
+                                    <div>
+                                        <h2 class="doctor-filter-title">{{ __('Cari Dokter') }}</h2>
+                                        <p class="doctor-filter-count" id="sidebarResultCount" role="status" aria-live="polite"></p>
+                                    </div>
+                                    <button type="button" id="btnResetAll" class="btn-reset-all" hidden>
+                                        <i class="fas fa-rotate-left" aria-hidden="true"></i>
+                                        {{ __('Reset semua') }}
                                     </button>
-                                    <div class="dropdown-menu p-0 w-100">
-                                        <div class="p-2 border-bottom">
-                                            <input type="text" id="clinicSearch" class="form-control" placeholder="{{ __('Cari Spesialisasi...') }}">
-                                        </div>
-                                        <div id="clinicList" class="clinic-list" style="max-height: 250px; overflow-y: auto;">
-                                            @foreach ($spesialisasi as $spesialis)
-                                            <button type="button" class="dropdown-item clinic-option" data-value="{{ $spesialis->Name }}" data-code="{{ $spesialis->Code }}">
-                                                {{ ucwords(strtolower($spesialis->Name)) }}
-                                            </button>
-                                            @endforeach
-                                        </div>
+                                </header>
+
+                                <!-- Pencarian nama dokter / klinik / spesialisasi -->
+                                <div class="doctor-field">
+                                    <label for="searchKeyword" class="doctor-label">{{ __('Nama dokter atau klinik') }}</label>
+                                    <div class="doctor-search-field">
+                                        <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
+                                        <input type="search" id="searchKeyword" class="doctor-search-input"
+                                               placeholder="{{ __('Contoh: dr. Budi, Poli Gigi') }}"
+                                               autocomplete="off" enterkeyhint="search">
+                                        <button type="button" id="btnClearSearch" class="doctor-search-clear" hidden aria-label="{{ __('Hapus pencarian') }}">
+                                            <i class="fas fa-circle-xmark" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- Search Nama Dokter -->
-                            <div class="col-md-4">
-                                <input type="text" id="searchKeyword" class="form-control" style="height: 45px;" placeholder="{{ __('Nama Dokter') }}">
-                            </div>
-                            <!-- Buttons -->
-                            <div class="col-md-4 d-flex gap-2">
-                                <button type="button" class="btn btn-primary-custom-sm flex-grow-1"><i class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
-                                <button type="button" id="btnReset" class="btn btn-outline-secondary px-3" style="border-radius: 50px;" title="{{ __('Reset Pencarian') }}"><i class="fas fa-undo"></i></button>
-                            </div>
+
+                                <!-- Chips filter aktif -->
+                                <ul class="doctor-chips" data-chips aria-label="{{ __('Filter aktif') }}" hidden></ul>
+
+                                <!-- Spesialisasi -->
+                                <fieldset class="doctor-specialty">
+                                    <legend class="doctor-label doctor-legend">
+                                        <span>{{ __('Spesialisasi') }}</span>
+                                        <span id="specialtyCountBadge" class="doctor-badge" hidden>0</span>
+                                    </legend>
+
+                                    <label for="specialtySearchInput" class="visually-hidden">{{ __('Cari spesialisasi') }}</label>
+                                    <div class="doctor-search-field doctor-search-field--sm">
+                                        <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
+                                        <input type="search" id="specialtySearchInput" class="doctor-search-input"
+                                               placeholder="{{ __('Cari spesialisasi...') }}" autocomplete="off">
+                                    </div>
+
+                                    <div class="doctor-specialty-actions">
+                                        <button type="button" id="btnSelectAllSpecs" class="doctor-link-btn">{{ __('Pilih semua yang tampil') }}</button>
+                                        <button type="button" id="btnClearSpecs" class="doctor-link-btn doctor-link-btn--muted">{{ __('Hapus pilihan') }}</button>
+                                    </div>
+
+                                    <div id="specialtyCheckboxes" class="doctor-specialty-list">
+                                        @foreach ($spesialisasi as $spesialis)
+                                        <div class="specialty-option" data-code="{{ $spesialis->Code }}">
+                                            <input class="specialty-checkbox"
+                                                   type="checkbox"
+                                                   value="{{ $spesialis->Code }}"
+                                                   id="spec_{{ $spesialis->Code }}"
+                                                   data-name="{{ ucwords(strtolower($spesialis->Name)) }}">
+                                            <label class="specialty-label" for="spec_{{ $spesialis->Code }}">
+                                                <span class="specialty-name">{{ ucwords(strtolower($spesialis->Name)) }}</span>
+                                                <span class="specialty-count" data-count aria-hidden="true"></span>
+                                            </label>
+                                        </div>
+                                        @endforeach
+                                        <p class="doctor-specialty-empty" id="specialtyEmpty" hidden>{{ __('Spesialisasi tidak ditemukan.') }}</p>
+                                    </div>
+                                </fieldset>
+
+                                <!-- Tombol utama: hanya di bottom sheet / drawer -->
+                                <footer class="doctor-filter-foot">
+                                    <button type="button" id="btnShowResults" class="btn btn-primary-custom doctor-show-btn"
+                                            data-bs-dismiss="offcanvas" data-bs-target="#doctorFilterOffcanvas">
+                                        {{ __('Tampilkan') }} <span id="resultCountBtn">0</span> {{ __('dokter') }}
+                                    </button>
+                                </footer>
+                            </form>
                         </div>
                     </div>
-                    
-                    <!-- Tab Klinik -->
-                    <div class="tab-pane fade {{ request('klinik') ? 'show active' : '' }}" id="clinic">
-                        <form class="row g-3 align-items-center" action="{{{ route('dokter.index') }}}" method="GET">
-                            <div class="col-md-8">
-                                <input type="text" name="klinik" class="form-control" style="height: 45px;" placeholder="{{ __('Nama Klinik') }}" value="{{ request('klinik') }}">
-                            </div>
-                            <div class="col-md-4 d-flex gap-2">
-                                <button class="btn btn-primary-custom-sm flex-grow-1" type="submit"><i class="fas fa-search me-2"></i>{{ __('Cari') }}</button>
-                                <a href="{{{ route('dokter.index') }}}" class="btn btn-outline-secondary px-3 d-flex align-items-center justify-content-center" style="border-radius: 50px;" title="{{ __('Reset Pencarian') }}"><i class="fas fa-undo"></i></a>
-                            </div>
-                        </form>
+                </aside>
+
+                <!-- ========================================== -->
+                <!-- DAFTAR DOKTER                              -->
+                <!-- ========================================== -->
+                <div class="doctor-content-col">
+                    <!-- Toolbar filter (hanya di bawah 1200px) -->
+                    <div class="doctor-toolbar d-xl-none">
+                        <button class="doctor-toolbar-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#doctorFilterOffcanvas" aria-controls="doctorFilterOffcanvas">
+                            <i class="fas fa-sliders-h" aria-hidden="true"></i>
+                            <span>{{ __('Filter') }}</span>
+                            <span id="mobileFilterCount" class="doctor-badge" hidden>0</span>
+                        </button>
+                        <span class="doctor-toolbar-hint">{{ __('Cari dokter, klinik, atau spesialisasi') }}</span>
+                    </div>
+
+                    <!-- Chips filter aktif (terlihat meski panel filter tertutup) -->
+                    <ul class="doctor-chips doctor-chips--content" data-chips aria-label="{{ __('Filter aktif') }}" hidden></ul>
+
+                    <!-- Ringkasan Hasil Pencarian -->
+                    <div id="search-summary-container" class="doctor-summary d-none" role="status" aria-live="polite">
+                        <h3 class="doctor-summary-text">
+                            <span id="search-summary-label">{{ __('Hasil Pencarian:') }}</span>
+                            <span class="doctor-summary-keyword" id="search-summary-keyword"></span>
+                        </h3>
+                        <span class="doctor-summary-badge">
+                            {{ __('Ditemukan') }} <span id="search-summary-count">0</span> {{ __('dokter') }}
+                        </span>
+                    </div>
+
+                    <!-- Wadah Kartu Dokter Dinamis -->
+                    <div id="daftar-dokter">
+
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <div class="container-fluid main-content py-3">
-        <section class="container" id="dokter-container">
-            
-            <div id="search-summary-container" class="d-none mb-4">
-                <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm border-start border-4 border-primary">
-                    <h6 class="mb-0 fw-semibold text-muted"><span id="search-summary-label">{{ __('Hasil Pencarian:') }}</span> <span class="text-dark fw-bold" id="search-summary-keyword"></span></h6>
-                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fs-6">
-                        {{ __('Ditemukan') }} <span id="search-summary-count" class="fw-bold">0</span> {{ __('dokter') }}
-                    </span>
-                </div>
-            </div>
-
-            <div id="daftar-dokter">
-
-            </div>
-
         </section>
     </div>
     </main>

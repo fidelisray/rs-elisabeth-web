@@ -47,21 +47,112 @@ export function setDoctorContext(doctorList) {
     state.currentPage = 1;
 }
 
-export function filterDoctors(keyword, type = "nama") {
-    if (keyword === "") {
+let specialtyCacheMap = null;
+
+export function getSpecialtyMap() {
+    if (!specialtyCacheMap) {
+        specialtyCacheMap = new Map();
+        try {
+            const el = document.getElementById("specialties-json");
+            if (el) {
+                const data = JSON.parse(el.textContent || "[]");
+                if (Array.isArray(data)) {
+                    data.forEach((item) => {
+                        const code = item.Code ?? item.code;
+                        const name = item.Name ?? item.name;
+                        if (code && name) {
+                            specialtyCacheMap.set(String(code), String(name));
+                        }
+                    });
+                }
+            }
+        } catch (e) {
+            console.error("Error parsing specialties json:", e);
+        }
+    }
+    return specialtyCacheMap;
+}
+
+function matchesKeywordTokens(dokter, tokens, specialtyMap) {
+    if (tokens.length === 0) return true;
+
+    const nama = (dokter.paramedicName || '').toLowerCase();
+    const specCode = String(dokter.specialtyCode || '');
+    const specNameDirect = (dokter.specialtyName || '').toLowerCase();
+    const specNameMapped = (specialtyMap.get(specCode) || '').toLowerCase();
+    const serviceUnitName = (dokter.serviceUnitName || '').toLowerCase();
+
+    const scheduleUnits = [];
+    if (dokter.schedule) {
+        for (const day of state.days) {
+            const slots = dokter.schedule[day] || [];
+            for (const slot of slots) {
+                if (slot.serviceUnitName) {
+                    scheduleUnits.push(slot.serviceUnitName.toLowerCase());
+                }
+            }
+        }
+    }
+
+    const combinedSearchText = [
+        nama,
+        specNameDirect,
+        specNameMapped,
+        serviceUnitName,
+        ...scheduleUnits
+    ].join(' ');
+
+    return tokens.every((token) => combinedSearchText.includes(token));
+}
+
+export function getSpecialtyCounts(keyword = '') {
+    const counts = new Map();
+    const hasKeyword = typeof keyword === 'string' && keyword.trim() !== '';
+    const tokens = hasKeyword
+        ? keyword.trim().toLowerCase().split(/\s+/).filter((t) => t.length > 0)
+        : [];
+    const specialtyMap = getSpecialtyMap();
+
+    for (const dokter of state.fullDoctorList) {
+        if (!matchesKeywordTokens(dokter, tokens, specialtyMap)) continue;
+        const code = String(dokter.specialtyCode || '');
+        if (code) {
+            counts.set(code, (counts.get(code) || 0) + 1);
+        }
+    }
+    return counts;
+}
+
+export function filterDoctors(keyword = '', selectedSpecialtyCodes = []) {
+    const hasKeyword = typeof keyword === 'string' && keyword.trim() !== '';
+    const hasSpecialties = Array.isArray(selectedSpecialtyCodes) && selectedSpecialtyCodes.length > 0;
+
+    if (!hasKeyword && !hasSpecialties) {
         state.filteredDoctorList = state.fullDoctorList;
     } else {
-        const lowerKeyword = keyword.toLowerCase();
+        const specialtyMap = getSpecialtyMap();
+        const tokens = hasKeyword
+            ? keyword.trim().toLowerCase().split(/\s+/).filter((t) => t.length > 0)
+            : [];
+        const specSet = hasSpecialties
+            ? new Set(selectedSpecialtyCodes.map((c) => String(c)))
+            : null;
+
         state.filteredDoctorList = state.fullDoctorList.filter((dokter) => {
-            if (type === "klinik") {
-                // const specName = dokter.specialtyName?.toLowerCase() || "";
-                const unitName = dokter.serviceUnitName?.toLowerCase() || "";
-                // return specName.includes(lowerKeyword) || unitName.includes(lowerKeyword);
-                return unitName.includes(lowerKeyword);
-            } else {
-                const nama = dokter.paramedicName?.toLowerCase() || "";
-                return nama.includes(lowerKeyword);
+            // 1. Filter spesialisasi (OR logic antar spesialisasi yang dipilih)
+            if (specSet) {
+                const docSpecCode = String(dokter.specialtyCode || '');
+                if (!specSet.has(docSpecCode)) {
+                    return false;
+                }
             }
+
+            // 2. Filter kata kunci teks (AND logic antar token kata)
+            if (!matchesKeywordTokens(dokter, tokens, specialtyMap)) {
+                return false;
+            }
+
+            return true;
         });
     }
     state.currentPage = 1;
