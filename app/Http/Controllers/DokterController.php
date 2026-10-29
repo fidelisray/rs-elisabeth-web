@@ -74,7 +74,7 @@ class DokterController extends Controller
     }
 
     public function spesialisasi() {
-        $spesialisasi = $this->apiService->getCachedSpesialisasi();
+        $spesialisasi = $this->apiService->getDaftarSpesialisasi();
 
         // dd($spesialisasi);
 
@@ -84,6 +84,9 @@ class DokterController extends Controller
     public function dokterBySpesialisasi(string $specialtyCode) {
 
         $doctors = $this->apiService->getDokterBySpesialisasi($specialtyCode);
+        if (isset($doctors['ScheduleRoutine']) && is_array($doctors['ScheduleRoutine'])) {
+            $doctors['ScheduleRoutine'] = $this->filterActiveDoctors($doctors['ScheduleRoutine']);
+        }
 
         // dd(response()->json($doctors['Data']));
         // dd($doctors);
@@ -139,8 +142,53 @@ class DokterController extends Controller
                 'data'    => [],
             ], 503);
         }
-        
+
+        $data = $this->filterActiveDoctors($data);
+
         return response()->json($data, 200);
+    }
+
+    /**
+     * Menyaring daftar jadwal dokter Medin berdasarkan status is_active dari CMS.
+     * Fail-open: jika CMS tidak dapat dihubungi, kembalikan data Medin tanpa gagal.
+     */
+    protected function filterActiveDoctors(array $schedules): array
+    {
+        if (empty($schedules)) {
+            return [];
+        }
+
+        try {
+            $cmsDoctors = $this->cmsApiService->getDoctors();
+            if (empty($cmsDoctors)) {
+                return $schedules;
+            }
+
+            $activeCodes = [];
+            foreach ($cmsDoctors as $doc) {
+                if (($doc['is_active'] ?? true) && ! empty($doc['paramedic_code'])) {
+                    $activeCodes[trim((string) $doc['paramedic_code'])] = true;
+                }
+            }
+
+            return array_values(array_filter($schedules, function ($item) use ($activeCodes) {
+                $row = is_object($item) ? (array) $item : $item;
+                $code = trim((string) ($row['ParamedicCode'] ?? ''));
+
+                return $code !== '' && isset($activeCodes[$code]);
+            }));
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning('Gagal menyinkronkan status is_active dokter dari CMS; menampilkan data Medin.', [
+                'exception_type' => get_class($e),
+            ]);
+
+            return $schedules;
+        }
+    }
+
+    public function test_doctor_api() {
+        $doctors = Cache::get('all_doctors_list', []);
+        return response()->json($doctors);
     }
 
     // public function detail(int $id)

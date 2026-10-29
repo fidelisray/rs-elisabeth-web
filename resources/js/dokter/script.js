@@ -18,6 +18,7 @@ const specialtyEmpty = document.getElementById("specialtyEmpty");
 const btnSelectAllSpecs = document.getElementById("btnSelectAllSpecs");
 const btnClearSpecs = document.getElementById("btnClearSpecs");
 const detailDokterModal = document.getElementById("detailDokter");
+const doctorFilterOffcanvas = document.getElementById("doctorFilterOffcanvas");
 
 function getSelectedSpecialties() {
     const selected = [];
@@ -190,7 +191,13 @@ function syncUrl(keyword = "", selectedCodes = []) {
     window.history.replaceState({}, document.title, nextUrl);
 }
 
+function isMobileDrawerOpen() {
+    return Boolean(doctorFilterOffcanvas && doctorFilterOffcanvas.classList.contains("show") && window.innerWidth < 1200);
+}
+
 function scrollToContentTop() {
+    if (isMobileDrawerOpen()) return;
+
     const contentCol = document.querySelector(".doctor-content-col");
     if (!contentCol) return;
 
@@ -281,7 +288,8 @@ if (searchInput) {
         if (btnClearSearch) {
             btnClearSearch.hidden = searchInput.value.trim().length === 0;
         }
-        triggerFilter(false);
+        const shouldScroll = !isMobileDrawerOpen();
+        triggerFilter(false, false, shouldScroll);
     });
 
     searchInput.addEventListener("keydown", (e) => {
@@ -291,7 +299,7 @@ if (searchInput) {
         } else if (e.key === "Escape") {
             if (searchInput.value) {
                 searchInput.value = "";
-                triggerFilter(true, false, true);
+                triggerFilter(true, false, !isMobileDrawerOpen());
             }
         }
     });
@@ -301,9 +309,15 @@ if (btnClearSearch) {
     btnClearSearch.addEventListener("click", () => {
         if (searchInput) {
             searchInput.value = "";
-            searchInput.focus();
+            searchInput.focus({ preventScroll: true });
         }
-        triggerFilter(true, false, true);
+        triggerFilter(true, false, !isMobileDrawerOpen());
+    });
+}
+
+if (doctorFilterOffcanvas) {
+    doctorFilterOffcanvas.addEventListener("hidden.bs.offcanvas", () => {
+        scrollToContentTop();
     });
 }
 
