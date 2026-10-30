@@ -65,7 +65,7 @@
                                 <div class="card-accent-bar"></div>
                                 <div class="room-thumb-wrapper">
                                     <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang" loading="lazy">
+                                        <img src="{{ $room->image_url ?? Vite::asset('resources/images/feature.jfif') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang" loading="lazy">
                                     </a>
                                     <span class="room-class-badge">
                                         <i class="fa-solid fa-bed"></i> {{ $room->name }}
@@ -196,7 +196,7 @@
                                 @endif
                                 <div class="premium-img-wrapper">
                                     <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ $room->image_url ?? asset('images/feature.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
+                                        <img src="{{ $room->image_url ?? Vite::asset('resources/images/feature.jfif') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
                                     </a>
                                     <span class="room-category-label">{{ $room->name }}</span>
                                 </div>
@@ -292,7 +292,7 @@
                         <div class="premium-room-card card-featured h-100">
                             <div class="premium-ribbon"></div>
                             <div class="premium-img-wrapper">
-                                <img src="{{ asset('images/feature.jpg') }}" alt="President Suite RS St. Elisabeth Semarang">
+                                <img src="{{ Vite::asset('resources/images/feature.jfif') }}" alt="President Suite RS St. Elisabeth Semarang">
                                 <span class="room-category-label">President Suite</span>
                             </div>
                             <div class="premium-card-body">

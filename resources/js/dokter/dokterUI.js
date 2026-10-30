@@ -1,5 +1,7 @@
 import { state, getSpecialtyMap } from "./dokterService.js";
 
+export const DEFAULT_DOCTOR_PHOTO = new URL("../../images/default.png", import.meta.url).href;
+
 export function getLocale() {
     return document.documentElement.lang?.toLowerCase().startsWith("en")
         ? "en"
@@ -232,7 +234,7 @@ export function createDoctorCard(dokter) {
                                 class="img-fluid mb-3 rounded-3"
                                 style="width:165px;height:200px;object-fit:cover;object-position:top center;"
                                 alt="${t("doctorPhoto")}"
-                                onerror="this.onerror=null; this.src='/images/default.png';">
+                                onerror="this.onerror=null; this.src='${DEFAULT_DOCTOR_PHOTO}';">
                             <span class="badge bg-primary mb-3 d-none fw-bold">
                                     ${escapeHtml(getSpecialtyName(dokter.specialtyCode))}
                             </span>
@@ -478,7 +480,7 @@ export function renderModal(doctorData) {
         fotoDokter.innerHTML = `
             <img src="https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(doctorData.paramedicCode)}.png"
             alt="${t("doctorPhoto")}"
-            onerror="this.onerror=null; this.src='/images/default.png';">
+            onerror="this.onerror=null; this.src='${DEFAULT_DOCTOR_PHOTO}';">
         `;
     }
 

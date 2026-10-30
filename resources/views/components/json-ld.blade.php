@@ -3,7 +3,7 @@
   "@@context": "https://schema.org",
   "@@type": "Hospital",
   "name": "RS St. Elisabeth Semarang",
-  "image": "{{ asset('images/web-icon.webp') }}",
+  "image": "{{ Vite::asset('resources/images/web-icon.webp') }}",
   "@@id": "{{ url('/') }}",
   "url": "{{ url('/') }}",
   "telephone": "(024) 8502244",

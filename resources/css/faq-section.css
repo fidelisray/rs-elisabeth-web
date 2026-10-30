@@ -8,7 +8,19 @@
     background: radial-gradient(circle 380px at 90% 15%, rgba(0, 143, 215, 0.06), transparent 70%),
                 radial-gradient(circle 380px at 10% 85%, rgba(183, 228, 229, 0.25), transparent 70%),
                 linear-gradient(180deg, #f8fafc 0%, #ffffff 50%, #f0f7fc 100%);
-    overflow: hidden;
+    overflow: clip;
+}
+
+/* Sticky Sidebar for FAQ Left Column (>= 992px) */
+@media (min-width: 992px) {
+    .faq-sticky-col {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 96px;
+        align-self: flex-start;
+        z-index: 20;
+        transition: top 0.3s ease;
+    }
 }
 
 /* Eyebrow Badge */
@@ -229,6 +241,167 @@
 
 .faq-time-row:not(:last-child) {
     border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+/* Gray Accented Card for Sunday / Holidays (Poli Spesialis) */
+.faq-time-card--muted {
+    background-color: #f8fafc;
+    border-color: rgba(100, 116, 139, 0.18);
+}
+
+.faq-time-card--muted .faq-time-title {
+    color: #64748b;
+}
+
+/* Stacked Registration Guide Cards (Full Width) */
+.faq-guide-card {
+    background: #ffffff;
+    border: 1px solid rgba(2, 97, 153, 0.12);
+    border-radius: 0.875rem;
+    padding: 1.25rem 1.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+    transition: all 0.25s ease;
+}
+
+.faq-guide-card:hover {
+    border-color: rgba(2, 97, 153, 0.3);
+    box-shadow: 0 6px 18px rgba(2, 97, 153, 0.07);
+}
+
+.faq-guide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(2, 97, 153, 0.08);
+}
+
+.faq-guide-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a2740;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.faq-guide-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 50rem;
+    background: rgba(2, 97, 153, 0.08);
+    color: #026199;
+    border: 1px solid rgba(2, 97, 153, 0.15);
+}
+
+.faq-guide-portal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0077b6;
+    text-decoration: none;
+    word-break: break-all;
+    transition: color 0.2s ease;
+}
+
+.faq-guide-portal-link:hover {
+    color: #026199;
+    text-decoration: underline;
+}
+
+/* Numbered Step List inside FAQ */
+.faq-step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    flex-grow: 1;
+}
+
+.faq-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #334155;
+}
+
+.faq-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(2, 97, 153, 0.1);
+    color: #026199;
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.faq-step-text {
+    flex: 1;
+}
+
+.faq-step-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.25rem;
+    background: #e2e8f0;
+    color: #475569;
+    margin-left: 0.35rem;
+}
+
+/* Badge Callout / Alert Box with thematic contrast */
+.faq-badge-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.9rem 1.15rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin-top: 1rem;
+    border: 1px solid transparent;
+}
+
+.faq-badge-alert i {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    margin-top: 0.12rem;
+}
+
+.faq-badge-alert--warning {
+    background-color: #fffbeb;
+    color: #92400e;
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.faq-badge-alert--info {
+    background-color: #f0f9ff;
+    color: #0369a1;
+    border-color: rgba(2, 97, 153, 0.25);
+}
+
+.faq-badge-alert--light {
+    background-color: #f8fafc;
+    color: #475569;
+    border-color: rgba(148, 163, 184, 0.25);
 }
 
 @media (max-width: 991.98px) {

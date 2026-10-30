@@ -41,7 +41,7 @@
                         <div class="news-card">
                             <div class="news-card-img-wrapper">
                                 <a href="{{{ route('articles.show', ['slug' => $item->slug]) }}}">
-                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}">
+                                    <img src="{{ $item->image_url ?? Vite::asset('resources/images/hero-v2.png') }}" class="news-card-img" alt="{{ $item->title }}">
                                 </a>
                             </div>
                             <div class="news-card-body">

@@ -246,7 +246,7 @@ nav#second-navbar.is-stuck .nav-link:hover::before {
             #f8fafc 100%
         );
     position: relative;
-    overflow-x: hidden;
+    overflow-x: clip; /* clip prevents scrollbars without breaking position: sticky */
 }
 
 #about-us,
