@@ -12,5 +12,5 @@
 @foreach ($alternateLocales as $alternateLocale)
 <meta property="og:locale:alternate" content="{{ $alternateLocale }}">
 @endforeach
-<link rel="icon" type="image/png" href="{{ asset('images/web-icon.webp') }}">
+<link rel="icon" type="image/png" href="{{ Vite::asset('resources/images/web-icon.webp') }}">
 <title>{{ $title ?? 'RS St. Elisabeth Semarang' }}</title>

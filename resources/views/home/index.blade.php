@@ -185,7 +185,7 @@
                     </div>
                     <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
                         <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
-                        <img src="{{ asset('images/feature.jpg') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="{{ __('Fasilitas RS St. Elisabeth Semarang') }}" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
+                        <img src="{{ Vite::asset('resources/images/feature.jfif') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="{{ __('Fasilitas RS St. Elisabeth Semarang') }}" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
                     </div>
                 </div>
             </div>
@@ -247,7 +247,7 @@
         <section id="home-hero">
             <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-pause="false">
                 <div class="carousel-inner">
-                    <div class="carousel-item active hero-bg-image" style="background-image: url('{{ asset('images/hero.jpg') }}');"></div>
+                    <div class="carousel-item active hero-bg-image" style="background-image: url('{{ Vite::asset('resources/images/hero-v2.png') }}');"></div>
                 </div>
             </div>
 
@@ -438,7 +438,7 @@
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
                                 <a href="{{ $articleUrl }}" aria-label="{{ $item->title }}">
-                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
+                                    <img src="{{ $item->image_url ?? Vite::asset('resources/images/hero-v2.png') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
                                 </a>
                             </div>
                             <div class="news-card-body">
@@ -495,7 +495,7 @@
                         <div class="news-card h-100">
                             <div class="news-card-img-wrapper">
                                 <a href="{{ $newsUrl }}" aria-label="{{ $item->title }}">
-                                    <img src="{{ $item->image_url ?? asset('images/hero.jpg') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
+                                    <img src="{{ $item->image_url ?? Vite::asset('resources/images/hero-v2.png') }}" class="news-card-img" alt="{{ $item->title }}" loading="lazy">
                                 </a>
                             </div>
                             <div class="news-card-body">
@@ -538,10 +538,10 @@
 
         <section id="frequently-ask-question">
             <div class="container">
-                <div class="row g-5 align-items-start">
+                <div class="row g-5">
                     <!-- Kolom Kiri: Header & Quick Support Card -->
                     <div class="col-lg-5">
-                        <div class="pe-lg-4">
+                        <div class="pe-lg-4 faq-sticky-col">
                             <span class="faq-eyebrow">
                                 <i class="fa-solid fa-circle-question"></i> {{ __('Informasi & Tanya Jawab') }}
                             </span>
@@ -575,18 +575,18 @@
                     <div class="col-lg-7">
                         <div class="accordion faq-accordion" id="faqAccordion">
 
-                            <!-- FAQ 1: Jam Kunjungan -->
+                            <!-- FAQ 1: Jam Kunjungan Rawat Inap -->
                             <div class="accordion-item">
-                                <h3 class="accordion-header" id="headingFaqOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqOne" aria-expanded="true" aria-controls="collapseFaqOne">
+                                <h3 class="accordion-header" id="headingFaqVisitHours">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqVisitHours" aria-expanded="true" aria-controls="collapseFaqVisitHours">
                                         <span class="faq-icon-bullet"><i class="fa-solid fa-clock"></i></span>
                                         <span>{{ __('Kapan waktu jam kunjungan (besuk) pasien rawat inap?') }}</span>
                                     </button>
                                 </h3>
-                                <div id="collapseFaqOne" class="accordion-collapse collapse show" aria-labelledby="headingFaqOne" data-bs-parent="#faqAccordion">
+                                <div id="collapseFaqVisitHours" class="accordion-collapse collapse show" aria-labelledby="headingFaqVisitHours" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         <p class="mb-3">
-                                            {{ __('Untuk menjaga ketenangan, kenyamanan, dan proses istirahat pasien, jam kunjungan diatur menjadi dua sesi setiap harinya:') }}
+                                             {{ __('Untuk menjaga ketenangan, kenyamanan, dan proses istirahat pasien, jam kunjungan diatur menjadi dua sesi setiap harinya:') }}
                                         </p>
                                         <div class="row g-3">
                                             <div class="col-sm-6">
@@ -626,15 +626,167 @@
                                 </div>
                             </div>
 
-                            <!-- FAQ 2: Batas Jumlah Pengunjung -->
+                            <!-- FAQ 2: Cara melakukan pendaftaran online -->
                             <div class="accordion-item">
-                                <h3 class="accordion-header" id="headingFaqTwo">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqTwo" aria-expanded="false" aria-controls="collapseFaqTwo">
+                                <h3 class="accordion-header" id="headingFaqOnlineReg">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqOnlineReg" aria-expanded="false" aria-controls="collapseFaqOnlineReg">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-mobile-screen-button"></i></span>
+                                        <span>{{ __('Bagaimana cara melakukan pendaftaran online?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqOnlineReg" class="accordion-collapse collapse" aria-labelledby="headingFaqOnlineReg" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="text-muted mb-3">
+                                            {{ __('RS St. Elisabeth Semarang menyediakan 2 (dua) opsi kemudahan pendaftaran secara online tanpa perlu antre di tempat:') }}
+                                        </p>
+
+                                        <!-- Baris 1: Aplikasi Mobile Elisameds -->
+                                        <div class="faq-guide-card mb-3">
+                                            <div class="faq-guide-header">
+                                                <h4 class="faq-guide-title">
+                                                    <i class="fa-solid fa-mobile-screen text-primary"></i>
+                                                    {{ __('Aplikasi Elisameds') }}
+                                                </h4>
+                                                <span class="faq-guide-badge">{{ __('Mobile App') }}</span>
+                                            </div>
+                                            <ol class="faq-step-list">
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">1</span>
+                                                    <span class="faq-step-text">{{ __('Buka aplikasi Elisameds di smartphone, lalu pilih menu') }} <strong>{{ __('Registrasi Online') }}</strong>.</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">2</span>
+                                                    <span class="faq-step-text">{{ __('Pilih tanggal kunjungan, Klinik/Poli Spesialis, serta Dokter yang diinginkan.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">3</span>
+                                                    <span class="faq-step-text">{{ __('Konfirmasi formulir pendaftaran dan simpan bukti konfirmasi/notifikasi antrean.') }}</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+
+                                        <!-- Baris 2: Website RegOnline -->
+                                        <div class="faq-guide-card mb-3">
+                                            <div class="faq-guide-header">
+                                                <h4 class="faq-guide-title">
+                                                    <i class="fa-solid fa-globe text-primary"></i>
+                                                    {{ __('Website RegOnline') }}
+                                                </h4>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="faq-guide-badge">{{ __('Portal Web') }}</span>
+                                                    <a href="https://regonline.elisabeth.or.id" target="_blank" rel="noopener noreferrer" class="faq-guide-portal-link ms-2">
+                                                        <i class="fa-solid fa-arrow-up-right-from-square"></i> regonline.elisabeth.or.id
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <ol class="faq-step-list">
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">1</span>
+                                                    <span class="faq-step-text">{{ __('Kunjungi website resmi RegOnline.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">2</span>
+                                                    <span class="faq-step-text">{{ __('Isi form data diri pasien secara lengkap & valid.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">3</span>
+                                                    <span class="faq-step-text">{{ __('Masukkan nomor Rekam Medis (jika sudah memiliki rekam medis sebelumnya di RS St. Elisabeth).') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">4</span>
+                                                    <span class="faq-step-text">{{ __('Atau masukkan NIK KTP Anda') }} <span class="badge bg-secondary-subtle text-secondary fw-semibold ms-1">{{ __('Pilih salah satu') }}</span> {{ __('apabila belum memiliki nomor RM.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">5</span>
+                                                    <span class="faq-step-text">{{ __('Masukkan nomor Handphone / WhatsApp aktif yang dapat dihubungi.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">6</span>
+                                                    <span class="faq-step-text">{{ __('Tentukan jenis penjamin pembayaran yang Anda gunakan.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">7</span>
+                                                    <span class="faq-step-text">{{ __('Pilih tanggal periksa dan Poli/Klinik yang dituju.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">8</span>
+                                                    <span class="faq-step-text">{{ __('Pilih jadwal Dokter yang tersedia sesuai preferensi Anda.') }}</span>
+                                                </li>
+                                                <li class="faq-step-item">
+                                                    <span class="faq-step-num">9</span>
+                                                    <span class="faq-step-text">{{ __('Konfirmasi dengan menekan tombol') }} <strong>{{ __('Daftar Periksa') }}</strong> {{ __('dan tunggu notifikasi konfirmasi.') }}</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+
+                                        <div class="faq-badge-alert faq-badge-alert--warning">
+                                            <i class="fa-solid fa-triangle-exclamation"></i>
+                                            <div>{{ __('Pastikan data identitas dan nomor kontak telah diisi dengan benar untuk menghindari kendala saat verifikasi kedatangan di rumah sakit.') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 3: Jam Operasional Poli Spesialis -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqPolyHours">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqPolyHours" aria-expanded="false" aria-controls="collapseFaqPolyHours">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-stethoscope"></i></span>
+                                        <span>{{ __('Kapan jadwal operasional Poli Spesialis?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqPolyHours" class="accordion-collapse collapse" aria-labelledby="headingFaqPolyHours" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-3">
+                                            {{ __('Layanan rawat jalan Poli Spesialis RS St. Elisabeth Semarang melayani konsultasi dan pemeriksaan medis dengan jadwal operasional sebagai berikut:') }}
+                                        </p>
+                                        <div class="row g-3">
+                                            <div class="col-sm-6">
+                                                <div class="faq-time-card">
+                                                    <div class="faq-time-title">
+                                                        <i class="fa-solid fa-calendar-day text-primary"></i>
+                                                        <span>{{ __('Senin – Sabtu') }}</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-regular fa-sun text-warning me-1"></i> {{ __('Pagi') }}</span>
+                                                        <span class="fw-bold text-dark">06.00 - 13.00 WIB</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-solid fa-cloud-sun text-info me-1"></i> {{ __('Sore') }}</span>
+                                                        <span class="fw-bold text-dark">13.00 - 21.30 WIB</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="faq-time-card faq-time-card--muted">
+                                                    <div class="faq-time-title text-secondary">
+                                                        <i class="fa-regular fa-calendar-xmark text-secondary"></i>
+                                                        <span>{{ __('Minggu & Hari Libur') }}</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-regular fa-clock text-secondary me-1"></i> {{ __('Operasional') }}</span>
+                                                        <span class="badge bg-secondary-subtle text-secondary fw-bold px-2 py-1">{{ __('Tutup / Tidak Beroperasi') }}</span>
+                                                    </div>
+                                                    <div class="faq-time-row">
+                                                        <span class="text-muted"><i class="fa-solid fa-truck-medical text-danger me-1"></i> {{ __('Layanan Darurat') }}</span>
+                                                        <span class="fw-semibold text-danger">{{ __('IGD Siaga 24 Jam') }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 4: Batas Jumlah Pengunjung -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqMaxVisitor">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqMaxVisitor" aria-expanded="false" aria-controls="collapseFaqMaxVisitor">
                                         <span class="faq-icon-bullet"><i class="fa-solid fa-users"></i></span>
                                         <span>{{ __('Berapa jumlah maksimal pengunjung untuk setiap pasien?') }}</span>
                                     </button>
                                 </h3>
-                                <div id="collapseFaqTwo" class="accordion-collapse collapse" aria-labelledby="headingFaqTwo" data-bs-parent="#faqAccordion">
+                                <div id="collapseFaqMaxVisitor" class="accordion-collapse collapse" aria-labelledby="headingFaqMaxVisitor" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         <p class="mb-2">
                                             {!! __('Demi ketenangan dan kelancaran perawatan medis pasien, setiap pasien diperkenankan menerima :badge secara bergantian.', ['badge' => '<span class="badge bg-primary-subtle text-primary fw-bold px-2 py-1">' . __('maksimal 2 pengunjung') . '</span>']) !!}
@@ -646,15 +798,15 @@
                                 </div>
                             </div>
 
-                            <!-- FAQ 3: Batas Usia Anak -->
+                            <!-- FAQ 5: Batas Usia Anak -->
                             <div class="accordion-item">
-                                <h3 class="accordion-header" id="headingFaqThree">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqThree" aria-expanded="false" aria-controls="collapseFaqThree">
+                                <h3 class="accordion-header" id="headingFaqChildAge">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqChildAge" aria-expanded="false" aria-controls="collapseFaqChildAge">
                                         <span class="faq-icon-bullet"><i class="fa-solid fa-child-reaching"></i></span>
                                         <span>{{ __('Apakah anak-anak diizinkan berkunjung menjenguk pasien?') }}</span>
                                     </button>
                                 </h3>
-                                <div id="collapseFaqThree" class="accordion-collapse collapse" aria-labelledby="headingFaqThree" data-bs-parent="#faqAccordion">
+                                <div id="collapseFaqChildAge" class="accordion-collapse collapse" aria-labelledby="headingFaqChildAge" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         <p class="mb-2">
                                             {!! __('Anak-anak :badge tidak diizinkan berkunjung ke area ruang perawatan pasien.', ['badge' => '<span class="badge bg-danger-subtle text-danger fw-bold px-2 py-1">' . __('di bawah usia 12 tahun') . '</span>']) !!}
@@ -666,15 +818,15 @@
                                 </div>
                             </div>
 
-                            <!-- FAQ 4: Kondisi Kesehatan Pengunjung -->
+                            <!-- FAQ 6: Kondisi Kesehatan Pengunjung -->
                             <div class="accordion-item">
-                                <h3 class="accordion-header" id="headingFaqFour">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqFour" aria-expanded="false" aria-controls="collapseFaqFour">
+                                <h3 class="accordion-header" id="headingFaqVisitorHealth">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqVisitorHealth" aria-expanded="false" aria-controls="collapseFaqVisitorHealth">
                                         <span class="faq-icon-bullet"><i class="fa-solid fa-heart-pulse"></i></span>
                                         <span>{{ __('Bagaimana ketentuan bagi pengunjung yang sedang merasa kurang sehat?') }}</span>
                                     </button>
                                 </h3>
-                                <div id="collapseFaqFour" class="accordion-collapse collapse" aria-labelledby="headingFaqFour" data-bs-parent="#faqAccordion">
+                                <div id="collapseFaqVisitorHealth" class="accordion-collapse collapse" aria-labelledby="headingFaqVisitorHealth" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         <p class="mb-2">
                                             {!! __('Demi kesehatan pasien yang sedang dalam masa penyembuhan, kami menyarankan untuk :badge terlebih dahulu apabila kondisi badan Anda sedang tidak fit.', ['badge' => '<span class="badge bg-warning-subtle text-warning-emphasis fw-bold px-2 py-1">' . __('tidak melakukan kunjungan') . '</span>']) !!}
@@ -686,24 +838,45 @@
                                 </div>
                             </div>
 
-                            <!-- FAQ 5: Tata Tertib & Kenyamanan -->
+                            <!-- FAQ 7: Tata Tertib & Kenyamanan -->
                             <div class="accordion-item">
-                                <h3 class="accordion-header" id="headingFaqFive">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqFive" aria-expanded="false" aria-controls="collapseFaqFive">
-                                        <span class="faq-icon-bullet"><i class="fa-solid fa-volume-xmark"></i></span>
+                                <h3 class="accordion-header" id="headingFaqHospitalRules">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqHospitalRules" aria-expanded="false" aria-controls="collapseFaqHospitalRules">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-shield-halved"></i></span>
                                         <span>{{ __('Apa saja tata tertib yang perlu ditaati selama berkunjung?') }}</span>
                                     </button>
                                 </h3>
-                                <div id="collapseFaqFive" class="accordion-collapse collapse" aria-labelledby="headingFaqFive" data-bs-parent="#faqAccordion">
+                                <div id="collapseFaqHospitalRules" class="accordion-collapse collapse" aria-labelledby="headingFaqHospitalRules" data-bs-parent="#faqAccordion">
                                     <div class="accordion-body">
                                         <ul class="mb-3 ps-3">
                                             <li class="mb-1"><strong>{{ __('Ketenangan:') }}</strong> {{ __('Mohon untuk tidak berbicara keras atau membuat kegaduhan di lingkungan ruang rawat inap.') }}</li>
                                             <li class="mb-1"><strong>{{ __('Kebersihan Tangan:') }}</strong> {{ __('Gunakan cairan antiseptik hand sanitizer yang disediakan sebelum dan setelah memasuki kamar pasien.') }}</li>
                                             <li class="mb-1"><strong>{{ __('Ketepatan Waktu:') }}</strong> {{ __('Harap mengakhiri kunjungan tepat pada saat jam kunjungan berakhir agar pasien dapat beristirahat.') }}</li>
                                         </ul>
-                                        <div class="p-3 rounded-3 bg-light text-muted small fst-italic border border-light-subtle">
-                                            <i class="fa-solid fa-heart text-danger me-1"></i>
-                                            {{ __('Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama di rawat di Rumah Sakit St. Elisabeth Semarang.') }}
+                                        <div class="faq-badge-alert faq-badge-alert--light">
+                                            <i class="fa-solid fa-heart text-danger"></i>
+                                            <div>{{ __('Terima kasih atas kesediaan Anda dalam membantu kami menjaga ketenangan dan kenyamanan pasien selama di rawat di Rumah Sakit St. Elisabeth Semarang.') }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- FAQ 8: Batas Check-in Pasien BPJS -->
+                            <div class="accordion-item">
+                                <h3 class="accordion-header" id="headingFaqBpjsCheckin">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaqBpjsCheckin" aria-expanded="false" aria-controls="collapseFaqBpjsCheckin">
+                                        <span class="faq-icon-bullet"><i class="fa-solid fa-id-card-clip"></i></span>
+                                        <span>{{ __('Pendaftaran pasien BPJS ada batas check-in jam berapa?') }}</span>
+                                    </button>
+                                </h3>
+                                <div id="collapseFaqBpjsCheckin" class="accordion-collapse collapse" aria-labelledby="headingFaqBpjsCheckin" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body">
+                                        <p class="mb-2">
+                                            {!! __('Batas waktu Check-in pasien BPJS adalah :badge sebelum jadwal yang sudah ditentukan.', ['badge' => '<span class="badge bg-info-subtle text-info-emphasis fw-bold px-2 py-1">' . __('Satu Jam') . '</span>']) !!}
+                                        </p>
+                                        <div class="faq-badge-alert faq-badge-alert--info">
+                                            <i class="fa-solid fa-circle-info text-info"></i>
+                                            <div>{{ __('Disarankan untuk menyiapkan kartu BPJS Kesehatan / KTP asli serta bukti pendaftaran atau rujukan saat melakukan konfirmasi check-in di loket admisi atau anjungan pendaftaran mandiri.') }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -868,7 +1041,7 @@
                                     <span class="large-text">Google Play</span>
                                 </div>
                             </a>
-                            <a href="#" class="btn-store shadow">
+                            <a href="https://apps.apple.com/id/app/elisameds/id6748007776" class="btn-store shadow">
                                 <i class="fab fa-apple"></i>
                                 <div class="store-text">
                                     <span class="small-text">Download on the</span>
@@ -880,10 +1053,10 @@
                     <div class="col-lg-6">
                         <div class="app-mockup-container">
                             <div class="mobile-frame app-mockup-secondary">
-                                <img src="{{ asset('images/elisameds/elisameds-2.webp') }}" alt="Elisameds Feature">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-2.webp') }}" alt="Elisameds Feature">
                             </div>
                             <div class="mobile-frame app-mockup-main">
-                                <img src="{{ asset('images/elisameds/elisameds-1.webp') }}" alt="Elisameds Main App">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-1.webp') }}" alt="Elisameds Main App">
                             </div>
                             
                             <div class="floating-badge">
@@ -902,7 +1075,7 @@
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ asset('images/elisameds/elisameds-3.webp') }}" alt="Elisameds Feature 1">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-3.webp') }}" alt="Elisameds Feature 1">
                             </div>
                         </div>
                     </div>
@@ -910,7 +1083,7 @@
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ asset('images/elisameds/elisameds-4.webp') }}" alt="Elisameds Feature 2">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-4.webp') }}" alt="Elisameds Feature 2">
                             </div>
                         </div>
                     </div>
@@ -918,7 +1091,7 @@
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ asset('images/elisameds/elisameds-5.webp') }}" alt="Elisameds Feature 3">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-5.webp') }}" alt="Elisameds Feature 3">
                             </div>
                         </div>
                     </div>

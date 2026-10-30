@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         
-                        <img src="{{ $news->image_url ?? asset('images/hero.jpg') }}" class="article-featured-image" alt="{{ $news->title }}">
+                        <img src="{{ $news->image_url ?? Vite::asset('resources/images/hero-v2.png') }}" class="article-featured-image" alt="{{ $news->title }}">
                         
                         <div class="article-content">
                             {!! $news->content !!}

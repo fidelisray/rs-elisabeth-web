@@ -54,8 +54,8 @@
         <div class="container-fluid px-3 px-xl-4 px-xxl-5 align-items-center">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" height="45" class="logo-main navbar-logo">
-                <img src="{{ asset('images/akreditasi.png') }}" alt="Akreditasi" height="45" class="d-none d-sm-block navbar-logo">
+                <img src="{{ Vite::asset('resources/images/logo.png') }}" alt="Logo RS St. Elisabeth Semarang" height="45" class="logo-main navbar-logo">
+                <img src="{{ Vite::asset('resources/images/100-tahun-rses.png') }}" alt="{{ __('100 Tahun RS St. Elisabeth') }}" height="45" class="d-none d-sm-block navbar-logo">
             </a>
 
             <!-- Mobile Toggles (Kanan) -->
@@ -180,7 +180,7 @@
     <div class="offcanvas offcanvas-end offcanvas-menu" tabindex="-1" id="mobileOffcanvas">
         <div class="offcanvas-header offcanvas-menu-header">
             <div class="offcanvas-logo-container">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo RS St. Elisabeth" height="32" class="offcanvas-logo">
+                <img src="{{ Vite::asset('resources/images/logo.png') }}" alt="Logo RS St. Elisabeth" height="32" class="offcanvas-logo">
             </div>
             <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="{{ __('Tutup') }}"></button>
         </div>
