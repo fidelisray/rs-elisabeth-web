@@ -64,6 +64,8 @@ export const I18N = {
         proceedToRegOnline: "Lanjut ke Pendaftaran",
         bookingClinic: "Poliklinik",
         bookingTime: "Jam Praktik",
+        bookingSession: "Sesi",
+        sessionPrefix: "Sesi",
         bookingDate: "Tanggal Periksa",
         bookingNotice:
             "Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal yang terisi otomatis.",
@@ -118,9 +120,11 @@ export const I18N = {
         confirmBookingTitle: "Doctor Appointment Confirmation",
         nextUpcomingDate: "Next Available Date",
         proceedToRegOnline: "Proceed to Registration",
-        bookingClinic: "Clinic",
-        bookingTime: "Practice Time",
-        bookingDate: "Appointment Date",
+        bookingClinic: "Outpatient Clinic",
+        bookingTime: "Practice Hours",
+        bookingSession: "Session",
+        sessionPrefix: "Session",
+        bookingDate: "Examination Date",
         bookingNotice:
             "You will be redirected to the RS St. Elisabeth Online Registration portal with pre-filled appointment details.",
     },
@@ -247,6 +251,12 @@ export function openBookingModal(bookingData) {
 
     const timeEl = document.getElementById("bookingModalTime");
     if (timeEl) timeEl.textContent = bookingData.timeSlot || "-";
+
+    const sessionEl = document.getElementById("bookingModalSession");
+    if (sessionEl) {
+        const sesiNumber = bookingData.sesi || 1;
+        sessionEl.textContent = `${t("sessionPrefix")} ${sesiNumber}`;
+    }
 
     const dateFormattedEl = document.getElementById(
         "bookingModalDateFormatted",

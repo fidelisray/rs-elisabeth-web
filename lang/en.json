@@ -531,5 +531,15 @@
     "Satu Jam": "One Hour",
     "Tentukan jenis penjamin pembayaran yang Anda gunakan.": "Select the type of payment guarantor you will use.",
     "Tutup / Tidak Beroperasi": "Closed / Not Operating",
-    "Website RegOnline": "RegOnline Website"
+    "Website RegOnline": "RegOnline Website",
+    "Konfirmasi Janji Dokter": "Doctor Appointment Confirmation",
+    "Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal berikut yang terisi otomatis:": "You will be redirected to the RS St. Elisabeth Online Registration portal with the following pre-filled appointment details:",
+    "Poliklinik": "Outpatient Clinic",
+    "Jam Praktik": "Practice Hours",
+    "Sesi": "Session",
+    "Tanggal Periksa": "Examination Date",
+    "Jadwal Terdekat": "Next Available Schedule",
+    "Di portal RegOnline, Anda cukup memverifikasi NIK / No. Rekam Medis untuk menyelesaikan pendaftaran.": "On the RegOnline portal, simply verify your NIK / Medical Record Number to complete the registration.",
+    "Batal": "Cancel",
+    "Lanjut ke Pendaftaran": "Proceed to Registration"
 }
