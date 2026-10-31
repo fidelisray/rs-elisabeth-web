@@ -31,8 +31,23 @@ export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
         }
 
         const doc = doctorMap.get(item.ParamedicCode);
+
+        let sessions = [];
+        if (Array.isArray(item.ListTimeSchedule) && item.ListTimeSchedule.length > 0) {
+            sessions = item.ListTimeSchedule.map((ts, idx) => ({
+                jam: `${ts.StartTime} - ${ts.EndTime}`,
+                sesi: ts.Session ?? (idx + 1),
+            }));
+        } else if (typeof item.OperationalTimeName === 'string' && item.OperationalTimeName.trim() !== '') {
+            sessions = item.OperationalTimeName.split("|").map((jamStr, idx) => ({
+                jam: jamStr.trim(),
+                sesi: idx + 1,
+            }));
+        }
+
         doc.schedule[item.DayNumber].push({
-            jam: typeof item.OperationalTimeName === 'string' ? item.OperationalTimeName.split("|") : [],
+            jam: sessions.map((s) => s.jam),
+            sessions,
             serviceUnitCode: item.ServiceUnitCode,
             serviceUnitName: item.ServiceUnitName,
         });

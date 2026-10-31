@@ -1,6 +1,9 @@
 import { state, getSpecialtyMap } from "./dokterService.js";
 
-export const DEFAULT_DOCTOR_PHOTO = new URL("../../images/default.png", import.meta.url).href;
+export const DEFAULT_DOCTOR_PHOTO = new URL(
+    "../../images/default.png",
+    import.meta.url,
+).href;
 
 export function getLocale() {
     return document.documentElement.lang?.toLowerCase().startsWith("en")
@@ -62,7 +65,8 @@ export const I18N = {
         bookingClinic: "Poliklinik",
         bookingTime: "Jam Praktik",
         bookingDate: "Tanggal Periksa",
-        bookingNotice: "Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal yang terisi otomatis.",
+        bookingNotice:
+            "Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal yang terisi otomatis.",
     },
     en: {
         days: {
@@ -117,7 +121,8 @@ export const I18N = {
         bookingClinic: "Clinic",
         bookingTime: "Practice Time",
         bookingDate: "Appointment Date",
-        bookingNotice: "You will be redirected to the RS St. Elisabeth Online Registration portal with pre-filled appointment details.",
+        bookingNotice:
+            "You will be redirected to the RS St. Elisabeth Online Registration portal with pre-filled appointment details.",
     },
 };
 
@@ -171,7 +176,7 @@ export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
     const yyyy = targetDate.getFullYear();
     const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
     const dd = String(targetDate.getDate()).padStart(2, "0");
-    const dateIso = `${yyyy}-${mm}-${dd}`;
+    const dateIso = `${yyyy}${mm}${dd}`;
 
     const locale = getLocale();
     const formatted = new Intl.DateTimeFormat(
@@ -192,12 +197,18 @@ export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
     };
 }
 
-export function buildRegOnlineUrl({ tgl = "", poli = "", dokter = "", jam = "" } = {}) {
-    const url = new URL("https://regonline.rs-elisabeth.com/");
+export function buildRegOnlineUrl({
+    tgl = "",
+    kodepoli = "",
+    kodedokter = "",
+    sesi = "",
+} = {}) {
+    const url = new URL("http://172.17.12.17:669/");
+    // const url = new URL("https://regonline.rs-elisabeth.com/");
     if (tgl) url.searchParams.set("tgl", tgl);
-    if (poli) url.searchParams.set("poli", poli);
-    if (dokter) url.searchParams.set("dokter", dokter);
-    if (jam) url.searchParams.set("jam", jam.replace(/\s+/g, ""));
+    if (kodepoli) url.searchParams.set("kodepoli", kodepoli);
+    if (kodedokter) url.searchParams.set("kodedokter", kodedokter);
+    if (sesi) url.searchParams.set("sesi", String(sesi));
     return url.toString();
 }
 
@@ -210,16 +221,16 @@ export function openBookingModal(bookingData) {
     );
     const bookingUrl = buildRegOnlineUrl({
         tgl: nextDate.dateIso,
-        poli: bookingData.poliCode,
-        dokter: bookingData.paramedicCode,
-        jam: bookingData.timeSlot,
+        kodepoli: bookingData.poliCode,
+        kodedokter: bookingData.paramedicCode,
+        sesi: bookingData.sesi || 1,
     });
 
     const photoImg = document.querySelector("#bookingModalDoctorPhoto img");
     if (photoImg) {
         photoImg.src = `https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(bookingData.paramedicCode)}.png`;
         photoImg.alt = bookingData.paramedicName || t("doctorPhoto");
-        photoImg.onerror = function() {
+        photoImg.onerror = function () {
             this.onerror = null;
             this.src = DEFAULT_DOCTOR_PHOTO;
         };
@@ -237,7 +248,9 @@ export function openBookingModal(bookingData) {
     const timeEl = document.getElementById("bookingModalTime");
     if (timeEl) timeEl.textContent = bookingData.timeSlot || "-";
 
-    const dateFormattedEl = document.getElementById("bookingModalDateFormatted");
+    const dateFormattedEl = document.getElementById(
+        "bookingModalDateFormatted",
+    );
     if (dateFormattedEl) dateFormattedEl.textContent = nextDate.formatted;
 
     const confirmBtn = document.getElementById("bookingModalConfirmBtn");
@@ -332,7 +345,13 @@ export function createScheduleGrid(dokter) {
     activeDays.forEach((day) => {
         let slotsHtml = "";
         schedule[day].forEach((item) => {
-            item.jam.forEach((jam) => {
+            const sessionList = Array.isArray(item.sessions) && item.sessions.length > 0
+                ? item.sessions
+                : item.jam.map((j, idx) => ({ jam: j, sesi: idx + 1 }));
+
+            sessionList.forEach((slot) => {
+                const jam = slot.jam;
+                const sesiNumber = slot.sesi;
                 slotsHtml += `
                     <button type="button" 
                         class="jadwal-slot jadwal-slot-interactive"
@@ -343,7 +362,8 @@ export function createScheduleGrid(dokter) {
                         data-booking-time="${escapeHtml(jam)}"
                         data-booking-poli="${escapeHtml(item.serviceUnitCode)}"
                         data-booking-poli-name="${escapeHtml(item.serviceUnitName)}"
-                        title="${escapeHtml(t('clickToBook'))}: ${escapeHtml(dokter.paramedicName)} (${t('days')[day]}, ${escapeHtml(jam)})">
+                        data-booking-sesi="${sesiNumber}"
+                        title="${escapeHtml(t("clickToBook"))}: ${escapeHtml(dokter.paramedicName)} (${t("days")[day]}, ${escapeHtml(jam)})">
                         <div class="slot-content">
                             <span class="slot-time">
                                 <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
@@ -351,7 +371,7 @@ export function createScheduleGrid(dokter) {
                             <span class="slot-klinik">${escapeHtml(item.serviceUnitName)}</span>
                         </div>
                         <span class="slot-action-badge">
-                            <i class="fa-solid fa-calendar-plus me-1"></i>${t('bookSlot')}
+                            <i class="fa-solid fa-calendar-plus me-1"></i>${t("bookSlot")}
                         </span>
                     </button>
                 `;
@@ -662,7 +682,13 @@ export function renderModal(doctorData) {
         activeDays.forEach(([day, detail]) => {
             let timeSlotsHtml = "";
             detail.forEach((data) => {
-                data.jam.forEach((jam) => {
+                const sessionList = Array.isArray(data.sessions) && data.sessions.length > 0
+                    ? data.sessions
+                    : data.jam.map((j, idx) => ({ jam: j, sesi: idx + 1 }));
+
+                sessionList.forEach((slot) => {
+                    const jam = slot.jam;
+                    const sesiNumber = slot.sesi;
                     timeSlotsHtml += `
                         <button type="button"
                             class="modal-time-slot jadwal-slot-interactive"
@@ -673,7 +699,8 @@ export function renderModal(doctorData) {
                             data-booking-time="${escapeHtml(jam)}"
                             data-booking-poli="${escapeHtml(data.serviceUnitCode)}"
                             data-booking-poli-name="${escapeHtml(data.serviceUnitName)}"
-                            title="${escapeHtml(t('clickToBook'))}: ${escapeHtml(doctorData.paramedicName)} (${t('days')[day]}, ${escapeHtml(jam)})">
+                            data-booking-sesi="${sesiNumber}"
+                            title="${escapeHtml(t("clickToBook"))}: ${escapeHtml(doctorData.paramedicName)} (${t("days")[day]}, ${escapeHtml(jam)})">
                             <div class="slot-content">
                                 <span class="modal-slot-time">
                                     <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
@@ -681,7 +708,7 @@ export function renderModal(doctorData) {
                                 <span class="modal-slot-unit">${escapeHtml(data.serviceUnitName)}</span>
                             </div>
                             <span class="slot-action-badge">
-                                <i class="fa-solid fa-calendar-plus me-1"></i>${t('bookSlot')}
+                                <i class="fa-solid fa-calendar-plus me-1"></i>${t("bookSlot")}
                             </span>
                         </button>
                     `;
