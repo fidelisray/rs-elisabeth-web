@@ -514,25 +514,42 @@ export function renderPagination(totalPages, onPageChange) {
         return;
     }
 
-    // --- Smart Pagination Logic ---
+    // --- Dynamic Sliding Window Pagination Logic (±2 Sibling) ---
     let pages = [];
-    if (totalPages <= 7) {
+    if (totalPages <= 8) {
         for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
-        if (state.currentPage <= 3) {
-            pages = [1, 2, 3, "INPUT", totalPages - 1, totalPages];
-        } else if (state.currentPage >= totalPages - 2) {
-            pages = [1, 2, "INPUT", totalPages - 2, totalPages - 1, totalPages];
-        } else {
-            pages = [
-                1,
-                "INPUT",
-                state.currentPage - 1,
-                state.currentPage,
-                state.currentPage + 1,
-                "INPUT_2",
-                totalPages,
-            ];
+        const delta = 2; // ±2 tetangga aktif
+        let left = state.currentPage - delta;
+        let right = state.currentPage + delta;
+
+        // Normalisasi batas agar minimal ada 5 angka berurutan di awal/akhir
+        if (left <= 3) {
+            left = 1;
+            right = Math.max(5, right);
+        }
+        if (right >= totalPages - 2) {
+            right = totalPages;
+            left = Math.min(left, totalPages - 4);
+        }
+
+        // Susun array halaman dengan penanda jump input
+        if (left > 1) {
+            pages.push(1);
+            if (left > 2) {
+                pages.push("INPUT");
+            }
+        }
+
+        for (let i = left; i <= right; i++) {
+            pages.push(i);
+        }
+
+        if (right < totalPages) {
+            if (right < totalPages - 1) {
+                pages.push("INPUT_2");
+            }
+            pages.push(totalPages);
         }
     }
 

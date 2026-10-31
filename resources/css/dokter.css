@@ -1441,3 +1441,19 @@ div#detailDokter .day-badge p.day-name::after {
     -moz-appearance: textfield;
     appearance: textfield;
 }
+
+@media (max-width: 575.98px) {
+    .custom-pagination {
+        gap: 3px;
+        flex-wrap: wrap;
+    }
+    .custom-pagination .page-link {
+        min-width: 34px;
+        height: 36px;
+        padding: 0 6px;
+        font-size: 0.82rem;
+    }
+    .custom-pagination .pagination-input {
+        width: 44px;
+    }
+}
