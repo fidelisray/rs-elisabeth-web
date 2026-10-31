@@ -486,6 +486,7 @@ document.addEventListener("click", function (event) {
         timeSlot: slotBtn.dataset.bookingTime,
         poliCode: slotBtn.dataset.bookingPoli,
         poliName: slotBtn.dataset.bookingPoliName,
+        sesi: parseInt(slotBtn.dataset.bookingSesi, 10) || 1,
     };
 
     openBookingModal(bookingData);
