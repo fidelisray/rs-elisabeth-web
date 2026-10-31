@@ -72,26 +72,28 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     text-align: left;
     font-family: inherit;
     color: inherit;
+    position: relative;
+    overflow: hidden;
+    min-height: 54px;
 }
 
-/* Interactive slot button styling */
+/* Interactive slot button styling - Anti-glitch Smooth Hover */
 .jadwal-slot-interactive {
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .jadwal-slot-interactive:hover {
     background-color: #e0f2fe;
     border-color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 143, 215, 0.18);
+    box-shadow: 0 4px 12px rgba(0, 143, 215, 0.16);
 }
 
 .jadwal-slot-interactive:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 143, 215, 0.12);
+    background-color: #bae6fd;
+    box-shadow: 0 1px 3px rgba(0, 143, 215, 0.12);
 }
 
 .jadwal-slot-interactive:focus-visible {
@@ -99,21 +101,43 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     outline-offset: 2px;
 }
 
+/* Floating bottom overlay action banner - Smooth Slide-up (Zero Layout Shift) */
 .jadwal-slot-interactive .slot-action-badge {
-    display: none;
-    font-size: 0.68rem;
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 24px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: #ffffff;
+    font-size: 0.67rem;
     font-weight: 700;
-    color: var(--secondary-darker-color);
-    margin-top: 4px;
-    padding-top: 4px;
-    border-top: 1px dashed rgba(0, 143, 215, 0.35);
+    letter-spacing: 0.3px;
+    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 5px;
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.18s ease;
+    pointer-events: none;
+    z-index: 2;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .jadwal-slot-interactive:hover .slot-action-badge,
 .jadwal-slot-interactive:focus-visible .slot-action-badge {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.jadwal-slot .slot-content,
+.modal-time-slot .slot-content {
     display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
 }
 
 .jadwal-slot .slot-time {
@@ -179,6 +203,9 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     text-align: left;
     font-family: inherit;
     color: inherit;
+    position: relative;
+    overflow: hidden;
+    min-height: 54px;
 }
 
 /* ==================================================
