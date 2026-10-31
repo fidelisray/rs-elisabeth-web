@@ -369,13 +369,17 @@
                                 </div>
 
                                 <div class="row g-2 small">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <span class="text-muted d-block">{{ __('Poliklinik') }}</span>
                                         <strong class="text-dark" id="bookingModalPoliName">-</strong>
                                     </div>
                                     <div class="col-6">
                                         <span class="text-muted d-block">{{ __('Jam Praktik') }}</span>
                                         <strong class="text-dark" id="bookingModalTime">-</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted d-block">{{ __('Sesi') }}</span>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="bookingModalSession">-</span>
                                     </div>
                                     <div class="col-12 mt-2 pt-2 border-top">
                                         <span class="text-muted d-block">{{ __('Tanggal Periksa') }}</span>
