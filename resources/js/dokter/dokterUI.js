@@ -54,6 +54,15 @@ export const I18N = {
         profileNotFound: "Profil dokter belum tersedia.",
         profileUnavailable:
             "Profil belum dapat dimuat. Silakan coba lagi nanti.",
+        bookSlot: "Booking",
+        clickToBook: "Klik untuk booking",
+        confirmBookingTitle: "Konfirmasi Janji Dokter",
+        nextUpcomingDate: "Jadwal Terdekat",
+        proceedToRegOnline: "Lanjut ke Pendaftaran",
+        bookingClinic: "Poliklinik",
+        bookingTime: "Jam Praktik",
+        bookingDate: "Tanggal Periksa",
+        bookingNotice: "Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal yang terisi otomatis.",
     },
     en: {
         days: {
@@ -100,6 +109,15 @@ export const I18N = {
         profileNotFound: "Doctor profile is not available.",
         profileUnavailable:
             "The profile could not be loaded. Please try again later.",
+        bookSlot: "Book",
+        clickToBook: "Click to book",
+        confirmBookingTitle: "Doctor Appointment Confirmation",
+        nextUpcomingDate: "Next Available Date",
+        proceedToRegOnline: "Proceed to Registration",
+        bookingClinic: "Clinic",
+        bookingTime: "Practice Time",
+        bookingDate: "Appointment Date",
+        bookingNotice: "You will be redirected to the RS St. Elisabeth Online Registration portal with pre-filled appointment details.",
     },
 };
 
@@ -120,6 +138,118 @@ export function escapeHtml(value) {
                 "'": "&#39;",
             })[character],
     );
+}
+
+export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
+    const now = new Date();
+    // JavaScript getDay(): 0 is Sunday, 1 is Monday ... 6 is Saturday
+    const currentDayNumber = now.getDay() === 0 ? 7 : now.getDay();
+
+    let daysUntil = parseInt(targetDayNumber, 10) - currentDayNumber;
+    if (daysUntil < 0) {
+        daysUntil += 7;
+    } else if (daysUntil === 0 && timeSlotStr) {
+        // Cek jika jam praktik hari ini sudah lewat
+        const parts = timeSlotStr.split("-");
+        const endPart = (parts[1] || parts[0]).trim();
+        const timeMatch = endPart.match(/(\d{1,2})[:.](\d{2})/);
+        if (timeMatch) {
+            const endHour = parseInt(timeMatch[1], 10);
+            const endMin = parseInt(timeMatch[2], 10);
+            const slotEndTime = new Date(now);
+            slotEndTime.setHours(endHour, endMin, 0, 0);
+            if (now > slotEndTime) {
+                // Jam praktik hari ini sudah lewat, jadwalkan minggu depan
+                daysUntil = 7;
+            }
+        }
+    }
+
+    const targetDate = new Date(now);
+    targetDate.setDate(now.getDate() + daysUntil);
+
+    const yyyy = targetDate.getFullYear();
+    const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
+    const dd = String(targetDate.getDate()).padStart(2, "0");
+    const dateIso = `${yyyy}-${mm}-${dd}`;
+
+    const locale = getLocale();
+    const formatted = new Intl.DateTimeFormat(
+        locale === "en" ? "en-US" : "id-ID",
+        {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        },
+    ).format(targetDate);
+
+    return {
+        date: targetDate,
+        dateIso,
+        formatted,
+        isToday: daysUntil === 0,
+    };
+}
+
+export function buildRegOnlineUrl({ tgl = "", poli = "", dokter = "", jam = "" } = {}) {
+    const url = new URL("https://regonline.rs-elisabeth.com/");
+    if (tgl) url.searchParams.set("tgl", tgl);
+    if (poli) url.searchParams.set("poli", poli);
+    if (dokter) url.searchParams.set("dokter", dokter);
+    if (jam) url.searchParams.set("jam", jam.replace(/\s+/g, ""));
+    return url.toString();
+}
+
+export function openBookingModal(bookingData) {
+    if (!bookingData) return;
+
+    const nextDate = calculateNextDate(
+        bookingData.dayNumber,
+        bookingData.timeSlot,
+    );
+    const bookingUrl = buildRegOnlineUrl({
+        tgl: nextDate.dateIso,
+        poli: bookingData.poliCode,
+        dokter: bookingData.paramedicCode,
+        jam: bookingData.timeSlot,
+    });
+
+    const photoImg = document.querySelector("#bookingModalDoctorPhoto img");
+    if (photoImg) {
+        photoImg.src = `https://mobile.rs-elisabeth.com/paramedic/${encodeURIComponent(bookingData.paramedicCode)}.png`;
+        photoImg.alt = bookingData.paramedicName || t("doctorPhoto");
+        photoImg.onerror = function() {
+            this.onerror = null;
+            this.src = DEFAULT_DOCTOR_PHOTO;
+        };
+    }
+
+    const nameEl = document.getElementById("bookingModalDoctorName");
+    if (nameEl) nameEl.textContent = bookingData.paramedicName || "-";
+
+    const specEl = document.getElementById("bookingModalDoctorSpec");
+    if (specEl) specEl.textContent = bookingData.specialtyName || "-";
+
+    const poliEl = document.getElementById("bookingModalPoliName");
+    if (poliEl) poliEl.textContent = bookingData.poliName || "-";
+
+    const timeEl = document.getElementById("bookingModalTime");
+    if (timeEl) timeEl.textContent = bookingData.timeSlot || "-";
+
+    const dateFormattedEl = document.getElementById("bookingModalDateFormatted");
+    if (dateFormattedEl) dateFormattedEl.textContent = nextDate.formatted;
+
+    const confirmBtn = document.getElementById("bookingModalConfirmBtn");
+    if (confirmBtn) {
+        confirmBtn.href = bookingUrl;
+    }
+
+    const modalEl = document.getElementById("bookingConfirmModal");
+    if (modalEl && window.bootstrap?.Modal) {
+        const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+    }
 }
 
 export function renderProfile(status, profile = null) {
@@ -204,10 +334,26 @@ export function createScheduleGrid(dokter) {
         schedule[day].forEach((item) => {
             item.jam.forEach((jam) => {
                 slotsHtml += `
-                    <div class="jadwal-slot">
-                        <span class="slot-time">${escapeHtml(jam)}</span>
-                        <span class="slot-klinik">${escapeHtml(item.serviceUnitName)}</span>
-                    </div>
+                    <button type="button" 
+                        class="jadwal-slot jadwal-slot-interactive"
+                        data-booking-doctor="${escapeHtml(dokter.paramedicCode)}"
+                        data-booking-doctor-name="${escapeHtml(dokter.paramedicName)}"
+                        data-booking-specialty="${escapeHtml(getSpecialtyName(dokter.specialtyCode))}"
+                        data-booking-day="${day}"
+                        data-booking-time="${escapeHtml(jam)}"
+                        data-booking-poli="${escapeHtml(item.serviceUnitCode)}"
+                        data-booking-poli-name="${escapeHtml(item.serviceUnitName)}"
+                        title="${escapeHtml(t('clickToBook'))}: ${escapeHtml(dokter.paramedicName)} (${t('days')[day]}, ${escapeHtml(jam)})">
+                        <div class="slot-content">
+                            <span class="slot-time">
+                                <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
+                            </span>
+                            <span class="slot-klinik">${escapeHtml(item.serviceUnitName)}</span>
+                        </div>
+                        <span class="slot-action-badge">
+                            <i class="fa-solid fa-calendar-plus me-1"></i>${t('bookSlot')}
+                        </span>
+                    </button>
                 `;
             });
         });
@@ -518,10 +664,26 @@ export function renderModal(doctorData) {
             detail.forEach((data) => {
                 data.jam.forEach((jam) => {
                     timeSlotsHtml += `
-                        <div class="modal-time-slot">
-                            <span class="modal-slot-time">${escapeHtml(jam)}</span>
-                            <span class="modal-slot-unit">${escapeHtml(data.serviceUnitName)}</span>
-                        </div>
+                        <button type="button"
+                            class="modal-time-slot jadwal-slot-interactive"
+                            data-booking-doctor="${escapeHtml(doctorData.paramedicCode)}"
+                            data-booking-doctor-name="${escapeHtml(doctorData.paramedicName)}"
+                            data-booking-specialty="${escapeHtml(getSpecialtyName(doctorData.specialtyCode))}"
+                            data-booking-day="${day}"
+                            data-booking-time="${escapeHtml(jam)}"
+                            data-booking-poli="${escapeHtml(data.serviceUnitCode)}"
+                            data-booking-poli-name="${escapeHtml(data.serviceUnitName)}"
+                            title="${escapeHtml(t('clickToBook'))}: ${escapeHtml(doctorData.paramedicName)} (${t('days')[day]}, ${escapeHtml(jam)})">
+                            <div class="slot-content">
+                                <span class="modal-slot-time">
+                                    <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
+                                </span>
+                                <span class="modal-slot-unit">${escapeHtml(data.serviceUnitName)}</span>
+                            </div>
+                            <span class="slot-action-badge">
+                                <i class="fa-solid fa-calendar-plus me-1"></i>${t('bookSlot')}
+                            </span>
+                        </button>
                     `;
                 });
             });

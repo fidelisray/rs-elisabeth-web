@@ -1,5 +1,5 @@
 import { fetchAllDokter, fetchDoctorProfile, filterDoctors, getSpecialtyCounts, state } from './dokterService.js';
-import { renderDoctorPage, renderModal, renderProfile, showLoading, showError, t, getLocale, escapeHtml } from './dokterUI.js';
+import { renderDoctorPage, renderModal, renderProfile, openBookingModal, showLoading, showError, t, getLocale, escapeHtml } from './dokterUI.js';
 
 // Elements
 const filterForm = document.getElementById("doctorFilterForm");
@@ -468,4 +468,25 @@ document.addEventListener("click", function (event) {
     if (event.target.closest(".button-janji") || event.target.closest(".btn-buat-janji")) {
         window.open("https://regonline.rs-elisabeth.com/", "_blank");
     }
+});
+
+// ------------------------------
+// Interactive Booking Slot Click
+// ------------------------------
+document.addEventListener("click", function (event) {
+    const slotBtn = event.target.closest(".jadwal-slot-interactive");
+    if (!slotBtn) return;
+
+    event.preventDefault();
+    const bookingData = {
+        paramedicCode: slotBtn.dataset.bookingDoctor,
+        paramedicName: slotBtn.dataset.bookingDoctorName,
+        specialtyName: slotBtn.dataset.bookingSpecialty,
+        dayNumber: parseInt(slotBtn.dataset.bookingDay, 10),
+        timeSlot: slotBtn.dataset.bookingTime,
+        poliCode: slotBtn.dataset.bookingPoli,
+        poliName: slotBtn.dataset.bookingPoliName,
+    };
+
+    openBookingModal(bookingData);
 });
