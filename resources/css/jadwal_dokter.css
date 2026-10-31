@@ -68,6 +68,52 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     display: flex;
     flex-direction: column;
     gap: 2px;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+}
+
+/* Interactive slot button styling */
+.jadwal-slot-interactive {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.jadwal-slot-interactive:hover {
+    background-color: #e0f2fe;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 143, 215, 0.18);
+}
+
+.jadwal-slot-interactive:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 143, 215, 0.12);
+}
+
+.jadwal-slot-interactive:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.jadwal-slot-interactive .slot-action-badge {
+    display: none;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--secondary-darker-color);
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px dashed rgba(0, 143, 215, 0.35);
+    align-items: center;
+    justify-content: center;
+}
+
+.jadwal-slot-interactive:hover .slot-action-badge,
+.jadwal-slot-interactive:focus-visible .slot-action-badge {
+    display: flex;
 }
 
 .jadwal-slot .slot-time {
@@ -129,6 +175,36 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
     display: flex;
     flex-direction: column;
     gap: 2px;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+}
+
+/* ==================================================
+   Booking Confirmation Modal (#bookingConfirmModal)
+================================================== */
+
+#bookingConfirmModal .booking-summary-card {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 1px solid #e2e8f0;
+}
+
+#bookingConfirmModal .booking-icon-wrapper {
+    background-color: #e0f2fe;
+    color: var(--primary-color);
+}
+
+#bookingConfirmModal #bookingModalConfirmBtn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 143, 215, 0.25);
+    transition: all 0.2s ease;
+}
+
+#bookingConfirmModal #bookingModalConfirmBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 143, 215, 0.35);
 }
 
 .modal-slot-time {

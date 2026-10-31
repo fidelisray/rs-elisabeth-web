@@ -337,6 +337,73 @@
                 </div>
             </div>
 
+            <!-- ================================================= -->
+            <!-- ---------Booking Confirmation Modal-------------- -->
+            <!-- ================================================= -->
+            <div class="modal fade" id="bookingConfirmModal" tabindex="-1" aria-labelledby="bookingModalTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content rounded-4 border-0 shadow-lg">
+                        <div class="modal-header border-0 pb-0">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="booking-icon-wrapper rounded-circle p-2 bg-primary-subtle text-primary">
+                                    <i class="fa-solid fa-calendar-check fs-5"></i>
+                                </div>
+                                <h5 class="modal-title fw-bold" id="bookingModalTitle">{{ __('Konfirmasi Janji Dokter') }}</h5>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body pt-3">
+                            <p class="text-muted small mb-3">
+                                {{ __('Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal berikut yang terisi otomatis:') }}
+                            </p>
+
+                            <div class="booking-summary-card p-3 rounded-3 bg-light border mb-3">
+                                <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
+                                    <div id="bookingModalDoctorPhoto" class="rounded-circle overflow-hidden flex-shrink-0 border" style="width: 56px; height: 56px;">
+                                        <img src="" alt="" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1 text-dark" id="bookingModalDoctorName">-</h6>
+                                        <span class="badge bg-primary text-white" id="bookingModalDoctorSpec">-</span>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2 small">
+                                    <div class="col-6">
+                                        <span class="text-muted d-block">{{ __('Poliklinik') }}</span>
+                                        <strong class="text-dark" id="bookingModalPoliName">-</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="text-muted d-block">{{ __('Jam Praktik') }}</span>
+                                        <strong class="text-dark" id="bookingModalTime">-</strong>
+                                    </div>
+                                    <div class="col-12 mt-2 pt-2 border-top">
+                                        <span class="text-muted d-block">{{ __('Tanggal Periksa') }}</span>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <strong class="text-primary fs-6" id="bookingModalDateFormatted">-</strong>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                                <i class="fa-solid fa-circle-check me-1"></i>{{ __('Jadwal Terdekat') }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info py-2 px-3 small d-flex align-items-start gap-2 mb-0">
+                                <i class="fa-solid fa-circle-info mt-1 text-info flex-shrink-0"></i>
+                                <span>{{ __('Di portal RegOnline, Anda cukup memverifikasi NIK / No. Rekam Medis untuk menyelesaikan pendaftaran.') }}</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">{{ __('Batal') }}</button>
+                            <a href="#" id="bookingModalConfirmBtn" target="_blank" rel="noopener noreferrer" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{{ __('Lanjut ke Pendaftaran') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     @include('components.floating-buttons')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/726e331ad1.js" crossorigin="anonymous"></script>
