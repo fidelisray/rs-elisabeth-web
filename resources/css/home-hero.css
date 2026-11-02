@@ -152,12 +152,6 @@ h6 {
         padding: 2.75rem 0;
     }
 
-    #home-hero .hero-bg-image {
-        background-attachment: scroll;
-        background-size: cover;
-        background-position: center center;
-    }
-
     #home-hero h1 {
         font-size: 1.5rem !important;
         line-height: 1.28 !important;

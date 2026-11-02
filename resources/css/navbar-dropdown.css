@@ -8,33 +8,48 @@
  * 1. MAIN NAVBAR — Sticky Shrink Animation
  * ============================================================ */
 #main-navbar {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.82) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(2, 97, 153, 0.08);
     padding-top: 0.6rem;
     padding-bottom: 0.6rem;
     box-shadow: none;
+    will-change: transform;
     transition:
-        padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.35s ease,
-        background 0.35s ease;
+        transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
     z-index: 1030;
 }
 
-/* State "menempel" — ditambahkan via JS saat halaman discroll */
-#main-navbar.is-stuck {
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.09);
-    background-color: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+/* Smart Scroll auto-hide dan smooth reveal states */
+#main-navbar.navbar-hidden {
+    transform: translateY(-100%) !important;
 }
 
-/* Logo — scale saat navbar mengecil */
-.navbar-logo {
-    transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+#main-navbar.navbar-visible {
+    transform: translateY(0) !important;
 }
-#main-navbar.is-stuck .navbar-logo {
-    height: 36px !important;
+
+/* State scrolled: bayangan halus dan kontras glassmorphism dinaikkan */
+#main-navbar.navbar-scrolled {
+    background-color: rgba(255, 255, 255, 0.88) !important;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    border-bottom-color: rgba(2, 97, 153, 0.12);
+}
+
+/* Logo: ukuran konsisten tanpa shrink saat scroll */
+.navbar-logo {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.25s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.02);
 }
 
 /* ============================================================
@@ -246,15 +261,25 @@
     font-weight: 600;
     padding: 0.4rem 0.85rem;
     border-radius: 50rem;
-    transition: all 0.2s ease;
+    transition:
+        transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .nav-lang-dropdown .dropdown-toggle:hover,
 .nav-lang-dropdown .dropdown-toggle:focus {
-    background-color: #ffffff;
+    background-color: rgba(0, 143, 215, 0.08);
     border-color: var(--primary-color);
     color: var(--primary-color);
-    box-shadow: 0 2px 8px rgba(0, 143, 215, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 143, 215, 0.15);
+}
+
+.nav-lang-dropdown .dropdown-toggle:active {
+    transform: translateY(0) scale(0.97);
 }
 
 .nav-lang-dropdown .dropdown-menu {
@@ -292,8 +317,9 @@
     position: relative;
     overflow: hidden;
     transition:
-        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.25s ease !important;
+        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.25s ease,
+        background-color 0.25s ease !important;
 }
 
 /* Kilatan shimmer */
@@ -319,8 +345,13 @@
 }
 
 .btn-janji:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 230, 0, 0.45) !important;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(255, 230, 0, 0.45) !important;
+}
+
+.btn-janji:active {
+    transform: translateY(0) scale(0.97) !important;
+    box-shadow: 0 2px 8px rgba(255, 230, 0, 0.35) !important;
 }
 
 /* ============================================================
@@ -565,13 +596,22 @@
 .mobile-igd-btn {
     position: relative;
     transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.2s ease,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .mobile-igd-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 0 4px rgba(229, 62, 62, 0.2);
+    background-color: #ef233c;
+    border-color: #ef233c;
+    color: #ffffff;
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: 0 4px 14px rgba(239, 35, 60, 0.35);
+}
+
+.mobile-igd-btn:active {
+    transform: translateY(0) scale(0.95);
 }
 
 /* ============================================================
@@ -669,10 +709,6 @@
         width: auto;
     }
 
-    #main-navbar.is-stuck .navbar-logo {
-        height: 32px !important;
-    }
-
     .mobile-igd-btn {
         width: 44px;
         height: 44px;
@@ -693,6 +729,18 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        border-radius: 50%;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease;
+    }
+
+    #main-navbar .navbar-toggler:hover {
+        background-color: rgba(0, 143, 215, 0.08);
+        color: var(--primary-color);
+        transform: scale(1.06);
+    }
+
+    #main-navbar .navbar-toggler:active {
+        transform: scale(0.94);
     }
 
     #main-navbar .navbar-toggler .fa-bars {
