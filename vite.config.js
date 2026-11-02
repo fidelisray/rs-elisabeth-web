@@ -73,6 +73,7 @@ export default defineConfig(({ mode }) => {
                     'resources/js/glosarium/glosarium.js',
                     'resources/js/dokter/script.js',
                     'resources/js/components/back-to-top.js',
+                    'resources/js/home/elisameds-animation.js',
                 ],
                 refresh: true,
             }),
