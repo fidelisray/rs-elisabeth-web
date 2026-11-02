@@ -1105,31 +1105,47 @@
                     </div>
                 </div>
 
-                <div class="row app-features-mockups mt-5 pt-4 justify-content-center">
-                    <div class="col-lg-4 col-md-6 mb-5 d-flex justify-content-center">
+                <div class="row app-features-mockups elisameds-3d-stage mt-4 mt-lg-5 pt-lg-4 justify-content-center">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="0">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-3.webp') }}" alt="Elisameds Feature 1">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-3.webp') }}" alt="{{ __('Reservasi Dokter Online') }}">
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-5 d-flex justify-content-center">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="1">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-4.webp') }}" alt="Elisameds Feature 2">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-4.webp') }}" alt="{{ __('Pantau Antrean Real-Time') }}">
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-5 d-flex justify-content-center">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="2">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
-                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-5.webp') }}" alt="Elisameds Feature 3">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-5.webp') }}" alt="{{ __('Rekam Medis & E-Resep') }}">
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Segmented Control Indicator (Khusus Mobile & Tablet < 992px) -->
+                <div class="elisameds-stage-nav d-flex d-lg-none justify-content-center align-items-center gap-2 mt-2 mb-3">
+                    <button type="button" class="elisameds-nav-pill" data-target-index="0" aria-label="{{ __('Fitur 1: Reservasi') }}">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>{{ __('Reservasi') }}</span>
+                    </button>
+                    <button type="button" class="elisameds-nav-pill active" data-target-index="1" aria-label="{{ __('Fitur 2: Antrean') }}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>{{ __('Antrean') }}</span>
+                    </button>
+                    <button type="button" class="elisameds-nav-pill" data-target-index="2" aria-label="{{ __('Fitur 3: Rekam Medis') }}">
+                        <i class="fa-solid fa-file-medical"></i>
+                        <span>{{ __('Rekam Medis') }}</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -1146,7 +1162,8 @@
         'resources/js/navbar/navbar.js',
         'resources/js/navbar/navbar-dropdown.js',
         'resources/js/promotions/promotions.js',
-        'resources/js/components/back-to-top.js'
+        'resources/js/components/back-to-top.js',
+        'resources/js/home/elisameds-animation.js'
     ])
     @include('components.json-ld')
     </body>
