@@ -1,3 +1,5 @@
+import { gsap } from "gsap";
+
 /**
  * navbar.js
  *
@@ -153,34 +155,54 @@
         attachHoverDropdown(navTentangKami);
     }
 
-    // 3. Staggered Offcanvas Menu Items
+    // 3. Staggered Offcanvas Menu Items (GSAP Orchestration)
     function initOffcanvasAnimation() {
         const offcanvas = document.getElementById("mobileOffcanvas");
         if (!offcanvas) return;
 
-        offcanvas.addEventListener("show.bs.offcanvas", () => {
-            const items = offcanvas.querySelectorAll(".offcanvas-nav-link");
-            items.forEach((item, i) => {
-                item.style.opacity = "0";
-                item.style.transform = "translateX(20px)";
-                item.style.transition = `opacity 0.3s ease ${i * 0.06}s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) ${i * 0.06}s`;
-            });
+        const navLinks = Array.from(offcanvas.querySelectorAll(".offcanvas-nav-link"));
+        const ctaWrapper = offcanvas.querySelector(".offcanvas-cta-wrapper");
+        const animatedElements = [...navLinks];
+        if (ctaWrapper) {
+            animatedElements.push(ctaWrapper);
+        }
+
+        // Set kondisi awal saat offcanvas tertutup
+        gsap.set(animatedElements, {
+            opacity: 0,
+            x: 25
         });
 
-        offcanvas.addEventListener("shown.bs.offcanvas", () => {
-            const items = offcanvas.querySelectorAll(".offcanvas-nav-link");
-            items.forEach((item) => {
-                item.style.opacity = "1";
-                item.style.transform = "translateX(0)";
-            });
+        offcanvas.addEventListener("show.bs.offcanvas", () => {
+            // Cek preferensi aksesibilitas pengguna
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                gsap.set(animatedElements, { opacity: 1, x: 0 });
+                return;
+            }
+
+            gsap.killTweensOf(animatedElements);
+            gsap.fromTo(animatedElements, 
+                {
+                    opacity: 0,
+                    x: 25
+                },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.45,
+                    stagger: 0.045,
+                    delay: 0.15,
+                    ease: "back.out(1.1)",
+                    clearProps: "transform,opacity"
+                }
+            );
         });
 
         offcanvas.addEventListener("hide.bs.offcanvas", () => {
-            const items = offcanvas.querySelectorAll(".offcanvas-nav-link");
-            items.forEach((item) => {
-                item.style.opacity = "0";
-                item.style.transform = "translateX(20px)";
-                item.style.transition = "none";
+            gsap.killTweensOf(animatedElements);
+            gsap.set(animatedElements, {
+                opacity: 0,
+                x: 25
             });
         });
     }
