@@ -93,40 +93,70 @@ section#hero-section .hero-subtitle {
     max-width: 780px;
 }
 
-/* Responsive Scaling */
+/* Responsive Scaling Mobile (< 768px) */
 @media (max-width: 767.98px) {
     section#hero-section {
-        padding: 1.75rem 0 2.25rem;
-        min-height: auto;
+        padding: 2.75rem 0 3.25rem;
+        min-height: 220px;
     }
 
     section#hero-section.hero-compact {
-        padding: 1.35rem 0 1.65rem;
+        padding: 1.85rem 0 2.25rem;
+        min-height: auto;
     }
 
     section#hero-section .hero-breadcrumb .breadcrumb {
-        font-size: 0.78rem;
+        font-size: 0.82rem;
+        margin-bottom: 0.5rem;
+    }
+
+    section#hero-section .hero-badge {
+        font-size: 0.80rem;
+        padding: 0.35rem 1rem;
+        margin-top: 0.4rem;
+        margin-bottom: 0.45rem;
+    }
+
+    section#hero-section .hero-title {
+        font-size: 1.7rem;
+        line-height: 1.28;
+        letter-spacing: -0.015em;
+        margin-top: 0.35rem;
+        margin-bottom: 0.45rem;
+    }
+
+    section#hero-section .hero-subtitle {
+        font-size: 0.95rem;
+        line-height: 1.55;
+        margin-top: 0.35rem;
+    }
+}
+
+/* Adaptasi Khusus Layar Sempit (< 375px) */
+@media (max-width: 374.98px) {
+    section#hero-section {
+        padding: 2.25rem 0 2.75rem;
+        min-height: 205px;
+    }
+
+    section#hero-section .hero-breadcrumb .breadcrumb {
+        font-size: 0.76rem;
         margin-bottom: 0.35rem;
     }
 
     section#hero-section .hero-badge {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.85rem;
-        margin-top: 0.35rem;
-        margin-bottom: 0.35rem;
+        font-size: 0.74rem;
+        padding: 0.28rem 0.85rem;
     }
 
     section#hero-section .hero-title {
-        font-size: 1.45rem;
+        font-size: 1.55rem;
         line-height: 1.28;
-        margin-top: 0.25rem;
-        margin-bottom: 0.35rem;
     }
 
     section#hero-section .hero-subtitle {
         font-size: 0.88rem;
-        line-height: 1.55;
-        margin-top: 0.25rem;
+        line-height: 1.5;
     }
 }
 
