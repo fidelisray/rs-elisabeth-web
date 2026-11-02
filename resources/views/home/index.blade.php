@@ -1106,8 +1106,20 @@
                 </div>
 
                 <div class="row app-features-mockups elisameds-3d-stage mt-4 mt-lg-5 pt-lg-4 justify-content-center">
-                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
+                    <!-- Kartu 1 (Khusus Mobile): elisameds-2.webp -->
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex d-lg-none justify-content-center elisameds-stage-card" 
                          data-card-index="0"
+                         data-feature-title="{{ __('Layanan Digital Terpadu') }}"
+                         data-feature-desc="{{ __('Registrasi online, cek hasil laboratorium, dan pantau riwayat periksa dalam satu aplikasi.') }}">
+                        <div class="static-mockup-wrapper">
+                            <div class="mockup-glow"></div>
+                            <div class="static-mobile-frame">
+                                <img src="{{ Vite::asset('resources/images/elisameds/elisameds-2.webp') }}" alt="{{ __('Layanan Digital Terpadu ElisaMeds') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
+                         data-card-index="1"
                          data-feature-title="{{ __('Reservasi Dokter Online') }}"
                          data-feature-desc="{{ __('Buat janji temu dokter spesialis lebih cepat tanpa antre.') }}">
                         <div class="static-mockup-wrapper">
@@ -1118,7 +1130,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
-                         data-card-index="1"
+                         data-card-index="2"
                          data-feature-title="{{ __('Pantau Antrean Real-Time') }}"
                          data-feature-desc="{{ __('Pantau giliran pemeriksaan dokter langsung dari genggaman.') }}">
                         <div class="static-mockup-wrapper">
@@ -1129,7 +1141,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
-                         data-card-index="2"
+                         data-card-index="3"
                          data-feature-title="{{ __('Rekam Medis & E-Resep') }}"
                          data-feature-desc="{{ __('Akses riwayat diagnosis dan resep obat secara digital.') }}">
                         <div class="static-mockup-wrapper">
@@ -1148,9 +1160,10 @@
                         <p class="elisameds-info-desc text-muted mb-3"></p>
                     </div>
                     <div class="elisameds-dots-nav d-flex justify-content-center align-items-center gap-2">
-                        <button type="button" class="elisameds-dot" data-target-index="0" aria-label="{{ __('Fitur 1: Reservasi') }}"></button>
-                        <button type="button" class="elisameds-dot active" data-target-index="1" aria-label="{{ __('Fitur 2: Antrean') }}"></button>
-                        <button type="button" class="elisameds-dot" data-target-index="2" aria-label="{{ __('Fitur 3: Rekam Medis') }}"></button>
+                        <button type="button" class="elisameds-dot active" data-target-index="0" aria-label="{{ __('Fitur 1: Layanan Terpadu') }}"></button>
+                        <button type="button" class="elisameds-dot" data-target-index="1" aria-label="{{ __('Fitur 2: Reservasi') }}"></button>
+                        <button type="button" class="elisameds-dot" data-target-index="2" aria-label="{{ __('Fitur 3: Antrean') }}"></button>
+                        <button type="button" class="elisameds-dot" data-target-index="3" aria-label="{{ __('Fitur 4: Rekam Medis') }}"></button>
                     </div>
                 </div>
             </div>

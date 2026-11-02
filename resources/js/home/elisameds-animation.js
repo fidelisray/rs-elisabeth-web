@@ -15,23 +15,23 @@ function initElisamedsMockups() {
 
     if (cards.length === 0) return;
 
-    let activeIndex = 1; // Default sorotan tengah pada kartu ke-2 (Antrean Real-Time)
+    let activeIndex = 0; // Default kartu pembuka pada Index 0: Layanan Digital Terpadu (elisameds-2)
     let isAnimating = false;
     let autoPlayTimer = null;
     let isPaused = false;
     const autoPlayInterval = 4500;
 
-    // Menghitung posisi siklis (-1 = kiri, 0 = tengah, 1 = kanan)
-    function getCyclicOffset(cardIndex, active, total = 3) {
+    // Menghitung posisi siklis (-1 = kiri, 0 = tengah, 1 = kanan, 2/-2 = belakang)
+    function getCyclicOffset(cardIndex, active, total) {
         let diff = (cardIndex - active) % total;
-        if (diff < -1) diff += total;
-        if (diff > 1) diff -= total;
+        if (diff < -total / 2) diff += total;
+        if (diff > total / 2) diff -= total;
         return diff;
     }
 
     const mm = gsap.matchMedia();
 
-    // 1. Breakpoint Mobile & Tablet (< 992px): Centered Coverflow Slider
+    // 1. Breakpoint Mobile & Tablet (< 992px): Centered Coverflow Slider (4 Kartu)
     mm.add("(max-width: 991.98px)", () => {
         function getPeekDistance() {
             return window.innerWidth < 375 ? 72 : 85;
@@ -69,6 +69,13 @@ function initElisamedsMockups() {
                     scale = 0.84;
                     opacity = 0.55;
                     zIndex = 10;
+                    card.classList.remove("is-active");
+                } else {
+                    // Kartu Belakang (Siap meluncur pada putaran berikutnya)
+                    x = 0;
+                    scale = 0.7;
+                    opacity = 0;
+                    zIndex = 1;
                     card.classList.remove("is-active");
                 }
 
@@ -272,6 +279,9 @@ function initElisamedsMockups() {
             autoPlayTimer = null;
         }
 
+        // Filter kartu yang aktif di desktop (mengabaikan kartu khusus mobile .d-lg-none)
+        const desktopCards = cards.filter((card) => !card.classList.contains("d-lg-none"));
+
         // Reset seluruh inline transform agar layout desktop murni dan tidak terpengaruh
         cards.forEach((card) => {
             gsap.set(card, {
@@ -286,7 +296,7 @@ function initElisamedsMockups() {
             start: "top 75%",
             once: true,
             onEnter: () => {
-                gsap.from(cards, {
+                gsap.from(desktopCards, {
                     y: 50,
                     opacity: 0,
                     scale: 0.9,
@@ -298,7 +308,7 @@ function initElisamedsMockups() {
         });
 
         // Micro-interaction 3D Hover Depth pada desktop
-        cards.forEach((card) => {
+        desktopCards.forEach((card) => {
             card.addEventListener("mouseenter", () => {
                 gsap.to(card, {
                     y: -10,
