@@ -138,8 +138,69 @@
         font-size: 1.65rem;
     }
     .questionnaire-main-card {
-        padding: 1.5rem;
+        padding: 1.25rem 1.1rem;
         border-radius: 1rem;
+    }
+    .questionnaire-container {
+        margin-top: -1.5rem;
+        padding-bottom: 2.75rem;
+    }
+    .questionnaire-progress-tracker {
+        padding: 0.75rem 0.95rem;
+        margin-bottom: 1.35rem;
+        gap: 0.65rem;
+    }
+    .progress-tracker-text {
+        font-size: 0.82rem;
+    }
+    .questionnaire-step-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.6rem;
+    }
+    .questionnaire-step-header.mt-5 {
+        margin-top: 1.75rem !important;
+    }
+    .step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.82rem;
+    }
+    .step-title {
+        font-size: 1.02rem;
+    }
+    .question-item-card {
+        padding: 1rem;
+        margin-bottom: 0.85rem;
+    }
+    .question-text {
+        font-size: 0.88rem;
+        margin-bottom: 0.65rem;
+    }
+    .demography-pill-btn {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.82rem;
+        min-height: 40px;
+    }
+    .rating-pill-btn {
+        min-height: 44px;
+        padding: 0.5rem 0.65rem;
+        font-size: 0.8rem;
+    }
+    .btn-submit-questionnaire {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        font-size: 0.92rem;
+        min-height: 46px;
+    }
+    .hub-service-card {
+        padding: 1.35rem 1.25rem;
+        border-radius: 1rem;
+    }
+    .hub-card-icon-wrap {
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+        margin-bottom: 0.85rem;
     }
 }
 

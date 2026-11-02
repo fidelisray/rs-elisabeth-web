@@ -347,3 +347,128 @@
         height: 220px;
     }
 }
+
+/* =====================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ===================================================== */
+@media (max-width: 767.98px) {
+    #facilities-intro {
+        padding: 1.75rem 0 1rem;
+    }
+
+    #facilities-intro .intro-label span {
+        font-size: 0.75rem;
+    }
+
+    #facilities-intro .intro-title {
+        font-size: 1.4rem;
+        margin-bottom: 0.6rem;
+    }
+
+    #facilities-intro .intro-desc {
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    #facilities-main {
+        padding: 1rem 0 3rem;
+    }
+
+    .facility-sidebar {
+        margin-bottom: 1rem;
+    }
+
+    .facility-sidebar-header {
+        font-size: 0.98rem;
+        margin-bottom: 0.65rem;
+        padding-bottom: 0.5rem;
+    }
+
+    /* Horizontal Scroll Strip for Facility Selector Buttons on Mobile */
+    .facility-list {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 0.5rem;
+        padding: 0.2rem 0.1rem 0.6rem;
+        margin-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
+    }
+
+    .facility-list::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .btn-facility {
+        flex: 0 0 auto;
+        width: auto;
+        padding: 0.5rem 0.95rem;
+        font-size: 0.82rem;
+        min-height: 42px;
+        scroll-snap-align: start;
+    }
+
+    .btn-facility:hover {
+        transform: none;
+    }
+
+    .facility-detail-panel {
+        border-radius: 1rem;
+        min-height: auto;
+    }
+
+    .facility-img-wrapper {
+        height: 195px;
+    }
+
+    .facility-content-body {
+        padding: 1.25rem;
+    }
+
+    .facility-tag {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.75rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .facility-name {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .facility-divider {
+        margin: 0.75rem 0 0.9rem;
+    }
+
+    .facility-desc {
+        font-size: 0.88rem;
+        line-height: 1.65;
+    }
+
+    .facility-highlights {
+        margin-top: 1rem;
+        gap: 0.45rem;
+    }
+
+    .facility-highlight-badge {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.7rem;
+    }
+
+    .facility-cta {
+        margin-top: 1.25rem;
+        gap: 0.5rem;
+    }
+
+    .facility-cta .btn-primary-facility,
+    .facility-cta .btn-outline-facility {
+        width: 100%;
+        justify-content: center;
+        padding: 0.6rem 1.25rem;
+        font-size: 0.88rem;
+        min-height: 44px;
+    }
+}

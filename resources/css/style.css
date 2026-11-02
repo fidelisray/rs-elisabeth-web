@@ -649,3 +649,283 @@ span.carousel-control-next-icon {
         animation: none;
     }
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px: Medium, Large, Extra Large) TIDAK DISENTUH SAMA SEKALI
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    body {
+        font-size: 0.925rem;
+        line-height: 1.6;
+        padding-bottom: 48px;
+    }
+
+    section[id] {
+        scroll-margin-top: 72px;
+    }
+
+    .section-title h2,
+    h2.section-title,
+    .section-title .display-6,
+    .section-title .fw-bold {
+        font-size: 1.45rem !important;
+        line-height: 1.3 !important;
+    }
+
+    .section-title {
+        margin-top: 0.75rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .section-title .divider {
+        width: 56px;
+        height: 3px;
+    }
+
+    .btn-primary-custom {
+        font-size: 0.875rem;
+        padding: 9px 22px;
+    }
+
+    /* Matikan animasi pantul tak berujung & proporsionalkan tombol di mobile */
+    .btn-bouncing {
+        animation: none !important;
+        padding: 0.65rem 1.5rem !important;
+        font-size: 0.88rem !important;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-bouncing:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Floating Buttons: 44x44px di tepi layar agar tidak menutupi konten utama */
+    .floating-whatsapp {
+        left: 12px;
+        bottom: 68px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.25rem;
+        box-shadow: 0 3px 10px rgba(37, 211, 102, 0.35);
+    }
+
+    .floating-emergency {
+        left: 12px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        animation: none !important;
+        box-shadow: 0 3px 10px rgba(229, 62, 62, 0.35);
+    }
+
+    .back-to-top-btn {
+        left: auto;
+        right: 12px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        transform: translateY(16px);
+    }
+
+    .back-to-top-btn.show {
+        transform: translateY(0);
+        animation: none !important;
+    }
+
+    .back-to-top-btn:hover {
+        transform: translateY(-2px);
+        animation: none !important;
+    }
+
+    /* Home Page Sections Spacing & Proportions */
+    #about-us.py-5,
+    #facilities-and-services.py-5,
+    #promotions.py-5,
+    #latest-articles.py-5,
+    #latest-news.py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    #promotions > .container.pb-5,
+    #latest-articles > .container.pb-5,
+    #latest-news > .container.pb-5 {
+        padding-bottom: 1rem !important;
+    }
+
+    /* About Us Mobile Proportions */
+    #about-us .row.mt-5 {
+        margin-top: 1.25rem !important;
+    }
+
+    #about-us .about-image {
+        margin-bottom: 1.5rem !important;
+    }
+
+    #about-us .about-content.ps-lg-4 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    #about-us .about-rs.mb-5 {
+        margin-bottom: 1.35rem !important;
+    }
+
+    #about-us .about-rs .d-flex.align-items-center.mb-3 {
+        margin-bottom: 0.5rem !important;
+    }
+
+    #about-us .about-rs .icon-circle {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 0.95rem !important;
+        margin-right: 0.75rem !important;
+        flex-shrink: 0;
+    }
+
+    #about-us .about-rs h3,
+    #about-us .about-rs h4 {
+        font-size: 1.05rem !important;
+        line-height: 1.3 !important;
+    }
+
+    #about-us .about-rs p {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        margin-right: 0 !important;
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+        text-indent: 0 !important;
+        text-align: left !important;
+    }
+
+    /* Facilities & Services Carousel on Home Page */
+    #facilities-and-services .facility-img-wrapper {
+        height: 195px;
+    }
+
+    #facilities-and-services .carousel-item {
+        min-height: auto;
+    }
+
+    #facilities-and-services .carousel-item .row {
+        min-height: auto;
+        --bs-gutter-y: 0.75rem;
+    }
+
+    #facilities-and-services .facility-content {
+        padding: 0.5rem 0.75rem 2.25rem !important;
+    }
+
+    #facilities-and-services .facility-content h3 {
+        font-size: 1.18rem !important;
+        margin-bottom: 0.35rem !important;
+    }
+
+    #facilities-and-services .facility-content p.fs-5 {
+        font-size: 0.9rem !important;
+        line-height: 1.55 !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    #facilities-and-services .facility-content .btn-learn {
+        font-size: 0.85rem;
+        margin-top: 0.5rem !important;
+    }
+
+    #facilities-and-services .carousel-control-prev,
+    #facilities-and-services .carousel-control-next {
+        top: 97px;
+        bottom: auto;
+        width: 40px;
+        height: 40px;
+        transform: translateY(-50%);
+        opacity: 0.85;
+    }
+
+    #facilities-and-services .carousel-control-prev {
+        left: 8px;
+    }
+
+    #facilities-and-services .carousel-control-next {
+        right: 8px;
+    }
+
+    #facilities-and-services .carousel-control-prev-icon,
+    #facilities-and-services .carousel-control-next-icon {
+        padding: 0.65rem !important;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    /* Promotions, Latest Articles & News Cards on Home Page */
+    .promo-img-wrapper {
+        height: 200px;
+    }
+
+    #promotions .card-body,
+    #latest-articles .card-body,
+    #latest-news .card-body {
+        padding: 1.15rem !important;
+    }
+
+    #promotions .card-title,
+    #latest-articles .card-title,
+    #latest-news .card-title {
+        font-size: 1.05rem !important;
+        line-height: 1.38 !important;
+    }
+
+    #promotions .card-text,
+    #latest-articles .card-text,
+    #latest-news .card-text {
+        font-size: 0.875rem !important;
+        line-height: 1.55 !important;
+    }
+
+    #latest-articles .article-img-wrapper,
+    #latest-news .article-img-wrapper {
+        height: 185px !important;
+    }
+
+    /* Promo Modal on Mobile */
+    #promoModal .modal-header {
+        padding: 1rem 1.25rem 0.5rem !important;
+    }
+
+    #promoModal .modal-title {
+        font-size: 1.15rem !important;
+    }
+
+    #promoModal .modal-body {
+        padding: 1rem 1.25rem 1.25rem !important;
+    }
+
+    #promoModal #promoModalImg {
+        max-height: 220px !important;
+    }
+
+    #promoModal #promoModalDesc {
+        font-size: 0.9rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 1.25rem !important;
+    }
+
+    #promoModal .d-flex.justify-content-end.gap-3 {
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+
+    #promoModal .d-flex.justify-content-end.gap-3 .btn {
+        width: 100%;
+        padding: 0.65rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}

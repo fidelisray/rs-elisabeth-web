@@ -1457,3 +1457,157 @@ div#detailDokter .day-badge p.day-name::after {
         width: 44px;
     }
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .main-content {
+        padding-top: 1.25rem !important;
+        padding-bottom: 2.5rem;
+    }
+
+    .doctor-toolbar {
+        margin-bottom: 0.75rem;
+    }
+
+    .doctor-toolbar-btn {
+        font-size: 0.88rem;
+        min-height: 44px;
+    }
+
+    .doctor-summary {
+        padding: 0.75rem 0.9rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .doctor-summary-text {
+        font-size: 0.85rem;
+    }
+
+    .doctor-summary-badge {
+        font-size: 0.78rem;
+        padding: 0.25rem 0.7rem;
+    }
+
+    /* Doctor Card Item: Stacked Centered Layout with Compact Photo & Buttons */
+    #daftar-dokter .doctor-card-item .card-body {
+        padding: 1rem !important;
+    }
+
+    #daftar-dokter .doctor-card-photo {
+        border-right: none !important;
+        border-bottom: 1px solid #eef2f6;
+        padding-bottom: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    #daftar-dokter .doctor-card-photo > div.p-2 {
+        padding: 0 !important;
+    }
+
+    #daftar-dokter .doctor-card-photo img {
+        width: 110px !important;
+        height: 135px !important;
+        margin-bottom: 0.65rem !important;
+        border-radius: 12px !important;
+    }
+
+    #daftar-dokter .group-btn {
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.25rem !important;
+        margin-bottom: 0 !important;
+    }
+
+    #daftar-dokter .group-btn a {
+        flex: 1 1 auto;
+        max-width: 148px;
+        min-height: 40px;
+        height: 40px;
+        font-size: 0.78rem;
+        padding: 0 12px;
+    }
+
+    #daftar-dokter .doctor-card-main > .container-fluid {
+        padding: 0 !important;
+    }
+
+    #daftar-dokter .dokter-header {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #daftar-dokter .dokter-header h5 {
+        font-size: 1.02rem;
+        line-height: 1.35;
+        margin-bottom: 0.35rem !important;
+    }
+
+    .speciality-badge .speciality-title {
+        font-size: 0.78rem;
+        padding: 0.2rem 1rem;
+        margin-bottom: 0;
+    }
+
+    /* Detail Dokter Modal on Mobile */
+    div#detailDokter .doctor-card .profile-header {
+        padding: 1rem;
+    }
+
+    div#detailDokter .doctor-photo {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+    }
+
+    div#detailDokter #namaDokter {
+        font-size: 1.02rem;
+        line-height: 1.3;
+        padding-right: 1.75rem;
+    }
+
+    div#detailDokter .close-btn {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+    }
+
+    div#detailDokter .nav-tabs .nav-link {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.85rem;
+    }
+
+    div#detailDokter .content-section {
+        padding: 0.9rem;
+    }
+
+    div#detailDokter .info-box {
+        padding: 0.75rem 0.9rem;
+        border-radius: 12px;
+        gap: 0.75rem;
+    }
+
+    div#detailDokter .info-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+    div#detailDokter .info-label {
+        font-size: 0.78rem;
+    }
+
+    div#detailDokter .cta-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        min-height: 44px;
+    }
+}

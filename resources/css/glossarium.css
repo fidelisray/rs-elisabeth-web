@@ -87,12 +87,37 @@ section#hero-section .letter-btn.active {
 }
 
 @media (max-width: 767.98px) {
+    section#hero-section .search-label {
+        font-size: 0.88rem;
+        margin-top: 1.15rem;
+        margin-bottom: 0.5rem;
+    }
+
+    section#hero-section .search-box {
+        padding: 0.5rem 1rem;
+    }
+
+    section#hero-section .search-box input {
+        font-size: 0.88rem;
+    }
+
+    section#hero-section .letter-panel-label {
+        font-size: 0.88rem;
+        margin-top: 1.35rem;
+        margin-bottom: 0.65rem;
+    }
+
     section#hero-section .letter-grid {
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.35rem;
         max-width: 100%;
     }
-    section#hero-section .letter-panel-label {
-        margin-top: 2.5rem;
+
+    section#hero-section .letter-btn {
+        width: 100%;
+        max-width: 2.45rem;
+        font-size: 0.82rem;
+        margin: 0 auto;
     }
 }
 
@@ -391,4 +416,125 @@ section#glosarium .glosarium-container {
 .cta-card > .fa-arrow-right {
     font-size: 1.1rem;
     opacity: 0.8;
+}
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    /* Perbaikan Grid 55%/45% menjadi 1 kolom penuh di Handphone */
+    section#glosarium .glosarium-container {
+        grid-template-columns: 1fr;
+    }
+
+    section#glosarium .glosarium-container .content-side {
+        display: none;
+    }
+
+    section#glosarium .container.py-5,
+    section#glosarium-explore .container.py-5 {
+        padding-top: 1.75rem !important;
+        padding-bottom: 2.25rem !important;
+    }
+
+    section#glosarium h1.display-5 {
+        font-size: 1.35rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    section#glosarium h2.display-6,
+    section#glosarium-explore h2.h3 {
+        font-size: 1.25rem !important;
+    }
+
+    section#glosarium .istilah-title {
+        font-size: 1.05rem !important;
+    }
+
+    /* Glossary Show / Detail Page */
+    main .container.py-5 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 2.25rem !important;
+    }
+
+    main .card-body.p-4.p-md-5 {
+        padding: 1.25rem !important;
+    }
+
+    main .istilah-header {
+        font-size: 1.35rem !important;
+    }
+
+    main .deskripsi-text.fs-5 {
+        font-size: 0.92rem !important;
+        line-height: 1.65 !important;
+    }
+
+    /* Explore Bento Cards & Stats on Mobile */
+    .stat-card {
+        padding: 1rem 0.75rem;
+    }
+
+    .stat-card .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.05rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card .stat-value {
+        font-size: 1.25rem;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.76rem;
+    }
+
+    .term-pill {
+        padding: 0.4rem 0.85rem;
+        font-size: 0.82rem;
+    }
+
+    .cta-card {
+        padding: 1rem 1.15rem;
+    }
+
+    .cta-card .cta-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+
+    .cta-card h3.h5 {
+        font-size: 1rem;
+    }
+
+    .explore-bento-card {
+        padding: 1.25rem;
+        border-radius: 16px;
+    }
+
+    .explore-bento-card .icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+    }
+
+    .bento-title {
+        font-size: 1.3rem;
+    }
+
+    .bento-title-sm {
+        font-size: 1.15rem;
+    }
+
+    .bento-desc,
+    .bento-desc-sm {
+        font-size: 0.88rem;
+    }
+
+    .bento-action {
+        font-size: 0.92rem;
+    }
 }

@@ -260,3 +260,78 @@ Jadwal Dokter Styles - Card Grid (Doctor Card on the main list)
         font-size: 0.9rem;
     }
 }
+
+/* ==================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+================================================== */
+@media (max-width: 767.98px) {
+    .jadwal-wrapper {
+        padding: 0.75rem 0 0.25rem;
+    }
+
+    .jadwal-title {
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+        justify-content: center;
+    }
+
+    .jadwal-grid {
+        gap: 6px;
+    }
+
+    .jadwal-day-col {
+        flex: 1 1 calc(50% - 6px);
+        max-width: calc(50% - 3px);
+        min-width: 125px;
+    }
+
+    .jadwal-day-name {
+        padding: 5px 6px;
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+
+    .jadwal-slot {
+        padding: 6px 7px;
+        min-height: 48px;
+    }
+
+    .jadwal-slot .slot-time {
+        font-size: 0.75rem;
+    }
+
+    .jadwal-slot .slot-klinik {
+        font-size: 0.68rem;
+    }
+
+    .modal-day-header {
+        font-size: 0.78rem;
+        padding: 6px;
+    }
+
+    .modal-time-list {
+        padding: 6px;
+        gap: 5px;
+    }
+
+    .modal-time-slot {
+        padding: 6px 8px;
+        min-height: 48px;
+    }
+
+    .modal-slot-time {
+        font-size: 0.76rem;
+    }
+
+    .modal-slot-unit {
+        font-size: 0.68rem;
+    }
+}
+
+@media (max-width: 379.98px) {
+    .jadwal-day-col {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
