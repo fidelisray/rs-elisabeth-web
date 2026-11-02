@@ -129,3 +129,79 @@ h4.footer-title {
     font-weight: 500;
     color: #fff;
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    #footer.pt-5 {
+        padding-top: 2.25rem !important;
+    }
+
+    #footer .footer-body.py-4 {
+        padding-top: 0.5rem !important;
+        padding-bottom: 1.25rem !important;
+    }
+
+    #footer .footer-body > .row.g-4 {
+        --bs-gutter-y: 1.5rem;
+    }
+
+    #footer .footer-header img {
+        width: 72px !important;
+        height: auto;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .footer-header .rs-name {
+        font-size: 1.35rem;
+        line-height: 1.25;
+    }
+
+    .footer-header p.moto {
+        font-size: 1.1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    h4.footer-title {
+        font-size: 1.05rem;
+        margin-bottom: 0.65rem !important;
+    }
+
+    #footer .footer-list {
+        margin-bottom: 0.35rem;
+        margin-left: 0;
+        font-size: 0.88rem;
+    }
+
+    #footer .footer-list a {
+        padding: 0.15rem 0;
+    }
+
+    .social-media {
+        margin-top: 1rem;
+    }
+
+    .btn-social {
+        width: 44px;
+        height: 44px;
+        font-size: 1.15rem;
+    }
+
+    .fa-google-play {
+        font-size: 2rem;
+    }
+
+    .elisameds-desc {
+        font-size: 0.92rem;
+    }
+
+    #footer .footer-copyright {
+        padding: 0.85rem 0.5rem;
+    }
+
+    #footer .footer-copyright p {
+        font-size: 0.8rem;
+    }
+}

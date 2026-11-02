@@ -135,3 +135,106 @@
     color: #555;
     line-height: 1.5;
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    #motto.py-5,
+    #sejarah-singkat.py-5,
+    #visi-dan-misi.py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    #visi-dan-misi {
+        padding-bottom: 3rem !important;
+    }
+
+    /* Motto Section */
+    .motto-section i.display-4 {
+        font-size: 1.85rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    .motto-section h2.display-5 {
+        font-size: 1.35rem !important;
+        line-height: 1.38 !important;
+        margin-bottom: 0.75rem !important;
+    }
+
+    /* Sejarah Singkat */
+    #sejarah-singkat .history-card .card-body {
+        padding: 1.25rem !important;
+    }
+
+    #sejarah-singkat .d-flex.align-items-center.mb-4 {
+        margin-bottom: 1rem !important;
+    }
+
+    .history-icon-wrapper {
+        width: 44px;
+        height: 44px;
+        font-size: 1.15rem;
+        margin-right: 0.75rem !important;
+        flex-shrink: 0;
+    }
+
+    #sejarah-singkat .history-card h3 {
+        font-size: 1.15rem;
+    }
+
+    #sejarah-singkat .history-content.fs-5,
+    #sejarah-singkat .history-content p {
+        font-size: 0.9rem !important;
+        line-height: 1.65 !important;
+    }
+
+    /* Visi & Misi */
+    #visi-dan-misi .row.mb-5 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .vision-card {
+        padding: 1.35rem 1.15rem !important;
+        border-radius: 1rem;
+    }
+
+    .vision-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.4rem;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .vision-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .vision-text {
+        font-size: 0.94rem;
+        line-height: 1.6;
+    }
+
+    #visi-dan-misi h3.mb-4 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem !important;
+    }
+
+    .mission-card .card-body {
+        padding: 1.15rem !important;
+    }
+
+    .mission-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.2rem;
+        margin-bottom: 0.65rem !important;
+    }
+
+    .mission-card p {
+        font-size: 0.88rem;
+        line-height: 1.55;
+    }
+}

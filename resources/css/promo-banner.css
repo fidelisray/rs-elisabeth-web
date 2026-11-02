@@ -122,3 +122,40 @@
         width: 20px !important;
     }
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    #promo-banner-carousel .carousel-control-prev,
+    #promo-banner-carousel .carousel-control-next {
+        width: 40px !important;
+        height: 40px !important;
+        opacity: 0.75 !important;
+        background: rgba(15, 23, 42, 0.35) !important;
+    }
+
+    #promo-banner-carousel .carousel-control-prev {
+        left: 8px !important;
+    }
+
+    #promo-banner-carousel .carousel-control-next {
+        right: 8px !important;
+    }
+
+    /* Fallback banner slide when no banner images are uploaded */
+    #promo-banner-carousel .carousel-item > .d-flex[style*="min-height: 420px"] {
+        min-height: 220px !important;
+        padding: 1.75rem 1rem !important;
+    }
+
+    #promo-banner-carousel .carousel-item h2.display-6 {
+        font-size: 1.35rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    #promo-banner-carousel .carousel-item p.lead {
+        font-size: 0.88rem !important;
+    }
+}

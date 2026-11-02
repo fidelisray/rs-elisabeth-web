@@ -187,3 +187,70 @@
 .article-content p {
     margin-bottom: 1.5rem;
 }
+
+/* ==========================================================================
+   MOBILE HANDPHONE OVERHAUL (< 768px)
+   Desktop (>= 768px) tidak disentuh sama sekali.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+    .news-section {
+        padding: 1.75rem 0 2.75rem;
+    }
+
+    .news-card-body {
+        padding: 1.15rem;
+    }
+
+    .news-date {
+        font-size: 0.78rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .news-title {
+        font-size: 1.05rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .news-excerpt {
+        font-size: 0.86rem;
+        line-height: 1.55;
+        margin-bottom: 0.85rem;
+    }
+
+    .news-read-more {
+        font-size: 0.84rem;
+    }
+
+    /* Article & News Detail Page */
+    .article-header {
+        margin-bottom: 1.15rem;
+    }
+
+    .article-title {
+        font-size: 1.38rem;
+        line-height: 1.3;
+        margin-bottom: 0.65rem;
+    }
+
+    .article-meta {
+        font-size: 0.82rem;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.15rem;
+    }
+
+    .article-featured-image {
+        max-height: 240px;
+        margin-bottom: 1.35rem;
+        border-radius: 10px;
+    }
+
+    .article-content {
+        font-size: 0.92rem;
+        line-height: 1.7;
+    }
+
+    .article-content p {
+        margin-bottom: 1rem;
+    }
+}
