@@ -1,52 +1,89 @@
 /**
- * navbar.js — Revisi Penuh
+ * navbar.js
  *
  * Bertanggung jawab atas:
- * 1. Sticky scroll-shrink: menambahkan class .is-stuck pada #main-navbar
- *    ketika halaman discroll ke bawah (menggunakan IntersectionObserver).
- * 2. Hover dropdown: mengubah trigger .nav-tentang-kami dari klik → hover
+ * 1. Smart scroll auto-hide & smooth reveal: menyembunyikan navbar saat scroll ke bawah,
+ *    dan memunculkan navbar kembali saat scroll ke atas, dengan elevasi glassmorphism halus.
+ * 2. Hover dropdown: mengubah trigger .nav-tentang-kami dari klik ke hover
  *    dengan delay menutup agar user bisa memindahkan kursor ke dalam menu.
+ * 3. Staggered animasi menu offcanvas mobile.
+ * 4. Pembersihan modal backdrop pencarian.
  */
 
 (function () {
     "use strict";
 
-    // ─── Konfigurasi ───────────────────────────────────────────────────────
+    // Konfigurasi
     const CLOSE_DELAY_MS = 280;
 
-    // ─── 1. Sticky Shrink via IntersectionObserver ─────────────────────────
-    function initStickyNavbar() {
+    // 1. Smart Scroll Auto-Hide & Smooth Reveal
+    function initSmartScrollNavbar() {
         const navbar = document.getElementById("main-navbar");
         if (!navbar) return;
 
-        // Sentinel: elemen 1px tepat setelah top-bar.
-        // Saat sentinel keluar viewport (scroll ke bawah), navbar "menempel".
-        // PENTING: sentinel harus berada di normal flow (bukan position:absolute),
-        // supaya posisinya benar-benar setelah top-bar. Sebelumnya absolute membuat
-        // sentinel berada di pojok atas dokumen sehingga .is-stuck aktif terlalu dini
-        // (navbar mengecil padahal belum benar-benar menempel di atas).
-        const sentinel = document.createElement("div");
-        sentinel.id = "navbar-scroll-sentinel";
-        sentinel.style.cssText = "position:relative;width:100%;height:1px;pointer-events:none;";
-        document.body.insertBefore(sentinel, navbar);
+        let lastScrollY = Math.max(window.pageYOffset || document.documentElement.scrollTop, 0);
+        let ticking = false;
 
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                navbar.classList.toggle("is-stuck", !entry.isIntersecting);
-            },
-            { threshold: 0 }
-        );
+        const SCROLL_TOP_THRESHOLD = 80;
+        const DELTA_DOWN_THRESHOLD = 10;
+        const DELTA_UP_THRESHOLD = 8;
 
-        observer.observe(sentinel);
+        function isOverlayOpen() {
+            return Boolean(
+                document.querySelector("#mobileOffcanvas.show") ||
+                document.querySelector(".modal.show")
+            );
+        }
+
+        function updateNavbar() {
+            const currentScrollY = Math.max(window.pageYOffset || document.documentElement.scrollTop, 0);
+            const delta = currentScrollY - lastScrollY;
+
+            // Efek elevasi / shadow saat discroll
+            navbar.classList.toggle("navbar-scrolled", currentScrollY > 15);
+
+            // Jika menu offcanvas atau modal sedang terbuka, navbar tetap terlihat
+            if (isOverlayOpen()) {
+                navbar.classList.remove("navbar-hidden");
+                navbar.classList.add("navbar-visible");
+                lastScrollY = currentScrollY;
+                ticking = false;
+                return;
+            }
+
+            // Saat berada di area puncak halaman, navbar selalu tampil
+            if (currentScrollY < SCROLL_TOP_THRESHOLD) {
+                navbar.classList.remove("navbar-hidden");
+                navbar.classList.add("navbar-visible");
+            } else {
+                // Scroll ke bawah: sembunyikan navbar ke atas
+                if (delta > DELTA_DOWN_THRESHOLD) {
+                    navbar.classList.add("navbar-hidden");
+                    navbar.classList.remove("navbar-visible");
+                }
+                // Scroll ke atas: munculkan navbar kembali
+                else if (delta < -DELTA_UP_THRESHOLD) {
+                    navbar.classList.remove("navbar-hidden");
+                    navbar.classList.add("navbar-visible");
+                }
+            }
+
+            lastScrollY = currentScrollY;
+            ticking = false;
+        }
+
+        window.addEventListener("scroll", () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        }, { passive: true });
     }
 
-    // ─── 2. Hover Dropdown ──────────────────────────────────────────────────
-
+    // 2. Hover Dropdown
     function disableBootstrapClickToggle(navItem) {
         const toggle = navItem.querySelector(".nav-link.dropdown-toggle");
         if (!toggle) return;
-        // Hapus atribut agar Bootstrap tidak ikut men-toggle dropdown
-        // (konflik dengan sistem hover/klik kustom di bawah).
         toggle.removeAttribute("data-bs-toggle");
         toggle.removeAttribute("data-bs-target");
     }
@@ -69,8 +106,6 @@
             }, CLOSE_DELAY_MS);
         }
 
-        // Deteksi perangkat tanpa hover (touch). Pada perangkat tersebut dropdown
-        // dikelola via klik, bukan hover, supaya tidak terbuka/tertutup secara tidak stabil.
         const canHover = window.matchMedia("(hover: hover)").matches;
 
         if (canHover) {
@@ -91,7 +126,6 @@
                 toggle.addEventListener("click", (e) => {
                     if (navItem.classList.contains("hover-open")) {
                         scheduleClose();
-                        // Jika ada link, biarkan pengguna menuju ke halaman tersebut pada tap kedua
                         if (toggle.getAttribute("href") !== "#") return; 
                     } else {
                         openDropdown();
@@ -113,8 +147,7 @@
         attachHoverDropdown(navTentangKami);
     }
 
-    // ─── 3. Staggered Offcanvas Menu Items ──────────────────────────────────
-    // Setiap item menu offcanvas slide-in berurutan saat offcanvas dibuka.
+    // 3. Staggered Offcanvas Menu Items
     function initOffcanvasAnimation() {
         const offcanvas = document.getElementById("mobileOffcanvas");
         if (!offcanvas) return;
@@ -146,7 +179,7 @@
         });
     }
 
-    // ─── 4. Search Modal — Auto-focus + Cleanup Backdrop ─────────────────────
+    // 4. Search Modal Auto-focus & Cleanup Backdrop
     function initSearchModal() {
         const searchModal = document.getElementById("searchModal");
         if (!searchModal) return;
@@ -156,19 +189,12 @@
             if (input) input.focus();
         });
 
-        // Fix: sisa .modal-backdrop dari modal yang tidak sempat dibersihkan
-        // dapat membuat layar tertutup blur (bug "layar gelap tidak bisa di-scroll").
-        // Bersihkan backdrop orphan setelah modal benar-benar tertutup.
         searchModal.addEventListener("hidden.bs.modal", () => {
             document.querySelectorAll(".modal-backdrop").forEach((el) => el.remove());
         });
     }
 
-    // ─── 5. Navbar Padding — Hilangkan offset dari class .py-2 ───────────────
-    // #main-navbar memakai .py-2 (Bootstrap) yang bertabrakan dengan
-    // padding-top/padding-bottom kustom di navbar-dropdown.css, sehingga
-    // animasi shrink (is-stuck) tidak berjalan mulus. Kita override langsung
-    // via inline style agar konsisten di semua breakpoint.
+    // 5. Navbar Padding Normalization
     function normalizeNavbarPadding() {
         const navbar = document.getElementById("main-navbar");
         if (!navbar) return;
@@ -177,10 +203,10 @@
         navbar.classList.remove("py-2");
     }
 
-    // ─── Init ───────────────────────────────────────────────────────────────
+    // Init
     function init() {
         normalizeNavbarPadding();
-        initStickyNavbar();
+        initSmartScrollNavbar();
         initHoverDropdown();
         initOffcanvasAnimation();
         initSearchModal();

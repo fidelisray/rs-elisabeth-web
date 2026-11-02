@@ -50,7 +50,7 @@
     </div>
 
     <!-- 2. Main Navbar (Logo, Menu, dan CTA tergabung) -->
-    <nav id="main-navbar" class="navbar navbar-expand-xl bg-white sticky-top py-2">
+    <nav id="main-navbar" class="navbar navbar-expand-xl sticky-top navbar-glassmorphism">
         <div class="container-fluid px-3 px-xl-4 px-xxl-5 align-items-center">
             <!-- Logo -->
             <a class="navbar-brand d-flex align-items-center gap-2 m-0" href="/">
