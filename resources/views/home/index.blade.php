@@ -1110,7 +1110,7 @@
                     <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex d-lg-none justify-content-center elisameds-stage-card" 
                          data-card-index="0"
                          data-feature-title="{{ __('Layanan Digital Terpadu') }}"
-                         data-feature-desc="{{ __('Registrasi online, cek hasil laboratorium, dan pantau riwayat periksa dalam satu aplikasi.') }}">
+                         data-feature-desc="{{ __('Registrasi online dan akses hasil laboratorium secara praktis.') }}">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">

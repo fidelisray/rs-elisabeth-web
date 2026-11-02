@@ -35,6 +35,12 @@
             );
         }
 
+        function isNearBottom(currentScrollY) {
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight || document.documentElement.clientHeight;
+            return (currentScrollY + clientHeight) >= (scrollHeight - 60);
+        }
+
         function updateNavbar() {
             const currentScrollY = Math.max(window.pageYOffset || document.documentElement.scrollTop, 0);
             const delta = currentScrollY - lastScrollY;
@@ -51,8 +57,8 @@
                 return;
             }
 
-            // Saat berada di area puncak halaman, navbar selalu tampil
-            if (currentScrollY < SCROLL_TOP_THRESHOLD) {
+            // Saat berada di area puncak halaman atau menyentuh dasar halaman (bottom-edge guard), navbar selalu tampil
+            if (currentScrollY < SCROLL_TOP_THRESHOLD || isNearBottom(currentScrollY)) {
                 navbar.classList.remove("navbar-hidden");
                 navbar.classList.add("navbar-visible");
             } else {
