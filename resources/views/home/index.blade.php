@@ -153,39 +153,74 @@
                     <h2 class="fw-bold">{{ __('Percayakan Kesehatan Anda Bersama Kami') }}</h2>
                     <div class="divider"></div>
                 </div>
-                <div class="row align-items-center mt-5">
-                    <div class="col-md-5 mb-4 mb-md-0 px-md-4">
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-medal"></i>
+                <div class="row align-items-center mt-4 mt-lg-5 g-4 g-lg-5">
+                    <div class="col-lg-6">
+                        <div class="about-feature-cards">
+                            <div class="about-feature-card">
+                                <div class="about-card-header d-flex align-items-center mb-3">
+                                    <div class="about-icon-box me-3">
+                                        <i class="fas fa-medal"></i>
+                                    </div>
+                                    <h4 class="about-card-title mb-0">{{ __('Terakreditasi Paripurna') }}</h4>
                                 </div>
-                                {{ __('Terakreditasi Paripurna') }}
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.') }}</p>
+                                <p class="about-card-desc">{{ __('Kami mendapat predikat PARIPURNA dari Komisi Akreditasi Rumah Sakit (KARS), yang merupakan predikat dengan hasil penilaian tertinggi berdasarkan penilaian terhadap manajemen mutu dan keselamatan pasien yang diterapkan di Rumah Sakit.') }}</p>
+                            </div>
+                            <div class="about-feature-card">
+                                <div class="about-card-header d-flex align-items-center mb-3">
+                                    <div class="about-icon-box me-3">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <h4 class="about-card-title mb-0">{{ __('Layanan 24 Jam') }}</h4>
+                                </div>
+                                <p class="about-card-desc">{{ __('Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.') }}</p>
+                            </div>
+                            <div class="about-feature-card">
+                                <div class="about-card-header d-flex align-items-center mb-3">
+                                    <div class="about-icon-box me-3">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <h4 class="about-card-title mb-0">{{ __('Pelayanan Prima') }}</h4>
+                                </div>
+                                <p class="about-card-desc">{{ __('Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.') }}</p>
+                            </div>
                         </div>
-                        <div class="about-rs mb-5">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                {{ __('Layanan 24 Jam') }}
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Kami menyediakan layanan 24 jam untuk memenuhi kebutuhan Kesehatan anda, khususnya bagi anda yang membutuhkan penanganan emergency.') }}</p>
-                        </div>
-                        <div class="about-rs">
-                            <h4 class="fw-bold d-flex align-items-center" style="color: var(--primary-color);">
-                                <div class="icon-circle bg-light me-3 d-flex align-items-center justify-content-center rounded-circle shadow-sm" style="width: 50px; height: 50px; flex-shrink: 0;">
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                                {{ __('Pelayanan Prima') }}
-                            </h4>
-                            <p class="text-muted ms-5 ps-3" style="font-size: 1.1rem; line-height: 1.6;">{{ __('Berpusat kepada pasien sebagai “Tamu Ilahi”, Kami senantiasa memberikan kualitas pelayanan yang bermutu tinggi dan profesional, dengan tetap memperhatikan aspek keselamatan pasien.') }}</p>
+                        <div class="about-cta-wrapper mt-4 pt-1">
+                            <a href="{{ route('tentang-kami.index') }}" class="btn-about-explore">
+                                <span>{{ __('Pelajari Selengkapnya Tentang Kami') }}</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
-                    <div class="col-md-7 text-center position-relative mt-4 mt-md-0">
-                        <div class="position-absolute w-100 h-100 rounded-4 about-bg-accent d-none d-md-block"></div>
-                        <img src="{{ Vite::asset('resources/images/feature.jfif') }}" class="img-fluid rounded-4 shadow-lg position-relative" alt="{{ __('Fasilitas RS St. Elisabeth Semarang') }}" style="z-index: 2; object-fit: cover; max-height: 500px; width: 100%;">
+                    <div class="col-lg-6">
+                        <div class="about-visual-wrapper">
+                            <div class="about-glow-aura"></div>
+                            <div class="about-img-frame">
+                                <img src="{{ Vite::asset('resources/images/feature.jfif') }}" class="img-fluid about-main-img" alt="{{ __('Fasilitas RS St. Elisabeth Semarang') }}">
+                            </div>
+                            <!-- Floating Badge 1: Akreditasi Paripurna KARS -->
+                            <div class="about-floating-badge badge-akreditasi">
+                                <div class="about-badge-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="about-badge-content">
+                                    <span class="about-badge-title">{{ __('KARS Paripurna') }}</span>
+                                    <div class="about-badge-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="about-badge-sub">{{ __('Mutu & Keselamatan Pasien') }}</span>
+                                </div>
+                            </div>
+                            <!-- Floating Badge 2: 100 Tahun Sejak 1927 -->
+                            <div class="about-floating-badge badge-sejarah">
+                                <div class="about-badge-icon">
+                                    <i class="fas fa-clock-rotate-left"></i>
+                                </div>
+                                <div class="about-badge-content">
+                                    <span class="about-badge-title">{{ __('100 Tahun RS St. Elisabeth') }}</span>
+                                    <span class="about-badge-sub">{{ __('Melayani Sejak 1927') }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
