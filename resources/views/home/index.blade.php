@@ -1106,7 +1106,10 @@
                 </div>
 
                 <div class="row app-features-mockups elisameds-3d-stage mt-4 mt-lg-5 pt-lg-4 justify-content-center">
-                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="0">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
+                         data-card-index="0"
+                         data-feature-title="{{ __('Reservasi Dokter Online') }}"
+                         data-feature-desc="{{ __('Buat janji temu dokter spesialis lebih cepat tanpa antre.') }}">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
@@ -1114,7 +1117,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="1">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
+                         data-card-index="1"
+                         data-feature-title="{{ __('Pantau Antrean Real-Time') }}"
+                         data-feature-desc="{{ __('Pantau giliran pemeriksaan dokter langsung dari genggaman.') }}">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
@@ -1122,7 +1128,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" data-card-index="2">
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-5 d-flex justify-content-center elisameds-stage-card" 
+                         data-card-index="2"
+                         data-feature-title="{{ __('Rekam Medis & E-Resep') }}"
+                         data-feature-desc="{{ __('Akses riwayat diagnosis dan resep obat secara digital.') }}">
                         <div class="static-mockup-wrapper">
                             <div class="mockup-glow"></div>
                             <div class="static-mobile-frame">
@@ -1132,20 +1141,17 @@
                     </div>
                 </div>
 
-                <!-- Segmented Control Indicator (Khusus Mobile & Tablet < 992px) -->
-                <div class="elisameds-stage-nav d-flex d-lg-none justify-content-center align-items-center gap-2 mt-2 mb-3">
-                    <button type="button" class="elisameds-nav-pill" data-target-index="0" aria-label="{{ __('Fitur 1: Reservasi') }}">
-                        <i class="fa-solid fa-calendar-check"></i>
-                        <span>{{ __('Reservasi') }}</span>
-                    </button>
-                    <button type="button" class="elisameds-nav-pill active" data-target-index="1" aria-label="{{ __('Fitur 2: Antrean') }}">
-                        <i class="fa-solid fa-users"></i>
-                        <span>{{ __('Antrean') }}</span>
-                    </button>
-                    <button type="button" class="elisameds-nav-pill" data-target-index="2" aria-label="{{ __('Fitur 3: Rekam Medis') }}">
-                        <i class="fa-solid fa-file-medical"></i>
-                        <span>{{ __('Rekam Medis') }}</span>
-                    </button>
+                <!-- Dynamic Feature Info & Pagination Dots (Khusus Mobile & Tablet < 992px) -->
+                <div class="elisameds-info-container d-block d-lg-none text-center mt-3 mb-2">
+                    <div class="elisameds-feature-info" id="elisameds-feature-info">
+                        <h4 class="elisameds-info-title mb-1 fw-bold"></h4>
+                        <p class="elisameds-info-desc text-muted mb-3"></p>
+                    </div>
+                    <div class="elisameds-dots-nav d-flex justify-content-center align-items-center gap-2">
+                        <button type="button" class="elisameds-dot" data-target-index="0" aria-label="{{ __('Fitur 1: Reservasi') }}"></button>
+                        <button type="button" class="elisameds-dot active" data-target-index="1" aria-label="{{ __('Fitur 2: Antrean') }}"></button>
+                        <button type="button" class="elisameds-dot" data-target-index="2" aria-label="{{ __('Fitur 3: Rekam Medis') }}"></button>
+                    </div>
                 </div>
             </div>
         </section>

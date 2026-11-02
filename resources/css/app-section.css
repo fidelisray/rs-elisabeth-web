@@ -237,51 +237,62 @@
     50% { transform: translateY(-20px); }
 }
 
-/* Segmented Control Indicator (Mobile & Tablet) */
-.elisameds-stage-nav {
+/* Dynamic Feature Info & Pagination Dots (Mobile & Tablet) */
+.elisameds-info-container {
+    position: relative;
+    z-index: 5;
+    padding: 0 1rem;
+}
+
+.elisameds-feature-info {
+    min-height: 58px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.elisameds-info-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--secondary-darker-color, #1e293b);
+    line-height: 1.3;
+}
+
+.elisameds-info-desc {
+    font-size: 0.82rem;
+    color: #64748b;
+    max-width: 280px;
+    margin: 0 auto;
+    line-height: 1.45;
+}
+
+.elisameds-dots-nav {
     position: relative;
     z-index: 10;
 }
 
-.elisameds-nav-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 15px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #4b5563;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 143, 215, 0.18);
+.elisameds-dot {
+    width: 9px;
+    height: 9px;
     border-radius: 9999px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    background: #cbd5e1;
+    border: none;
+    padding: 0;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.elisameds-nav-pill i {
-    font-size: 0.8rem;
-    color: var(--secondary-color);
-    transition: color 0.25s ease;
+.elisameds-dot:hover {
+    background: #94a3b8;
+    transform: scale(1.15);
 }
 
-.elisameds-nav-pill:hover {
-    color: var(--primary-color);
-    border-color: rgba(0, 143, 215, 0.35);
-    transform: translateY(-1px);
-}
-
-.elisameds-nav-pill.active {
-    color: #ffffff;
+.elisameds-dot.active {
+    width: 26px;
+    border-radius: 5px;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    border-color: transparent;
-    box-shadow: 0 4px 14px rgba(0, 143, 215, 0.35);
-}
-
-.elisameds-nav-pill.active i {
-    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 143, 215, 0.4);
 }
 
 @media (min-width: 992px) {
@@ -507,19 +518,23 @@
 }
 
 /* ==========================================================================
-   ELISAMEDS 3D INTERACTIVE STAGE (MOBILE & TABLET < 992px)
+   ELISAMEDS CENTERED COVERFLOW STAGE (MOBILE & TABLET < 992px)
    ========================================================================== */
 @media (max-width: 991.98px) {
     .elisameds-3d-stage {
         position: relative;
         height: 380px;
+        width: 100%;
+        max-width: 440px;
         perspective: 1200px;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: visible;
-        margin-top: 1.5rem !important;
+        margin-top: 1.25rem !important;
         margin-bottom: 0.5rem !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
         padding: 0 !important;
     }
 
@@ -536,6 +551,7 @@
         user-select: none;
         -webkit-user-select: none;
         transform-origin: center center;
+        will-change: transform, opacity;
     }
 
     .elisameds-stage-card .static-mockup-wrapper {
@@ -549,8 +565,8 @@
         transform: none !important;
         border-width: 6px;
         border-radius: 1.6rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.35s ease, border-color 0.35s ease;
     }
 
     .elisameds-stage-card .static-mobile-frame::before {
@@ -562,7 +578,7 @@
 
     .elisameds-stage-card.is-active .static-mobile-frame {
         border-color: #0f172a;
-        box-shadow: 0 20px 40px rgba(0, 143, 215, 0.28), 0 12px 24px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 20px 45px rgba(2, 97, 153, 0.32), 0 10px 20px rgba(0, 0, 0, 0.15);
     }
 
     .elisameds-stage-card.is-active .mockup-glow {
@@ -585,9 +601,12 @@
         height: 295px;
     }
 
-    .elisameds-nav-pill {
-        padding: 5px 10px;
-        font-size: 0.75rem;
-        gap: 4px;
+    .elisameds-info-title {
+        font-size: 0.95rem;
+    }
+
+    .elisameds-info-desc {
+        font-size: 0.76rem;
+        max-width: 250px;
     }
 }
