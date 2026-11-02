@@ -1,6 +1,6 @@
 <footer id="footer" class="pt-5 pb-3">
     <div class="container">
-        <div class="row g-5 mb-5">
+        <div class="row g-4 g-lg-5 mb-5">
             <!-- Bagian 1: Identitas & Kontak -->
             <div class="col-lg-4 col-md-6">
                 <div class="footer-header mb-4">

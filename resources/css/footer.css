@@ -2,6 +2,8 @@
 
 #footer {
     background-color: var(--secondary-darker-color);
+    overflow-x: hidden;
+    width: 100%;
 }
 
 #footer .footer-body ul {
