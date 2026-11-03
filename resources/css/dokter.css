@@ -86,12 +86,14 @@
     }
 
     .doctor-sidebar-col {
+        --doc-sticky-top: 88px;
         position: sticky;
         top: var(--doc-sticky-top);
         align-self: start;
         height: calc(100vh - var(--doc-sticky-top) - 20px);
         height: calc(100dvh - var(--doc-sticky-top) - 20px);
         z-index: 100;
+        will-change: top, height;
     }
 
     .doctor-filter-panel {
