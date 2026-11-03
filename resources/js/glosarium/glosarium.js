@@ -1,117 +1,280 @@
-// public/js/glossary-search.js
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const searchInput = document.getElementById("glossarySearchInput");
-//     const resultsBox = document.getElementById("glossarySearchResults");
-//     const SEARCH_URL = "/glosarium/cari"; // atau pakai window.route jika ada helper JS route
+gsap.registerPlugin(ScrollTrigger);
 
-//     let debounceTimer = null;
-//     const DEBOUNCE_DELAY = 350; // ms, silakan disesuaikan
+document.addEventListener("DOMContentLoaded", () => {
+    const groupCards = Array.from(document.querySelectorAll(".glossary-group-card"));
+    if (groupCards.length === 0) {
+        return;
+    }
 
-//     searchInput.addEventListener("input", function () {
-//         const keyword = this.value.trim();
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const prefixPills = Array.from(document.querySelectorAll(".glossary-prefix-pill"));
+    const filterInput = document.getElementById("glossaryLocalFilter");
+    const filterClearBtn = document.getElementById("glossaryFilterClear");
+    const filterResetBtn = document.getElementById("glossaryResetFilterBtn");
+    const filterEmptyCard = document.getElementById("glossaryFilterEmpty");
+    const filterKeywordEl = document.getElementById("glossaryFilterKeyword");
+    const visibleCountEl = document.getElementById("glossaryVisibleCount");
+    const visibleGroupsEl = document.getElementById("glossaryVisibleGroups");
 
-//         // Batalkan timer sebelumnya setiap kali user mengetik lagi
-//         clearTimeout(debounceTimer);
+    let highlightTimeout = null;
+    let isProgrammaticScroll = false;
 
-//         if (keyword.length < 2) {
-//             hideResults();
-//             return;
-//         }
+    function setActivePrefix(targetId) {
+        prefixPills.forEach((pill) => {
+            const isMatch = pill.dataset.target === targetId;
+            pill.classList.toggle("active", isMatch);
 
-//         // Jalankan fetch HANYA setelah user berhenti mengetik selama DEBOUNCE_DELAY
-//         debounceTimer = setTimeout(() => {
-//             fetchResults(keyword);
-//         }, DEBOUNCE_DELAY);
-//     });
+            if (isMatch) {
+                const track = pill.closest(".mobile-prefix-track, .glossary-prefix-grid");
+                if (track) {
+                    const pillRect = pill.getBoundingClientRect();
+                    const trackRect = track.getBoundingClientRect();
+                    if (pillRect.left < trackRect.left || pillRect.right > trackRect.right) {
+                        track.scrollTo({
+                            left: pill.offsetLeft - track.clientWidth / 2 + pill.clientWidth / 2,
+                            behavior: "smooth",
+                        });
+                    }
+                }
+            }
+        });
+    }
 
+    if (!prefersReducedMotion) {
+        const headerEl = document.querySelector(".glossary-directory-header");
+        const sideCards = document.querySelectorAll(".glossary-side-card, .glossary-side-cta-stack .cta-card");
 
-//     function fetchResults(keyword) {
-//         const url = `${SEARCH_URL}?q=${encodeURIComponent(keyword)}`;
-//         console.log(url);
-        
-//         fetch(url, {
-//             method: "GET",
-//             headers: {
-//                 "X-Requested-With": "XMLHttpRequest",
-//                 Accept: "application/json",
-//             },
-//         })
-//             .then((response) => {
-//                 console.log(response);
-                
-//                 if (!response.ok) {
-//                     throw new Error("Gagal mengambil data pencarian");
-//                 }
-//                 return response.json();
-//             })
-//             .then((data) => renderResults(data))
-//             .catch((error) => {
-//                 console.error(error);
-//                 hideResults();
-//             });
-//     }
+        if (headerEl) {
+            gsap.fromTo(
+                headerEl,
+                { opacity: 0, y: 18 },
+                { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", clearProps: "transform,opacity" }
+            );
+        }
 
-//     function renderResults(items) {
-//         resultsBox.innerHTML = "";
+        if (sideCards.length > 0) {
+            gsap.fromTo(
+                sideCards,
+                { opacity: 0, x: 18 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.5,
+                    stagger: 0.08,
+                    ease: "power3.out",
+                    clearProps: "transform,opacity",
+                }
+            );
+        }
 
-//         if (items.length === 0) {
-//             resultsBox.innerHTML = `
-//                 <div class="list-group-item text-muted">
-//                     Tidak ada istilah ditemukan.
-//                 </div>`;
-//             showResults();
-//             return;
-//         }
+        groupCards.forEach((card) => {
+            const termItems = card.querySelectorAll(".glossary-term-card");
 
-//         items.forEach((item) => {
-//             const el = document.createElement("a");
-//             el.href = "#";
-//             el.className = "list-group-item list-group-item-action";
-//             el.textContent = item.istilah;
+            gsap.fromTo(
+                card,
+                { opacity: 0, y: 26 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    ease: "power3.out",
+                    clearProps: "transform,opacity",
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 88%",
+                         toggleActions: "play none none none",
+                        once: true,
+                    },
+                }
+            );
 
-//             // Buka modal detail, bukan pindah halaman
-//             el.addEventListener("click", function (e) {
-//                 e.preventDefault();
-//                 openTermModal(item);
-//                 hideResults();
-//                 searchInput.value = "";
-//             });
+            if (termItems.length > 0) {
+                gsap.fromTo(
+                    termItems,
+                    { opacity: 0, y: 12 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.35,
+                        stagger: 0.018,
+                        ease: "power2.out",
+                        clearProps: "transform,opacity",
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 86%",
+                            toggleActions: "play none none none",
+                            once: true,
+                        },
+                    }
+                );
+            }
+        });
+    }
 
-//             resultsBox.appendChild(el);
-//         });
+    groupCards.forEach((card) => {
+        ScrollTrigger.create({
+            trigger: card,
+            start: "top 35%",
+            end: "bottom 35%",
+            onEnter: () => {
+                if (!isProgrammaticScroll) {
+                    setActivePrefix(card.id);
+                }
+            },
+            onEnterBack: () => {
+                if (!isProgrammaticScroll) {
+                    setActivePrefix(card.id);
+                }
+            },
+        });
+    });
 
-//         showResults();
-//     }
+    prefixPills.forEach((pill) => {
+        pill.addEventListener("click", () => {
+            const targetId = pill.dataset.target;
+            const targetCard = document.getElementById(targetId);
+            if (!targetCard || targetCard.style.display === "none") {
+                return;
+            }
 
-//     function showResults() {
-//         resultsBox.style.display = "block";
-//     }
+            isProgrammaticScroll = true;
+            setActivePrefix(targetId);
 
-//     function hideResults() {
-//         resultsBox.style.display = "none";
-//         resultsBox.innerHTML = "";
-//     }
+            const isMobile = window.innerWidth < 992;
+            const offset = isMobile ? 132 : 102;
+            const targetTop = targetCard.getBoundingClientRect().top + window.scrollY - offset;
 
-//     // Sembunyikan dropdown kalau user klik di luar area search
-//     document.addEventListener("click", function (e) {
-//         if (!resultsBox.contains(e.target) && e.target !== searchInput) {
-//             hideResults();
-//         }
-//     });
+            window.scrollTo({
+                top: Math.max(0, targetTop),
+                behavior: prefersReducedMotion ? "auto" : "smooth",
+            });
 
-//     function openTermModal(item) {
-//         // Sesuaikan dengan modal Bootstrap yang sudah kamu buat sebelumnya
-//         document.getElementById("termModalLabel").textContent = item.istilah;
-//         document.getElementById("termModalBody").textContent = item.deskripsi;
+            groupCards.forEach((c) => c.classList.remove("is-highlighted"));
+            targetCard.classList.add("is-highlighted");
 
-//         const modal = new bootstrap.Modal(document.getElementById("termModal"));
-//         modal.show();
-//     }
-// });
+            if (!prefersReducedMotion) {
+                gsap.fromTo(
+                    targetCard,
+                    { scale: 0.99 },
+                    { scale: 1, duration: 0.45, ease: "back.out(1.7)", clearProps: "transform" }
+                );
+            }
 
+            clearTimeout(highlightTimeout);
+            highlightTimeout = setTimeout(() => {
+                targetCard.classList.remove("is-highlighted");
+                isProgrammaticScroll = false;
+            }, 900);
+        });
+    });
 
+    function applyLocalFilter(rawQuery) {
+        const query = rawQuery.trim().toLowerCase();
+        let totalVisibleTerms = 0;
+        let totalVisibleGroups = 0;
+        const newlyVisibleCards = [];
 
+        if (filterClearBtn) {
+            filterClearBtn.style.display = query.length > 0 ? "inline-flex" : "none";
+        }
 
-// JS disabled for traditional form submission
+        groupCards.forEach((groupCard) => {
+            const termCards = Array.from(groupCard.querySelectorAll(".glossary-term-card"));
+            const groupCountEl = groupCard.querySelector(".group-visible-count");
+            let visibleInGroup = 0;
 
+            termCards.forEach((termCard) => {
+                const termText = termCard.dataset.term || "";
+                const isMatch = query === "" || termText.includes(query);
+
+                if (isMatch) {
+                    termCard.style.display = "";
+                    visibleInGroup++;
+                    totalVisibleTerms++;
+                    newlyVisibleCards.push(termCard);
+                } else {
+                    termCard.style.display = "none";
+                }
+            });
+
+            if (groupCountEl) {
+                groupCountEl.textContent = visibleInGroup;
+            }
+
+            const hasVisible = visibleInGroup > 0;
+            groupCard.style.display = hasVisible ? "" : "none";
+            if (hasVisible) {
+                totalVisibleGroups++;
+            }
+
+            prefixPills.forEach((pill) => {
+                if (pill.dataset.target === groupCard.id) {
+                    pill.style.display = hasVisible ? "" : "none";
+                }
+            });
+        });
+
+        if (visibleCountEl) {
+            visibleCountEl.textContent = totalVisibleTerms;
+        }
+        if (visibleGroupsEl) {
+            visibleGroupsEl.textContent = totalVisibleGroups;
+        }
+
+        if (filterEmptyCard) {
+            const isEmpty = totalVisibleTerms === 0 && query.length > 0;
+            filterEmptyCard.style.display = isEmpty ? "block" : "none";
+            if (isEmpty && filterKeywordEl) {
+                filterKeywordEl.textContent = rawQuery.trim();
+            }
+        }
+
+        const firstVisibleGroup = groupCards.find((card) => card.style.display !== "none");
+        if (firstVisibleGroup) {
+            setActivePrefix(firstVisibleGroup.id);
+        }
+
+        if (!prefersReducedMotion && newlyVisibleCards.length > 0 && newlyVisibleCards.length <= 80) {
+            gsap.fromTo(
+                newlyVisibleCards,
+                { opacity: 0.35, y: 6 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.24,
+                    stagger: 0.008,
+                    ease: "power2.out",
+                    overwrite: "auto",
+                    clearProps: "transform,opacity",
+                }
+            );
+        }
+
+        ScrollTrigger.refresh();
+    }
+
+    if (filterInput) {
+        filterInput.addEventListener("input", (e) => {
+            applyLocalFilter(e.target.value);
+        });
+    }
+
+    if (filterClearBtn && filterInput) {
+        filterClearBtn.addEventListener("click", () => {
+            filterInput.value = "";
+            applyLocalFilter("");
+            filterInput.focus();
+        });
+    }
+
+    if (filterResetBtn && filterInput) {
+        filterResetBtn.addEventListener("click", () => {
+            filterInput.value = "";
+            applyLocalFilter("");
+            filterInput.focus();
+        });
+    }
+});

@@ -302,47 +302,235 @@
                     </div>
                  </section>
             @elseif ($mode === 'glosarium')
-                <div class="container mt-4"></div>
-                <section id="glosarium">
+                @php
+                    $totalGlossaryTerms = 0;
+                    foreach ($glossary as $groupItems) {
+                        $totalGlossaryTerms += count($groupItems);
+                    }
+                    $totalPrefixGroups = count($glossary);
+                @endphp
+
+                <section id="glosarium" class="py-4 py-lg-5">
                     <div class="container">
-                        <div class="title text-center">
-                            <h2 class="display-8 fw-bold section-title">{{ __('Kamus Medis Elisabeth') }}</h2>
+                        <!-- Directory Header & Instant Filter Toolbar -->
+                        <div class="glossary-directory-header">
+                            <div class="glossary-header-info">
+                                <div class="glossary-eyebrow">
+                                    <i class="fa-solid fa-book-medical"></i>
+                                    <span>{{ __('Direktori Kamus Medis Elisabeth') }}</span>
+                                </div>
+                                <h2 class="glossary-directory-title">
+                                    @if(isset($keyword) && $keyword !== '')
+                                        {{ __('Hasil Pencarian:') }} <span class="text-highlight">"{{ $keyword }}"</span>
+                                    @elseif(preg_match('/^[A-Z]$/', $activeLetter))
+                                        {{ __('Istilah Medis Awalan') }} <span class="letter-badge-inline">{{ $activeLetter }}</span>
+                                    @else
+                                        {{ __('Kamus Medis Elisabeth') }}
+                                    @endif
+                                </h2>
+                                @if($totalGlossaryTerms > 0)
+                                    <p class="glossary-directory-meta mb-0">
+                                        {{ __('Menampilkan') }}
+                                        <strong id="glossaryVisibleCount">{{ $totalGlossaryTerms }}</strong>
+                                        {{ __('istilah medis dalam') }}
+                                        <strong id="glossaryVisibleGroups">{{ $totalPrefixGroups }}</strong>
+                                        {{ __('kelompok sub-awalan') }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            <div class="glossary-header-actions">
+                                @if($totalGlossaryTerms > 0)
+                                    <div class="glossary-live-filter">
+                                        <i class="fa-solid fa-filter filter-icon" aria-hidden="true"></i>
+                                        <input
+                                            type="text"
+                                            id="glossaryLocalFilter"
+                                            class="glossary-filter-input"
+                                            placeholder="{{ __('Filter cepat di daftar ini...') }}"
+                                            autocomplete="off"
+                                            aria-label="{{ __('Filter cepat di daftar ini') }}"
+                                        >
+                                        <button
+                                            type="button"
+                                            id="glossaryFilterClear"
+                                            class="glossary-filter-clear"
+                                            style="display: none;"
+                                            aria-label="{{ __('Hapus filter') }}"
+                                        >
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                @endif
+
+                                <a href="{{ route('glossary.index') }}" class="glossary-back-explore">
+                                    <i class="fa-solid fa-compass"></i>
+                                    <span>{{ __('Menu Utama Kamus') }}</span>
+                                </a>
+                            </div>
                         </div>
-                        <div class="glosarium-container py-5">
-                            <section class="content-body">
+
+                        <!-- Mobile & Tablet Sticky Horizontal Prefix Bar (< 992px) -->
+                        @if($totalPrefixGroups > 0)
+                            <div class="glossary-mobile-prefix-bar d-lg-none" role="navigation" aria-label="{{ __('Navigasi cepat sub-awalan') }}">
+                                <span class="mobile-prefix-label">
+                                    <i class="fa-solid fa-bolt"></i> {{ __('Lompat:') }}
+                                </span>
+                                <div class="mobile-prefix-track">
+                                    @foreach($glossary as $prefix => $items)
+                                        @php $prefixId = 'prefix-' . \Illuminate\Support\Str::slug($prefix); @endphp
+                                        <button
+                                            type="button"
+                                            class="glossary-prefix-pill {{ $loop->first ? 'active' : '' }}"
+                                            data-target="{{ $prefixId }}"
+                                            data-prefix="{{ $prefix }}"
+                                        >
+                                            <span class="prefix-text">{{ $prefix }}</span>
+                                            <span class="prefix-count">{{ count($items) }}</span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Main Asymmetric Directory Grid -->
+                        <div class="glosarium-container">
+                            <section class="content-body" id="glossaryGroupsContainer">
                                 @if(count($glossary) > 0)
                                     @foreach($glossary as $prefix => $items)
-
-                                        {{-- Header grup: "Ba", "Bi", "Ca", dst --}}
-                                        <h4 class="fw-bold mt-4 mb-2 border-bottom pb-1">{{ $prefix }}</h4>
-
-                                        @foreach($items as $item)
-                                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                                <a href="{{ route('glossary.show', urlencode($item['slug'])) }}"
-                                                class="text-decoration-none text-dark fs-6">
-                                                    {{ $item['istilah'] }}
-                                                </a>
+                                        @php $prefixId = 'prefix-' . \Illuminate\Support\Str::slug($prefix); @endphp
+                                        <article class="glossary-group-card" id="{{ $prefixId }}" data-prefix="{{ $prefix }}">
+                                            <div class="glossary-group-header">
+                                                <div class="glossary-group-badge" aria-hidden="true">
+                                                    {{ $prefix }}
+                                                </div>
+                                                <div class="glossary-group-info">
+                                                    <h3 class="glossary-group-title">
+                                                        {{ __('Sub-Awalan') }} "{{ $prefix }}"
+                                                    </h3>
+                                                    <span class="glossary-group-sub">
+                                                        {{ __('Kumpulan istilah medis berawalan') }} {{ $prefix }}
+                                                    </span>
+                                                </div>
+                                                <span class="glossary-group-count">
+                                                    <strong class="group-visible-count">{{ count($items) }}</strong> {{ __('Istilah') }}
+                                                </span>
                                             </div>
-                                        @endforeach
 
+                                            <div class="glossary-terms-grid">
+                                                @foreach($items as $item)
+                                                    <a
+                                                        href="{{ route('glossary.show', urlencode($item['slug'])) }}"
+                                                        class="glossary-term-card"
+                                                        data-term="{{ strtolower($item['istilah']) }}"
+                                                    >
+                                                        <span class="term-card-dot" aria-hidden="true"></span>
+                                                        <span class="term-card-name">{{ $item['istilah'] }}</span>
+                                                        <span class="term-card-arrow" aria-hidden="true">
+                                                            <i class="fa-solid fa-arrow-right"></i>
+                                                        </span>
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </article>
                                     @endforeach
+
+                                    <!-- Instant Filter Empty State (Client-Side) -->
+                                    <div id="glossaryFilterEmpty" class="glossary-empty-card" style="display: none;">
+                                        <div class="empty-icon">
+                                            <i class="fa-solid fa-magnifying-glass-minus"></i>
+                                        </div>
+                                        <h4 class="empty-title">{{ __('Istilah Tidak Ditemukan di Daftar Ini') }}</h4>
+                                        <p class="empty-desc">
+                                            {{ __('Tidak ada istilah pada halaman ini yang cocok dengan kata kunci filter') }}
+                                            "<strong id="glossaryFilterKeyword"></strong>".
+                                        </p>
+                                        <button type="button" id="glossaryResetFilterBtn" class="btn-reset-filter">
+                                            <i class="fa-solid fa-rotate-left me-1"></i> {{ __('Tampilkan Semua Istilah') }}
+                                        </button>
+                                    </div>
                                 @else
-                                    <div class="alert alert-info mt-3 fs-5">
-                                        @if(isset($keyword) && $keyword !== '')
-                                            {{ __('Mohon maaf data yang anda inputkan') }} <strong>{{ $keyword }}</strong> {{ __('saat ini belum tersedia.') }}
-                                        @else
-                                            {{ __('Tidak ada istilah medis untuk huruf') }} <strong>{{ $activeLetter }}</strong>.
-                                        @endif
+                                    <!-- Server Empty State -->
+                                    <div class="glossary-empty-card">
+                                        <div class="empty-icon">
+                                            <i class="fa-solid fa-book-open-reader"></i>
+                                        </div>
+                                        <h4 class="empty-title">{{ __('Belum Ada Data Istilah Medis') }}</h4>
+                                        <p class="empty-desc">
+                                            @if(isset($keyword) && $keyword !== '')
+                                                {{ __('Mohon maaf, istilah untuk pencarian') }} <strong>"{{ $keyword }}"</strong> {{ __('saat ini belum tersedia di dalam kamus medis kami.') }}
+                                            @else
+                                                {{ __('Belum ada istilah medis yang terdaftar untuk awalan huruf') }} <strong>"{{ $activeLetter }}"</strong>.
+                                            @endif
+                                        </p>
+                                        <a href="{{ route('glossary.index') }}" class="btn-reset-filter text-decoration-none">
+                                            <i class="fa-solid fa-arrow-left me-1"></i> {{ __('Kembali ke Kamus Utama') }}
+                                        </a>
                                     </div>
                                 @endif
                             </section>
-                            <section class="content-side">
 
-                            </section>
+                            <aside class="content-side">
+                                <div class="glossary-sidebar-sticky">
+                                    @if($totalPrefixGroups > 0)
+                                        <div class="glossary-side-card mb-3">
+                                            <div class="side-card-header">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <span class="side-card-icon">
+                                                        <i class="fa-solid fa-layer-group"></i>
+                                                    </span>
+                                                    <h3 class="side-card-title mb-0">{{ __('Navigasi Sub-Awalan') }}</h3>
+                                                </div>
+                                                <span class="side-card-badge">{{ $totalPrefixGroups }} {{ __('Grup') }}</span>
+                                            </div>
+                                            <p class="side-card-desc">
+                                                {{ __('Klik kode sub-awalan di bawah untuk melompat langsung ke kelompok istilah yang Anda cari.') }}
+                                            </p>
+                                            <div class="glossary-prefix-grid" role="navigation" aria-label="{{ __('Navigasi Sub-Awalan Desktop') }}">
+                                                @foreach($glossary as $prefix => $items)
+                                                    @php $prefixId = 'prefix-' . \Illuminate\Support\Str::slug($prefix); @endphp
+                                                    <button
+                                                        type="button"
+                                                        class="glossary-prefix-pill {{ $loop->first ? 'active' : '' }}"
+                                                        data-target="{{ $prefixId }}"
+                                                        data-prefix="{{ $prefix }}"
+                                                    >
+                                                        <span class="prefix-text">{{ $prefix }}</span>
+                                                        <span class="prefix-count">{{ count($items) }}</span>
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    <div class="glossary-side-cta-stack">
+                                        <a href="{{ route('dokter.index') }}" class="cta-card cta-primary text-decoration-none">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="cta-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                                                <div>
+                                                    <h3 class="h6 fw-bold mb-1">{{ __('Butuh Konsultasi?') }}</h3>
+                                                    <p class="mb-0 small text-white-50">{{ __('Konsultasikan keluhan Anda langsung dengan dokter spesialis kami.') }}</p>
+                                                </div>
+                                            </div>
+                                            <i class="fa-solid fa-arrow-right ms-auto"></i>
+                                        </a>
+
+                                        <a href="{{ route('articles.index') }}" class="cta-card cta-outline text-decoration-none">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="cta-icon"><i class="fa-solid fa-newspaper"></i></div>
+                                                <div>
+                                                    <h3 class="h6 fw-bold mb-1">{{ __('Artikel Kesehatan') }}</h3>
+                                                    <p class="mb-0 small text-muted">{{ __('Baca panduan dan informasi kesehatan terbaru yang terpercaya.') }}</p>
+                                                </div>
+                                            </div>
+                                            <i class="fa-solid fa-arrow-right ms-auto"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </aside>
                         </div>
                     </div>
                 </section>
-
             @endif
            
         </div>
