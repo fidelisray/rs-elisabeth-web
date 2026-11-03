@@ -4,12 +4,83 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 document.addEventListener("DOMContentLoaded", () => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // =========================================================================
+    // 1. HALAMAN DETAIL ISTILAH MEDIS (glosarium/show.blade.php)
+    // =========================================================================
+    const detailShell = document.querySelector(".glossary-detail-shell");
+    if (detailShell && !prefersReducedMotion) {
+        const revealBlocks = Array.from(detailShell.querySelectorAll(".gsap-detail-reveal"));
+        const paragraphs = Array.from(detailShell.querySelectorAll(".gsap-detail-paragraph"));
+        const relatedCard = detailShell.querySelector(".glossary-related-card");
+        const relatedItems = Array.from(detailShell.querySelectorAll(".gsap-related-item"));
+
+        revealBlocks.forEach((block) => {
+            gsap.fromTo(
+                block,
+                { opacity: 0, y: 28 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.55,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: block,
+                        start: "top 88%",
+                        toggleActions: "play none none reset",
+                    },
+                }
+            );
+        });
+
+        paragraphs.forEach((para, idx) => {
+            gsap.fromTo(
+                para,
+                { opacity: 0, y: 18 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.45,
+                    delay: Math.min(idx * 0.05, 0.25),
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: para,
+                        start: "top 90%",
+                        toggleActions: "play none none reset",
+                    },
+                }
+            );
+        });
+
+        if (relatedCard && relatedItems.length > 0) {
+            gsap.fromTo(
+                relatedItems,
+                { opacity: 0, y: 14 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.36,
+                    stagger: 0.03,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: relatedCard,
+                        start: "top 85%",
+                        toggleActions: "play none none reset",
+                    },
+                }
+            );
+        }
+    }
+
+    // =========================================================================
+    // 2. HALAMAN DIREKTORI GLOSARIUM (glosarium/index.blade.php)
+    // =========================================================================
     const groupCards = Array.from(document.querySelectorAll(".glossary-group-card"));
     if (groupCards.length === 0) {
         return;
     }
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const prefixPills = Array.from(document.querySelectorAll(".glossary-prefix-pill"));
     const filterInput = document.getElementById("glossaryLocalFilter");
     const filterClearBtn = document.getElementById("glossaryFilterClear");
