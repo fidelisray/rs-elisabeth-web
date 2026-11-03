@@ -148,7 +148,7 @@ section#explore-services {
             rgba(183, 228, 229, 0.35),
             rgba(183, 228, 229, 0) 70%
         ),
-        linear-gradient(180deg, #ffffff 0%, #f1f8fd 100%);
+        linear-gradient(180deg, #f1f8fd 0%, #eef7fd 100%);
 }
 
 .explore-bento-card {
@@ -316,7 +316,13 @@ section#glosarium .glosarium-container {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
     gap: 2rem;
-    align-items: start;
+    align-items: stretch;
+}
+
+section#glosarium .glosarium-container .content-side {
+    position: relative;
+    height: 100%;
+    align-self: stretch;
 }
 
 .glossary-directory-header {
@@ -680,7 +686,13 @@ section#glosarium .glosarium-container {
 /* Sticky Sidebar Directory (.content-side) */
 .glossary-sidebar-sticky {
     position: sticky;
-    top: 96px;
+    top: 20px;
+    z-index: 15;
+    transition: top 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glossary-sidebar-sticky.is-navbar-visible {
+    top: 90px;
 }
 
 .glossary-side-card {

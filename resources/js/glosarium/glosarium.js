@@ -18,9 +18,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterKeywordEl = document.getElementById("glossaryFilterKeyword");
     const visibleCountEl = document.getElementById("glossaryVisibleCount");
     const visibleGroupsEl = document.getElementById("glossaryVisibleGroups");
+    const stickySidebar = document.querySelector(".glossary-sidebar-sticky");
+    const mainNavbar = document.getElementById("main-navbar");
 
     let highlightTimeout = null;
     let isProgrammaticScroll = false;
+
+    if (stickySidebar && mainNavbar) {
+        const syncStickyOffset = () => {
+            const isNavbarHidden = mainNavbar.classList.contains("navbar-hidden");
+            stickySidebar.classList.toggle("is-navbar-visible", !isNavbarHidden);
+        };
+
+        syncStickyOffset();
+
+        const navbarObserver = new MutationObserver(syncStickyOffset);
+        navbarObserver.observe(mainNavbar, {
+            attributes: true,
+            attributeFilter: ["class"],
+        });
+    }
 
     function setActivePrefix(targetId) {
         prefixPills.forEach((pill) => {
@@ -75,18 +92,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
             gsap.fromTo(
                 card,
-                { opacity: 0, y: 26 },
+                { opacity: 0, y: 28 },
                 {
                     opacity: 1,
                     y: 0,
                     duration: 0.5,
                     ease: "power3.out",
-                    clearProps: "transform,opacity",
                     scrollTrigger: {
                         trigger: card,
                         start: "top 88%",
-                         toggleActions: "play none none none",
-                        once: true,
+                        toggleActions: "play none none reset",
                     },
                 }
             );
@@ -94,19 +109,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (termItems.length > 0) {
                 gsap.fromTo(
                     termItems,
-                    { opacity: 0, y: 12 },
+                    { opacity: 0, y: 14 },
                     {
                         opacity: 1,
                         y: 0,
-                        duration: 0.35,
+                        duration: 0.36,
                         stagger: 0.018,
                         ease: "power2.out",
-                        clearProps: "transform,opacity",
                         scrollTrigger: {
                             trigger: card,
                             start: "top 86%",
-                            toggleActions: "play none none none",
-                            once: true,
+                            toggleActions: "play none none reset",
                         },
                     }
                 );
@@ -144,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setActivePrefix(targetId);
 
             const isMobile = window.innerWidth < 992;
-            const offset = isMobile ? 132 : 102;
+            const offset = isMobile ? 132 : 95;
             const targetTop = targetCard.getBoundingClientRect().top + window.scrollY - offset;
 
             window.scrollTo({
@@ -159,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 gsap.fromTo(
                     targetCard,
                     { scale: 0.99 },
-                    { scale: 1, duration: 0.45, ease: "back.out(1.7)", clearProps: "transform" }
+                    { scale: 1, duration: 0.45, ease: "back.out(1.7)" }
                 );
             }
 
@@ -248,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     stagger: 0.008,
                     ease: "power2.out",
                     overwrite: "auto",
-                    clearProps: "transform,opacity",
                 }
             );
         }
