@@ -102,17 +102,70 @@ class GlossaryController extends Controller
         // Pencarian berbasis slug (field 'name' di file JSON) yang sudah di-urlencode,
         // case-insensitive agar "hypertension" dan "Hypertension" sama-sama ditemukan.
         $decodedTerm = strtolower(urldecode($term));
-        $item = collect($all)->first(
+        $sortedAll = collect($all)
+            ->sortBy(fn($entry) => strtolower($entry['istilah']))
+            ->values();
+
+        $currentIndex = $sortedAll->search(
             fn($i) => strtolower($i['slug']) === $decodedTerm
                 || strtolower($i['istilah']) === $decodedTerm
         );
 
-        abort_if(!$item, 404, 'Istilah medis tidak ditemukan.');
+        abort_if($currentIndex === false, 404, 'Istilah medis tidak ditemukan.');
+
+        $item = $sortedAll->get($currentIndex);
+        $prevItem = $currentIndex > 0 ? $sortedAll->get($currentIndex - 1) : null;
+        $nextItem = $currentIndex < ($sortedAll->count() - 1) ? $sortedAll->get($currentIndex + 1) : null;
+
+        $activeLetter = strtoupper(substr($item['istilah'], 0, 1));
+        $activePrefix = ucfirst(strtolower(substr($item['istilah'], 0, 2)));
+
+        $samePrefixItems = $sortedAll->filter(function ($entry) use ($item, $activePrefix) {
+            return strtolower($entry['slug']) !== strtolower($item['slug'])
+                && strtolower(substr($entry['istilah'], 0, 2)) === strtolower($activePrefix);
+        });
+
+        $sameLetterItems = $sortedAll->filter(function ($entry) use ($item, $activeLetter, $activePrefix) {
+            return strtolower($entry['slug']) !== strtolower($item['slug'])
+                && strtoupper(substr($entry['istilah'], 0, 1)) === $activeLetter
+                && strtolower(substr($entry['istilah'], 0, 2)) !== strtolower($activePrefix);
+        });
+
+        $relatedItems = $samePrefixItems
+            ->concat($sameLetterItems)
+            ->take(8)
+            ->values()
+            ->all();
+
+        $rawDescription = trim((string) ($item['deskripsi'] ?? ''));
+        $sentences = preg_split('/(?<=[.!?])\s+/u', $rawDescription, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        $leadParagraph = '';
+        $bodyParagraphs = [];
+
+        if (count($sentences) > 2) {
+            $leadParagraph = implode(' ', array_slice($sentences, 0, 2));
+            $chunks = array_chunk(array_slice($sentences, 2), 3);
+            foreach ($chunks as $chunk) {
+                $bodyParagraphs[] = implode(' ', $chunk);
+            }
+        } else {
+            $leadParagraph = $rawDescription;
+        }
 
         // dd($item);
 
         // return view('glossary.show', compact('item'));
-        return view('glosarium.show', compact('item'));
+        return view('glosarium.show', compact(
+            'item',
+            'prevItem',
+            'nextItem',
+            'activeLetter',
+            'activePrefix',
+            'relatedItems',
+            'leadParagraph',
+            'bodyParagraphs'
+        ));
     }
 
     /**
