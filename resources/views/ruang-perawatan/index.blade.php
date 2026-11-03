@@ -14,35 +14,19 @@
         'resources/css/search-and-quick-access.css',
         'resources/css/top-bar.css'
     ])
-    <style>
-        /* Reveal animation helper — inline to avoid extra file */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(28px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .reveal-on-scroll.revealed {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .reveal-on-scroll:nth-child(2) { transition-delay: 0.1s; }
-        .reveal-on-scroll:nth-child(3) { transition-delay: 0.2s; }
-        .reveal-on-scroll:nth-child(4) { transition-delay: 0.3s; }
-    </style>
 </head>
 <body>
 
-
     @include('components.navbar')
 
-<main>
+    <main class="ruang-perawatan-canvas">
         <h1 class="visually-hidden">{{ __('Ruang Perawatan RS Santa Elisabeth Semarang') }}</h1>
 
         @include('components.hero-section', [
             'badgeIcon' => 'fa-solid fa-bed-pulse',
             'badgeText' => __('Akomodasi & Rawat Inap'),
             'title' => __('Ruang Perawatan'),
-            'subtitle' => __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau — semua dengan standar pelayanan paripurna.'),
+            'subtitle' => __('Kenyamanan dan kesembuhan Anda adalah prioritas kami. Pilih ruang perawatan yang sesuai dengan kebutuhan, dari suite eksklusif hingga kelas yang terjangkau, semua dengan standar pelayanan paripurna.'),
             'headingTag' => 'h2',
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],
@@ -50,45 +34,124 @@
             ],
         ])
 
-        <section id="inpatient-room-facilities">
+        @php
+            $totalRooms = count($roomsData);
+        @endphp
+
+        <section id="inpatient-room-facilities" aria-label="{{ __('Pilihan Ruang Rawat Inap') }}">
             <div class="container">
-                <div class="section-title text-center mb-4">
-                    <h2 class="fw-bold">{{ __('Ruang Rawat Inap') }}</h2>
-                    <div class="divider"></div>
-                    <p class="text-muted mt-3">{{ __('RS Santa Elisabeth menyediakan beragam pilihan ruang perawatan untuk kenyamanan dan pemulihan kesehatan optimal Anda dengan standar mutu pelayanan prima.') }}</p>
+
+                @if($totalRooms > 0)
+                {{-- ===== DISCOVERY BAR (LIVE SEARCH + COUNTER) ===== --}}
+                <div class="room-discovery-bar" id="room-discovery-bar">
+                    <div class="room-search-box">
+                        <i class="fa-solid fa-magnifying-glass room-search-icon" aria-hidden="true"></i>
+                        <input
+                            type="search"
+                            id="room-search-input"
+                            class="room-search-input"
+                            placeholder="{{ __('Cari nama ruang perawatan atau fasilitas kamar (misal: VIP, Smart TV, 1 Bed)...') }}"
+                            aria-label="{{ __('Cari nama ruang perawatan atau fasilitas kamar (misal: VIP, Smart TV, 1 Bed)...') }}"
+                            autocomplete="off"
+                        >
+                        <button
+                            type="button"
+                            id="room-search-clear"
+                            class="room-search-clear"
+                            aria-label="{{ __('Reset Pencarian') }}"
+                            hidden
+                        >
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <div class="room-counter-pill" aria-live="polite">
+                        <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                        <span>{{ __('Menampilkan') }} <strong id="room-visible-count">{{ $totalRooms }}</strong> {{ __('Ruang Perawatan') }}</span>
+                    </div>
                 </div>
 
-                <div class="row g-4">
-                    @forelse($roomsData as $room)
-                        <div class="col-12 col-md-6 col-lg-4 room-card-col reveal-on-scroll">
-                            <div class="inpatient-room-card">
+                {{-- ===== ROOM CARDS GRID ===== --}}
+                <div class="row g-4" id="room-cards-grid">
+                    @foreach($roomsData as $room)
+                        @php
+                            $isPremium = strtolower((string) $room->category) === 'premium';
+                            $badgeLabel = $isPremium ? __('Premium & Eksklusif') : __('Ruang Rawat Inap');
+                            $badgeIcon = $isPremium ? 'fa-solid fa-crown' : 'fa-solid fa-bed';
+
+                            $specsSearch = implode(' ', array_filter([
+                                $room->room_size ? $room->room_size . ' m2' : '',
+                                $room->bed_count ? $room->bed_count . ' bed' : '',
+                                $room->max_companion ? $room->max_companion . ' penunggu' : '',
+                                $badgeLabel,
+                            ]));
+
+                            $tagsCollector = [];
+                            if (!empty($room->highlight_tags) && is_array($room->highlight_tags)) {
+                                foreach ($room->highlight_tags as $tag) {
+                                    if (!empty($tag['label'])) {
+                                        $tagsCollector[] = $tag['label'];
+                                    }
+                                }
+                            }
+                            if (!empty($room->amenities) && is_array($room->amenities)) {
+                                foreach ($room->amenities as $group) {
+                                    foreach ($group['items'] ?? [] as $amenityItem) {
+                                        $tagsCollector[] = is_array($amenityItem) ? ($amenityItem['name'] ?? '') : $amenityItem;
+                                    }
+                                }
+                            }
+                            $tagsSearch = \Illuminate\Support\Str::lower(implode(' ', array_filter($tagsCollector)));
+                            $descSearch = \Illuminate\Support\Str::lower(strip_tags(($room->tagline ?? '') . ' ' . ($room->description ?? '')));
+                        @endphp
+                        <div
+                            class="col-12 col-md-6 col-lg-4 room-card-col"
+                            data-name="{{ \Illuminate\Support\Str::lower($room->name) }}"
+                            data-specs="{{ \Illuminate\Support\Str::lower($specsSearch) }}"
+                            data-desc="{{ $descSearch }}"
+                            data-tags="{{ $tagsSearch }}"
+                        >
+                            <article class="inpatient-room-card {{ $isPremium ? 'is-premium' : 'is-standard' }}">
                                 <div class="card-accent-bar"></div>
                                 <div class="room-thumb-wrapper">
-                                    <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ $room->image_url ?? Vite::asset('resources/images/feature.jfif') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang" loading="lazy">
+                                    <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="room-thumb-link" aria-label="{{ __('Lihat Detail') }} {{ $room->name }}">
+                                        <img
+                                            src="{{ $room->image_url ?? Vite::asset('resources/images/feature.jfif') }}"
+                                            alt="{{ $room->name }} RS St. Elisabeth Semarang"
+                                            loading="lazy"
+                                        >
                                     </a>
-                                    <span class="room-class-badge">
-                                        <i class="fa-solid fa-bed"></i> {{ $room->name }}
+                                    <span class="room-class-badge {{ $isPremium ? 'badge-tier-premium' : 'badge-tier-standard' }}">
+                                        <i class="{{ $badgeIcon }}" aria-hidden="true"></i>
+                                        <span>{{ $badgeLabel }}</span>
                                     </span>
                                 </div>
+
                                 <div class="room-card-body">
-                                    <h3 class="room-name">{{ $room->name }}</h3>
+                                    <h3 class="room-name">
+                                        <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="room-name-link">
+                                            {{ $room->name }}
+                                        </a>
+                                    </h3>
 
                                     @if($room->room_size || $room->bed_count || $room->max_companion)
                                     <div class="room-specs">
                                         @if($room->room_size)
                                         <span class="spec-chip">
-                                            <i class="fa-solid fa-vector-square"></i> {{ $room->room_size }} m²
+                                            <i class="fa-solid fa-vector-square" aria-hidden="true"></i>
+                                            <span>{{ $room->room_size }} m²</span>
                                         </span>
                                         @endif
                                         @if($room->bed_count)
                                         <span class="spec-chip">
-                                            <i class="fa-solid fa-bed"></i> {{ $room->bed_count }} Bed
+                                            <i class="fa-solid fa-bed" aria-hidden="true"></i>
+                                            <span>{{ $room->bed_count }} Bed</span>
                                         </span>
                                         @endif
                                         @if($room->max_companion)
                                         <span class="spec-chip">
-                                            <i class="fa-solid fa-user-group"></i> {{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}
+                                            <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+                                            <span>{{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}</span>
                                         </span>
                                         @endif
                                     </div>
@@ -96,851 +159,126 @@
 
                                     @if($room->tagline || $room->description)
                                     <p class="room-description">
-                                        {{ $room->tagline ?? Str::limit(strip_tags($room->description), 140) }}
+                                        {{ $room->tagline ?? \Illuminate\Support\Str::limit(strip_tags($room->description), 145) }}
                                     </p>
                                     @endif
 
                                     @if(!empty($room->highlight_tags) && is_array($room->highlight_tags))
                                     <div class="room-tags">
-                                        @foreach(array_slice($room->highlight_tags, 0, 3) as $tag)
+                                        @foreach(array_slice($room->highlight_tags, 0, 4) as $tag)
+                                            @if(!empty($tag['label']))
                                             <span class="tag-pill">
-                                                @if(!empty($tag['icon'])) <i class="{{ $tag['icon'] }}"></i> @endif
-                                                {{ $tag['label'] ?? '' }}
+                                                @if(!empty($tag['icon']))
+                                                    <i class="{{ $tag['icon'] }}" aria-hidden="true"></i>
+                                                @else
+                                                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                                                @endif
+                                                <span>{{ $tag['label'] }}</span>
                                             </span>
+                                            @endif
                                         @endforeach
                                     </div>
                                     @endif
 
                                     <div class="room-card-cta">
                                         <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn-detail">
-                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail') }}
+                                            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                                            <span>{{ __('Lihat Detail') }}</span>
                                         </a>
                                         @php
                                             $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
                                         @endphp
-                                        <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-wa-icon" title="{{ __('Tanya Ketersediaan via WhatsApp') }}" aria-label="{{ __('Tanya Ketersediaan via WhatsApp') }}">
-                                            <i class="fa-brands fa-whatsapp"></i>
+                                        <a
+                                            href="https://wa.me/6285600600870?text={{ urlencode($waText) }}"
+                                            target="_blank"
+                                            rel="noopener"
+                                            class="btn-wa-icon"
+                                            title="{{ __('Tanya Ketersediaan') }} {{ $room->name }}"
+                                            aria-label="{{ __('Tanya Ketersediaan') }} {{ $room->name }}"
+                                        >
+                                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </article>
                         </div>
-                    @empty
-                        <div class="col-12 reveal-on-scroll">
-                            <div class="empty-state-card">
-                                <div class="empty-icon-wrapper">
-                                    <i class="fa-solid fa-bed-pulse"></i>
-                                </div>
-                                <h4 class="empty-title">{{ __('Data Ruangan Sedang Diperbarui') }}</h4>
-                                <p class="empty-desc">
-                                    {{ __('Informasi pilihan ruang perawatan saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk informasi ketersediaan kamar secara langsung.') }}
-                                </p>
-                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan Ruang Perawatan RS St. Elisabeth')) }}" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-semibold">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Hubungi via WhatsApp') }}
-                                </a>
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </section>
-
-        {{-- ===== INTRO ===== --}}
-        {{-- <section id="room-intro">
-            <div class="container text-center">
-                <div class="section-title text-center mb-4">
-                    <h2 class="fw-bold">{{ __('Temukan Ruangan yang Tepat untuk Anda') }}</h2>
-                    <div class="divider"></div>
-                    <p class="text-muted mt-3">{{ __('RS St. Elisabeth Semarang menyediakan berbagai pilihan ruang perawatan untuk memenuhi kebutuhan dan kenyamanan setiap pasien. Setiap kamar dirancang dengan memperhatikan detail untuk memastikan lingkungan penyembuhan yang optimal.') }}</p>
+                    @endforeach
                 </div>
 
-                <!-- Filter Tabs -->
-                <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
-                    <button class="btn btn-sm px-4 py-2 rounded-pill fw-600 active"
-                            data-room-filter="all"
-                            style="background:#008fd7;color:#fff;border:none;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-table-cells-large me-1"></i> {{ __('Semua Kelas') }}
-                    </button>
-                    <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
-                            data-room-filter="premium"
-                            style="background:#1a2740;color:#c9a84c;border:1px solid rgba(201,168,76,.35);font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-crown me-1"></i> {{ __('Premium & Eksklusif') }}
-                    </button>
-                    <button class="btn btn-sm px-4 py-2 rounded-pill fw-600"
-                            data-room-filter="standard"
-                            style="background:#f0f7ff;color:#026199;border:1px solid #d0e8f5;font-weight:600;transition:all .2s;">
-                        <i class="fa-solid fa-bed me-1"></i> {{ __('Standar') }}
+                {{-- ===== EMPTY FILTER STATE ===== --}}
+                <div class="empty-state-card" id="room-filter-empty" hidden>
+                    <div class="empty-icon-wrapper">
+                        <i class="fa-solid fa-magnifying-glass-minus" aria-hidden="true"></i>
+                    </div>
+                    <h3 class="empty-title">{{ __('Tidak Ada Ruang Perawatan yang Cocok') }}</h3>
+                    <p class="empty-desc">
+                        {{ __('Tidak ditemukan ruang perawatan yang sesuai dengan kata kunci pencarian Anda. Silakan coba kata kunci lain atau tampilkan kembali seluruh kamar.') }}
+                    </p>
+                    <button type="button" class="btn-reset-room" id="btn-reset-room-search">
+                        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                        <span>{{ __('Tampilkan Semua Kamar') }}</span>
                     </button>
                 </div>
-            </div>
-        </section> --}}
 
-        {{-- ===== PREMIUM ROOMS (President Suite / Suites / Executive) ===== --}}
-        {{-- <section id="premium-rooms">
-            <div class="container position-relative">
-                <div class="premium-section-header">
-                    <div class="premium-badge">
-                        <i class="fa-solid fa-crown"></i> {{ __('Koleksi Eksklusif') }}
+                @else
+                {{-- ===== EMPTY CMS STATE ===== --}}
+                <div class="empty-state-card">
+                    <div class="empty-icon-wrapper">
+                        <i class="fa-solid fa-bed-pulse" aria-hidden="true"></i>
                     </div>
-                    <h2 class="premium-title">{{ __('Ruang Perawatan Premium') }}</h2>
-                    <p class="premium-subtitle">{{ __('Rasakan pengalaman perawatan setara hotel bintang lima dengan privasi penuh, desain interior elegan, dan layanan personal yang tak tertandingi.') }}</p>
+                    <h3 class="empty-title">{{ __('Data Ruangan Sedang Diperbarui') }}</h3>
+                    <p class="empty-desc">
+                        {{ __('Informasi pilihan ruang perawatan saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk informasi ketersediaan kamar secara langsung.') }}
+                    </p>
+                    <a
+                        href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan Ruang Perawatan RS St. Elisabeth')) }}"
+                        target="_blank"
+                        rel="noopener"
+                        class="btn-reset-room"
+                    >
+                        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                        <span>{{ __('Hubungi via WhatsApp') }}</span>
+                    </a>
                 </div>
+                @endif
 
-                <!-- Grid: Dynamic Premium Cards -->
-                <div class="row g-4 pb-5">
-                    @forelse($premiumRooms as $room)
-                        <div class="col-12 col-lg-4 reveal-on-scroll">
-                            <div class="premium-room-card {{ $loop->first ? 'card-featured' : '' }} h-100">
-                                @if($loop->first)
-                                    <div class="premium-ribbon"></div>
-                                @endif
-                                <div class="premium-img-wrapper">
-                                    <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ $room->image_url ?? Vite::asset('resources/images/feature.jfif') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
-                                    </a>
-                                    <span class="room-category-label">{{ $room->name }}</span>
-                                </div>
-                                <div class="premium-card-body">
-                                    <div class="d-flex align-items-center gap-2 mb-3">
-                                        @if($room->room_size || $room->bed_count)
-                                        <span class="room-size-chip">
-                                            <i class="fa-solid fa-vector-square"></i> {{ $room->room_size }} m² @if($room->room_size && $room->bed_count) • @endif {{ $room->bed_count }} Bed
-                                        </span>
-                                        @endif
-                                        @if($room->max_companion)
-                                        <span class="room-size-chip">
-                                            <i class="fa-solid fa-user-group"></i> {{ __('Maks.') }} {{ $room->max_companion }} {{ __('Penunggu') }}
-                                        </span>
-                                        @endif
-                                    </div>
-                                    <h3 class="room-title">{{ $room->name }}</h3>
-                                    <p class="room-tagline">{{ $room->tagline ?? $room->description }}</p>
-                                    <hr class="gold-divider">
-                                    
-                                    @if($room->amenities && is_array($room->amenities))
-                                        <div class="premium-amenities">
-                                            @foreach($room->amenities as $amenityGroup)
-                                                <div class="premium-amenity-group">
-                                                    <h6>{{ $amenityGroup['group'] ?? $amenityGroup['group_name'] ?? __('Fasilitas') }}</h6>
-                                                    @php
-                                                        $items = $amenityGroup['items'] ?? [];
-                                                    @endphp
-                                                    @if(!empty($items))
-                                                        <ul>
-                                                            @foreach($items as $item)
-                                                                <li>{{ is_array($item) ? $item['name'] : trim($item) }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    @endif
-
-                                    @if($room->highlight_tags && is_array($room->highlight_tags))
-                                        <div class="premium-highlight-tags">
-                                            @foreach($room->highlight_tags as $tag)
-                                                <span class="htag">
-                                                    @if(isset($tag['icon'])) <i class="{{ $tag['icon'] }}"></i> @endif
-                                                    {{ $tag['label'] ?? '' }}
-                                                </span>
-                                            @endforeach
-                                        </div>
-                                    @endif
-
-                                    <div class="premium-card-cta">
-                                        <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn-gold-outline w-100 mb-2 d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail Lengkap') }}
-                                        </a>
-                                        <div class="d-flex w-100 gap-2">
-                                            @php
-                                                $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
-                                            @endphp
-                                            <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-gold flex-grow-1 d-flex align-items-center justify-content-center gap-1">
-                                                <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya') }}
-                                            </a>
-                                            <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-gold-outline d-flex align-items-center justify-content-center">
-                                                <i class="fa-regular fa-calendar-check"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12 reveal-on-scroll">
-                            <div class="empty-state-premium p-5 text-center rounded-4" style="background: linear-gradient(145deg, #1a2740, #131c2e); border: 1px solid rgba(201, 168, 76, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-                                <div class="mb-4">
-                                    <div class="icon-wrapper mx-auto d-flex align-items-center justify-content-center rounded-circle" style="width: 80px; height: 80px; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.3);">
-                                        <i class="fa-solid fa-crown" style="font-size: 2.2rem; color: #c9a84c;"></i>
-                                    </div>
-                                </div>
-                                <h4 class="fw-bold mb-3" style="color: #c9a84c; letter-spacing: 0.5px;">{{ __('Ruang Perawatan Premium Sedang Kami Siapkan') }}</h4>
-                                <p class="mb-4 mx-auto" style="max-width: 600px; color: #a8b2c1; font-size: 1.05rem; line-height: 1.6;">
-                                    {{ __('Informasi detail mengenai fasilitas dan layanan Ruang Perawatan Premium kami saat ini sedang dalam tahap pembaruan untuk memberikan pengalaman visual terbaik dan informasi paling akurat untuk Anda.') }}
-                                </p>
-                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan dan informasi Ruang Perawatan Premium RS St. Elisabeth')) }}" target="_blank" class="btn px-4 py-2 rounded-pill fw-bold" style="background: #c9a84c; color: #1a2740; transition: all 0.3s ease;">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Hubungi Personal Assistant Kami') }}
-                                </a>
-                            </div>
-                        </div>
-                    @endforelse
-
-                    @if(false) <!-- OLD HARDCODED PREMIUM ROOMS -->
-                    <!-- 1. PRESIDENT SUITE -->
-                    <div class="col-12 col-lg-4 reveal-on-scroll">
-                        <div class="premium-room-card card-featured h-100">
-                            <div class="premium-ribbon"></div>
-                            <div class="premium-img-wrapper">
-                                <img src="{{ Vite::asset('resources/images/feature.jfif') }}" alt="President Suite RS St. Elisabeth Semarang">
-                                <span class="room-category-label">President Suite</span>
-                            </div>
-                            <div class="premium-card-body">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-vector-square"></i> ~40 m² · 1 Tempat Tidur
-                                    </span>
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-user-group"></i> Max 2 Penunggu
-                                    </span>
-                                </div>
-                                <h3 class="room-title">President Suite</h3>
-                                <p class="room-tagline">Kemewahan tertinggi dengan privasi absolut. Kamar perawatan terluas kami, dirancang bagi pasien yang menginginkan pengalaman perawatan di lingkungan yang eksklusif dan tenang.</p>
-                                <hr class="gold-divider">
-                                <div class="premium-amenities">
-                                    <div class="premium-amenity-group">
-                                        <h6>Kamar &amp; Ruangan</h6>
-                                        <ul>
-                                            <li>Ruang tamu &amp; sofa mewah</li>
-                                            <li>Kamar mandi suite dengan bathtub</li>
-                                            <li>Ruang tunggu keluarga private</li>
-                                            <li>Pantry &amp; mini bar</li>
-                                            <li>AC inverter individual</li>
-                                        </ul>
-                                    </div>
-                                    <div class="premium-amenity-group">
-                                        <h6>Layanan Eksklusif</h6>
-                                        <ul>
-                                            <li>Perawat personal 24 jam</li>
-                                            <li>Menu makan pilihan premium</li>
-                                            <li>Konsultasi dokter spesialis</li>
-                                            <li>TV LED 55" + streaming</li>
-                                            <li>Wi-Fi dedicated broadband</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="premium-highlight-tags">
-                                    <span class="htag"><i class="fa-solid fa-crown"></i> Kamar Terluas</span>
-                                    <span class="htag"><i class="fa-solid fa-utensils"></i> Makan 3x Sehari</span>
-                                    <span class="htag"><i class="fa-solid fa-shield-heart"></i> Perawat Personal</span>
-                                    <span class="htag"><i class="fa-solid fa-wifi"></i> Wi-Fi Premium</span>
-                                </div>
-                                <div class="premium-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20President%20Suite" target="_blank" class="btn-gold">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                    <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-gold-outline">
-                                        <i class="fa-regular fa-calendar-check"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. SUITES -->
-                    <div class="col-12 col-lg-4 reveal-on-scroll">
-                        <div class="premium-room-card h-100">
-                            <div class="premium-ribbon"></div>
-                            <div class="premium-img-wrapper">
-                                <img src="{{ asset('images/F1671680659.jpg') }}" alt="Suites RS St. Elisabeth Semarang">
-                                <span class="room-category-label">Suites</span>
-                            </div>
-                            <div class="premium-card-body">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-vector-square"></i> ~30 m² · 1 Tempat Tidur
-                                    </span>
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-user-group"></i> Max 2 Penunggu
-                                    </span>
-                                </div>
-                                <h3 class="room-title">Suites</h3>
-                                <p class="room-tagline">Ruang perawatan premium dengan suasana seperti kamar hotel berbintang. Nikmati privasi penuh dalam ruangan yang luas dan nyaman dengan berbagai fasilitas lengkap.</p>
-                                <hr class="gold-divider">
-                                <div class="premium-amenities">
-                                    <div class="premium-amenity-group">
-                                        <h6>Kamar &amp; Ruangan</h6>
-                                        <ul>
-                                            <li>Sofa bed untuk penunggu</li>
-                                            <li>Kamar mandi dalam shower cabin</li>
-                                            <li>Lemari pakaian built-in</li>
-                                            <li>Meja kerja &amp; kursi</li>
-                                            <li>AC individual thermostat</li>
-                                        </ul>
-                                    </div>
-                                    <div class="premium-amenity-group">
-                                        <h6>Layanan Eksklusif</h6>
-                                        <ul>
-                                            <li>Perawat dedicated satu shift</li>
-                                            <li>Menu makan pilihan RS</li>
-                                            <li>TV LED 43"</li>
-                                            <li>Wi-Fi kecepatan tinggi</li>
-                                            <li>Kulkas &amp; dispenser air</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="premium-highlight-tags">
-                                    <span class="htag"><i class="fa-solid fa-star"></i> Privasi Penuh</span>
-                                    <span class="htag"><i class="fa-solid fa-utensils"></i> Makan 3x Sehari</span>
-                                    <span class="htag"><i class="fa-solid fa-tv"></i> Smart TV</span>
-                                    <span class="htag"><i class="fa-solid fa-snowflake"></i> AC Individual</span>
-                                </div>
-                                <div class="premium-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20Suites" target="_blank" class="btn-gold">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                    <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-gold-outline">
-                                        <i class="fa-regular fa-calendar-check"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. EXECUTIVE -->
-                    <div class="col-12 col-lg-4 reveal-on-scroll">
-                        <div class="premium-room-card h-100">
-                            <div class="premium-ribbon"></div>
-                            <div class="premium-img-wrapper">
-                                <img src="{{ asset('images/F1671680579.jpg') }}" alt="Executive RS St. Elisabeth Semarang">
-                                <span class="room-category-label">Executive</span>
-                            </div>
-                            <div class="premium-card-body">
-                                <div class="d-flex align-items-center gap-2 mb-3">
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-vector-square"></i> ~24 m² · 1 Tempat Tidur
-                                    </span>
-                                    <span class="room-size-chip">
-                                        <i class="fa-solid fa-user-group"></i> Max 1 Penunggu
-                                    </span>
-                                </div>
-                                <h3 class="room-title">Executive</h3>
-                                <p class="room-tagline">Pilihan ideal bagi pasien yang mengutamakan privasi dengan anggaran lebih terjangkau. Ruangan bersih, modern, dan dilengkapi fasilitas yang cukup untuk kenyamanan selama perawatan.</p>
-                                <hr class="gold-divider">
-                                <div class="premium-amenities">
-                                    <div class="premium-amenity-group">
-                                        <h6>Kamar &amp; Ruangan</h6>
-                                        <ul>
-                                            <li>Kamar rawat private 1 bed</li>
-                                            <li>Kamar mandi dalam</li>
-                                            <li>Sofa/kursi untuk penunggu</li>
-                                            <li>Lemari pakaian</li>
-                                            <li>AC individual</li>
-                                        </ul>
-                                    </div>
-                                    <div class="premium-amenity-group">
-                                        <h6>Layanan</h6>
-                                        <ul>
-                                            <li>Pelayanan perawat standar</li>
-                                            <li>Makan 3x sehari dari RS</li>
-                                            <li>TV LED 32"</li>
-                                            <li>Wi-Fi tersedia</li>
-                                            <li>Dispenser air minum</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="premium-highlight-tags">
-                                    <span class="htag"><i class="fa-solid fa-lock"></i> Privasi Terjaga</span>
-                                    <span class="htag"><i class="fa-solid fa-utensils"></i> Makan Termasuk</span>
-                                    <span class="htag"><i class="fa-solid fa-wifi"></i> Wi-Fi</span>
-                                    <span class="htag"><i class="fa-solid fa-bed"></i> 1 Tempat Tidur</span>
-                                </div>
-                                <div class="premium-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20Executive%20Room" target="_blank" class="btn-gold">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                    <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-gold-outline">
-                                        <i class="fa-regular fa-calendar-check"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endif <!-- END OLD HARDCODED PREMIUM ROOMS -->
-                </div><!-- end row premium -->
-            </div><!-- end container -->
-        </section>
-
-        <!-- ===== STANDARD ROOMS (VIP / Kelas I / II / III) ===== -->
-        <section id="standard-rooms">
-            <div class="container">
-                <div class="section-title text-center mb-5">
-                    <h2 class="fw-bold">{{ __('Ruang Perawatan Standar & VIP') }}</h2>
-                    <div class="divider"></div>
-                    <p class="text-muted mt-3">{{ __('Dirancang untuk memberikan perawatan berkualitas dengan fasilitas yang memadai dan harga yang dapat disesuaikan dengan berbagai kebutuhan pasien.') }}</p>
-                </div>
-
-                <div class="row g-4">
-                    @forelse($standardRooms as $room)
-                        <div class="col-12 col-md-6 col-lg-4 col-xl-4 col-xxl-3 reveal-on-scroll">
-                            <div class="standard-room-card room-{{ strtolower(str_replace(' ', '', $room->name)) }}">
-                                <div class="card-top-bar"></div>
-                                <div class="std-img-wrapper">
-                                    <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="d-block w-100 h-100">
-                                        <img src="{{ $room->image_url ?? asset('images/placeholder.jpg') }}" alt="{{ $room->name }} RS St. Elisabeth Semarang">
-                                    </a>
-                                </div>
-                                <div class="std-card-body">
-                                    <span class="std-class-label">
-                                        <i class="fa-solid fa-bed"></i> {{ $room->name }}
-                                    </span>
-                                    <h3 class="std-room-name">{{ $room->name }}</h3>
-                                    
-                                    @if($room->room_size || $room->bed_count)
-                                    <p class="std-room-size">
-                                        <i class="fa-solid fa-vector-square"></i> {{ $room->room_size }} @if($room->room_size && $room->bed_count) · @endif {{ $room->bed_count }} Bed
-                                    </p>
-                                    @endif
-                                    
-                                    <p class="std-desc">{{ Str::limit(strip_tags($room->description), 180) }}</p>
-                                    
-                                    @if($room->highlight_tags && is_array($room->highlight_tags))
-                                    <div class="std-amenity-chips">
-                                        @foreach($room->highlight_tags as $tag)
-                                            <span class="chip">
-                                                @if(isset($tag['icon'])) <i class="{{ $tag['icon'] }}"></i> @endif
-                                                {{ $tag['label'] ?? '' }}
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                    @endif
-
-                                    <div class="std-card-cta d-flex flex-column gap-2 mt-auto">
-                                        <a href="{{ route('ruang-perawatan.show', $room->slug) }}" class="btn btn-outline-primary w-100 rounded-pill d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-solid fa-circle-info"></i> {{ __('Lihat Detail') }}
-                                        </a>
-                                        @php
-                                            $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
-                                        @endphp
-                                        <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn-blue w-100 d-flex align-items-center justify-content-center gap-2">
-                                            <i class="fa-brands fa-whatsapp"></i> {{ __('Tanya Ketersediaan') }}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12 reveal-on-scroll">
-                            <div class="empty-state-standard p-5 text-center rounded-4" style="background-color: #f1f8fd; border: 2px dashed #d0e8f5;">
-                                <div class="mb-3">
-                                    <i class="fa-solid fa-bed-pulse" style="font-size: 3.5rem; color: #b8d4e3;"></i>
-                                </div>
-                                <h4 class="fw-bold mb-2" style="color: var(--secondary-darker-color, #1a2740);">{{ __('Data Ruangan Sedang Diperbarui') }}</h4>
-                                <p class="text-muted mb-4 mx-auto" style="max-width: 550px;">
-                                    {{ __('Informasi ruang perawatan standar dan VIP saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk mengecek ketersediaan kamar secara real-time.') }}
-                                </p>
-                                <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan informasi ketersediaan Ruang Perawatan Standar di RS St. Elisabeth')) }}" target="_blank" class="btn btn-outline-primary px-4 py-2 rounded-pill">
-                                    <i class="fa-brands fa-whatsapp me-2"></i> {{ __('Tanya Ketersediaan Kamar') }}
-                                </a>
-                            </div>
-                        </div>
-                    @endforelse
-
-                    @if(false) <!-- OLD HARDCODED STANDARD ROOMS -->
-                    <!-- VIP -->
-                    <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
-                        <div class="standard-room-card room-vip">
-                            <div class="card-top-bar"></div>
-                            <div class="std-img-wrapper">
-                                <img src="{{ asset('images/F1671680565.jpg') }}" alt="VIP Room RS St. Elisabeth Semarang">
-                            </div>
-                            <div class="std-card-body">
-                                <span class="std-class-label">
-                                    <i class="fa-solid fa-gem"></i> VIP
-                                </span>
-                                <h3 class="std-room-name">VIP</h3>
-                                <p class="std-room-size">
-                                    <i class="fa-solid fa-vector-square"></i> ~20 m² · 1 Tempat Tidur
-                                </p>
-                                <p class="std-desc">
-                                    Ruang perawatan semi-privat dengan nuansa yang lebih nyaman. Cocok untuk pasien yang menginginkan ketenangan namun dengan biaya yang lebih terjangkau dari kelas Executive, dengan 1 tempat tidur dan fasilitas standar yang lengkap.
-                                </p>
-                                <div class="std-amenity-chips">
-                                    <span class="chip"><i class="fa-solid fa-bed"></i> 1 Bed Privat</span>
-                                    <span class="chip"><i class="fa-solid fa-bath"></i> Kamar Mandi Dalam</span>
-                                    <span class="chip"><i class="fa-solid fa-tv"></i> TV</span>
-                                    <span class="chip"><i class="fa-solid fa-snowflake"></i> AC</span>
-                                    <span class="chip"><i class="fa-solid fa-wifi"></i> Wi-Fi</span>
-                                    <span class="chip"><i class="fa-solid fa-utensils"></i> Makan 3x</span>
-                                </div>
-                                <div class="std-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20VIP%20Room" target="_blank" class="btn-blue">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kelas I -->
-                    <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
-                        <div class="standard-room-card room-kelas1">
-                            <div class="card-top-bar"></div>
-                            <div class="std-img-wrapper">
-                                <img src="{{ asset('images/F1670914854.jpg') }}" alt="Kelas I RS St. Elisabeth Semarang">
-                            </div>
-                            <div class="std-card-body">
-                                <span class="std-class-label">
-                                    <i class="fa-solid fa-1"></i> Kelas I
-                                </span>
-                                <h3 class="std-room-name">Kelas I</h3>
-                                <p class="std-room-size">
-                                    <i class="fa-solid fa-vector-square"></i> 2 Tempat Tidur per Kamar
-                                </p>
-                                <p class="std-desc">
-                                    Kamar bersama untuk 2 pasien dengan sekat privasi yang memadai. Dilengkapi dengan fasilitas standar yang nyaman, termasuk kamar mandi dalam, AC, dan TV. Ideal bagi pasien yang tidak memerlukan ruang isolasi penuh.
-                                </p>
-                                <div class="std-amenity-chips">
-                                    <span class="chip"><i class="fa-solid fa-bed-pulse"></i> 2 Bed per Kamar</span>
-                                    <span class="chip"><i class="fa-solid fa-bath"></i> Kamar Mandi Dalam</span>
-                                    <span class="chip"><i class="fa-solid fa-tv"></i> TV</span>
-                                    <span class="chip"><i class="fa-solid fa-snowflake"></i> AC</span>
-                                    <span class="chip"><i class="fa-solid fa-utensils"></i> Makan 3x</span>
-                                    <span class="chip"><i class="fa-solid fa-user"></i> 1 Penunggu</span>
-                                </div>
-                                <div class="std-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20Kelas%20I" target="_blank" class="btn-blue">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kelas II -->
-                    <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
-                        <div class="standard-room-card room-kelas2">
-                            <div class="card-top-bar"></div>
-                            <div class="std-img-wrapper">
-                                <img src="{{ asset('images/F1670914872.jpg') }}" alt="Kelas II RS St. Elisabeth Semarang">
-                            </div>
-                            <div class="std-card-body">
-                                <span class="std-class-label">
-                                    <i class="fa-solid fa-2"></i> Kelas II
-                                </span>
-                                <h3 class="std-room-name">Kelas II</h3>
-                                <p class="std-room-size">
-                                    <i class="fa-solid fa-vector-square"></i> 3–4 Tempat Tidur per Kamar
-                                </p>
-                                <p class="std-desc">
-                                    Kamar perawatan bersama untuk 3–4 pasien dengan fasilitas lengkap dan pelayanan medis yang sama baiknya dengan kelas lain. Pilihan ekonomis yang tetap mengutamakan kebersihan, kenyamanan, dan keselamatan pasien.
-                                </p>
-                                <div class="std-amenity-chips">
-                                    <span class="chip"><i class="fa-solid fa-bed-pulse"></i> 3–4 Bed per Kamar</span>
-                                    <span class="chip"><i class="fa-solid fa-bath"></i> Kamar Mandi Bersama</span>
-                                    <span class="chip"><i class="fa-solid fa-tv"></i> TV Bersama</span>
-                                    <span class="chip"><i class="fa-solid fa-snowflake"></i> AC Central</span>
-                                    <span class="chip"><i class="fa-solid fa-utensils"></i> Makan 3x</span>
-                                </div>
-                                <div class="std-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20Kelas%20II" target="_blank" class="btn-blue">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kelas III -->
-                    <div class="col-12 col-md-6 col-xl-3 reveal-on-scroll">
-                        <div class="standard-room-card room-kelas3">
-                            <div class="card-top-bar"></div>
-                            <div class="std-img-wrapper">
-                                <img src="{{ asset('images/F1670220299.jpg') }}" alt="Kelas III RS St. Elisabeth Semarang">
-                            </div>
-                            <div class="std-card-body">
-                                <span class="std-class-label">
-                                    <i class="fa-solid fa-3"></i> Kelas III
-                                </span>
-                                <h3 class="std-room-name">Kelas III</h3>
-                                <p class="std-room-size">
-                                    <i class="fa-solid fa-vector-square"></i> 5–6 Tempat Tidur per Kamar
-                                </p>
-                                <p class="std-desc">
-                                    Ruang perawatan umum dengan kapasitas lebih besar, tetap dijaga kebersihannya dan memiliki akses layanan medis yang sama. Tersedia untuk peserta BPJS Kesehatan. Pelayanan perawat dilakukan secara rutin dan terstandar.
-                                </p>
-                                <div class="std-amenity-chips">
-                                    <span class="chip"><i class="fa-solid fa-bed-pulse"></i> 5–6 Bed per Kamar</span>
-                                    <span class="chip"><i class="fa-solid fa-bath"></i> Kamar Mandi Bersama</span>
-                                    <span class="chip"><i class="fa-solid fa-snowflake"></i> AC Central</span>
-                                    <span class="chip"><i class="fa-solid fa-utensils"></i> Makan 3x</span>
-                                    <span class="chip"><i class="fa-solid fa-id-card"></i> BPJS Kesehatan</span>
-                                </div>
-                                <div class="std-card-cta">
-                                    <a href="https://wa.me/6285600600870?text=Halo%2C%20saya%20ingin%20informasi%20Kelas%20III" target="_blank" class="btn-blue">
-                                        <i class="fa-brands fa-whatsapp"></i> Tanya Ketersediaan
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    @endif <!-- END OLD HARDCODED STANDARD ROOMS -->
-                </div><!-- end row standard -->
-            </div><!-- end container -->
-        </section>
-        --}}
-
-        {{-- ===== COMPARISON TABLE (DYNAMIC) =====
-        @php
-            // Menggabungkan Premium dan Standar agar Premium selalu di depan.
-            // Masing-masing kelompok sudah diurutkan berdasarkan sort_order dari controller.
-            $allRooms = $premiumRooms->merge($standardRooms);
-            
-            // Mengumpulkan semua fitur unik yang ditandai "show_in_comparison" dari seluruh ruangan
-            $allFeatures = collect();
-            foreach($allRooms as $room) {
-                $amenities = $room->amenities;
-                if(is_array($amenities)) {
-                    foreach($amenities as $group) {
-                        foreach($group['items'] ?? [] as $item) {
-                            if(is_array($item) && ($item['show_in_comparison'] ?? false)) {
-                                $allFeatures->push($item['name']);
-                            }
-                        }
-                    }
-                }
-            }
-            $uniqueFeatures = $allFeatures->unique()->values();
-        @endphp
-
-        @if($allRooms->isNotEmpty() && $uniqueFeatures->isNotEmpty())
-        <section id="room-comparison">
-            <div class="container">
-                <div class="comparison-header">
-                    <h2 class="comparison-title">{{ __('Perbandingan Fasilitas Ruangan') }}</h2>
-                    <p class="comparison-desc">{{ __('Bandingkan semua fasilitas di setiap kelas ruang perawatan kami secara mudah.') }}</p>
-                </div>
-                <div class="table-responsive">
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left; padding-left:1.25rem;">{{ __('Fasilitas') }}</th>
-                                @foreach($allRooms as $room)
-                                    <th class="{{ $room->category === 'premium' ? 'col-premium' : '' }}">
-                                        {{ $room->name }}
-                                    </th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($uniqueFeatures as $featureName)
-                            <tr>
-                                <td>{{ $featureName }}</td>
-                                @foreach($allRooms as $room)
-                                    @php
-                                        $val = 'no';
-                                        $displayValue = '';
-                                        $isPremium = $room->category === 'premium';
-                                        
-                                        // Cari item yang cocok di dalam amenities ruangan ini
-                                        $amenities = $room->amenities;
-                                        if(is_array($amenities)) {
-                                            foreach($amenities as $group) {
-                                                foreach($group['items'] ?? [] as $item) {
-                                                    if(is_array($item) && ($item['name'] ?? '') === $featureName) {
-                                                        if(empty($item['value'])) {
-                                                            $val = $isPremium ? 'premium' : 'yes';
-                                                        } else {
-                                                            $val = 'text';
-                                                            $displayValue = $item['value'];
-                                                        }
-                                                        break 2;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        
-                                        $tdClass = $isPremium ? 'cell-premium' : '';
-                                    @endphp
-                                    <td class="{{ $tdClass }}">
-                                        @if($val === 'yes')
-                                            <i class="fa-solid fa-check check-yes"></i>
-                                        @elseif($val === 'no')
-                                            <i class="fa-solid fa-minus check-no"></i>
-                                        @elseif($val === 'premium')
-                                            <i class="fa-solid fa-check check-gold"></i>
-                                        @elseif($val === 'text')
-                                            <small {!! $isPremium ? 'style="color:#c9a84c"' : 'class="text-muted"' !!}>
-                                                {{ $displayValue }}
-                                            </small>
-                                        @endif
-                                    </td>
-                                @endforeach
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-center text-muted mt-3" style="font-size:0.8rem;">
-                    <i class="fa-solid fa-circle-info me-1"></i>
-                    {{ __('Fasilitas dapat berubah. Hubungi kami untuk informasi terkini dan ketersediaan kamar.') }}
-                </p>
             </div>
         </section>
-        @endif
-        --}}
 
-        {{-- OLD ROOM-COMPARISON SECTION FOR BACKUP --}}
-        @if(false)
-        <section id="room-comparison">
+        {{-- ===== MODERN FLOATING RESERVATION CTA BANNER ===== --}}
+        <section id="room-cta-banner" aria-label="{{ __('Siap Melakukan Reservasi?') }}">
             <div class="container">
-                <div class="comparison-header">
-                    <h2 class="comparison-title">Perbandingan Fasilitas Ruangan</h2>
-                    <p class="comparison-desc">Bandingkan semua fasilitas di setiap kelas ruang perawatan kami secara mudah.</p>
-                </div>
-                <div class="table-responsive">
-                    <table class="comparison-table">
-                        <thead>
-                            <tr>
-                                <th style="text-align:left; padding-left:1.25rem;">Fasilitas</th>
-                                <th class="col-premium-top">President Suite</th>
-                                <th class="col-premium">Suites</th>
-                                <th class="col-premium">Executive</th>
-                                <th>VIP</th>
-                                <th>Kelas I</th>
-                                <th>Kelas II</th>
-                                <th>Kelas III</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Kamar mandi dalam (private)</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>AC individual (thermostat)</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><small class="text-muted">Central</small></td>
-                                <td><small class="text-muted">Central</small></td>
-                            </tr>
-                            <tr>
-                                <td>Televisi</td>
-                                <td class="cell-premium"><small style="color:#c9a84c">55" Smart</small></td>
-                                <td class="cell-premium"><small style="color:#c9a84c">43" Smart</small></td>
-                                <td class="cell-premium"><small style="color:#c9a84c">32" TV</small></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><small class="text-muted">Bersama</small></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Wi-Fi Internet</td>
-                                <td class="cell-premium"><small style="color:#c9a84c">Dedicated</small></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Ruang tamu / sofa</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Kulkas</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Makan pasien (3× sehari)</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Perawat personal / dedicated</td>
-                                <td class="cell-premium"><i class="fa-solid fa-check check-gold"></i></td>
-                                <td class="cell-premium"><small style="color:#c9a84c">Per shift</small></td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                            </tr>
-                            <tr>
-                                <td>Jumlah bed per kamar</td>
-                                <td class="cell-premium"><small style="color:#c9a84c">1 (eksklusif)</small></td>
-                                <td class="cell-premium"><small style="color:#c9a84c">1 (eksklusif)</small></td>
-                                <td class="cell-premium"><small style="color:#c9a84c">1 (private)</small></td>
-                                <td><small>1</small></td>
-                                <td><small>2</small></td>
-                                <td><small>3–4</small></td>
-                                <td><small>5–6</small></td>
-                            </tr>
-                            <tr>
-                                <td>Akomodasi BPJS Kesehatan</td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td class="cell-premium"><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-minus check-no"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                                <td><i class="fa-solid fa-check check-yes"></i></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-center text-muted mt-3" style="font-size:0.8rem;">
-                    <i class="fa-solid fa-circle-info me-1"></i>
-                    Fasilitas dapat berubah. Hubungi kami untuk informasi terkini dan ketersediaan kamar.
-                </p>
-            </div>
-        </section>
-        @endif
-
-        {{-- ===== CTA BANNER ===== --}}
-        <section id="room-cta-banner">
-            <div class="container position-relative" style="z-index:1;">
-                <h2 class="cta-title">{{ __('Siap Melakukan Reservasi?') }}</h2>
-                <p class="cta-subtitle">{{ __('Hubungi tim kami sekarang untuk memeriksa ketersediaan kamar dan mendapatkan informasi lebih lanjut tentang biaya perawatan.') }}</p>
-                <div class="d-flex justify-content-center flex-wrap">
-                    <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin reservasi ruang perawatan')) }}" target="_blank" class="btn-cta-white">
-                        <i class="fa-brands fa-whatsapp fs-5"></i> {{ __('Hubungi via WhatsApp') }}
-                    </a>
-                    <a href="https://regonline.rs-elisabeth.com" target="_blank" class="btn-cta-outline">
-                        <i class="fa-regular fa-calendar-check"></i> {{ __('Daftar Online') }}
-                    </a>
-                    <a href="tel:024850224" class="btn-cta-outline">
-                        <i class="fa-solid fa-phone"></i> (024) 8502244
-                    </a>
+                <div class="room-cta-card" id="room-cta-card">
+                    <div class="room-cta-content">
+                        <h2 class="cta-title">{{ __('Siap Melakukan Reservasi?') }}</h2>
+                        <p class="cta-subtitle">
+                            {{ __('Hubungi tim kami sekarang untuk memeriksa ketersediaan kamar dan mendapatkan informasi lebih lanjut tentang biaya perawatan.') }}
+                        </p>
+                        <div class="room-cta-actions">
+                            <a
+                                href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin reservasi ruang perawatan')) }}"
+                                target="_blank"
+                                rel="noopener"
+                                class="btn-cta-white"
+                            >
+                                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                                <span>{{ __('Hubungi via WhatsApp') }}</span>
+                            </a>
+                            <a
+                                href="https://regonline.rs-elisabeth.com"
+                                target="_blank"
+                                rel="noopener"
+                                class="btn-cta-outline"
+                            >
+                                <i class="fa-regular fa-calendar-check" aria-hidden="true"></i>
+                                <span>{{ __('Daftar Online') }}</span>
+                            </a>
+                            <a href="tel:0248502244" class="btn-cta-outline">
+                                <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                                <span>(024) 8502244</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -960,5 +298,5 @@
         'resources/js/components/back-to-top.js'
     ])
     @include('components.json-ld')
-    </body>
+</body>
 </html>

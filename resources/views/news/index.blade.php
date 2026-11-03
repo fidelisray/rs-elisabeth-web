@@ -29,7 +29,7 @@
             'subtitle' => __('Ikuti perkembangan terbaru, inovasi medis, dan informasi kesehatan dari Rumah Sakit St. Elisabeth Semarang.'),
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],
-                ['label' => __('Berita & Artikel')],
+                ['label' => __('ElisaNews')],
             ],
         ])
         

@@ -29,7 +29,7 @@
             'subtitle' => __('Kumpulan artikel kesehatan, tips medis, dan info penyakit dari dokter Rumah Sakit St. Elisabeth Semarang.'),
             'breadcrumbs' => [
                 ['label' => __('Beranda'), 'url' => url('/')],
-                ['label' => __('Berita & Artikel')],
+                ['label' => __('Artikel')],
             ],
         ])
         

@@ -1,114 +1,175 @@
-
 /* =====================================================
-   RUANG PERAWATAN PAGE — CSS
+   RUANG PERAWATAN PAGE STYLES
+   Clinical-Editorial Room Showcase & Discovery
    ===================================================== */
 
 :root {
-    /* Brand colors */
-    --rp-blue-dark:     #124f8c;
-    --rp-blue:          #026199;
-    --rp-blue-light:    #008fd7;
-    /* Premium gold accent (for luxury rooms) */
-    --rp-gold:          #c9a84c;
-    --rp-gold-light:    #e8c96d;
-    --rp-gold-shine:    #f5e4a3;
-    --rp-gold-dark:     #a07830;
+    --rp-blue-dark:  #124f8c;
+    --rp-blue:       #026199;
+    --rp-blue-light: #008fd7;
+    --rp-gold:       #c9a84c;
+    --rp-gold-light: #e8c96d;
+    --rp-gold-dark:  #a07830;
 }
 
-main {
+main,
+.ruang-perawatan-canvas {
     background:
-        radial-gradient(circle 340px at 88% 8%, rgba(183, 228, 229, 0.35), rgba(183, 228, 229, 0) 70%),
-        linear-gradient(180deg, #ffffff 0%, #eef7fd 100%);
+        radial-gradient(circle 480px at 88% 12%, rgba(183, 228, 229, 0.28), rgba(183, 228, 229, 0) 70%),
+        radial-gradient(circle 520px at 10% 52%, rgba(0, 143, 215, 0.06), rgba(0, 143, 215, 0) 70%),
+        linear-gradient(180deg, #ffffff 0%, #f4f9fd 28%, #eaf4fb 68%, #e5f0fa 100%);
+    min-height: calc(100vh - 80px);
+    position: relative;
+    overflow-x: clip;
 }
 
 /* =====================================================
-   INPATIENT ROOM FACILITIES — UNIFIED SECTION
+   INPATIENT ROOM FACILITIES SECTION
    ===================================================== */
 #inpatient-room-facilities {
-    padding: 3.5rem 0 5rem;
+    padding: 2.5rem 0 3.5rem;
     background: transparent;
     position: relative;
 }
 
-@media (min-width: 992px) {
-    #inpatient-room-facilities > .container {
-        max-width: 1640px;
-        width: 94%;
-    }
+/* ---------- Discovery Bar (Live Search + Counter) ---------- */
+.room-discovery-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: #ffffff;
+    border: 1px solid rgba(2, 97, 153, 0.14);
+    border-radius: 16px;
+    padding: 1.1rem 1.35rem;
+    margin-bottom: 2.25rem;
+    box-shadow: 0 8px 24px rgba(18, 79, 140, 0.06);
 }
 
-@media (min-width: 1600px) {
-    #inpatient-room-facilities .room-card-col {
-        flex: 0 0 auto;
-        width: 25%;
-    }
+.room-search-box {
+    position: relative;
+    flex: 1 1 340px;
+    max-width: 640px;
+    display: flex;
+    align-items: center;
 }
 
-#inpatient-room-facilities .section-header {
-    text-align: center;
-    margin-bottom: 3rem;
+.room-search-icon {
+    position: absolute;
+    left: 1rem;
+    color: #026199;
+    font-size: 0.95rem;
+    pointer-events: none;
 }
 
-#inpatient-room-facilities .section-header .section-badge {
+.room-search-input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.6rem 2.75rem 0.6rem 2.65rem;
+    border-radius: 12px;
+    border: 1.5px solid rgba(2, 97, 153, 0.28);
+    background-color: #f8fbfe;
+    color: #1e293b;
+    font-size: 0.94rem;
+    font-weight: 500;
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-search-input::placeholder {
+    color: #475569;
+    opacity: 1;
+}
+
+.room-search-input:hover {
+    border-color: #026199;
+    background-color: #ffffff;
+}
+
+.room-search-input:focus,
+.room-search-input:focus-visible {
+    outline: 2.5px solid #026199;
+    outline-offset: 2px;
+    border-color: #026199;
+    background-color: #ffffff;
+    box-shadow: 0 4px 14px rgba(2, 97, 153, 0.1);
+}
+
+.room-search-clear {
+    position: absolute;
+    right: 0.35rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #475569;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.room-search-clear:hover {
+    background-color: #e6f4fb;
+    color: #124f8c;
+}
+
+.room-search-clear:focus-visible {
+    outline: 2.5px solid #026199;
+    outline-offset: 2px;
+}
+
+.room-counter-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: #e0f2fe;
-    color: #0284c7;
-    padding: 0.35rem 1.15rem;
-    border-radius: 50px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
-    border: 1px solid rgba(2, 132, 199, 0.15);
-}
-
-#inpatient-room-facilities .section-header .section-title {
-    font-family: var(--font-primary, 'Montserrat', sans-serif);
-    font-size: 2.15rem;
-    font-weight: 700;
+    background-color: #f0f7fd;
     color: #124f8c;
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
+    border: 1px solid rgba(2, 97, 153, 0.2);
+    border-radius: 12px;
+    padding: 0.55rem 1.05rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    min-height: 44px;
 }
 
-#inpatient-room-facilities .section-header .divider {
-    width: 50px;
-    height: 3px;
-    background: #008fd7;
-    margin: 0 auto 1rem;
-    border-radius: 2px;
+.room-counter-pill i {
+    color: #026199;
+    font-size: 0.95rem;
 }
 
-#inpatient-room-facilities .section-header .section-desc {
-    font-family: var(--font-secondary, 'Poppins', sans-serif);
-    font-size: 0.98rem;
-    color: #64748b;
-    max-width: 650px;
-    margin: 0 auto;
-    line-height: 1.7;
+.room-counter-pill strong {
+    font-weight: 700;
+    color: #026199;
 }
 
-/* Inpatient Room Card */
+/* ---------- Refined Editorial Room Card ---------- */
 .inpatient-room-card {
     background: #ffffff;
-    border-radius: 1.25rem;
+    border-radius: 20px;
     overflow: hidden;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(2, 97, 153, 0.13);
+    box-shadow: 0 10px 30px rgba(18, 79, 140, 0.06);
     display: flex;
     flex-direction: column;
     height: 100%;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+    transition:
+        transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.3s ease;
     position: relative;
 }
 
 .inpatient-room-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 36px rgba(18, 79, 140, 0.12);
-    border-color: #93c5fd;
+    box-shadow: 0 18px 40px rgba(18, 79, 140, 0.13);
+    border-color: rgba(2, 97, 153, 0.32);
+}
+
+.inpatient-room-card.is-premium:hover {
+    border-color: rgba(160, 120, 48, 0.45);
 }
 
 .inpatient-room-card .card-accent-bar {
@@ -117,60 +178,103 @@ main {
     background: linear-gradient(90deg, #026199, #008fd7);
 }
 
+.inpatient-room-card.is-premium .card-accent-bar {
+    background: linear-gradient(90deg, #a07830, #e8c96d, #a07830);
+}
+
 .inpatient-room-card .room-thumb-wrapper {
     position: relative;
     width: 100%;
-    height: 275px;
+    height: 250px;
     overflow: hidden;
-    background: #f1f5f9;
+    background: #e6f4fb;
+    border-bottom: 1px solid rgba(2, 97, 153, 0.08);
+}
+
+.inpatient-room-card .room-thumb-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.inpatient-room-card .room-thumb-link:focus-visible {
+    outline: 2.5px solid #026199;
+    outline-offset: -3px;
 }
 
 .inpatient-room-card .room-thumb-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    display: block;
+    transition: transform 0.45s ease;
 }
 
 .inpatient-room-card:hover .room-thumb-wrapper img {
-    transform: scale(1.05);
+    transform: scale(1.045);
 }
 
 .inpatient-room-card .room-class-badge {
     position: absolute;
     bottom: 14px;
     left: 16px;
-    background: rgba(18, 79, 140, 0.88);
-    color: #ffffff;
-    backdrop-filter: blur(4px);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
-    padding: 0.32rem 0.9rem;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    letter-spacing: 0.03em;
+    padding: 0.34rem 0.88rem;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+}
+
+.inpatient-room-card .room-class-badge.badge-tier-standard {
+    background: #124f8c;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.inpatient-room-card .room-class-badge.badge-tier-premium {
+    background: #fef3c7;
+    color: #78350f;
+    border: 1px solid rgba(180, 83, 9, 0.35);
 }
 
 .inpatient-room-card .room-card-body {
-    padding: 1.75rem 1.75rem 1.85rem;
+    padding: 1.65rem 1.7rem 1.75rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .inpatient-room-card .room-name {
-    font-family: var(--font-primary, 'Montserrat', sans-serif);
-    font-size: 1.38rem;
-    font-weight: 700;
+    font-family: var(--font-primary, "Montserrat", sans-serif);
+    font-size: 1.35rem;
+    font-weight: 800;
     color: #124f8c;
     margin-bottom: 0.75rem;
-    line-height: 1.35;
+    line-height: 1.32;
     letter-spacing: -0.01em;
 }
 
+.inpatient-room-card .room-name-link {
+    color: #124f8c;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.inpatient-room-card .room-name-link:hover {
+    color: #026199;
+}
+
+.inpatient-room-card .room-name-link:focus-visible {
+    outline: 2.5px solid #026199;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Spec Chips */
 .inpatient-room-card .room-specs {
     display: flex;
     flex-wrap: wrap;
@@ -182,33 +286,33 @@ main {
     display: inline-flex;
     align-items: center;
     gap: 0.38rem;
-    font-size: 0.82rem;
+    font-size: 0.81rem;
     font-weight: 600;
     color: #026199;
-    background: #f0f7fd;
-    border: 1px solid #dbeafe;
-    padding: 0.35rem 0.75rem;
+    background: #e6f4fb;
+    border: 1px solid rgba(2, 97, 153, 0.2);
+    padding: 0.34rem 0.75rem;
     border-radius: 8px;
     white-space: nowrap;
 }
 
 .inpatient-room-card .spec-chip i {
     font-size: 0.78rem;
-    color: #008fd7;
+    color: #026199;
 }
 
 .inpatient-room-card .room-description {
-    font-size: 0.92rem;
-    color: #64748b;
-    line-height: 1.65;
+    font-size: 0.94rem;
+    color: #334155;
+    line-height: 1.72;
     margin-bottom: 1.15rem;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 4.5em;
 }
 
+/* Highlight Tag Pills */
 .inpatient-room-card .room-tags {
     display: flex;
     flex-wrap: wrap;
@@ -218,28 +322,31 @@ main {
 
 .inpatient-room-card .room-tags .tag-pill {
     font-size: 0.78rem;
-    font-weight: 500;
-    color: #475569;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 0.26rem 0.72rem;
-    border-radius: 50px;
+    font-weight: 600;
+    color: #124f8c;
+    background: #f0f7fd;
+    border: 1px solid rgba(2, 97, 153, 0.2);
+    padding: 0.28rem 0.75rem;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
 }
 
 .inpatient-room-card .room-tags .tag-pill i {
-    color: #008fd7;
-    font-size: 0.72rem;
+    color: #026199;
+    font-size: 0.74rem;
 }
 
+/* Card Footer Actions */
 .inpatient-room-card .room-card-cta {
     margin-top: auto;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(2, 97, 153, 0.1);
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.7rem;
 }
 
 .inpatient-room-card .btn-detail {
@@ -248,857 +355,335 @@ main {
     justify-content: center;
     gap: 0.5rem;
     flex: 1;
-    min-height: 48px;
-    padding: 0.7rem 1.25rem;
-    border-radius: 50px;
+    min-height: 46px;
+    padding: 0.65rem 1.2rem;
+    border-radius: 999px;
     font-size: 0.92rem;
     font-weight: 600;
     color: #026199;
-    border: 1.5px solid #026199;
-    background: transparent;
-    transition: all 0.2s ease;
+    border: 2px solid #026199;
+    background: #ffffff;
+    transition: background-color 0.22s ease, color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
     text-decoration: none;
 }
 
 .inpatient-room-card .btn-detail:hover {
-    background: #f0f7fd;
-    color: #024e7a;
-    border-color: #024e7a;
-    transform: translateY(-1px);
+    background: #026199;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(2, 97, 153, 0.22);
+}
+
+.inpatient-room-card .btn-detail:focus-visible {
+    outline: 2.5px solid #124f8c;
+    outline-offset: 2px;
 }
 
 .inpatient-room-card .btn-wa-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: #25D366;
+    background: #15803d;
     color: #ffffff;
     border: none;
-    font-size: 1.35rem;
+    font-size: 1.3rem;
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 3px 10px rgba(37, 211, 102, 0.28);
+    transition: background-color 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.26);
 }
 
 .inpatient-room-card .btn-wa-icon:hover {
-    background: #20ba59;
+    background: #166534;
     color: #ffffff;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.38);
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 18px rgba(21, 128, 61, 0.36);
 }
 
-.inpatient-room-card .btn-wa {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 50px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #ffffff;
-    background: #026199;
-    border: 1.5px solid #026199;
-    transition: all 0.2s ease;
-    text-decoration: none;
+.inpatient-room-card .btn-wa-icon:focus-visible {
+    outline: 2.5px solid #124f8c;
+    outline-offset: 2px;
 }
 
-.inpatient-room-card .btn-wa:hover {
-    background: #024e7a;
-    border-color: #024e7a;
-    color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(2, 97, 153, 0.25);
-}
-
-/* Empty State */
+/* ---------- Empty Filter & Empty Data States ---------- */
 #inpatient-room-facilities .empty-state-card {
     background: #ffffff;
-    border: 2px dashed #cbd5e1;
-    border-radius: 1.25rem;
-    padding: 4rem 2rem;
+    border: 1px solid rgba(2, 97, 153, 0.14);
+    border-radius: 20px;
+    padding: 3.5rem 2rem;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 10px 30px rgba(18, 79, 140, 0.06);
 }
 
 #inpatient-room-facilities .empty-state-card .empty-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #f0f7fd;
-    border: 1px solid #d0e8f5;
-    display: flex;
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: #e6f4fb;
+    color: #026199;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.5rem;
-}
-
-#inpatient-room-facilities .empty-state-card .empty-icon-wrapper i {
-    font-size: 2.25rem;
-    color: #008fd7;
+    margin: 0 auto 1.25rem;
+    font-size: 1.9rem;
 }
 
 #inpatient-room-facilities .empty-state-card .empty-title {
-    font-family: var(--font-primary, 'Montserrat', sans-serif);
-    font-size: 1.4rem;
+    font-family: var(--font-primary, "Montserrat", sans-serif);
+    font-size: 1.35rem;
     font-weight: 700;
     color: #124f8c;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.65rem;
 }
 
 #inpatient-room-facilities .empty-state-card .empty-desc {
-    font-family: var(--font-secondary, 'Poppins', sans-serif);
-    font-size: 0.95rem;
-    color: #64748b;
-    max-width: 540px;
+    font-family: var(--font-secondary, "Poppins", sans-serif);
+    font-size: 0.96rem;
+    color: #334155;
+    max-width: 520px;
     margin: 0 auto 1.5rem;
     line-height: 1.7;
 }
 
-/* ---------- Section Intro ---------- */
-#room-intro {
-    padding: 4rem 0 2rem;
-    background: transparent;
-}
-#room-intro .intro-label {
-    display: flex;
+.btn-reset-room {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-}
-#room-intro .intro-label::before,
-#room-intro .intro-label::after {
-    content: '';
-    flex: 1;
-    max-width: 60px;
-    height: 3px;
-    background: var(--rp-blue-light);
-    border-radius: 2px;
-}
-#room-intro .intro-label span {
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--rp-blue-light);
-}
-#room-intro .intro-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--rp-blue-dark);
-    margin-bottom: 1rem;
-}
-#room-intro .intro-desc {
-    font-size: 1.05rem;
-    color: #555;
-    max-width: 680px;
-    margin: 0 auto;
-    line-height: 1.8;
-}
-
-/* ---------- Premium Rooms Banner (President / Suites / Executive) ---------- */
-#premium-rooms {
-    padding: 1rem 0 3rem;
-    background: #0d1b2a;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Subtle grid texture overlay */
-#premium-rooms::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-}
-
-#premium-rooms .premium-section-header {
-    padding: 3rem 0 2.5rem;
-    text-align: center;
-    position: relative;
-}
-#premium-rooms .premium-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, var(--rp-gold), var(--rp-gold-light));
-    color: #1a1200;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    padding: 0.4rem 1.2rem;
-    border-radius: 50px;
-    margin-bottom: 1.25rem;
-}
-#premium-rooms .premium-title {
-    font-family: var(--font-primary);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--rp-gold-light);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.01em;
-}
-#premium-rooms .premium-subtitle {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.55);
-    max-width: 560px;
-    margin: 0 auto;
-    line-height: 1.75;
-}
-
-/* ---------- Premium Room Card ---------- */
-.premium-room-card {
-    background: linear-gradient(135deg, #1a2740 0%, #0f1e30 100%);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 1.5rem;
-    overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
-    position: relative;
-}
-.premium-room-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 1.5rem;
-    background: linear-gradient(135deg,
-        rgba(201,168,76,0.06) 0%,
-        transparent 60%);
-    pointer-events: none;
-}
-.premium-room-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,76,0.4);
-    border-color: rgba(201,168,76,0.45);
-}
-
-/* Card — featured (president suite) gets slightly larger treatment */
-.premium-room-card.card-featured {
-    border-color: rgba(201,168,76,0.35);
-    background: linear-gradient(135deg, #1e2e47 0%, #111d2e 100%);
-}
-
-/* Image wrapper */
-.premium-room-card .premium-img-wrapper {
-    width: 100%;
-    height: 240px;
-    overflow: hidden;
-    position: relative;
-}
-.premium-room-card .premium-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s ease;
-    filter: brightness(0.88);
-}
-.premium-room-card:hover .premium-img-wrapper img {
-    transform: scale(1.06);
-    filter: brightness(0.92);
-}
-
-/* Gold top ribbon */
-.premium-room-card .premium-ribbon {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--rp-gold-dark), var(--rp-gold-light), var(--rp-gold-dark));
-}
-
-.premium-room-card .room-category-label {
-    position: absolute;
-    bottom: 0; left: 0;
-    padding: 0.4rem 0.9rem;
-    background: linear-gradient(90deg, rgba(0,0,0,0.85), transparent);
-    color: var(--rp-gold-light);
-    font-family: var(--font-primary);
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Room content body */
-.premium-room-card .premium-card-body {
-    padding: 1.75rem 1.75rem 2rem;
-}
-
-.premium-room-card .room-size-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.06);
-    padding: 0.3rem 0.75rem;
-    border-radius: 50px;
-    margin-bottom: 1.25rem;
-}
-.premium-room-card .room-size-chip i {
-    color: var(--rp-gold);
-    font-size: 0.75rem;
-}
-
-.premium-room-card .room-title {
-    font-family: var(--font-primary);
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.01em;
-}
-
-.premium-room-card .room-tagline {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-}
-
-/* Divider with gold tint */
-.premium-room-card .gold-divider {
-    border: none;
-    border-top: 1px solid rgba(201,168,76,0.2);
-    margin-bottom: 1.25rem;
-}
-
-/* Amenity grid: two cols */
-.premium-amenities {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.85rem;
-    margin-bottom: 1.5rem;
-}
-
-.premium-amenity-group h6 {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--rp-gold);
-    margin-bottom: 0.6rem;
-}
-
-.premium-amenity-group ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.premium-amenity-group ul li {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.7);
-    padding: 0.2rem 0;
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    line-height: 1.45;
-}
-
-.premium-amenity-group ul li::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    background: var(--rp-gold);
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 5px;
-}
-
-/* Highlight tags (e.g., "Breakfast Included") */
-.premium-highlight-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-bottom: 1.5rem;
-}
-.premium-highlight-tags .htag {
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.25rem 0.7rem;
-    border-radius: 50px;
-    background: rgba(201,168,76,0.12);
-    color: var(--rp-gold-light);
-    border: 1px solid rgba(201,168,76,0.25);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-.premium-highlight-tags .htag i { font-size: 0.7rem; }
-
-/* CTA inside premium card */
-.premium-card-cta {
-    display: flex;
-    gap: 0.65rem;
-    flex-wrap: wrap;
-}
-.premium-card-cta .btn-gold {
-    background: linear-gradient(135deg, var(--rp-gold), var(--rp-gold-light));
-    color: #1a1200;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    flex-grow: 1;
-    justify-content: center;
-}
-.premium-card-cta .btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(201,168,76,0.4);
-    color: #1a1200;
-}
-.premium-card-cta .btn-gold-outline {
-    background: transparent;
-    color: var(--rp-gold-light);
-    border: 1.5px solid rgba(201,168,76,0.45);
-    padding: 0.6rem 1.25rem;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.25s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    flex-grow: 0;
-    justify-content: center;
-}
-.premium-card-cta .btn-gold-outline:hover {
-    background: rgba(201,168,76,0.1);
-    border-color: rgba(201,168,76,0.7);
-    color: var(--rp-gold-light);
-    transform: translateY(-2px);
-}
-
-/* ---------- Standard Rooms Section ---------- */
-#standard-rooms {
-    padding: 3rem 0 5rem;
-    background: transparent;
-}
-
-#standard-rooms .standard-section-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-#standard-rooms .standard-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--rp-blue-light);
-    margin-bottom: 0.75rem;
-}
-#standard-rooms .standard-label::before,
-#standard-rooms .standard-label::after {
-    content: '';
-    width: 30px;
-    height: 2px;
-    background: var(--rp-blue-light);
-    border-radius: 2px;
-}
-#standard-rooms .standard-title {
-    font-size: 1.85rem;
-    font-weight: 800;
-    color: var(--rp-blue-dark);
-    margin-bottom: 0.75rem;
-}
-#standard-rooms .standard-desc {
-    font-size: 1rem;
-    color: #666;
-    max-width: 580px;
-    margin: 0 auto;
-    line-height: 1.75;
-}
-
-/* ---------- Standard Room Card ---------- */
-.standard-room-card {
-    background: #fff;
-    border-radius: 1.25rem;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #eee;
-    height: 100%;
-}
-.standard-room-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.12);
-}
-
-/* Colored top bar per class */
-.standard-room-card .card-top-bar {
-    height: 4px;
-    width: 100%;
-}
-.room-vip    .card-top-bar { background: linear-gradient(90deg, #7b68ee, #9b8fff); }
-.room-kelas1 .card-top-bar { background: linear-gradient(90deg, #20b2aa, #48d1cc); }
-.room-kelas2 .card-top-bar { background: linear-gradient(90deg, #4682b4, #6ca0cf); }
-.room-kelas3 .card-top-bar { background: linear-gradient(90deg, #5f9ea0, #7eb8ba); }
-
-/* Image */
-.standard-room-card .std-img-wrapper {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-}
-.standard-room-card .std-img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-.standard-room-card:hover .std-img-wrapper img {
-    transform: scale(1.04);
-}
-
-/* Card body */
-.standard-room-card .std-card-body {
-    padding: 1.5rem 1.75rem 1.75rem;
-}
-
-/* Room class label */
-.std-class-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    margin-bottom: 0.85rem;
-}
-.room-vip    .std-class-label { background: rgba(123,104,238,0.1); color: #7b68ee; border: 1px solid rgba(123,104,238,0.25); }
-.room-kelas1 .std-class-label { background: rgba(32,178,170,0.1); color: #20b2aa; border: 1px solid rgba(32,178,170,0.25); }
-.room-kelas2 .std-class-label { background: rgba(70,130,180,0.1); color: #4682b4; border: 1px solid rgba(70,130,180,0.25); }
-.room-kelas3 .std-class-label { background: rgba(95,158,160,0.1); color: #5f9ea0; border: 1px solid rgba(95,158,160,0.25); }
-
-.standard-room-card .std-room-name {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--rp-blue-dark);
-    margin-bottom: 0.3rem;
-}
-.standard-room-card .std-room-size {
-    font-size: 0.83rem;
-    color: #888;
-    margin-bottom: 0.85rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-.standard-room-card .std-room-size i {
-    color: var(--rp-blue-light);
-}
-
-.standard-room-card .std-desc {
+    gap: 0.55rem;
+    min-height: 46px;
+    padding: 0.65rem 1.55rem;
+    border-radius: 999px;
+    border: 2px solid #026199;
+    background-color: #026199;
+    color: #ffffff;
     font-size: 0.92rem;
-    color: #555;
-    line-height: 1.75;
-    margin-bottom: 1.25rem;
-}
-
-/* Amenity chips */
-.std-amenity-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-bottom: 1.5rem;
-}
-.std-amenity-chips .chip {
-    font-size: 0.78rem;
-    padding: 0.28rem 0.7rem;
-    border-radius: 50px;
-    background: #f0f7ff;
-    color: var(--rp-blue);
-    border: 1px solid #d0e8f5;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-.std-amenity-chips .chip i { font-size: 0.72rem; color: var(--rp-blue-light); }
-
-/* CTA */
-.std-card-cta .btn-blue {
-    background: var(--rp-blue-light);
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1.4rem;
-    border-radius: 50px;
     font-weight: 600;
-    font-size: 0.875rem;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.25s ease;
-    width: 100%;
-    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-.std-card-cta .btn-blue:hover {
-    background: var(--rp-blue);
+
+.btn-reset-room:hover {
+    background-color: #124f8c;
+    border-color: #124f8c;
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,143,215,0.3);
-    color: #fff;
 }
 
-/* ---------- Comparison Table Section ---------- */
-#room-comparison {
-    padding: 4rem 0 5rem;
-    background: transparent;
-}
-#room-comparison .comparison-header {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-#room-comparison .comparison-title {
-    font-size: 1.85rem;
-    font-weight: 800;
-    color: var(--rp-blue-dark);
-    margin-bottom: 0.5rem;
-}
-#room-comparison .comparison-desc {
-    font-size: 0.95rem;
-    color: #666;
+.btn-reset-room:focus-visible {
+    outline: 2.5px solid #124f8c;
+    outline-offset: 2px;
 }
 
-.comparison-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-}
-
-.comparison-table thead tr th {
-    background: var(--rp-blue-dark);
-    color: #fff;
-    padding: 1rem 0.85rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-    border-bottom: 2px solid var(--rp-blue);
-    white-space: nowrap;
-}
-
-/* Gold header for premium columns */
-.comparison-table thead tr th.col-premium {
-    background: linear-gradient(135deg, #1e2e47, #0f1e30);
-    color: var(--rp-gold-light);
-    border-bottom-color: rgba(201,168,76,0.4);
-}
-.comparison-table thead tr th.col-premium-top {
-    background: linear-gradient(135deg, #1a2740, #0d1b2a);
-    color: var(--rp-gold-light);
-    border-bottom-color: rgba(201,168,76,0.4);
-}
-
-.comparison-table tbody tr {
-    transition: background 0.2s;
-}
-.comparison-table tbody tr:nth-child(even) { background: #f8f9fa; }
-.comparison-table tbody tr:nth-child(odd)  { background: #fff; }
-.comparison-table tbody tr:hover           { background: #eef6fc; }
-
-.comparison-table tbody tr td {
-    padding: 0.85rem 0.85rem;
-    font-size: 0.875rem;
-    color: #444;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
-}
-.comparison-table tbody tr td:first-child {
-    text-align: left;
-    font-weight: 600;
-    color: #333;
-    padding-left: 1.25rem;
-}
-
-/* Premium cells get faint dark bg */
-.comparison-table tbody tr td.cell-premium {
-    background: rgba(13,27,42,0.035);
-}
-.comparison-table tbody tr:nth-child(even) td.cell-premium {
-    background: rgba(13,27,42,0.06);
-}
-
-.check-yes { color: #16a34a; font-size: 1rem; }
-.check-no  { color: #d1d5db; font-size: 1rem; }
-.check-gold{ color: var(--rp-gold); font-size: 1rem; }
-
-/* ---------- CTA Banner ---------- */
+/* =====================================================
+   MODERN FLOATING RESERVATION CTA BANNER
+   ===================================================== */
 #room-cta-banner {
-    padding: 5rem 0;
-    background: linear-gradient(135deg, var(--rp-blue-dark) 0%, var(--rp-blue) 50%, var(--rp-blue-light) 100%);
-    text-align: center;
+    padding: 1rem 0 4.5rem;
+    background: transparent;
     position: relative;
+}
+
+.room-cta-card {
+    position: relative;
+    background: linear-gradient(135deg, #124f8c 0%, #026199 65%, #0275b8 100%);
+    border-radius: 24px;
+    padding: 3.25rem 2.25rem;
+    text-align: center;
     overflow: hidden;
+    box-shadow: 0 18px 44px rgba(18, 79, 140, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.14);
 }
-#room-cta-banner::before {
-    content: '';
+
+.room-cta-card::before {
+    content: "";
     position: absolute;
-    width: 600px; height: 600px;
+    width: 380px;
+    height: 380px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    top: -200px; right: -100px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+    top: -160px;
+    right: -80px;
     pointer-events: none;
 }
-#room-cta-banner::after {
-    content: '';
+
+.room-cta-card::after {
+    content: "";
     position: absolute;
-    width: 400px; height: 400px;
+    width: 320px;
+    height: 320px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    bottom: -150px; left: -80px;
+    background: radial-gradient(circle, rgba(183, 228, 229, 0.14) 0%, rgba(183, 228, 229, 0) 70%);
+    bottom: -140px;
+    left: -60px;
     pointer-events: none;
 }
-#room-cta-banner .cta-title {
-    font-family: var(--font-primary);
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
+
+.room-cta-content {
+    position: relative;
+    z-index: 1;
+}
+
+.room-cta-card .cta-title {
+    font-family: var(--font-primary, "Montserrat", sans-serif);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 800;
+    color: #ffffff;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
 }
-#room-cta-banner .cta-subtitle {
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0.8);
-    max-width: 500px;
-    margin: 0 auto 2rem;
+
+.room-cta-card .cta-subtitle {
+    font-size: 1rem;
+    color: #f1f5f9;
+    max-width: 560px;
+    margin: 0 auto 1.85rem;
     line-height: 1.75;
 }
-#room-cta-banner .btn-cta-white {
-    background: #fff;
-    color: var(--rp-blue-dark);
-    border: none;
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
+
+.room-cta-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.room-cta-card .btn-cta-white {
+    background: #ffffff;
+    color: #124f8c;
+    border: 2px solid #ffffff;
+    min-height: 46px;
+    padding: 0.7rem 1.75rem;
+    border-radius: 999px;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    margin: 0.35rem;
-    transition: all 0.25s ease;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background-color 0.22s ease;
 }
-#room-cta-banner .btn-cta-white:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(0,0,0,0.25);
-    color: var(--rp-blue-dark);
+
+.room-cta-card .btn-cta-white:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+    color: #124f8c;
+    background: #f8fafc;
 }
-#room-cta-banner .btn-cta-outline {
-    background: transparent;
-    color: #fff;
-    border: 2px solid rgba(255,255,255,0.5);
-    padding: 0.8rem 2rem;
-    border-radius: 50px;
+
+.room-cta-card .btn-cta-white:focus-visible {
+    outline: 2.5px solid #fff000;
+    outline-offset: 2px;
+}
+
+.room-cta-card .btn-cta-outline {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.65);
+    min-height: 46px;
+    padding: 0.7rem 1.75rem;
+    border-radius: 999px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.94rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    margin: 0.35rem;
-    transition: all 0.25s ease;
-}
-#room-cta-banner .btn-cta-outline:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.8);
-    color: #fff;
-    transform: translateY(-3px);
+    transition: background-color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
 }
 
-/* ---------- Responsive Fixes ---------- */
+.room-cta-card .btn-cta-outline:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: #ffffff;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.room-cta-card .btn-cta-outline:focus-visible {
+    outline: 2.5px solid #fff000;
+    outline-offset: 2px;
+}
+
+/* =====================================================
+   TABLET BREAKPOINT (768px - 991.98px)
+   ===================================================== */
 @media (max-width: 991.98px) {
-    .premium-amenities { grid-template-columns: 1fr; }
-    #premium-rooms .premium-title { font-size: 1.8rem; }
-    .comparison-table { font-size: 0.78rem; }
-    .comparison-table thead tr th,
-    .comparison-table tbody tr td { padding: 0.6rem 0.5rem; }
-}
-
-@media (max-width: 767.98px) {
-    #room-cta-banner .cta-title { font-size: 1.65rem; }
-    .premium-room-card .premium-img-wrapper { height: 200px; }
-
-    /* =====================================================
-       MOBILE HANDPHONE OVERHAUL (< 768px)
-       Desktop (>= 768px) tidak disentuh sama sekali.
-       ===================================================== */
     #inpatient-room-facilities {
-        padding: 1.75rem 0 2.75rem;
-    }
-
-    #inpatient-room-facilities .section-header {
-        margin-bottom: 1.75rem;
-    }
-
-    #inpatient-room-facilities .section-header .section-badge {
-        font-size: 0.72rem;
-        padding: 0.28rem 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-
-    #inpatient-room-facilities .section-header .section-title {
-        font-size: 1.45rem;
-        margin-bottom: 0.5rem;
-    }
-
-    #inpatient-room-facilities .section-header .section-desc {
-        font-size: 0.88rem;
-        line-height: 1.6;
-    }
-
-    .inpatient-room-card {
-        border-radius: 1rem;
+        padding: 2rem 0 3rem;
     }
 
     .inpatient-room-card .room-thumb-wrapper {
-        height: 200px;
+        height: 225px;
+    }
+
+    .inpatient-room-card .room-card-body {
+        padding: 1.45rem 1.5rem 1.55rem;
+    }
+
+    .room-cta-card {
+        padding: 2.5rem 1.75rem;
+    }
+}
+
+/* =====================================================
+   MOBILE PHONE BREAKPOINT (< 768px)
+   ===================================================== */
+@media (max-width: 767.98px) {
+    #inpatient-room-facilities {
+        padding: 1.35rem 0 2.25rem;
+    }
+
+    .room-discovery-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.95rem 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 14px;
+        gap: 0.65rem;
+    }
+
+    .room-search-box {
+        flex: 1 1 auto;
+        max-width: 100%;
+    }
+
+    .room-counter-pill {
+        justify-content: center;
+        font-size: 0.84rem;
+    }
+
+    .inpatient-room-card {
+        border-radius: 16px;
+    }
+
+    .inpatient-room-card .room-thumb-wrapper {
+        height: 205px;
     }
 
     .inpatient-room-card .room-class-badge {
         font-size: 0.72rem;
-        padding: 0.25rem 0.75rem;
+        padding: 0.28rem 0.78rem;
         bottom: 10px;
         left: 12px;
     }
 
     .inpatient-room-card .room-card-body {
-        padding: 1.2rem;
+        padding: 1.25rem;
     }
 
     .inpatient-room-card .room-name {
-        font-size: 1.15rem;
-        margin-bottom: 0.5rem;
+        font-size: 1.18rem;
+        margin-bottom: 0.55rem;
     }
 
     .inpatient-room-card .room-specs {
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.8rem;
     }
 
     .inpatient-room-card .spec-chip {
@@ -1107,26 +692,25 @@ main {
     }
 
     .inpatient-room-card .room-description {
-        font-size: 0.86rem;
-        line-height: 1.55;
-        margin-bottom: 0.85rem;
-        min-height: auto;
+        font-size: 0.88rem;
+        line-height: 1.62;
+        margin-bottom: 0.9rem;
     }
 
     .inpatient-room-card .room-tags {
         margin-bottom: 1rem;
-        gap: 0.35rem;
+        gap: 0.38rem;
     }
 
     .inpatient-room-card .room-tags .tag-pill {
-        font-size: 0.72rem;
-        padding: 0.22rem 0.6rem;
+        font-size: 0.74rem;
+        padding: 0.24rem 0.65rem;
     }
 
     .inpatient-room-card .btn-detail {
         min-height: 44px;
         padding: 0.55rem 1rem;
-        font-size: 0.85rem;
+        font-size: 0.86rem;
     }
 
     .inpatient-room-card .btn-wa-icon {
@@ -1136,27 +720,32 @@ main {
     }
 
     #room-cta-banner {
-        padding: 2.75rem 0;
+        padding: 0.5rem 0 3rem;
     }
 
-    #room-cta-banner .cta-title {
-        font-size: 1.4rem;
-        margin-bottom: 0.65rem;
+    .room-cta-card {
+        padding: 2rem 1.25rem;
+        border-radius: 18px;
     }
 
-    #room-cta-banner .cta-subtitle {
-        font-size: 0.88rem;
+    .room-cta-card .cta-subtitle {
+        font-size: 0.9rem;
         margin-bottom: 1.35rem;
     }
 
-    #room-cta-banner .btn-cta-white,
-    #room-cta-banner .btn-cta-outline {
+    .room-cta-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+    }
+
+    .room-cta-card .btn-cta-white,
+    .room-cta-card .btn-cta-outline {
         width: 100%;
         justify-content: center;
         padding: 0.65rem 1.25rem;
-        font-size: 0.88rem;
-        margin: 0.25rem 0;
-        min-height: 44px;
+        font-size: 0.9rem;
+        min-height: 46px;
     }
 
     /* Ruang Perawatan Show / Detail Page on Mobile */
