@@ -1,3 +1,4 @@
+import { gsap } from "gsap";
 import { fetchAllDokter, fetchDoctorProfile, filterDoctors, getSpecialtyCounts, state } from './dokterService.js';
 import { renderDoctorPage, renderModal, renderProfile, openBookingModal, showLoading, showError, t, getLocale, escapeHtml } from './dokterUI.js';
 
@@ -19,6 +20,47 @@ const btnSelectAllSpecs = document.getElementById("btnSelectAllSpecs");
 const btnClearSpecs = document.getElementById("btnClearSpecs");
 const detailDokterModal = document.getElementById("detailDokter");
 const doctorFilterOffcanvas = document.getElementById("doctorFilterOffcanvas");
+const sidebarCol = document.querySelector(".doctor-sidebar-col");
+
+function initStickySidebarNavbarSync() {
+    const mainNavbar = document.getElementById("main-navbar");
+    if (!mainNavbar || !sidebarCol) return;
+
+    const STICKY_TOP_NAV_VISIBLE = "88px";
+    const STICKY_TOP_NAV_HIDDEN = "16px";
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let lastNavbarHiddenState = mainNavbar.classList.contains("navbar-hidden");
+
+    const syncSidebarStickyOffset = (isNavbarHidden, immediate = false) => {
+        const targetTop = isNavbarHidden ? STICKY_TOP_NAV_HIDDEN : STICKY_TOP_NAV_VISIBLE;
+
+        if (immediate || reducedMotionQuery.matches || window.innerWidth < 1200) {
+            gsap.set(sidebarCol, { "--doc-sticky-top": targetTop });
+            return;
+        }
+
+        gsap.to(sidebarCol, {
+            "--doc-sticky-top": targetTop,
+            duration: 0.35,
+            ease: "power3.out",
+            overwrite: "auto",
+        });
+    };
+
+    syncSidebarStickyOffset(lastNavbarHiddenState, true);
+
+    const observer = new MutationObserver(() => {
+        const isNavbarHidden = mainNavbar.classList.contains("navbar-hidden");
+        if (isNavbarHidden === lastNavbarHiddenState) return;
+        lastNavbarHiddenState = isNavbarHidden;
+        syncSidebarStickyOffset(isNavbarHidden, false);
+    });
+
+    observer.observe(mainNavbar, {
+        attributes: true,
+        attributeFilter: ["class"],
+    });
+}
 
 function getSelectedSpecialties() {
     const selected = [];
@@ -385,6 +427,7 @@ if (btnClearSpecs) {
 // Initialization
 // ------------------------------
 document.addEventListener("DOMContentLoaded", async () => {
+    initStickySidebarNavbarSync();
     showLoading();
 
     const urlParams = new URLSearchParams(window.location.search);

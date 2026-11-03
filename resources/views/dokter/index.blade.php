@@ -243,6 +243,7 @@
                                                     <p id="doctor-profile-bio" class="text-secondary" style="white-space: pre-line;"></p>
                                                 </div>
                                             </div>
+                                            {{-- 
                                             <div class="dokter-info row gx-3 gy-3">
                                                 <!-- Location -->
                                                 <div class="col-12 col-lg-4">
@@ -281,6 +282,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                             --}}
                                             <!-- CTA -->
                                             <div class="info-button row">
                                                 <div class="button-group col-lg-12">
