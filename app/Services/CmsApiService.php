@@ -288,15 +288,17 @@ class CmsApiService
     /**
      * Mengambil single berita berdasarkan slug.
      */
-    public function getNewsBySlug(string $slug): ?array
+    public function getNewsBySlug(string $slug, ?string $localeOverride = null): ?array
     {
-        $locale = app()->getLocale();
+        $locale = $localeOverride ?? app()->getLocale();
         $cacheKey = "cms_news_slug_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('news');
 
-        return $this->rememberTagged('news', $cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('news', $cacheKey, $ttl, function () use ($slug, $locale) {
             try {
-                $response = $this->apiRequest()->get("{$this->baseUrl}/news/{$slug}");
+                $response = $this->apiRequest()
+                    ->withHeaders(['Accept-Language' => $locale])
+                    ->get("{$this->baseUrl}/news/{$slug}", ['lang' => $locale]);
 
                 if ($response->successful()) {
                     return $response->json('data', null);
@@ -368,15 +370,17 @@ class CmsApiService
      * PERBAIKAN: Digunakan oleh ArticleController::show() agar tidak perlu
      * fetch semua artikel hanya untuk menemukan satu artikel.
      */
-    public function getArticleBySlug(string $slug): ?array
+    public function getArticleBySlug(string $slug, ?string $localeOverride = null): ?array
     {
-        $locale = app()->getLocale();
+        $locale = $localeOverride ?? app()->getLocale();
         $cacheKey = "cms_article_slug_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('articles');
 
-        return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('articles', $cacheKey, $ttl, function () use ($slug, $locale) {
             try {
-                $response = $this->apiRequest()->get("{$this->baseUrl}/articles/{$slug}");
+                $response = $this->apiRequest()
+                    ->withHeaders(['Accept-Language' => $locale])
+                    ->get("{$this->baseUrl}/articles/{$slug}", ['lang' => $locale]);
 
                 if ($response->successful()) {
                     return $response->json('data', null);
@@ -519,15 +523,17 @@ class CmsApiService
     /**
      * Mengambil single fasilitas ruangan berdasarkan slug.
      */
-    public function getRoomFacilityBySlug(string $slug): ?array
+    public function getRoomFacilityBySlug(string $slug, ?string $localeOverride = null): ?array
     {
-        $locale = app()->getLocale();
+        $locale = $localeOverride ?? app()->getLocale();
         $cacheKey = "cms_room_facility_{$locale}_{$slug}";
         $ttl = $this->cacheTtl('room_facilities');
 
-        return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($slug) {
+        return $this->rememberTagged('room_facilities', $cacheKey, $ttl, function () use ($slug, $locale) {
             try {
-                $response = $this->apiRequest()->get("{$this->baseUrl}/room-facilities/{$slug}");
+                $response = $this->apiRequest()
+                    ->withHeaders(['Accept-Language' => $locale])
+                    ->get("{$this->baseUrl}/room-facilities/{$slug}", ['lang' => $locale]);
                 if ($response->successful()) {
                     return $response->json('data', null);
                 }
@@ -657,6 +663,7 @@ class CmsApiService
             }
             Log::warning('CMS patient submission was not confirmed', ['endpoint' => $path, 'http_code' => $response->status()]);
             $status = in_array($response->status(), [422, 429], true) ? $response->status() : 503;
+
             return [
                 'status' => 'error',
                 'http_code' => $status,
@@ -668,6 +675,7 @@ class CmsApiService
         } catch (\Exception $e) {
             // Pesan exception/body HTTP bisa berisi data pasien. Catat jenis kegagalan saja.
             Log::warning('CMS patient submission unavailable', ['endpoint' => $path, 'exception_type' => get_class($e)]);
+
             return [
                 'status' => 'exception',
                 'http_code' => 503,
