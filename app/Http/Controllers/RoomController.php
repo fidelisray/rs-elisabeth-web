@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CmsApiService;
 use App\DTOs\Cms\RoomFacilityDto;
+use App\Services\CmsApiService;
 
 class RoomController extends Controller
 {
@@ -17,10 +17,10 @@ class RoomController extends Controller
     public function index()
     {
         $rawRooms = $this->cmsApiService->getRoomFacilities();
-        $roomsData = collect($rawRooms)->map(fn($item) => RoomFacilityDto::fromArray($item));
+        $roomsData = collect($rawRooms)->map(fn ($item) => RoomFacilityDto::fromArray($item));
 
         // Pisahkan ruangan berdasarkan kategori
-        $premiumRooms  = $roomsData->where('category', 'premium')->values();
+        $premiumRooms = $roomsData->where('category', 'premium')->values();
         $standardRooms = $roomsData->where('category', 'standard')->values();
 
         return view('ruang-perawatan.index', compact(
@@ -35,10 +35,26 @@ class RoomController extends Controller
      */
     public function show($slug)
     {
-        $rawRoom = $this->cmsApiService->getRoomFacilityBySlug($slug);
+        $activeLocale = app()->getLocale();
+        $rawRoom = $this->cmsApiService->getRoomFacilityBySlug($slug, $activeLocale);
 
-        if (!$rawRoom) {
-            abort(404, 'Ruang Perawatan tidak ditemukan.');
+        if (! $rawRoom) {
+            $fallbackLocale = $activeLocale === 'id' ? 'en' : 'id';
+            $fallbackRoom = $this->cmsApiService->getRoomFacilityBySlug($slug, $fallbackLocale);
+
+            if ($fallbackRoom) {
+                $translatedSlug = $fallbackRoom['alternate_slugs'][$activeLocale] ?? null;
+
+                if (is_string($translatedSlug) && $translatedSlug !== '' && $translatedSlug !== $slug) {
+                    return redirect()->route('ruang-perawatan.show', ['slug' => $translatedSlug]);
+                }
+
+                $rawRoom = $fallbackRoom;
+            }
+        }
+
+        if (! $rawRoom) {
+            abort(404, __('Ruang Perawatan tidak ditemukan.'));
         }
 
         $room = RoomFacilityDto::fromArray($rawRoom);
