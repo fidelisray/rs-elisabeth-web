@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFeedbackRequest;
+use App\Http\Requests\SubmitDynamicFormWebRequest;
 use App\Services\FeedbackService;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class FeedbackController extends Controller
 {
@@ -21,8 +23,23 @@ class FeedbackController extends Controller
     /**
      * Menampilkan halaman formulir Kritik & Saran (Feedback Pelanggan).
      */
-    public function index(): View
+    public function index(Request $request): View|Response
     {
+        $legacySlug = config('cms_api.legacy_form_slugs.feedback');
+        if (is_string($legacySlug) && trim($legacySlug) !== '') {
+            return app(DynamicFormController::class)->renderSlug(
+                request: $request,
+                slug: trim($legacySlug),
+                source: 'web_public',
+                submitUrl: route('feedback.store'),
+                uploadUrl: route('dynamic-forms.upload', ['slug' => trim($legacySlug)]),
+                breadcrumbs: [
+                    ['label' => __('Beranda'), 'url' => url('/')],
+                    ['label' => __('Kritik & Saran')],
+                ]
+            );
+        }
+
         $relations = [
             'Diri Sendiri',
             'Orang Tua',
@@ -47,9 +64,21 @@ class FeedbackController extends Controller
     /**
      * Memproses pengiriman formulir kritik dan saran pelanggan.
      */
-    public function store(StoreFeedbackRequest $request): JsonResponse|RedirectResponse
+    public function store(Request $request): JsonResponse|RedirectResponse
     {
-        $validatedData = $request->validated();
+        $legacySlug = config('cms_api.legacy_form_slugs.feedback');
+        if (is_string($legacySlug) && trim($legacySlug) !== '') {
+            $dynamicRequest = app(SubmitDynamicFormWebRequest::class);
+
+            return app(DynamicFormController::class)->submitSlug(
+                $dynamicRequest,
+                trim($legacySlug),
+                forcedSource: 'web_public'
+            );
+        }
+
+        $feedbackRequest = app(StoreFeedbackRequest::class);
+        $validatedData = $feedbackRequest->validated();
 
         $result = $this->feedbackService->sendFeedback($validatedData);
 
