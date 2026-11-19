@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreQuestionnaireRequest;
+use App\Http\Requests\SubmitDynamicFormWebRequest;
 use App\Services\QuestionnaireService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class QuestionnaireController extends Controller
@@ -107,8 +109,12 @@ class QuestionnaireController extends Controller
     /**
      * Halaman Kuesioner Kepuasan Pasien IGD.
      */
-    public function igd(): View
+    public function igd(Request $request): View|Response
     {
+        if ($delegated = $this->renderLegacyFormIfConfigured($request, 'igd', route('questionnaire.igd.store'), 'Instalasi Gawat Darurat')) {
+            return $delegated;
+        }
+
         $type = 'igd';
         $title = 'Kuesioner Kepuasan Pasien IGD';
         $badge = 'Instalasi Gawat Darurat';
@@ -207,16 +213,20 @@ class QuestionnaireController extends Controller
     /**
      * Memproses submit kuesioner IGD.
      */
-    public function storeIgd(StoreQuestionnaireRequest $request): JsonResponse|RedirectResponse
+    public function storeIgd(Request $request): JsonResponse|RedirectResponse
     {
-        return $this->handleStore('igd', $request);
+        return $this->handleStoreOrDelegate('igd', $request);
     }
 
     /**
      * Halaman Kuesioner Kepuasan Pasien Rawat Jalan.
      */
-    public function rawatJalan(): View
+    public function rawatJalan(Request $request): View|Response
     {
+        if ($delegated = $this->renderLegacyFormIfConfigured($request, 'rawat-jalan', route('questionnaire.rawat-jalan.store'), 'Poliklinik Rawat Jalan')) {
+            return $delegated;
+        }
+
         $type = 'rawat-jalan';
         $title = 'Kuesioner Kepuasan Pasien Rawat Jalan';
         $badge = 'Poliklinik Rawat Jalan';
@@ -295,16 +305,20 @@ class QuestionnaireController extends Controller
     /**
      * Memproses submit kuesioner Rawat Jalan.
      */
-    public function storeRawatJalan(StoreQuestionnaireRequest $request): JsonResponse|RedirectResponse
+    public function storeRawatJalan(Request $request): JsonResponse|RedirectResponse
     {
-        return $this->handleStore('rawat-jalan', $request);
+        return $this->handleStoreOrDelegate('rawat-jalan', $request);
     }
 
     /**
      * Halaman Kuesioner Kepuasan Pasien Rawat Inap.
      */
-    public function rawatInap(): View
+    public function rawatInap(Request $request): View|Response
     {
+        if ($delegated = $this->renderLegacyFormIfConfigured($request, 'rawat-inap', route('questionnaire.rawat-inap.store'), 'Ruang Rawat Inap')) {
+            return $delegated;
+        }
+
         $type = 'rawat-inap';
         $title = 'Kuesioner Kepuasan Pasien Rawat Inap';
         $badge = 'Ruang Rawat Inap';
@@ -423,9 +437,50 @@ class QuestionnaireController extends Controller
     /**
      * Memproses submit kuesioner Rawat Inap.
      */
-    public function storeRawatInap(StoreQuestionnaireRequest $request): JsonResponse|RedirectResponse
+    public function storeRawatInap(Request $request): JsonResponse|RedirectResponse
     {
-        return $this->handleStore('rawat-inap', $request);
+        return $this->handleStoreOrDelegate('rawat-inap', $request);
+    }
+
+    protected function renderLegacyFormIfConfigured(Request $request, string $type, string $submitUrl, string $badge): ?Response
+    {
+        $legacySlug = config("cms_api.legacy_form_slugs.{$type}");
+        if (! is_string($legacySlug) || trim($legacySlug) === '') {
+            return null;
+        }
+
+        $slug = trim($legacySlug);
+
+        return app(DynamicFormController::class)->renderSlug(
+            request: $request,
+            slug: $slug,
+            source: 'qr_barcode',
+            submitUrl: $submitUrl,
+            uploadUrl: route('dynamic-forms.upload', ['slug' => $slug]),
+            breadcrumbs: [
+                ['label' => __('Beranda'), 'url' => url('/')],
+                ['label' => __('Kuesioner'), 'url' => route('questionnaire.index')],
+                ['label' => __($badge)],
+            ]
+        );
+    }
+
+    protected function handleStoreOrDelegate(string $type, Request $request): JsonResponse|RedirectResponse
+    {
+        $legacySlug = config("cms_api.legacy_form_slugs.{$type}");
+        if (is_string($legacySlug) && trim($legacySlug) !== '') {
+            $dynamicRequest = app(SubmitDynamicFormWebRequest::class);
+
+            return app(DynamicFormController::class)->submitSlug(
+                $dynamicRequest,
+                trim($legacySlug),
+                forcedSource: 'qr_barcode'
+            );
+        }
+
+        $storeRequest = app(StoreQuestionnaireRequest::class);
+
+        return $this->handleStore($type, $storeRequest);
     }
 
     /**

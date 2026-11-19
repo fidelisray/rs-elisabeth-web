@@ -216,6 +216,32 @@ class CmsWebhookCacheInvalidationTest extends TestCase
         $this->assertEquals('news_data', Cache::tags(['cms', 'cms_news'])->get('test_news_key'));
     }
 
+    public function test_successfully_invalidates_dynamic_forms_module_cache(): void
+    {
+        Cache::tags(['cms', 'cms_dynamic_forms'])->put('test_dynamic_form_key', 'old_form_schema', 600);
+        Cache::tags(['cms', 'cms_news'])->put('test_news_key', 'news_data', 600);
+
+        $body = [
+            'module' => 'dynamic_forms',
+            'event' => 'content.updated',
+            'slug' => 'survei-igd',
+        ];
+        $headers = $this->generateHmacHeaders($body);
+        $response = $this->postJson($this->endpoint, $body, $headers);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'success' => true,
+                'data' => [
+                    'module' => 'dynamic_forms',
+                    'event' => 'content.updated',
+                ],
+            ]);
+
+        $this->assertNull(Cache::tags(['cms', 'cms_dynamic_forms'])->get('test_dynamic_form_key'));
+        $this->assertEquals('news_data', Cache::tags(['cms', 'cms_news'])->get('test_news_key'));
+    }
+
     public function test_rejects_invalid_module_name(): void
     {
         $body = ['module' => 'unsupported_module_xyz'];
@@ -244,26 +270,32 @@ class CmsWebhookCacheInvalidationTest extends TestCase
     public function test_cache_keys_do_not_exceed_database_varchar_limit(): void
     {
         Config::set('cache.default', 'file');
+        Cache::store('file')->flush();
         \Illuminate\Support\Facades\Http::fake([
             '*' => \Illuminate\Support\Facades\Http::response(['data' => [['id' => 1, 'title' => 'Sample Article']]], 200),
         ]);
 
-        $service = app(\App\Services\CmsApiService::class);
-        $articles = $service->getArticles(['id' => 'sample-long-filter-parameter-test']);
-        $this->assertNotEmpty($articles);
+        try {
+            $service = app(\App\Services\CmsApiService::class);
+            $articles = $service->getArticles(['id' => 'sample-long-filter-parameter-test']);
+            $this->assertNotEmpty($articles);
 
-        $reflection = new \ReflectionClass($service);
-        $method = $reflection->getMethod('rememberTagged');
-        $method->setAccessible(true);
+            $reflection = new \ReflectionClass($service);
+            $method = $reflection->getMethod('rememberTagged');
+            $method->setAccessible(true);
 
-        // Uji dengan key yang sangat panjang
-        $longKey = str_repeat('very_long_article_slug_parameter_', 5);
-        $executed = false;
-        $method->invokeArgs($service, ['articles', $longKey, 60, function () use (&$executed) {
-            $executed = true;
-            return ['ok'];
-        }]);
+            // Uji dengan key yang sangat panjang
+            $longKey = str_repeat('very_long_article_slug_parameter_', 5);
+            $executed = false;
+            $method->invokeArgs($service, ['articles', $longKey, 60, function () use (&$executed) {
+                $executed = true;
 
-        $this->assertTrue($executed);
+                return ['ok'];
+            }]);
+
+            $this->assertTrue($executed);
+        } finally {
+            Cache::store('file')->flush();
+        }
     }
 }

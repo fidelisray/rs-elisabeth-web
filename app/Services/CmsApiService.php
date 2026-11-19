@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Exceptions\CmsApiException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -69,6 +71,57 @@ class CmsApiService
     }
 
     /**
+     * Kirim multipart upload bertanda tangan HMAC dengan SHA-256 isi berkas
+     * dan mempertahankan nama berkas asli untuk validasi ekstensi di CMS.
+     */
+    protected function postMultipartSigned(string $url, UploadedFile $file, array $fields = []): Response
+    {
+        $realPath = $file->getRealPath() ?: $file->getPathname();
+        if (! is_string($realPath) || $realPath === '' || ! is_readable($realPath)) {
+            throw new \RuntimeException('Uploaded file cannot be read for SHA-256 hashing.');
+        }
+
+        $sha256 = hash_file('sha256', $realPath);
+        if (! is_string($sha256) || $sha256 === '') {
+            throw new \RuntimeException('Failed to compute SHA-256 hash of uploaded file.');
+        }
+
+        $tStamp = strval(time());
+        $signature = base64_encode(hash_hmac('sha256', $tStamp.$this->consId.$sha256, $this->secretKey, true));
+        $uploadTimeout = max(5, (int) config('cms_api.upload_timeout', 30));
+
+        $stream = fopen($realPath, 'rb');
+        if ($stream === false) {
+            throw new \RuntimeException('Failed to open uploaded file stream.');
+        }
+
+        $originalName = str_replace('\\', '/', (string) $file->getClientOriginalName());
+        $safeName = basename($originalName);
+        if ($safeName === '') {
+            $safeName = 'upload.bin';
+        }
+
+        try {
+            return Http::withHeaders([
+                'X-Cons-ID' => $this->consId,
+                'X-Timestamp' => $tStamp,
+                'X-Signature' => $signature,
+                'X-Content-SHA256' => $sha256,
+                'Accept' => 'application/json',
+                'Accept-Language' => app()->getLocale(),
+            ])
+                ->timeout($uploadTimeout)
+                ->attach('file', $stream, $safeName)
+                ->post($url, $fields);
+        } catch (\Throwable $e) {
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+            throw $e;
+        }
+    }
+
+    /**
      * Ambil nilai TTL cache untuk sebuah modul dari config/cms_api.php.
      * Fallback ke 600 detik bila kunci belum terdaftar agar perilaku tetap aman.
      */
@@ -93,22 +146,46 @@ class CmsApiService
      */
     protected function rememberTagged(string $module, string $key, int $ttl, \Closure $callback)
     {
-        $scopedKey = $this->scopeKey().':'.$key;
         if (Cache::supportsTags()) {
+            $scopedKey = $this->scopeKey().':'.$key;
+
             return Cache::tags(['cms', "cms_{$module}"])->remember($scopedKey, $ttl, $callback);
         }
 
+        return Cache::remember($this->fallbackVersionedKey($module, $key), $ttl, $callback);
+    }
+
+    protected function fallbackVersionedKey(string $module, string $key): string
+    {
         $version = $this->moduleVersion($module);
         $fallbackKey = "cms_gen:{$this->scopeKey()}:{$module}:{$version}:{$key}";
 
-        // Pengaman: Jika kombinasi key melebihi 150 karakter (misal slug/filter panjang),
-        // hash bagian key spesifik agar total panjang (termasuk prefix cache Laravel)
-        // tidak akan pernah melebihi batas 255 karakter VARCHAR database.
+        // Pengaman: hash bagian key spesifik agar total panjang tetap di bawah batas 255 VARCHAR database.
         if (strlen($fallbackKey) > 150) {
             $fallbackKey = "cms_gen:{$this->scopeKey()}:{$module}:{$version}:".md5($key);
         }
 
-        return Cache::remember($fallbackKey, $ttl, $callback);
+        return $fallbackKey;
+    }
+
+    protected function getTaggedCache(string $module, string $key): mixed
+    {
+        if (Cache::supportsTags()) {
+            return Cache::tags(['cms', "cms_{$module}"])->get($this->scopeKey().':'.$key);
+        }
+
+        return Cache::get($this->fallbackVersionedKey($module, $key));
+    }
+
+    protected function putTaggedCache(string $module, string $key, mixed $value, int $ttl): void
+    {
+        if (Cache::supportsTags()) {
+            Cache::tags(['cms', "cms_{$module}"])->put($this->scopeKey().':'.$key, $value, $ttl);
+
+            return;
+        }
+
+        Cache::put($this->fallbackVersionedKey($module, $key), $value, $ttl);
     }
 
     protected function versionKey(string $module): string
@@ -136,6 +213,7 @@ class CmsApiService
             'banner_promotions',
             'doctors',
             'online_libraries',
+            'dynamic_forms',
         ];
 
         if ($module !== 'all' && ! in_array($module, $supportedModules, true)) {
@@ -675,6 +753,297 @@ class CmsApiService
         } catch (\Exception $e) {
             // Pesan exception/body HTTP bisa berisi data pasien. Catat jenis kegagalan saja.
             Log::warning('CMS patient submission unavailable', ['endpoint' => $path, 'exception_type' => get_class($e)]);
+
+            return [
+                'status' => 'exception',
+                'http_code' => 503,
+                'errors' => [],
+                'message' => __('Layanan formulir belum tersedia. Silakan coba lagi nanti.'),
+            ];
+        }
+    }
+
+    /**
+     * Mengambil daftar formulir dinamis publik yang aktif dan terpublikasi.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getDynamicForms(?string $mode = null, ?string $lang = null): array
+    {
+        $validMode = in_array($mode, ['questionnaire', 'feedback'], true) ? $mode : null;
+        $validLang = in_array($lang, ['id', 'en'], true) ? $lang : null;
+        $query = array_filter([
+            'mode' => $validMode,
+            'lang' => $validLang,
+        ], fn (?string $value): bool => $value !== null);
+
+        $cacheKey = 'cms_dynamic_forms_'.($validLang ?? 'all').'_'.($validMode ?? 'all');
+        $ttl = $this->cacheTtl('dynamic_forms');
+
+        $rows = $this->rememberTagged('dynamic_forms', $cacheKey, $ttl, function () use ($query) {
+            try {
+                $response = $this->apiRequest()->get("{$this->baseUrl}/forms", $query);
+                $data = $response->json('data');
+
+                if (! $response->successful() || ! is_array($data)) {
+                    throw new CmsApiException($response->status());
+                }
+
+                return array_values(array_filter($data, fn ($item): bool => is_array($item) && is_string($item['slug'] ?? null)));
+            } catch (CmsApiException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                Log::warning('CMS dynamic forms list unavailable', ['exception_type' => get_class($e)]);
+                throw new CmsApiException;
+            }
+        });
+
+        $now = now();
+
+        return array_values(array_filter($rows, function (array $form) use ($now): bool {
+            if (! ($form['is_public_listed'] ?? false)) {
+                return false;
+            }
+            if (! empty($form['starts_at']) && $now->lt(Carbon::parse($form['starts_at']))) {
+                return false;
+            }
+            if (! empty($form['ends_at']) && $now->gt(Carbon::parse($form['ends_at']))) {
+                return false;
+            }
+
+            return true;
+        }));
+    }
+
+    /**
+     * Mengambil skema lengkap formulir dinamis berdasarkan slug.
+     * NULL berarti 404; kegagalan upstream melempar CmsApiException dan tidak di-cache.
+     */
+    public function getDynamicFormBySlug(string $slug): ?array
+    {
+        $cacheKey = 'cms_dynamic_form_'.hash('sha256', $slug);
+        $cached = $this->getTaggedCache('dynamic_forms', $cacheKey);
+
+        if (is_array($cached)) {
+            return $this->applyLocalScheduleAvailability($cached);
+        }
+
+        try {
+            $response = $this->apiRequest()->get("{$this->baseUrl}/forms/".rawurlencode($slug));
+
+            if ($response->status() === 404) {
+                return null;
+            }
+
+            $row = $response->json('data');
+            if (! $response->successful() || ! is_array($row) || ! is_string($row['slug'] ?? null)) {
+                throw new CmsApiException($response->status());
+            }
+
+            $ttl = ($row['max_responses'] ?? null) !== null
+                ? (int) config('cms_api.cache_ttl.dynamic_forms_quota_ttl', 60)
+                : $this->cacheTtl('dynamic_forms');
+
+            $this->putTaggedCache('dynamic_forms', $cacheKey, $row, $ttl);
+
+            return $this->applyLocalScheduleAvailability($row);
+        } catch (CmsApiException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            Log::warning('CMS dynamic form detail unavailable', [
+                'slug' => $slug,
+                'exception_type' => get_class($e),
+            ]);
+            throw new CmsApiException;
+        }
+    }
+
+    /**
+     * Evaluasi ulang jadwal starts_at/ends_at secara lokal terhadap snapshot skema yang di-cache.
+     *
+     * @param  array<string, mixed>  $form
+     * @return array<string, mixed>
+     */
+    protected function applyLocalScheduleAvailability(array $form): array
+    {
+        $status = (string) ($form['status'] ?? 'published');
+        $hasPublishedVersion = ! empty($form['published_version']['version_id']);
+        $remainingQuota = $form['remaining_quota'] ?? null;
+        $maxResponses = $form['max_responses'] ?? null;
+        $locale = ($form['locale'] ?? 'id') === 'en' ? 'en' : 'id';
+
+        if ($status !== 'published' || ! $hasPublishedVersion) {
+            $form['is_accepting_responses'] = false;
+            $form['closed_reason'] ??= ($status === 'closed' ? 'closed' : 'not_published');
+
+            return $form;
+        }
+
+        if ($maxResponses !== null && $remainingQuota !== null && (int) $remainingQuota <= 0) {
+            $form['is_accepting_responses'] = false;
+            $form['closed_reason'] = 'quota_full';
+            $form['closed_message'] ??= $locale === 'en'
+                ? 'The maximum response quota for this form has been reached.'
+                : 'Kuota pengisian formulir ini sudah penuh.';
+
+            return $form;
+        }
+
+        $now = now();
+        $startsAt = ! empty($form['starts_at']) ? Carbon::parse($form['starts_at']) : null;
+        $endsAt = ! empty($form['ends_at']) ? Carbon::parse($form['ends_at']) : null;
+        $defaultNotStarted = $locale === 'en'
+            ? 'This form is not open for responses yet.'
+            : 'Formulir ini belum dibuka untuk pengisian.';
+        $defaultEnded = $locale === 'en'
+            ? 'The submission period for this form has ended.'
+            : 'Periode pengisian formulir ini telah berakhir.';
+
+        if ($startsAt && $now->lt($startsAt)) {
+            $form['is_accepting_responses'] = false;
+            $form['closed_reason'] = 'not_started';
+            $form['closed_message'] ??= $defaultNotStarted;
+
+            return $form;
+        }
+
+        if ($endsAt && $now->gt($endsAt)) {
+            $wasNotStarted = ($form['closed_reason'] ?? null) === 'not_started';
+            $form['is_accepting_responses'] = false;
+            $form['closed_reason'] = 'ended';
+            if ($wasNotStarted && ($form['closed_message'] ?? null) === $defaultNotStarted) {
+                $form['closed_message'] = $defaultEnded;
+            } else {
+                $form['closed_message'] ??= $defaultEnded;
+            }
+
+            return $form;
+        }
+
+        if (in_array($form['closed_reason'] ?? null, ['not_started', 'ended', null], true)) {
+            $form['is_accepting_responses'] = true;
+            $form['closed_reason'] = null;
+            $form['closed_message'] = null;
+        }
+
+        return $form;
+    }
+
+    /**
+     * Unggah berkas lampiran tahap-1 ke CMS untuk mendapatkan upload_token sementara.
+     */
+    public function uploadDynamicFormFile(string $slug, string $fieldKey, UploadedFile $file): array
+    {
+        try {
+            $response = $this->postMultipartSigned(
+                "{$this->baseUrl}/forms/".rawurlencode($slug).'/uploads',
+                $file,
+                ['field_key' => $fieldKey]
+            );
+
+            $data = $response->json('data');
+            if ($response->successful() && $response->json('success') === true && is_array($data) && is_string($data['upload_token'] ?? null) && $data['upload_token'] !== '') {
+                return [
+                    'status' => 'success',
+                    'http_code' => $response->status(),
+                    'data' => [
+                        'upload_token' => (string) $data['upload_token'],
+                        'original_name' => (string) ($data['original_name'] ?? $file->getClientOriginalName()),
+                        'size_bytes' => (int) ($data['size_bytes'] ?? $file->getSize() ?? 0),
+                        'mime_type' => (string) ($data['mime_type'] ?? ''),
+                        'expires_at' => $data['expires_at'] ?? null,
+                    ],
+                    'message' => (string) ($response->json('message') ?? __('Berkas berhasil diunggah.')),
+                ];
+            }
+
+            Log::warning('CMS dynamic form upload was not confirmed', [
+                'slug' => $slug,
+                'http_code' => $response->status(),
+            ]);
+
+            $status = in_array($response->status(), [404, 422, 429], true) ? $response->status() : 503;
+
+            return [
+                'status' => 'error',
+                'http_code' => $status,
+                'errors' => $status === 422 && is_array($response->json('errors')) ? $response->json('errors') : [],
+                'retry_after' => $status === 429 ? max(1, min(3600, (int) $response->header('Retry-After', '60'))) : null,
+                'message' => match ($status) {
+                    404 => __('Formulir tidak ditemukan.'),
+                    429 => __('Terlalu banyak unggahan. Silakan coba lagi nanti.'),
+                    422 => (string) ($response->json('message') ?: __('Berkas lampiran tidak memenuhi ketentuan formulir.')),
+                    default => __('Layanan unggah berkas belum tersedia. Silakan coba lagi nanti.'),
+                },
+            ];
+        } catch (\Exception $e) {
+            Log::warning('CMS dynamic form upload unavailable', [
+                'slug' => $slug,
+                'exception_type' => get_class($e),
+            ]);
+
+            return [
+                'status' => 'exception',
+                'http_code' => 503,
+                'errors' => [],
+                'message' => __('Layanan unggah berkas belum tersedia. Silakan coba lagi nanti.'),
+            ];
+        }
+    }
+
+    /**
+     * Kirim jawaban final formulir dinamis ke CMS (tanpa mencatat data pribadi ke log).
+     */
+    public function submitDynamicForm(string $slug, array $payload): array
+    {
+        if (array_key_exists('answers', $payload) && $payload['answers'] === []) {
+            $payload['answers'] = (object) [];
+        }
+
+        try {
+            $response = $this->postSigned("{$this->baseUrl}/forms/".rawurlencode($slug).'/submissions', $payload);
+            $data = $response->json('data');
+
+            if ($response->successful() && $response->json('success') === true && is_array($data)) {
+                $confirmation = (string) ($data['confirmation_message'] ?? $response->json('message') ?? __('Jawaban Anda berhasil dikirim.'));
+
+                return [
+                    'status' => 'success',
+                    'http_code' => $response->status(),
+                    'data' => [
+                        'submission_id' => $data['submission_id'] ?? null,
+                        'ticket_number' => $data['ticket_number'] ?? null,
+                        'confirmation_message' => $confirmation,
+                        'submitted_at' => $data['submitted_at'] ?? null,
+                    ],
+                    'message' => $confirmation,
+                ];
+            }
+
+            Log::warning('CMS dynamic form submission was not confirmed', [
+                'slug' => $slug,
+                'http_code' => $response->status(),
+            ]);
+
+            $status = in_array($response->status(), [404, 422, 429], true) ? $response->status() : 503;
+
+            return [
+                'status' => 'error',
+                'http_code' => $status,
+                'errors' => $status === 422 && is_array($response->json('errors')) ? $response->json('errors') : [],
+                'retry_after' => $status === 429 ? max(1, min(3600, (int) $response->header('Retry-After', '60'))) : null,
+                'message' => match ($status) {
+                    404 => __('Formulir tidak ditemukan.'),
+                    429 => __('Terlalu banyak pengiriman. Silakan coba lagi nanti.'),
+                    422 => (string) ($response->json('message') ?: __('Data belum dapat diterima. Periksa isian formulir Anda.')),
+                    default => __('Layanan formulir belum tersedia. Silakan coba lagi nanti.'),
+                },
+            ];
+        } catch (\Exception $e) {
+            Log::warning('CMS dynamic form submission unavailable', [
+                'slug' => $slug,
+                'exception_type' => get_class($e),
+            ]);
 
             return [
                 'status' => 'exception',
