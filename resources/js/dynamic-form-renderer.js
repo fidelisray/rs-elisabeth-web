@@ -213,29 +213,50 @@ function normalizeComparableValue(value) {
     return value;
 }
 
+function isMapValue(value) {
+    return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function isScalarValue(value) {
+    return value !== null && value !== undefined && typeof value !== 'object';
+}
+
 function isValueEmpty(value) {
-    if (value === null || value === undefined || value === '' || (Array.isArray(value) && value.length === 0)) {
+    if (value === null || value === undefined) {
         return true;
     }
+    if (typeof value === 'string') {
+        return value.trim() === '';
+    }
     if (Array.isArray(value)) {
-        return value.every((item) => item === null || item === undefined || item === '' || (Array.isArray(item) && item.length === 0));
+        return value.length === 0 || value.every((item) => isValueEmpty(item));
     }
     if (typeof value === 'object') {
-        return Object.values(value).every((item) => item === null || item === undefined || item === '' || (Array.isArray(item) && item.length === 0));
+        const vals = Object.values(value);
+        return vals.length === 0 || vals.every((item) => isValueEmpty(item));
     }
     return false;
 }
 
 function isNumericValue(val) {
-    if (val === null || val === undefined || val === '' || typeof val === 'boolean' || Array.isArray(val) || typeof val === 'object') {
+    if (val === null || val === undefined || typeof val === 'boolean' || Array.isArray(val) || typeof val === 'object') {
+        return false;
+    }
+    if (typeof val === 'string' && val.trim() === '') {
         return false;
     }
     return !Number.isNaN(Number(val)) && Number.isFinite(Number(val));
 }
 
 function matchesEquals(actual, expected) {
+    if (isMapValue(actual) || Array.isArray(expected) || isMapValue(expected)) {
+        return false;
+    }
     if (Array.isArray(actual)) {
-        return actual.length === 1 && String(actual[0]) === String(expected ?? '');
+        return actual.length === 1 && isScalarValue(actual[0]) && String(actual[0]) === String(expected ?? '');
+    }
+    if (!isScalarValue(actual)) {
+        return false;
     }
     if (isNumericValue(actual) && isNumericValue(expected)) {
         return Number(actual) === Number(expected);
@@ -244,44 +265,57 @@ function matchesEquals(actual, expected) {
 }
 
 function matchesIn(actual, expected) {
+    if (isMapValue(actual)) {
+        return false;
+    }
     const list = Array.isArray(expected)
-        ? expected.map((v) => String(v).trim()).filter(Boolean)
-        : String(expected ?? '').split(',').map((v) => v.trim()).filter(Boolean);
+        ? expected.filter(isScalarValue).map((v) => String(v).trim()).filter(Boolean)
+        : (isScalarValue(expected) ? String(expected).split(',').map((v) => v.trim()).filter(Boolean) : []);
 
     if (list.length === 0) return false;
     if (Array.isArray(actual)) {
-        const actualStrings = actual.map((v) => String(v));
+        const actualStrings = actual.filter(isScalarValue).map((v) => String(v));
         return actualStrings.some((item) => list.includes(item));
+    }
+    if (!isScalarValue(actual)) {
+        return false;
     }
     return list.includes(String(actual));
 }
 
 function matchesContains(actual, expected) {
-    const needle = String(expected ?? '');
+    if (isMapValue(actual) || !isScalarValue(expected)) {
+        return false;
+    }
+    const needle = String(expected);
     if (needle === '') return false;
     if (Array.isArray(actual)) {
-        return actual.map((v) => String(v)).includes(needle);
+        return actual.filter(isScalarValue).map((v) => String(v)).includes(needle);
+    }
+    if (!isScalarValue(actual)) {
+        return false;
     }
     return String(actual).toLowerCase().includes(needle.toLowerCase());
 }
 
 function evaluateOperator(actual, operator, expected) {
     const empty = isValueEmpty(actual);
+    const isMap = isMapValue(actual);
     switch (operator) {
         case 'is_empty':
             return empty;
         case 'is_not_empty':
             return !empty;
         case 'equals':
-            return !empty && matchesEquals(actual, expected);
+            return !empty && !isMap && matchesEquals(actual, expected);
         case 'not_equals':
-            return !empty && !matchesEquals(actual, expected);
+            return !empty && !isMap && !matchesEquals(actual, expected);
         case 'in':
-            return !empty && matchesIn(actual, expected);
+            return !empty && !isMap && matchesIn(actual, expected);
         case 'not_in':
-            return !empty && !matchesIn(actual, expected);
+            return !empty && !isMap && !matchesIn(actual, expected);
         case 'contains':
-            return !empty && matchesContains(actual, expected);
+            return !empty && !isMap && matchesContains(actual, expected);
         case 'gt':
             return isNumericValue(actual) && isNumericValue(expected) && Number(actual) > Number(expected);
         case 'gte':
@@ -2188,7 +2222,9 @@ class DynamicFormWizard {
 export {
     evaluateOperator,
     evaluateVisibility,
+    isNumericValue,
     isSafeHttpUrl,
+    isValueEmpty,
     normalizeComparableValue,
     resolveChoiceJumpTarget,
     resolveSectionNextTarget,

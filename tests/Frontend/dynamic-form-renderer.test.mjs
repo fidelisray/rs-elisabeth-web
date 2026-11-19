@@ -4,7 +4,9 @@ import {
     DynamicFormWizard,
     evaluateOperator,
     evaluateVisibility,
+    isNumericValue,
     isSafeHttpUrl,
+    isValueEmpty,
     resolveChoiceJumpTarget,
     resolveSectionNextTarget,
 } from '../../resources/js/dynamic-form-renderer.js';
@@ -201,4 +203,45 @@ test('handles empty string length/selection rules, broken jump final step, and i
         wizard.isFinalStep({ section_key: 's1', next_section_rule: { action: 'jump', target_section_key: 'missing' } }, []),
         true
     );
+});
+
+test('maintains PHP parity for whitespace-only strings and matrix_grid object values', () => {
+    assert.equal(isValueEmpty('   '), true);
+    assert.equal(isValueEmpty('\t\n '), true);
+    assert.equal(isValueEmpty(['   ', '']), true);
+    assert.equal(isValueEmpty(0), false);
+    assert.equal(isValueEmpty('0'), false);
+
+    assert.equal(evaluateOperator('   ', 'is_empty', null), true);
+    assert.equal(evaluateOperator('   ', 'is_not_empty', null), false);
+    assert.equal(evaluateOperator('   ', 'equals', '   '), false);
+
+    assert.equal(isNumericValue('   '), false);
+    assert.equal(isNumericValue(''), false);
+    assert.equal(isNumericValue(0), true);
+    assert.equal(isNumericValue('0'), true);
+    assert.equal(isNumericValue(' 42 '), true);
+    assert.equal(evaluateOperator('   ', 'lt', 3), false);
+    assert.equal(evaluateOperator('   ', 'gte', 0), false);
+    assert.equal(evaluateOperator(5, 'gt', '   '), false);
+
+    // matrix_grid object/map handling without [object Object] coercion
+    assert.equal(isValueEmpty({}), true);
+    assert.equal(isValueEmpty({ r1: '', r2: '   ' }), true);
+    assert.equal(isValueEmpty({ r1: [], r2: ['   '] }), true);
+    assert.equal(isValueEmpty({ r1: 'c1', r2: '' }), false);
+    assert.equal(isValueEmpty({ r1: ['c1'] }), false);
+
+    assert.equal(evaluateOperator({ r1: '   ' }, 'is_empty', null), true);
+    assert.equal(evaluateOperator({ r1: ['   '] }, 'is_empty', null), true);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'is_not_empty', null), true);
+    assert.equal(evaluateOperator({ r1: ['c1'] }, 'is_not_empty', null), true);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'equals', '[object Object]'), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'equals', 'c1'), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'not_equals', 'c1'), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'in', ['[object Object]', 'c1']), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'not_in', ['c1']), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'contains', 'object'), false);
+    assert.equal(evaluateOperator({ r1: ['c1'] }, 'contains', 'c1'), false);
+    assert.equal(evaluateOperator({ r1: 'c1' }, 'gt', 0), false);
 });
