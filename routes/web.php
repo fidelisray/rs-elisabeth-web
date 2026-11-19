@@ -59,6 +59,18 @@ Route::get('/informasi-pelanggan', function () {
     return view('customer-information.index');
 })->name('customer-information.index');
 
+// Halaman Formulir Dinamis (Katalog Publik & Renderer Multi-Step)
+Route::prefix('formulir')->name('dynamic-forms.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\DynamicFormController::class, 'index'])->name('index');
+    Route::get('/{slug}', [\App\Http\Controllers\DynamicFormController::class, 'show'])->name('show');
+    Route::post('/{slug}/uploads', [\App\Http\Controllers\DynamicFormController::class, 'upload'])
+        ->name('upload')
+        ->middleware('throttle:20,1');
+    Route::post('/{slug}/submit', [\App\Http\Controllers\DynamicFormController::class, 'submit'])
+        ->name('submit')
+        ->middleware('throttle:15,1');
+});
+
 // Halaman Kritik & Saran (Feedback Pelanggan)
 Route::get('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
 Route::post('/kritik-dan-saran', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');

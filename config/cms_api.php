@@ -23,7 +23,8 @@ return [
     | CMS API Timeout
     |--------------------------------------------------------------------------
     */
-    'timeout' => 10,
+    'timeout' => (int) env('CMS_API_TIMEOUT', 10),
+    'upload_timeout' => (int) env('CMS_API_UPLOAD_TIMEOUT', 30),
 
     /*
     |--------------------------------------------------------------------------
@@ -35,15 +36,31 @@ return [
     | tanpa mengubah kode, sekaligus menjamin keamanan nilai default di production.
     */
     'cache_ttl' => [
-        'default'           => (int) env('CMS_CACHE_TTL_DEFAULT', 600),
-        'news'              => (int) env('CMS_CACHE_TTL_NEWS', 600),
-        'articles'          => (int) env('CMS_CACHE_TTL_ARTICLES', 600),
-        'promotions'        => (int) env('CMS_CACHE_TTL_PROMOTIONS', 600),
-        'facilities'        => (int) env('CMS_CACHE_TTL_FACILITIES', 600),
-        'room_facilities'   => (int) env('CMS_CACHE_TTL_ROOM_FACILITIES', 600),
-        'banner_promotions' => (int) env('CMS_CACHE_TTL_BANNER_PROMOTIONS', 600),
-        'doctors'           => (int) env('CMS_CACHE_TTL_DOCTORS', 600),
-        'online_libraries'  => (int) env('CMS_CACHE_TTL_ONLINE_LIBRARIES', 600),
+        'default'                 => (int) env('CMS_CACHE_TTL_DEFAULT', 600),
+        'news'                    => (int) env('CMS_CACHE_TTL_NEWS', 600),
+        'articles'                => (int) env('CMS_CACHE_TTL_ARTICLES', 600),
+        'promotions'              => (int) env('CMS_CACHE_TTL_PROMOTIONS', 600),
+        'facilities'              => (int) env('CMS_CACHE_TTL_FACILITIES', 600),
+        'room_facilities'         => (int) env('CMS_CACHE_TTL_ROOM_FACILITIES', 600),
+        'banner_promotions'       => (int) env('CMS_CACHE_TTL_BANNER_PROMOTIONS', 600),
+        'doctors'                 => (int) env('CMS_CACHE_TTL_DOCTORS', 600),
+        'online_libraries'        => (int) env('CMS_CACHE_TTL_ONLINE_LIBRARIES', 600),
+        'dynamic_forms'           => (int) env('CMS_CACHE_TTL_DYNAMIC_FORMS', 600),
+        'dynamic_forms_quota_ttl' => (int) env('CMS_CACHE_TTL_DYNAMIC_FORMS_QUOTA', 60),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Optional Legacy Form Slug Mapping
+    |--------------------------------------------------------------------------
+    | Jika diisi slug formulir dinamis CMS, rute lama (/kritik-dan-saran dan
+    | /kuesioner/*) mendelegasikan render & submit ke DynamicFormController.
+    */
+    'legacy_form_slugs' => [
+        'feedback'    => env('CMS_LEGACY_SLUG_FEEDBACK') ?: null,
+        'igd'         => env('CMS_LEGACY_SLUG_IGD') ?: null,
+        'rawat-jalan' => env('CMS_LEGACY_SLUG_RAWAT_JALAN') ?: null,
+        'rawat-inap'  => env('CMS_LEGACY_SLUG_RAWAT_INAP') ?: null,
     ],
 
     /*
