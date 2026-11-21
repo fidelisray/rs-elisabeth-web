@@ -53,7 +53,57 @@ export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
         });
     });
 
-    return [...doctorMap.values()];
+    const doctors = [...doctorMap.values()];
+    doctors.forEach(markRegOnlineBookableSlots);
+    return doctors;
+}
+
+const REGONLINE_MAX_SESSION = 3;
+const REGONLINE_SKIPPED_SCHEDULE = { serviceUnitCode: "PL-11", paramedicCode: "0194010321" };
+
+function getCommonClinicName(unitName = "") {
+    return String(unitName).replace(/Klinik\s+(Elisabeth\s+)?/i, "").trim().toLowerCase();
+}
+
+function isElisabethClinic(unitName = "") {
+    return String(unitName).toLowerCase().includes("elisabeth");
+}
+
+// Meniru filter searchDokter() di RegOnline agar slot yang tidak ditampilkan di sana
+// tidak bisa dipesan dari web ini (jika dipesan, RegOnline diam-diam memilih jadwal lain).
+function markRegOnlineBookableSlots(doc) {
+    state.days.forEach((day) => {
+        const dayItems = doc.schedule[day] || [];
+        if (dayItems.length === 0) return;
+
+        const clinicStats = new Map();
+        dayItems.forEach((item) => {
+            const key = getCommonClinicName(item.serviceUnitName);
+            const stat = clinicStats.get(key) ?? { elisabeth: 0, biasa: 0 };
+            const visibleCount = item.sessions.filter((s) => Number(s.sesi) <= REGONLINE_MAX_SESSION).length;
+            if (isElisabethClinic(item.serviceUnitName)) stat.elisabeth += visibleCount;
+            else stat.biasa += visibleCount;
+            clinicStats.set(key, stat);
+        });
+
+        dayItems.forEach((item) => {
+            const stat = clinicStats.get(getCommonClinicName(item.serviceUnitName));
+            const hidesFirstRegularSession =
+                !isElisabethClinic(item.serviceUnitName) && stat.elisabeth > 0 && stat.biasa >= 2;
+            const isSkippedSchedule =
+                String(item.serviceUnitCode) === REGONLINE_SKIPPED_SCHEDULE.serviceUnitCode &&
+                String(doc.paramedicCode) === REGONLINE_SKIPPED_SCHEDULE.paramedicCode;
+
+            item.sessions = item.sessions.map((slot) => {
+                const sesi = Number(slot.sesi);
+                const excluded =
+                    isSkippedSchedule ||
+                    sesi > REGONLINE_MAX_SESSION ||
+                    (hidesFirstRegularSession && sesi === 1);
+                return { ...slot, bookable: !excluded };
+            });
+        });
+    });
 }
 
 export function setDoctorContext(doctorList) {
