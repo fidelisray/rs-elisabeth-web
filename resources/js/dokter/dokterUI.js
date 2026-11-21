@@ -203,35 +203,54 @@ export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
 
 let isBookingPrefillListenerBound = false;
 
-function initBookingPrefillToggle() {
-    if (isBookingPrefillListenerBound) return;
+function syncBookingPrefillState() {
     const toggle = document.getElementById("bookingPrefillToggle");
     const fieldsContainer = document.getElementById("bookingPrefillFields");
-    const inputRm = document.getElementById("bookingInputRm");
-    const inputDob = document.getElementById("bookingInputDob");
-    const inputWa = document.getElementById("bookingInputWa");
-    const inputCb = document.getElementById("bookingInputCb");
-
     if (!toggle || !fieldsContainer) return;
 
-    const syncPrefillState = () => {
-        const enabled = toggle.checked;
-        fieldsContainer.hidden = !enabled;
+    const enabled = toggle.checked;
+    fieldsContainer.hidden = !enabled;
 
-        [inputRm, inputDob, inputWa].forEach((input) => {
-            if (!input) return;
-            input.disabled = !enabled;
-            input.required = enabled;
-        });
+    ["bookingInputRm", "bookingInputDob", "bookingInputWa"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.disabled = !enabled;
+        input.required = enabled;
+    });
 
-        if (inputCb) {
-            inputCb.disabled = !enabled;
-        }
-    };
+    const inputCb = document.getElementById("bookingInputCb");
+    if (inputCb) inputCb.disabled = !enabled;
+}
 
-    toggle.addEventListener("change", syncPrefillState);
-    syncPrefillState();
-    isBookingPrefillListenerBound = true;
+// Dipanggil saat modal dibuka dan ditutup agar pasien tidak melihat sisa isian dari sesi sebelumnya
+function resetBookingPrefillState() {
+    const toggle = document.getElementById("bookingPrefillToggle");
+    if (toggle) toggle.checked = false;
+
+    [
+        "bookingInputRm",
+        "bookingInputDob",
+        "bookingInputWa",
+        "bookingInputCb",
+    ].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.value = "";
+    });
+
+    syncBookingPrefillState();
+}
+
+function initBookingPrefillToggle() {
+    const toggle = document.getElementById("bookingPrefillToggle");
+    const modalEl = document.getElementById("bookingConfirmModal");
+
+    if (!isBookingPrefillListenerBound && toggle) {
+        toggle.addEventListener("change", syncBookingPrefillState);
+        modalEl?.addEventListener("hidden.bs.modal", resetBookingPrefillState);
+        isBookingPrefillListenerBound = true;
+    }
+
+    resetBookingPrefillState();
 }
 
 export function openBookingModal(bookingData) {
