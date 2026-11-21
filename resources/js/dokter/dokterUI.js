@@ -400,6 +400,19 @@ export function createScheduleGrid(dokter) {
             sessionList.forEach((slot) => {
                 const jam = slot.jam;
                 const sesiNumber = slot.sesi;
+                if (slot.bookable === false) {
+                    slotsHtml += `
+                    <div class="jadwal-slot">
+                        <div class="slot-content">
+                            <span class="slot-time">
+                                <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
+                            </span>
+                            <span class="slot-klinik">${escapeHtml(item.serviceUnitName)}</span>
+                        </div>
+                    </div>
+                `;
+                    return;
+                }
                 slotsHtml += `
                     <button type="button" 
                         class="jadwal-slot jadwal-slot-interactive"
@@ -754,6 +767,19 @@ export function renderModal(doctorData) {
                 sessionList.forEach((slot) => {
                     const jam = slot.jam;
                     const sesiNumber = slot.sesi;
+                    if (slot.bookable === false) {
+                        timeSlotsHtml += `
+                        <div class="modal-time-slot">
+                            <div class="slot-content">
+                                <span class="modal-slot-time">
+                                    <i class="fa-regular fa-clock me-1"></i>${escapeHtml(jam)}
+                                </span>
+                                <span class="modal-slot-unit">${escapeHtml(data.serviceUnitName)}</span>
+                            </div>
+                        </div>
+                    `;
+                        return;
+                    }
                     timeSlotsHtml += `
                         <button type="button"
                             class="modal-time-slot jadwal-slot-interactive"
