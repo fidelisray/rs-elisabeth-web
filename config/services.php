@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'regonline' => [
+        'base_url' => env('REGONLINE_BASE_URL', 'https://regonline.rs-elisabeth.com'),
+        'encryption_key' => env('REGONLINE_URL_ENCRYPTION_KEY') ?: env('URL_ENCRYPTION_KEY'),
+        'token_ttl' => env('REGONLINE_TOKEN_TTL', 600),
+    ],
+
 ];

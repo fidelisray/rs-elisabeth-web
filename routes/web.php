@@ -30,6 +30,7 @@ Route::prefix('dokter')->name('dokter.')->group(function () {
         return view('dokter.jadwal-dokter');
     });
     Route::get('/all-dokter', [DokterController::class, 'allDokter'])->name('allDokter');
+    Route::post('/booking/dispatch', [DokterController::class, 'dispatchBooking'])->name('booking.dispatch')->middleware('throttle:60,1');
     Route::get('/test-api', [DokterController::class, 'test_doctor_api'])->name('test_doctor_api');
     // Route::get('/{id}',   [DokterController::class, 'dokterByUnitId'])->name('dokterByUnitId')
     // ->where('id', '[A-Z]{2}-[0-9]{2}');

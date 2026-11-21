@@ -354,58 +354,110 @@
                             </div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body pt-3">
-                            <p class="text-muted small mb-3">
-                                {{ __('Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal berikut yang terisi otomatis:') }}
-                            </p>
+                        <form id="bookingConfirmForm" method="POST" action="{{ route('dokter.booking.dispatch') }}" target="_blank">
+                            @csrf
+                            <input type="hidden" name="tgl" id="bookingFormTgl" value="">
+                            <input type="hidden" name="kodepoli" id="bookingFormPoli" value="">
+                            <input type="hidden" name="kodedokter" id="bookingFormDokter" value="">
+                            <input type="hidden" name="sesi" id="bookingFormSesi" value="1">
+                            <div class="modal-body pt-3">
+                                <p class="text-muted small mb-3">
+                                    {{ __('Anda akan diarahkan ke portal Registrasi Online RS St. Elisabeth dengan rincian jadwal berikut yang terisi otomatis:') }}
+                                </p>
 
-                            <div class="booking-summary-card p-3 rounded-3 bg-light border mb-3">
-                                <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-                                    <div id="bookingModalDoctorPhoto" class="rounded-circle overflow-hidden flex-shrink-0 border" style="width: 56px; height: 56px;">
-                                        <img src="" alt="" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                                <div class="booking-summary-card p-3 rounded-3 bg-light border mb-3">
+                                    <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
+                                        <div id="bookingModalDoctorPhoto" class="rounded-circle overflow-hidden flex-shrink-0 border" style="width: 56px; height: 56px;">
+                                            <img src="" alt="" class="w-100 h-100" style="object-fit: cover; object-position: top center;">
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark" id="bookingModalDoctorName">-</h6>
+                                            <span class="badge bg-primary text-white" id="bookingModalDoctorSpec">-</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h6 class="fw-bold mb-1 text-dark" id="bookingModalDoctorName">-</h6>
-                                        <span class="badge bg-primary text-white" id="bookingModalDoctorSpec">-</span>
-                                    </div>
-                                </div>
 
-                                <div class="row g-2 small">
-                                    <div class="col-12">
-                                        <span class="text-muted d-block">{{ __('Poliklinik') }}</span>
-                                        <strong class="text-dark" id="bookingModalPoliName">-</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">{{ __('Jam Praktik') }}</span>
-                                        <strong class="text-dark" id="bookingModalTime">-</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="text-muted d-block">{{ __('Sesi') }}</span>
-                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="bookingModalSession">-</span>
-                                    </div>
-                                    <div class="col-12 mt-2 pt-2 border-top">
-                                        <span class="text-muted d-block">{{ __('Tanggal Periksa') }}</span>
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <strong class="text-primary fs-6" id="bookingModalDateFormatted">-</strong>
-                                            <span class="badge bg-success-subtle text-success border border-success-subtle">
-                                                <i class="fa-solid fa-circle-check me-1"></i>{{ __('Jadwal Terdekat') }}
-                                            </span>
+                                    <div class="row g-2 small">
+                                        <div class="col-12">
+                                            <span class="text-muted d-block">{{ __('Poliklinik') }}</span>
+                                            <strong class="text-dark" id="bookingModalPoliName">-</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block">{{ __('Jam Praktik') }}</span>
+                                            <strong class="text-dark" id="bookingModalTime">-</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <span class="text-muted d-block">{{ __('Sesi') }}</span>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold" id="bookingModalSession">-</span>
+                                        </div>
+                                        <div class="col-12 mt-2 pt-2 border-top">
+                                            <span class="text-muted d-block">{{ __('Tanggal Periksa') }}</span>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <strong class="text-primary fs-6" id="bookingModalDateFormatted">-</strong>
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                                    <i class="fa-solid fa-circle-check me-1"></i>{{ __('Jadwal Terdekat') }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="alert alert-info py-2 px-3 small d-flex align-items-start gap-2 mb-0">
-                                <i class="fa-solid fa-circle-info mt-1 text-info flex-shrink-0"></i>
-                                <span>{{ __('Di portal RegOnline, Anda cukup memverifikasi NIK / No. Rekam Medis untuk menyelesaikan pendaftaran.') }}</span>
+                                <div class="booking-prefill-box p-3 rounded-3 border mb-3 bg-white">
+                                    <div class="form-check form-switch d-flex align-items-center justify-content-between ps-0 mb-0">
+                                        <label class="form-check-label fw-semibold text-dark small pe-2" for="bookingPrefillToggle" style="cursor: pointer;">
+                                            <i class="fa-regular fa-id-card text-primary me-1"></i>{{ __('Isi Data Pasien Sekarang (Opsional)') }}
+                                            <span class="d-block text-muted fw-normal" style="font-size: 0.78rem;">
+                                                {{ __('Mempercepat pendaftaran dengan mengisi otomatis data Anda di RegOnline.') }}
+                                            </span>
+                                        </label>
+                                        <input class="form-check-input ms-0 flex-shrink-0" type="checkbox" role="switch" id="bookingPrefillToggle" name="use_prefill" value="1" style="width: 2.5em; height: 1.3em; cursor: pointer;">
+                                    </div>
+
+                                    <div id="bookingPrefillFields" class="mt-3 pt-3 border-top" hidden>
+                                        <div class="row g-2 small">
+                                            <div class="col-12 col-sm-6">
+                                                <label for="bookingInputRm" class="form-label fw-semibold text-dark mb-1">
+                                                    {{ __('No. Rekam Medis (RM)') }} <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" class="form-control form-control-sm" id="bookingInputRm" name="rm" placeholder="{{ __('Contoh: 00-12-34-56') }}" maxlength="30" pattern="[0-9\-]+" disabled>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <label for="bookingInputDob" class="form-label fw-semibold text-dark mb-1">
+                                                    {{ __('Tanggal Lahir') }} <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="date" class="form-control form-control-sm" id="bookingInputDob" name="dob" max="{{ date('Y-m-d') }}" disabled>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <label for="bookingInputWa" class="form-label fw-semibold text-dark mb-1">
+                                                    {{ __('No. WhatsApp / Telepon') }} <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="tel" class="form-control form-control-sm" id="bookingInputWa" name="wa" placeholder="{{ __('Contoh: 08123456789') }}" maxlength="25" inputmode="tel" pattern="[0-9+\-\s]+" disabled>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <label for="bookingInputCb" class="form-label fw-semibold text-dark mb-1">
+                                                    {{ __('Jenis Pembayaran') }} <span class="text-muted fw-normal">({{ __('Opsional') }})</span>
+                                                </label>
+                                                <select class="form-select form-select-sm" id="bookingInputCb" name="cb" disabled>
+                                                    <option value="">{{ __('-- Pilih Jenis Pembayaran --') }}</option>
+                                                    <option value="PERSONAL">{{ __('Personal / Pribadi') }}</option>
+                                                    <option value="ASURANSI">{{ __('Asuransi') }}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info py-2 px-3 small d-flex align-items-start gap-2 mb-0">
+                                    <i class="fa-solid fa-circle-info mt-1 text-info flex-shrink-0"></i>
+                                    <span id="bookingModalInfoAlertText">{{ __('Di portal RegOnline, Anda cukup memverifikasi NIK / No. Rekam Medis untuk menyelesaikan pendaftaran.') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer border-0 pt-0">
-                            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">{{ __('Batal') }}</button>
-                            <a href="#" id="bookingModalConfirmBtn" target="_blank" rel="noopener noreferrer" class="btn btn-primary rounded-pill px-4 fw-bold">
-                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{{ __('Lanjut ke Pendaftaran') }}
-                            </a>
-                        </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-outline-secondary rounded-pill px-3" data-bs-dismiss="modal">{{ __('Batal') }}</button>
+                                <button type="submit" id="bookingModalConfirmBtn" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                    <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>{{ __('Lanjut ke Pendaftaran') }}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
