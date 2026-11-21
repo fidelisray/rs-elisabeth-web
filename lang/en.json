@@ -612,5 +612,17 @@
     "Pengisian formulir ditolak oleh filter keamanan.": "Submission was rejected by the security filter.",
     "Layanan formulir belum tersedia. Silakan coba lagi nanti.": "The form service is currently unavailable. Please try again later.",
     "Terlalu banyak pengiriman. Silakan coba lagi nanti.": "Too many submissions. Please try again later.",
-    "Data belum dapat diterima. Periksa isian formulir Anda.": "The submission could not be accepted. Please review your entries."
+    "Data belum dapat diterima. Periksa isian formulir Anda.": "The submission could not be accepted. Please review your entries.",
+    "Isi Data Pasien Sekarang (Opsional)": "Fill in Patient Details Now (Optional)",
+    "Mempercepat pendaftaran dengan mengisi otomatis data Anda di RegOnline.": "Speed up registration by pre-filling your details on RegOnline.",
+    "No. Rekam Medis (RM)": "Medical Record No. (MRN)",
+    "Contoh: 00-12-34-56": "Example: 00-12-34-56",
+    "Tanggal Lahir": "Date of Birth",
+    "No. WhatsApp / Telepon": "WhatsApp / Phone Number",
+    "Contoh: 08123456789": "Example: 08123456789",
+    "Jenis Pembayaran": "Payment Method",
+    "Opsional": "Optional",
+    "-- Pilih Jenis Pembayaran --": "-- Select Payment Method --",
+    "Personal / Pribadi": "Personal / Self-Pay",
+    "Asuransi": "Insurance"
 }

@@ -599,5 +599,17 @@
     "Pengisian formulir ditolak oleh filter keamanan.": "Pengisian formulir ditolak oleh filter keamanan.",
     "Layanan formulir belum tersedia. Silakan coba lagi nanti.": "Layanan formulir belum tersedia. Silakan coba lagi nanti.",
     "Terlalu banyak pengiriman. Silakan coba lagi nanti.": "Terlalu banyak pengiriman. Silakan coba lagi nanti.",
-    "Data belum dapat diterima. Periksa isian formulir Anda.": "Data belum dapat diterima. Periksa isian formulir Anda."
+    "Data belum dapat diterima. Periksa isian formulir Anda.": "Data belum dapat diterima. Periksa isian formulir Anda.",
+    "Isi Data Pasien Sekarang (Opsional)": "Isi Data Pasien Sekarang (Opsional)",
+    "Mempercepat pendaftaran dengan mengisi otomatis data Anda di RegOnline.": "Mempercepat pendaftaran dengan mengisi otomatis data Anda di RegOnline.",
+    "No. Rekam Medis (RM)": "No. Rekam Medis (RM)",
+    "Contoh: 00-12-34-56": "Contoh: 00-12-34-56",
+    "Tanggal Lahir": "Tanggal Lahir",
+    "No. WhatsApp / Telepon": "No. WhatsApp / Telepon",
+    "Contoh: 08123456789": "Contoh: 08123456789",
+    "Jenis Pembayaran": "Jenis Pembayaran",
+    "Opsional": "Opsional",
+    "-- Pilih Jenis Pembayaran --": "-- Pilih Jenis Pembayaran --",
+    "Personal / Pribadi": "Personal / Pribadi",
+    "Asuransi": "Asuransi"
 }
