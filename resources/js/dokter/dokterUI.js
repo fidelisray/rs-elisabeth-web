@@ -180,7 +180,7 @@ export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
     const yyyy = targetDate.getFullYear();
     const mm = String(targetDate.getMonth() + 1).padStart(2, "0");
     const dd = String(targetDate.getDate()).padStart(2, "0");
-    const dateIso = `${yyyy}${mm}${dd}`;
+    const dateIso = `${yyyy}-${mm}-${dd}`;
 
     const locale = getLocale();
     const formatted = new Intl.DateTimeFormat(
@@ -201,34 +201,58 @@ export function calculateNextDate(targetDayNumber, timeSlotStr = "") {
     };
 }
 
-export function buildRegOnlineUrl({
-    tgl = "",
-    kodepoli = "",
-    kodedokter = "",
-    sesi = "",
-} = {}) {
-    const url = new URL("http://172.17.12.17:669/");
-    // const url = new URL("https://regonline.rs-elisabeth.com/");
-    if (tgl) url.searchParams.set("tgl", tgl);
-    if (kodepoli) url.searchParams.set("kodepoli", kodepoli);
-    if (kodedokter) url.searchParams.set("kodedokter", kodedokter);
-    if (sesi) url.searchParams.set("sesi", String(sesi));
-    return url.toString();
+let isBookingPrefillListenerBound = false;
+
+function initBookingPrefillToggle() {
+    if (isBookingPrefillListenerBound) return;
+    const toggle = document.getElementById("bookingPrefillToggle");
+    const fieldsContainer = document.getElementById("bookingPrefillFields");
+    const inputRm = document.getElementById("bookingInputRm");
+    const inputDob = document.getElementById("bookingInputDob");
+    const inputWa = document.getElementById("bookingInputWa");
+    const inputCb = document.getElementById("bookingInputCb");
+
+    if (!toggle || !fieldsContainer) return;
+
+    const syncPrefillState = () => {
+        const enabled = toggle.checked;
+        fieldsContainer.hidden = !enabled;
+
+        [inputRm, inputDob, inputWa].forEach((input) => {
+            if (!input) return;
+            input.disabled = !enabled;
+            input.required = enabled;
+        });
+
+        if (inputCb) {
+            inputCb.disabled = !enabled;
+        }
+    };
+
+    toggle.addEventListener("change", syncPrefillState);
+    syncPrefillState();
+    isBookingPrefillListenerBound = true;
 }
 
 export function openBookingModal(bookingData) {
     if (!bookingData) return;
 
+    initBookingPrefillToggle();
+
     const nextDate = calculateNextDate(
         bookingData.dayNumber,
         bookingData.timeSlot,
     );
-    const bookingUrl = buildRegOnlineUrl({
-        tgl: nextDate.dateIso,
-        kodepoli: bookingData.poliCode,
-        kodedokter: bookingData.paramedicCode,
-        sesi: bookingData.sesi || 1,
-    });
+
+    const formTgl = document.getElementById("bookingFormTgl");
+    const formPoli = document.getElementById("bookingFormPoli");
+    const formDokter = document.getElementById("bookingFormDokter");
+    const formSesi = document.getElementById("bookingFormSesi");
+
+    if (formTgl) formTgl.value = nextDate.dateIso;
+    if (formPoli) formPoli.value = bookingData.poliCode || "";
+    if (formDokter) formDokter.value = bookingData.paramedicCode || "";
+    if (formSesi) formSesi.value = String(bookingData.sesi || 1);
 
     const photoImg = document.querySelector("#bookingModalDoctorPhoto img");
     if (photoImg) {
@@ -262,11 +286,6 @@ export function openBookingModal(bookingData) {
         "bookingModalDateFormatted",
     );
     if (dateFormattedEl) dateFormattedEl.textContent = nextDate.formatted;
-
-    const confirmBtn = document.getElementById("bookingModalConfirmBtn");
-    if (confirmBtn) {
-        confirmBtn.href = bookingUrl;
-    }
 
     const modalEl = document.getElementById("bookingConfirmModal");
     if (modalEl && window.bootstrap?.Modal) {
