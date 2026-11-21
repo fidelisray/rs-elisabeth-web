@@ -2147,40 +2147,6 @@ class DynamicFormWizard {
 
         card.append(badge, heading, message);
 
-        const ticket = this.submissionResult.ticket_number;
-        if (this.schema.mode === 'feedback' && ticket) {
-            const ticketBox = document.createElement('div');
-            ticketBox.className = 'df-ticket-box';
-
-            const lbl = document.createElement('div');
-            lbl.className = 'df-ticket-label';
-            lbl.textContent = this.t.ticketLabel;
-
-            const code = document.createElement('div');
-            code.className = 'df-ticket-code';
-            code.textContent = ticket;
-
-            const hint = document.createElement('p');
-            hint.className = 'small mb-2 mt-1';
-            hint.style.color = '#475569';
-            hint.textContent = this.t.ticketHint;
-
-            const copyBtn = document.createElement('button');
-            copyBtn.type = 'button';
-            copyBtn.className = 'df-btn-secondary mt-2';
-            copyBtn.textContent = this.t.copyTicket;
-            copyBtn.addEventListener('click', () => {
-                if (navigator.clipboard?.writeText) {
-                    navigator.clipboard.writeText(ticket).then(() => {
-                        copyBtn.textContent = this.t.ticketCopied;
-                    }).catch(() => {});
-                }
-            });
-
-            ticketBox.append(lbl, code, hint, copyBtn);
-            card.appendChild(ticketBox);
-        }
-
         const actions = document.createElement('div');
         actions.className = 'd-flex flex-wrap justify-content-center gap-3 mt-4';
 
