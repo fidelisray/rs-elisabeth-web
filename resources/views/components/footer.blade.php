@@ -29,9 +29,7 @@
                 </ul>
 
                 <div class="social-media d-flex gap-3">
-                    <a href="#" class="btn-social instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="#" class="btn-social facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#" class="btn-social youtube"><i class="fa-brands fa-youtube"></i></a>
+                    @include('components.social-links')
                 </div>
             </div>
 
@@ -81,7 +79,7 @@
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <p class="mb-0 small" style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">
-                    Designed & Developed with <i class="fa-solid fa-heart text-danger mx-1"></i> by Lorem Ipsum
+                    Designed & Developed with <i class="fa-solid fa-heart text-danger mx-1"></i> by <strong>Elisasoftworks</strong>
                 </p>
             </div>
         </div>

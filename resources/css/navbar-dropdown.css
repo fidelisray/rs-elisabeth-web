@@ -592,6 +592,95 @@
     color: #c53030;
 }
 
+/* Baris Media Sosial pada Mobile Offcanvas (latar putih) */
+.offcanvas-social {
+    padding-top: 0.75rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.offcanvas-social-label {
+    color: #475569;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.offcanvas-social-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.offcanvas-social .btn-social {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    background-color: #f1f5f9;
+    color: var(--secondary-darker-color, #124f8c);
+    border: 1px solid #64748b;
+    transition:
+        transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        color 0.25s ease;
+}
+
+.offcanvas-social .btn-social:hover,
+.offcanvas-social .btn-social:focus-visible {
+    transform: translateY(-2px);
+    border-color: transparent;
+    color: #ffffff;
+}
+
+.offcanvas-social .btn-social:focus-visible {
+    outline: 2px solid var(--primary-color, #008fd7);
+    outline-offset: 2px;
+}
+
+.offcanvas-social .btn-social:active {
+    transform: scale(0.95);
+}
+
+.offcanvas-social .btn-social.instagram:hover,
+.offcanvas-social .btn-social.instagram:focus-visible {
+    background-color: #E1306C;
+    box-shadow: 0 4px 12px rgba(225, 48, 108, 0.35);
+}
+
+.offcanvas-social .btn-social.facebook:hover,
+.offcanvas-social .btn-social.facebook:focus-visible {
+    background-color: #1877F2;
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.35);
+}
+
+.offcanvas-social .btn-social.youtube:hover,
+.offcanvas-social .btn-social.youtube:focus-visible {
+    background-color: #FF0000;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.35);
+}
+
+.offcanvas-social .btn-social.threads:hover,
+.offcanvas-social .btn-social.threads:focus-visible {
+    background-color: #000000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .offcanvas-social .btn-social:hover,
+    .offcanvas-social .btn-social:focus-visible,
+    .offcanvas-social .btn-social:active {
+        transform: none;
+    }
+}
+
 /* ============================================================
  * 8. MOBILE IGD BUTTON — Pulse Ring
  * ============================================================ */

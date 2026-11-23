@@ -194,25 +194,53 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.top-bar .btn-social:hover {
+.top-bar .btn-social:hover,
+.top-bar .btn-social:focus-visible {
     transform: translateY(-2px);
     border-color: transparent;
     color: #fff;
 }
 
-.top-bar .btn-social.instagram:hover {
+.top-bar .btn-social:focus-visible {
+    outline: 2px solid var(--accent-color, #f8f804);
+    outline-offset: 2px;
+}
+
+.top-bar .btn-social.instagram:hover,
+.top-bar .btn-social.instagram:focus-visible {
     background-color: #E1306C;
     box-shadow: 0 4px 10px rgba(225, 48, 108, 0.45);
 }
 
-.top-bar .btn-social.facebook:hover {
+.top-bar .btn-social.facebook:hover,
+.top-bar .btn-social.facebook:focus-visible {
     background-color: #1877F2;
     box-shadow: 0 4px 10px rgba(24, 119, 242, 0.45);
 }
 
-.top-bar .btn-social.youtube:hover {
+.top-bar .btn-social.youtube:hover,
+.top-bar .btn-social.youtube:focus-visible {
     background-color: #FF0000;
     box-shadow: 0 4px 10px rgba(255, 0, 0, 0.45);
+}
+
+.top-bar .btn-social.threads:hover,
+.top-bar .btn-social.threads:focus-visible {
+    background-color: #000000;
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-bar .btn-social {
+        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    }
+
+    .top-bar .btn-social:hover,
+    .top-bar .btn-social:focus-visible {
+        transform: none;
+    }
 }
 
 /* Responsive adjustment for compact laptop screens (992px - 1199px) */
