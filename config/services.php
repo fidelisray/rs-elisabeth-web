@@ -43,4 +43,23 @@ return [
         'poli_cache_ttl' => (int) env('REGONLINE_POLI_CACHE_TTL', 300),
     ],
 
+    'whatsapp' => (static function (): array {
+        $raw = preg_replace('/\D+/', '', (string) env('HOSPITAL_WHATSAPP_NUMBER', '6282138907740')) ?: '6282138907740';
+
+        $waNumber = str_starts_with($raw, '0')
+            ? '62' . substr($raw, 1)
+            : $raw;
+
+        $localDigits = str_starts_with($waNumber, '62')
+            ? '0' . substr($waNumber, 2)
+            : $waNumber;
+
+        $display = preg_replace('/^(\d{4})(\d{4})(\d+)$/', '$1-$2-$3', $localDigits) ?: $localDigits;
+
+        return [
+            'number' => $waNumber,
+            'display' => $display,
+        ];
+    })(),
+
 ];

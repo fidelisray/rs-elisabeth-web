@@ -54,7 +54,7 @@
                                     <h5 class="card-title fw-bold text-primary mb-3" style="text-transform: capitalize">{{ $promoTitle }}</h5>
                                     <p class="card-text text-muted flex-grow-1">{{ Str::limit($promo->excerpt ?? strip_tags($promoDesc), 120) }}</p>
                                     <div class="mt-4">
-                                        <a href="https://wa.me/6281234567890?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
+                                        <a href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill fw-bold shadow-sm d-flex justify-content-center align-items-center">
                                             <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Pesan Sekarang') }}
                                         </a>
                                     </div>
@@ -95,7 +95,7 @@
                                     <div class="mt-auto border-top pt-4">
                                         <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
+                                            <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
                                                 <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Hubungi Kami') }}
                                             </a>
                                             <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">{{ __('Tutup') }}</button>

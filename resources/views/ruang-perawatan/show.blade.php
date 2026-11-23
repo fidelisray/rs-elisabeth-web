@@ -93,7 +93,7 @@
                                         $waText = $room->whatsapp_text ?? __('Halo, saya ingin menanyakan ketersediaan ruang perawatan :name', ['name' => $room->name]);
                                     @endphp
                                     
-                                    <a href="https://wa.me/6285600600870?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill py-3 fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">
+                                    <a href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode($waText) }}" target="_blank" class="btn btn-success w-100 rounded-pill py-3 fw-bold mb-3 d-flex justify-content-center align-items-center gap-2">
                                         <i class="fa-brands fa-whatsapp fs-4"></i> {{ __('Tanya via WhatsApp') }}
                                     </a>
                                     
