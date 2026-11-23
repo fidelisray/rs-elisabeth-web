@@ -39,6 +39,8 @@ return [
         'base_url' => env('REGONLINE_BASE_URL', 'https://regonline.rs-elisabeth.com'),
         'encryption_key' => env('REGONLINE_URL_ENCRYPTION_KEY') ?: env('URL_ENCRYPTION_KEY'),
         'token_ttl' => env('REGONLINE_TOKEN_TTL', 600),
+        'poli_db_connection' => env('REGONLINE_POLI_DB_CONNECTION', 'sqlsrv'),
+        'poli_cache_ttl' => (int) env('REGONLINE_POLI_CACHE_TTL', 300),
     ],
 
 ];
