@@ -6,7 +6,7 @@ export const state = {
     days: [1, 2, 3, 4, 5, 6, 7],
 };
 
-export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
+export function preprocessingApiData(doctorData, knownSpecialtyCode = null, activePoliCodesOverride = undefined) {
     const doctorMap = new Map();
 
     if (!Array.isArray(doctorData)) return [];
@@ -53,13 +53,50 @@ export function preprocessingApiData(doctorData, knownSpecialtyCode = null) {
         });
     });
 
+    const activePoliSet = resolveActivePoliSet(activePoliCodesOverride);
     const doctors = [...doctorMap.values()];
-    doctors.forEach(markRegOnlineBookableSlots);
+    doctors.forEach((doc) => markRegOnlineBookableSlots(doc, activePoliSet));
     return doctors;
 }
 
-const REGONLINE_MAX_SESSION = 3;
-const REGONLINE_SKIPPED_SCHEDULE = { serviceUnitCode: "PL-11", paramedicCode: "0194010321" };
+let activePoliCacheSet;
+
+function getActivePoliCodeSet() {
+    if (activePoliCacheSet !== undefined) return activePoliCacheSet;
+    if (typeof document === "undefined") {
+        activePoliCacheSet = null;
+        return activePoliCacheSet;
+    }
+
+    try {
+        const el = document.getElementById("regonline-active-poli-json");
+        if (!el) {
+            activePoliCacheSet = null;
+            return activePoliCacheSet;
+        }
+        const parsed = JSON.parse(el.textContent || "null");
+        if (Array.isArray(parsed)) {
+            activePoliCacheSet = new Set(parsed.map((code) => String(code).trim()).filter(Boolean));
+        } else {
+            activePoliCacheSet = null;
+        }
+    } catch (e) {
+        console.error("Error parsing active poli json:", e);
+        activePoliCacheSet = null;
+    }
+
+    return activePoliCacheSet;
+}
+
+function resolveActivePoliSet(override) {
+    if (override === undefined) return getActivePoliCodeSet();
+    if (override === null) return null;
+    if (override instanceof Set) return override;
+    if (Array.isArray(override)) {
+        return new Set(override.map((code) => String(code).trim()).filter(Boolean));
+    }
+    return null;
+}
 
 function getCommonClinicName(unitName = "") {
     return String(unitName).replace(/Klinik\s+(Elisabeth\s+)?/i, "").trim().toLowerCase();
@@ -69,38 +106,49 @@ function isElisabethClinic(unitName = "") {
     return String(unitName).toLowerCase().includes("elisabeth");
 }
 
-// Meniru filter searchDokter() di RegOnline agar slot yang tidak ditampilkan di sana
-// tidak bisa dipesan dari web ini (jika dipesan, RegOnline diam-diam memilih jadwal lain).
-function markRegOnlineBookableSlots(doc) {
+// Menentukan status bookable berdasarkan referensi aktif dbo.ref_poli_online dan aturan sesi Elisabeth vs Reguler
+function markRegOnlineBookableSlots(doc, activePoliSet = null) {
     state.days.forEach((day) => {
         const dayItems = doc.schedule[day] || [];
         if (dayItems.length === 0) return;
 
+        // Unit yang tidak aktif di ref_poli_online tidak ikut dihitung dalam rasio Elisabeth vs Reguler
         const clinicStats = new Map();
         dayItems.forEach((item) => {
+            const unitCode = String(item.serviceUnitCode || "").trim();
+            if (activePoliSet !== null && !activePoliSet.has(unitCode)) return;
+
             const key = getCommonClinicName(item.serviceUnitName);
             const stat = clinicStats.get(key) ?? { elisabeth: 0, biasa: 0 };
-            const visibleCount = item.sessions.filter((s) => Number(s.sesi) <= REGONLINE_MAX_SESSION).length;
-            if (isElisabethClinic(item.serviceUnitName)) stat.elisabeth += visibleCount;
-            else stat.biasa += visibleCount;
+            if (isElisabethClinic(item.serviceUnitName)) {
+                stat.elisabeth += item.sessions.length;
+            } else {
+                stat.biasa += item.sessions.length;
+            }
             clinicStats.set(key, stat);
         });
 
         dayItems.forEach((item) => {
-            const stat = clinicStats.get(getCommonClinicName(item.serviceUnitName));
-            const hidesFirstRegularSession =
-                !isElisabethClinic(item.serviceUnitName) && stat.elisabeth > 0 && stat.biasa >= 2;
-            const isSkippedSchedule =
-                String(item.serviceUnitCode) === REGONLINE_SKIPPED_SCHEDULE.serviceUnitCode &&
-                String(doc.paramedicCode) === REGONLINE_SKIPPED_SCHEDULE.paramedicCode;
+            const unitCode = String(item.serviceUnitCode || "").trim();
+            const isPoliActive = activePoliSet === null || activePoliSet.has(unitCode);
+
+            if (!isPoliActive) {
+                item.sessions = item.sessions.map((slot) => ({ ...slot, bookable: false }));
+                return;
+            }
+
+            const isElisabeth = isElisabethClinic(item.serviceUnitName);
+            const stat = clinicStats.get(getCommonClinicName(item.serviceUnitName)) ?? { elisabeth: 0, biasa: 0 };
+            const hasElisabeth = stat.elisabeth > 0;
+            const hasMultipleRegularSessions = stat.biasa > 1;
 
             item.sessions = item.sessions.map((slot) => {
-                const sesi = Number(slot.sesi);
-                const excluded =
-                    isSkippedSchedule ||
-                    sesi > REGONLINE_MAX_SESSION ||
-                    (hidesFirstRegularSession && sesi === 1);
-                return { ...slot, bookable: !excluded };
+                if (!hasElisabeth || isElisabeth || !hasMultipleRegularSessions) {
+                    return { ...slot, bookable: true };
+                }
+
+                // Ada Klinik Elisabeth & Klinik Reguler sesi > 1: Sesi 1 non-bookable, Sesi 2+ bookable
+                return { ...slot, bookable: Number(slot.sesi) !== 1 };
             });
         });
     });

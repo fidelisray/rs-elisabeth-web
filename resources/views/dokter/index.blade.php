@@ -32,6 +32,8 @@
         ])
     {{-- Data spesialisasi untuk mapping dan pencarian client-side --}}
     <script id="specialties-json" type="application/json">@json($spesialisasi ?? [])</script>
+    {{-- Daftar kode poli aktif RegOnline (read-only dari dbo.ref_poli_online) --}}
+    <script id="regonline-active-poli-json" type="application/json">@json($activePoliCodes ?? null)</script>
 
     <div class="doctor-layout main-content py-4">
         <section id="dokter-container" aria-label="{{ __('Daftar dokter') }}">
