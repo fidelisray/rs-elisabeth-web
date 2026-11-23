@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Services\DoctorApiService;
 use App\Services\CmsApiService;
+use App\Services\RegOnlinePoliReferenceService;
 use App\DTOs\Cms\DoctorDto;
 use App\Exceptions\CmsApiException;
 use Illuminate\Http\JsonResponse;
@@ -15,7 +16,8 @@ class DokterController extends Controller
     //
     public function __construct(
         protected DoctorApiService $apiService,
-        protected CmsApiService $cmsApiService
+        protected CmsApiService $cmsApiService,
+        protected RegOnlinePoliReferenceService $poliReferenceService
     ) {}
 
     public function profile(Request $request, string $paramedicCode): JsonResponse
@@ -49,8 +51,9 @@ class DokterController extends Controller
 
         $units = $this->apiService->getDaftarUnits();
         $spesialisasi = $this->apiService->getDaftarSpesialisasi();
+        $activePoliCodes = $this->poliReferenceService->getActivePoliCodes();
 
-        return view('dokter.index', compact('units', 'spesialisasi'));
+        return view('dokter.index', compact('units', 'spesialisasi', 'activePoliCodes'));
 
         // return view('dokter.index', compact('dokter', 'filters'));
 
@@ -75,10 +78,11 @@ class DokterController extends Controller
 
     public function spesialisasi() {
         $spesialisasi = $this->apiService->getDaftarSpesialisasi();
+        $activePoliCodes = $this->poliReferenceService->getActivePoliCodes();
 
         // dd($spesialisasi);
 
-        return view("dokter.index", compact('spesialisasi'));
+        return view("dokter.index", compact('spesialisasi', 'activePoliCodes'));
     }
 
     public function dokterBySpesialisasi(string $specialtyCode) {
