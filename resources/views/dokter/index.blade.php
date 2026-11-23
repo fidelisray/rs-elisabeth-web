@@ -34,6 +34,8 @@
     <script id="specialties-json" type="application/json">@json($spesialisasi ?? [])</script>
     {{-- Daftar kode poli aktif RegOnline (read-only dari dbo.ref_poli_online) --}}
     <script id="regonline-active-poli-json" type="application/json">@json($activePoliCodes ?? null)</script>
+    {{-- Daftar referensi poliklinik (read-only dari dbo.ref_poli_online) --}}
+    <script id="regonline-poli-list-json" type="application/json">@json($poliReferences ?? null)</script>
 
     <div class="doctor-layout main-content py-4">
         <section id="dokter-container" aria-label="{{ __('Daftar dokter') }}">
@@ -67,13 +69,13 @@
                                     </button>
                                 </header>
 
-                                <!-- Pencarian nama dokter / klinik / spesialisasi -->
+                                <!-- Pencarian nama dokter, spesialisasi, atau poliklinik -->
                                 <div class="doctor-field">
-                                    <label for="searchKeyword" class="doctor-label">{{ __('Nama dokter atau klinik') }}</label>
+                                    <label for="searchKeyword" class="doctor-label">{{ __('Cari dokter, spesialisasi, atau poliklinik') }}</label>
                                     <div class="doctor-search-field">
                                         <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
                                         <input type="search" id="searchKeyword" class="doctor-search-input"
-                                               placeholder="{{ __('Contoh: dr. Budi, Poli Gigi') }}"
+                                               placeholder="{{ __('Contoh: dr. Budi, Klinik Bedah, Penyakit Dalam') }}"
                                                autocomplete="off" enterkeyhint="search">
                                         <button type="button" id="btnClearSearch" class="doctor-search-clear" hidden aria-label="{{ __('Hapus pencarian') }}">
                                             <i class="fas fa-circle-xmark" aria-hidden="true"></i>
@@ -84,42 +86,92 @@
                                 <!-- Chips filter aktif -->
                                 <ul class="doctor-chips" data-chips aria-label="{{ __('Filter aktif') }}" hidden></ul>
 
-                                <!-- Spesialisasi -->
-                                <fieldset class="doctor-specialty">
-                                    <legend class="doctor-label doctor-legend">
-                                        <span>{{ __('Spesialisasi') }}</span>
-                                        <span id="specialtyCountBadge" class="doctor-badge" hidden>0</span>
-                                    </legend>
-
-                                    <label for="specialtySearchInput" class="visually-hidden">{{ __('Cari spesialisasi') }}</label>
-                                    <div class="doctor-search-field doctor-search-field--sm">
-                                        <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
-                                        <input type="search" id="specialtySearchInput" class="doctor-search-input"
-                                               placeholder="{{ __('Cari spesialisasi...') }}" autocomplete="off">
+                                <!-- Segmented switch filter: Spesialisasi | Poliklinik -->
+                                <div class="doctor-filter-section">
+                                    <div class="doctor-filter-tabs" role="tablist" aria-label="{{ __('Kategori filter') }}">
+                                        <button type="button"
+                                                id="tabFilterSpecialty"
+                                                class="doctor-filter-tab is-active"
+                                                role="tab"
+                                                aria-selected="true"
+                                                aria-controls="panelFilterSpecialty"
+                                                data-filter-tab="specialty">
+                                            <span class="doctor-tab-label">{{ __('Spesialisasi') }}</span>
+                                            <span id="specialtyCountBadge" class="doctor-badge doctor-tab-badge" hidden>0</span>
+                                        </button>
+                                        <button type="button"
+                                                id="tabFilterPoli"
+                                                class="doctor-filter-tab"
+                                                role="tab"
+                                                aria-selected="false"
+                                                aria-controls="panelFilterPoli"
+                                                tabindex="-1"
+                                                data-filter-tab="poli">
+                                            <span class="doctor-tab-label">{{ __('Poliklinik') }}</span>
+                                            <span id="poliCountBadge" class="doctor-badge doctor-tab-badge" hidden>0</span>
+                                        </button>
                                     </div>
 
-                                    <div class="doctor-specialty-actions">
-                                        <button type="button" id="btnSelectAllSpecs" class="doctor-link-btn">{{ __('Pilih semua yang tampil') }}</button>
-                                        <button type="button" id="btnClearSpecs" class="doctor-link-btn doctor-link-btn--muted">{{ __('Hapus pilihan') }}</button>
-                                    </div>
-
-                                    <div id="specialtyCheckboxes" class="doctor-specialty-list">
-                                        @foreach ($spesialisasi as $spesialis)
-                                        <div class="specialty-option" data-code="{{ $spesialis->Code }}">
-                                            <input class="specialty-checkbox"
-                                                   type="checkbox"
-                                                   value="{{ $spesialis->Code }}"
-                                                   id="spec_{{ $spesialis->Code }}"
-                                                   data-name="{{ ucwords(strtolower($spesialis->Name)) }}">
-                                            <label class="specialty-label" for="spec_{{ $spesialis->Code }}">
-                                                <span class="specialty-name">{{ ucwords(strtolower($spesialis->Name)) }}</span>
-                                                <span class="specialty-count" data-count aria-hidden="true"></span>
-                                            </label>
+                                    <!-- Panel Spesialisasi -->
+                                    <div id="panelFilterSpecialty"
+                                         class="doctor-specialty doctor-filter-tabpanel"
+                                         role="tabpanel"
+                                         aria-labelledby="tabFilterSpecialty">
+                                        <label for="specialtySearchInput" class="visually-hidden">{{ __('Cari spesialisasi') }}</label>
+                                        <div class="doctor-search-field doctor-search-field--sm">
+                                            <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
+                                            <input type="search" id="specialtySearchInput" class="doctor-search-input"
+                                                   placeholder="{{ __('Cari spesialisasi...') }}" autocomplete="off">
                                         </div>
-                                        @endforeach
-                                        <p class="doctor-specialty-empty" id="specialtyEmpty" hidden>{{ __('Spesialisasi tidak ditemukan.') }}</p>
+
+                                        <div class="doctor-specialty-actions">
+                                            <button type="button" id="btnSelectAllSpecs" class="doctor-link-btn">{{ __('Pilih semua yang tampil') }}</button>
+                                            <button type="button" id="btnClearSpecs" class="doctor-link-btn doctor-link-btn--muted">{{ __('Hapus pilihan') }}</button>
+                                        </div>
+
+                                        <div id="specialtyCheckboxes" class="doctor-specialty-list">
+                                            @foreach ($spesialisasi as $spesialis)
+                                            <div class="specialty-option" data-code="{{ $spesialis->Code }}">
+                                                <input class="specialty-checkbox"
+                                                       type="checkbox"
+                                                       value="{{ $spesialis->Code }}"
+                                                       id="spec_{{ $spesialis->Code }}"
+                                                       data-name="{{ ucwords(strtolower($spesialis->Name)) }}">
+                                                <label class="specialty-label" for="spec_{{ $spesialis->Code }}">
+                                                    <span class="specialty-name">{{ ucwords(strtolower($spesialis->Name)) }}</span>
+                                                    <span class="specialty-count" data-count aria-hidden="true"></span>
+                                                </label>
+                                            </div>
+                                            @endforeach
+                                            <p class="doctor-specialty-empty" id="specialtyEmpty" hidden>{{ __('Spesialisasi tidak ditemukan.') }}</p>
+                                        </div>
                                     </div>
-                                </fieldset>
+
+                                    <!-- Panel Poliklinik -->
+                                    <div id="panelFilterPoli"
+                                         class="doctor-specialty doctor-filter-tabpanel"
+                                         role="tabpanel"
+                                         aria-labelledby="tabFilterPoli"
+                                         hidden>
+                                        <label for="poliSearchInput" class="visually-hidden">{{ __('Cari poliklinik') }}</label>
+                                        <div class="doctor-search-field doctor-search-field--sm">
+                                            <i class="fas fa-search doctor-search-icon" aria-hidden="true"></i>
+                                            <input type="search" id="poliSearchInput" class="doctor-search-input"
+                                                   placeholder="{{ __('Cari poliklinik...') }}" autocomplete="off">
+                                        </div>
+
+                                        <div class="doctor-specialty-actions">
+                                            <button type="button" id="btnSelectAllPolis" class="doctor-link-btn">{{ __('Pilih semua yang tampil') }}</button>
+                                            <button type="button" id="btnClearPolis" class="doctor-link-btn doctor-link-btn--muted">{{ __('Hapus pilihan') }}</button>
+                                        </div>
+
+                                        <div id="poliCheckboxes" class="doctor-specialty-list">
+                                            <p class="doctor-specialty-empty" id="poliLoading">{{ __('Memuat daftar poliklinik...') }}</p>
+                                            <p class="doctor-specialty-empty" id="poliEmpty" hidden>{{ __('Poliklinik tidak ditemukan.') }}</p>
+                                            <p class="doctor-specialty-empty" id="poliUnavailable" hidden>{{ __('Daftar poliklinik belum tersedia.') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <!-- Tombol utama: hanya di bottom sheet / drawer -->
                                 <footer class="doctor-filter-foot">
@@ -144,7 +196,7 @@
                             <span>{{ __('Filter') }}</span>
                             <span id="mobileFilterCount" class="doctor-badge" hidden>0</span>
                         </button>
-                        <span class="doctor-toolbar-hint">{{ __('Cari dokter, klinik, atau spesialisasi') }}</span>
+                        <span class="doctor-toolbar-hint">{{ __('Cari dokter, spesialisasi, atau poliklinik') }}</span>
                     </div>
 
                     <!-- Chips filter aktif (terlihat meski panel filter tertutup) -->
