@@ -62,4 +62,27 @@ return [
         ];
     })(),
 
+    'social' => (static function (): array {
+        $resolveUrl = static function (string $envKey): string {
+            $url = trim((string) env($envKey, ''));
+
+            if ($url === '') {
+                return '#';
+            }
+
+            if (preg_match('/^https?:\/\//i', $url) === 1) {
+                return $url;
+            }
+
+            return '#';
+        };
+
+        return [
+            'instagram' => $resolveUrl('HOSPITAL_SOCIAL_INSTAGRAM_URL'),
+            'facebook' => $resolveUrl('HOSPITAL_SOCIAL_FACEBOOK_URL'),
+            'youtube' => $resolveUrl('HOSPITAL_SOCIAL_YOUTUBE_URL'),
+            'threads' => $resolveUrl('HOSPITAL_SOCIAL_THREADS_URL'),
+        ];
+    })(),
+
 ];
