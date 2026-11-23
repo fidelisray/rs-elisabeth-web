@@ -41,10 +41,14 @@
                 <!-- Motto -->
                 <div class="row justify-content-center mb-5 pb-3">
                     <div class="col-md-10 text-center motto-section">
-                        <span class="badge bg-primary px-3 py-2 rounded-pill mb-3 fs-6">Motto</span>
-                        <h2 class="display-6">"Pancaran Cintanya Menyembuhkan Derita Sesama"</h2>
+                        <div class="section-title text-center mb-4">
+                            <h2 class="fw-bold">{{ __('Motto') }}</h2>
+                            <div class="divider"></div>
+                        </div>
+                        <blockquote class="motto-quote display-6 mb-0">"Pancaran Cintanya Menyembuhkan Derita Sesama"</blockquote>
                     </div>
                 </div>
+            </div>
         </section>
 
         <section id="sejarah-singkat">
@@ -83,7 +87,10 @@
                 <!-- Visi -->
                 <div class="row justify-content-center mb-5 pb-4">
                     <div class="col-lg-10 text-center">
-                        <span class="badge bg-primary px-3 py-2 rounded-pill mb-4 fs-6">Visi</span>
+                        <div class="section-title text-center mb-5">
+                            <h2 class="fw-bold">{{ __('Visi') }}</h2>
+                            <div class="divider"></div>
+                        </div>
                         <div class="card vision-card border-0 shadow-sm">
                             <div class="card-body p-4 p-md-5">
                                 <div class="vision-icon mb-4">
@@ -100,7 +107,10 @@
                 <!-- Misi -->
                 <div class="row justify-content-center mb-5">
                     <div class="col-lg-12 text-center">
-                        <span class="badge bg-primary px-3 py-2 rounded-pill mb-4 fs-6">Misi</span>
+                        <div class="section-title text-center mb-5">
+                            <h2 class="fw-bold">{{ __('Misi') }}</h2>
+                            <div class="divider"></div>
+                        </div>
                     </div>
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card mission-card border-start-0 border-end-0 border-bottom-0 shadow-sm p-4 text-center">

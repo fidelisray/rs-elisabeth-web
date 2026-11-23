@@ -39,7 +39,7 @@
 }
 
 /* Motto Section */
-.motto-section h2 {
+.motto-section .motto-quote {
     font-family: "Cormorant Garamond", serif;
     font-style: italic;
     font-weight: 700;
@@ -158,10 +158,10 @@
         margin-bottom: 0.5rem !important;
     }
 
-    .motto-section h2.display-5 {
-        font-size: 1.35rem !important;
-        line-height: 1.38 !important;
-        margin-bottom: 0.75rem !important;
+    .motto-section .motto-quote {
+        font-size: 1.45rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 0 !important;
     }
 
     /* Sejarah Singkat */
