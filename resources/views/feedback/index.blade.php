@@ -64,7 +64,7 @@
                                 <a href="{{ route('feedback.index') }}" class="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold">
                                     <i class="fa-solid fa-pen me-2"></i>{{ __('Kirim Masukan Lainnya') }}
                                 </a>
-                                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="btn btn-success rounded-pill px-4 py-2 fw-semibold">
+                                <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" rel="noopener noreferrer" class="btn btn-success rounded-pill px-4 py-2 fw-semibold">
                                     <i class="fa-brands fa-whatsapp me-2"></i>{{ __('Chat Customer Care') }}
                                 </a>
                                 <a href="{{ url('/') }}" class="btn btn-primary rounded-pill px-4 py-2 fw-semibold">
