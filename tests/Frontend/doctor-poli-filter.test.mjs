@@ -11,6 +11,7 @@ import {
     preprocessingApiData,
     resetReferenceCaches,
     setDoctorContext,
+    shouldShowSpecialtyOption,
     state,
 } from '../../resources/js/dokter/dokterService.js';
 import { createScheduleGrid, renderModal, t } from '../../resources/js/dokter/dokterUI.js';
@@ -778,4 +779,70 @@ test('Conjunction "&", compound words ("Medical Checkup"), and exact unit codes 
     assert.equal(matchesPoliOptionQuery('homecare', 'Home Care Rawat Jalan', 'HOME CARE RAWAT JALAN', 'PL-25'), true);
     assert.equal(matchesPoliOptionQuery('PL-31', 'Klinik Elisabeth Bedah', 'KLINIK ELISABETH BEDAH', 'PL-31'), true);
     assert.equal(matchesPoliOptionQuery('ikan', 'Klinik Anak', 'KLINIK ANAK', 'PL-01'), false);
+});
+
+test('shouldShowSpecialtyOption hides zero-doctor specialties dynamically while preserving checked options', () => {
+    setupDoctors();
+
+    // Global counts from sample data: KSM-28 has 2 doctors, KSM-99 (unpopulated specialty) has 0
+    const allCounts = getSpecialtyCounts('', [], FILTER_OPTS);
+    assert.equal(allCounts.get('KSM-28'), 2);
+    assert.equal(allCounts.get('KSM-99') || 0, 0);
+
+    // Globally empty unchecked specialty stays hidden even with empty or matching mini-search query
+    assert.equal(
+        shouldShowSpecialtyOption({ count: allCounts.get('KSM-99') || 0, isChecked: false, label: 'Kedokteran Nuklir', query: '' }),
+        false,
+    );
+    assert.equal(
+        shouldShowSpecialtyOption({ count: allCounts.get('KSM-99') || 0, isChecked: false, label: 'Kedokteran Nuklir', query: 'nuklir' }),
+        false,
+    );
+
+    // Populated specialty is visible for empty/matching mini-search and hidden for non-matching query
+    assert.equal(
+        shouldShowSpecialtyOption({ count: allCounts.get('KSM-28') || 0, isChecked: false, label: 'Penyakit Dalam', query: '' }),
+        true,
+    );
+    assert.equal(
+        shouldShowSpecialtyOption({ count: allCounts.get('KSM-28') || 0, isChecked: false, label: 'Penyakit Dalam', query: 'dalam' }),
+        true,
+    );
+    assert.equal(
+        shouldShowSpecialtyOption({ count: allCounts.get('KSM-28') || 0, isChecked: false, label: 'Penyakit Dalam', query: 'bedah' }),
+        false,
+    );
+
+    // Dynamically empty after selecting Poliklinik PL-31 (Klinik Elisabeth Bedah): KSM-28 drops to 0, KSM-04 remains 1
+    const poliFilteredCounts = getSpecialtyCounts('', ['PL-31'], FILTER_OPTS);
+    assert.equal(poliFilteredCounts.get('KSM-04'), 1);
+    assert.equal(poliFilteredCounts.get('KSM-28') || 0, 0);
+
+    assert.equal(
+        shouldShowSpecialtyOption({ count: poliFilteredCounts.get('KSM-04') || 0, isChecked: false, label: 'Bedah Digestif', query: '' }),
+        true,
+    );
+    assert.equal(
+        shouldShowSpecialtyOption({ count: poliFilteredCounts.get('KSM-28') || 0, isChecked: false, label: 'Penyakit Dalam', query: '' }),
+        false,
+    );
+
+    // Dynamically empty after Search Box keyword "Rehabilitasi": KSM-28 drops to 0
+    const keywordFilteredCounts = getSpecialtyCounts('Rehabilitasi', [], FILTER_OPTS);
+    assert.equal(keywordFilteredCounts.get('KSM-12'), 1);
+    assert.equal(keywordFilteredCounts.get('KSM-28') || 0, 0);
+    assert.equal(
+        shouldShowSpecialtyOption({ count: keywordFilteredCounts.get('KSM-28') || 0, isChecked: false, label: 'Penyakit Dalam', query: '' }),
+        false,
+    );
+
+    // Checked specialty with 0 matching doctors stays visible so user can uncheck it, then hides once unchecked
+    assert.equal(
+        shouldShowSpecialtyOption({ count: 0, isChecked: true, label: 'Penyakit Dalam', query: '' }),
+        true,
+    );
+    assert.equal(
+        shouldShowSpecialtyOption({ count: 0, isChecked: false, label: 'Penyakit Dalam', query: '' }),
+        false,
+    );
 });

@@ -729,6 +729,25 @@ export function getSpecialtyCounts(keyword = "", selectedPoliCodes = [], options
     return counts;
 }
 
+export function shouldShowSpecialtyOption({
+    count = 0,
+    isChecked = false,
+    label = "",
+    query = "",
+} = {}) {
+    const hasMatchingDoctors = Number(count) > 0;
+    if (!hasMatchingDoctors && !isChecked) {
+        return false;
+    }
+
+    const normalizedQuery = String(query || "").trim().toLowerCase();
+    if (normalizedQuery === "") {
+        return true;
+    }
+
+    return String(label || "").toLowerCase().includes(normalizedQuery);
+}
+
 export function getPoliCounts(keyword = "", selectedSpecialtyCodes = [], options = {}) {
     const counts = new Map();
     const ctx = createFilterContext(keyword, selectedSpecialtyCodes, [], options);

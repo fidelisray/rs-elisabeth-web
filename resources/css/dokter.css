@@ -517,6 +517,10 @@
     transition: background-color 0.15s ease;
 }
 
+.specialty-option[hidden] {
+    display: none;
+}
+
 .specialty-option:hover {
     background: #eef6fb;
 }
