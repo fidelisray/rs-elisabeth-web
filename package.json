@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "test:doctor-ui": "node --test tests/Frontend/doctor-profile.test.mjs"
+        "test:doctor-ui": "node --test tests/Frontend/doctor-profile.test.mjs tests/Frontend/doctor-poli-filter.test.mjs"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

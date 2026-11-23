@@ -111,6 +111,8 @@
     .doctor-filter-card {
         flex: 1 1 auto;
         min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     .doctor-sheet-header {
@@ -342,6 +344,22 @@
     background: rgba(2, 97, 153, 0.14);
 }
 
+.doctor-chip--poli {
+    background: #e5f4f5;
+    color: #0f4c5c;
+    border-color: rgba(15, 76, 92, 0.22);
+}
+
+.doctor-chip--poli button:hover {
+    background: rgba(15, 76, 92, 0.14);
+}
+
+.doctor-chip-icon {
+    font-size: 0.72rem;
+    opacity: 0.85;
+    flex: 0 0 auto;
+}
+
 /* ---------- Badge ---------- */
 .doctor-badge {
     min-width: 1.4rem;
@@ -356,6 +374,78 @@
 
 .doctor-badge[hidden] {
     display: none;
+}
+
+/* ---------- Filter segmented tabs (Spesialisasi | Poliklinik) ---------- */
+.doctor-filter-section {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+.doctor-filter-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    padding: 4px;
+    background: #eef4f9;
+    border: 1px solid #d8e5f0;
+    border-radius: 12px;
+    flex: 0 0 auto;
+}
+
+.doctor-filter-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+    min-height: var(--doc-tap);
+    padding: 0.4rem 0.45rem;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    background: transparent;
+    color: #465768;
+    font-size: 0.83rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.doctor-filter-tab:hover:not(.is-active) {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--doc-text);
+}
+
+.doctor-filter-tab.is-active,
+.doctor-filter-tab[aria-selected="true"] {
+    background: #ffffff;
+    border-color: rgba(2, 97, 153, 0.28);
+    color: var(--secondary-darker-color);
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(2, 97, 153, 0.14);
+}
+
+.doctor-tab-label {
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.doctor-tab-badge {
+    flex: 0 0 auto;
+    min-width: 1.25rem;
+    padding: 0.08rem 0.4rem;
+    font-size: 0.7rem;
+    line-height: 1.3;
+}
+
+.doctor-filter-tabpanel[hidden] {
+    display: none !important;
 }
 
 /* ---------- Specialty list ---------- */
@@ -619,17 +709,23 @@
     .doctor-filter-panel .offcanvas-body {
         display: flex;
         flex-direction: column;
-        padding: 1rem;
+        padding: 1rem 1rem 0;
         overflow: hidden;
     }
 
     .doctor-filter-card {
         flex: 1 1 auto;
         min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
         padding: 0;
         border: 0;
         background: transparent;
         box-shadow: none;
+    }
+
+    .doctor-filter-card .doctor-chips {
+        max-height: 5.5rem;
     }
 
     .doctor-filter-title {
@@ -643,8 +739,12 @@
 
     .doctor-filter-foot {
         display: block;
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
         margin-top: auto;
-        padding-top: 0.75rem;
+        padding: 0.75rem 0 1rem;
+        background: var(--doc-surface);
         border-top: 1px solid #eef2f6;
     }
 
@@ -722,6 +822,7 @@
 
 @media (prefers-reduced-motion: reduce) {
     .doctor-filter-panel,
+    .doctor-filter-tab,
     .specialty-option,
     .doctor-search-input,
     .btn-reset-all,

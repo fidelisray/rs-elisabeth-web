@@ -39,7 +39,7 @@ export const I18N = {
         doctorSchedule: "Jadwal Dokter",
         doctorNotFoundTitle: "Dokter Tidak Ditemukan",
         doctorNotFoundDesc:
-            "Maaf, kami tidak dapat menemukan dokter atau klinik yang sesuai dengan kata kunci pencarian Anda. Silakan coba spesialisasi atau nama yang berbeda.",
+            "Maaf, kami tidak dapat menemukan dokter atau poliklinik yang sesuai dengan pencarian atau filter Anda. Silakan coba kata kunci, spesialisasi, atau poliklinik lain.",
         loadingDoctors: "Memuat data dokter...",
         modalScheduleNotAvailable:
             "Jadwal praktik belum tersedia untuk saat ini.",
@@ -51,7 +51,11 @@ export const I18N = {
         selectSpecialty: "Pilih Spesialisasi",
         doctorsAvailable: "dokter tersedia",
         removeFilter: "Hapus filter",
+        removeSpecialtyFilter: "Hapus filter spesialisasi",
+        removePoliFilter: "Hapus filter poliklinik",
         clearKeyword: "Hapus kata kunci",
+        poliNotFound: "Poliklinik tidak ditemukan.",
+        poliUnavailable: "Daftar poliklinik belum tersedia.",
         profileLoading: "Memuat profil dokter...",
         profileEmpty: "Informasi belum diisi.",
         profileNotFound: "Profil dokter belum tersedia.",
@@ -97,7 +101,7 @@ export const I18N = {
         doctorSchedule: "Doctor Schedule",
         doctorNotFoundTitle: "Doctor Not Found",
         doctorNotFoundDesc:
-            "Sorry, we could not find any doctors or clinics matching your search keywords. Please try a different specialty or doctor name.",
+            "Sorry, we could not find any doctors or clinics matching your search or filters. Please try a different keyword, specialty, or clinic.",
         loadingDoctors: "Loading doctors data...",
         modalScheduleNotAvailable:
             "Practice schedule is not available at the moment.",
@@ -109,7 +113,11 @@ export const I18N = {
         selectSpecialty: "Select Specialty",
         doctorsAvailable: "doctors available",
         removeFilter: "Remove filter",
+        removeSpecialtyFilter: "Remove specialty filter",
+        removePoliFilter: "Remove clinic filter",
         clearKeyword: "Clear keyword",
+        poliNotFound: "No clinic found.",
+        poliUnavailable: "Clinic list is not available yet.",
         profileLoading: "Loading doctor profile...",
         profileEmpty: "Information has not been provided.",
         profileNotFound: "Doctor profile is not available.",
