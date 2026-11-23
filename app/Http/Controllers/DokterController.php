@@ -51,9 +51,10 @@ class DokterController extends Controller
 
         $units = $this->apiService->getDaftarUnits();
         $spesialisasi = $this->apiService->getDaftarSpesialisasi();
+        $poliReferences = $this->poliReferenceService->getPoliReferences();
         $activePoliCodes = $this->poliReferenceService->getActivePoliCodes();
 
-        return view('dokter.index', compact('units', 'spesialisasi', 'activePoliCodes'));
+        return view('dokter.index', compact('units', 'spesialisasi', 'activePoliCodes', 'poliReferences'));
 
         // return view('dokter.index', compact('dokter', 'filters'));
 
@@ -78,11 +79,12 @@ class DokterController extends Controller
 
     public function spesialisasi() {
         $spesialisasi = $this->apiService->getDaftarSpesialisasi();
+        $poliReferences = $this->poliReferenceService->getPoliReferences();
         $activePoliCodes = $this->poliReferenceService->getActivePoliCodes();
 
         // dd($spesialisasi);
 
-        return view("dokter.index", compact('spesialisasi', 'activePoliCodes'));
+        return view("dokter.index", compact('spesialisasi', 'activePoliCodes', 'poliReferences'));
     }
 
     public function dokterBySpesialisasi(string $specialtyCode) {

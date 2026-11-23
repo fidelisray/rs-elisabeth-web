@@ -206,5 +206,47 @@ class DokterPageAndCmsSyncTest extends TestCase
             ->assertJsonCount(1)
             ->assertJsonPath('0.ParamedicCode', 'DOC-1');
     }
+
+    public function test_dokter_page_embeds_poli_references_and_segmented_filter_tabs(): void
+    {
+        config([
+            'database.connections.sqlsrv.host' => '',
+            'database.connections.sqlsrv.database' => '',
+        ]);
+
+        Cache::put(\App\Services\RegOnlinePoliReferenceService::LIST_CACHE_KEY, [
+            ['code' => 'PL-31', 'name' => 'KLINIK ELISABETH BEDAH', 'is_active' => true],
+            ['code' => 'PL-27', 'name' => 'KLINIK UMUM', 'is_active' => false],
+        ], 300);
+
+        Http::fake([
+            'https://medin.invalid/medinfrasapi/rsses/api/reference/master/lst_spc' => Http::response([
+                'Data' => json_encode([
+                    ['Type' => 'lst_spc^SPECIALTY', 'Code' => 'KSM-04', 'Name' => 'BEDAH DIGESTIF'],
+                ]),
+            ], 200),
+        ]);
+
+        $responseId = $this->get('/dokter');
+        $responseId->assertOk()
+            ->assertSee('id="regonline-poli-list-json"', false)
+            ->assertSee('KLINIK ELISABETH BEDAH')
+            ->assertSee('KLINIK UMUM')
+            ->assertSee('id="regonline-active-poli-json" type="application/json">["PL-31"]', false)
+            ->assertSee('id="tabFilterSpecialty"', false)
+            ->assertSee('id="tabFilterPoli"', false)
+            ->assertSee('id="panelFilterSpecialty"', false)
+            ->assertSee('id="panelFilterPoli"', false)
+            ->assertSee('id="poliSearchInput"', false)
+            ->assertSee('id="poliCheckboxes"', false)
+            ->assertSee('Cari dokter, spesialisasi, atau poliklinik');
+
+        $responseEn = $this->withSession(['locale' => 'en'])->get('/dokter');
+        $responseEn->assertOk()
+            ->assertSee('Search doctor, specialty, or clinic')
+            ->assertSee('Outpatient Clinic')
+            ->assertSee('Specialty')
+            ->assertSee('Search clinic...');
+    }
 }
 
