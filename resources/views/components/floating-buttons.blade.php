@@ -1,5 +1,5 @@
 <!-- Floating WhatsApp Button -->
-<a href="https://wa.me/6281234567890" class="floating-whatsapp text-decoration-none text-white"
+<a href="https://wa.me/{{ config('services.whatsapp.number') }}" class="floating-whatsapp text-decoration-none text-white"
     title="{{ __('Chat dengan kami via WhatsApp') }}" aria-label="{{ __('Chat dengan kami via WhatsApp') }}" target="_blank" rel="noopener noreferrer">
     <i class="fa-brands fa-whatsapp"></i>
 </a>

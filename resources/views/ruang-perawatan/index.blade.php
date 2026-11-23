@@ -189,7 +189,7 @@
                                             $waText = $room->whatsapp_text ?? __('Halo, saya ingin informasi ruangan :name', ['name' => $room->name]);
                                         @endphp
                                         <a
-                                            href="https://wa.me/6285600600870?text={{ urlencode($waText) }}"
+                                            href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode($waText) }}"
                                             target="_blank"
                                             rel="noopener"
                                             class="btn-wa-icon"
@@ -231,7 +231,7 @@
                         {{ __('Informasi pilihan ruang perawatan saat ini sedang disinkronisasi. Silakan hubungi layanan pelanggan kami untuk informasi ketersediaan kamar secara langsung.') }}
                     </p>
                     <a
-                        href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan Ruang Perawatan RS St. Elisabeth')) }}"
+                        href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode(__('Halo, saya ingin menanyakan ketersediaan Ruang Perawatan RS St. Elisabeth')) }}"
                         target="_blank"
                         rel="noopener"
                         class="btn-reset-room"
@@ -256,7 +256,7 @@
                         </p>
                         <div class="room-cta-actions">
                             <a
-                                href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin reservasi ruang perawatan')) }}"
+                                href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode(__('Halo, saya ingin reservasi ruang perawatan')) }}"
                                 target="_blank"
                                 rel="noopener"
                                 class="btn-cta-white"

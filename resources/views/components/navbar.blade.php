@@ -32,10 +32,10 @@
 
                 <span class="top-bar-divider"></span>
 
-                <a href="https://wa.me/6282138907740?text={{ __('Halo, saya ingin melakukan konsultasi') }}" target="_blank" rel="noopener noreferrer" class="top-bar-item item-whatsapp" title="{{ __('Chat WhatsApp RS St. Elisabeth') }}">
+                <a href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode(__('Halo, saya ingin melakukan konsultasi')) }}" target="_blank" rel="noopener noreferrer" class="top-bar-item item-whatsapp" title="{{ __('Chat WhatsApp RS St. Elisabeth') }}">
                     <i class="fab fa-whatsapp item-icon"></i>
                     <span class="item-label">WhatsApp:</span>
-                    <span class="item-val">0821-3890-7740</span>
+                    <span class="item-val">{{ config('services.whatsapp.display') }}</span>
                 </a>
             </div>
 

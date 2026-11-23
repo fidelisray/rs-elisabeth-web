@@ -248,7 +248,7 @@
                     <p class="facility-empty-desc">
                         {{ __('Informasi fasilitas dan layanan saat ini sedang diperbarui. Silakan hubungi tim layanan pelanggan kami untuk informasi lebih lanjut.') }}
                     </p>
-                    <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin melakukan konsultasi')) }}" target="_blank" rel="noopener" class="btn-reset-facility">
+                    <a href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode(__('Halo, saya ingin melakukan konsultasi')) }}" target="_blank" rel="noopener" class="btn-reset-facility">
                         <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
                         <span>{{ __('Hubungi via WhatsApp') }}</span>
                     </a>

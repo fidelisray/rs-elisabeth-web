@@ -119,7 +119,7 @@
                         </a>
                     </div>
                     <div class="col-6 col-md-3 quick-access-option-3">
-                        <a href="https://wa.me/6285600600870?text={{ urlencode(__('Halo, saya ingin membuat janji temu')) }}" class="text-decoration-none h-100">
+                        <a href="https://wa.me/{{ config('services.whatsapp.number') }}?text={{ urlencode(__('Halo, saya ingin membuat janji temu')) }}" class="text-decoration-none h-100">
                             <div class="card card-contact h-100 border-0 rounded-0 shadow-sm">
                                 <div class="card-body d-flex flex-column text-center align-items-center justify-content-center text-white py-4 py-md-5">
                                     <i class="fa-brands fa-whatsapp whatsapp-icon mb-2 mb-md-3"></i>
@@ -437,7 +437,7 @@
                                     <div class="mt-auto border-top pt-4">
                                         <p class="text-muted fw-semibold mb-3">{{ __('Dapatkan penawaran ini sekarang!') }}</p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
+                                            <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center flex-grow-1 justify-content-center">
                                                 <i class="fa-brands fa-whatsapp fs-5 me-2"></i> {{ __('Hubungi Kami') }}
                                             </a>
                                             <button type="button" class="btn btn-light px-4 py-2 rounded-pill fw-semibold flex-grow-0" data-bs-dismiss="modal">{{ __('Tutup') }}</button>
@@ -595,7 +595,7 @@
                                     {{ __('Tim customer care kami siap memberikan informasi seputar layanan medis, rawat inap, dan pendaftaran 24 jam sehari.') }}
                                 </p>
                                 <div class="d-flex flex-wrap gap-2">
-                                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="faq-btn-wa">
+                                    <a href="https://wa.me/{{ config('services.whatsapp.number') }}" target="_blank" rel="noopener noreferrer" class="faq-btn-wa">
                                         <i class="fa-brands fa-whatsapp fs-5"></i> {{ __('Chat WhatsApp') }}
                                     </a>
                                     <a href="{{ route('customer-information.index') }}" class="faq-btn-info">
