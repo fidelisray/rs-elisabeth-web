@@ -42,9 +42,7 @@
             <!-- Kanan: Social Media Elisabeth Hospital -->
             <div class="top-bar-right d-flex align-items-center gap-2">
                 <span class="item-label me-1">{{ __('Ikuti Kami') }}</span>
-                <a href="#" class="btn-social instagram" title="Instagram RS St. Elisabeth" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="btn-social facebook" title="Facebook RS St. Elisabeth" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                <a href="#" class="btn-social youtube" title="YouTube RS St. Elisabeth" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                @include('components.social-links')
             </div>
         </div>
     </div>
@@ -230,6 +228,12 @@
                 <a class="offcanvas-igd-link" href="tel:+62248502244">
                     <i class="fa-solid fa-truck-medical me-2"></i> {{ __('IGD 24 Jam') }}: (024) 8502244
                 </a>
+                <div class="offcanvas-social">
+                    <span class="offcanvas-social-label">{{ __('Ikuti Kami') }}</span>
+                    <div class="offcanvas-social-links">
+                        @include('components.social-links')
+                    </div>
+                </div>
             </div>
         </div>
     </div>
