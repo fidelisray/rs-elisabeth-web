@@ -7,6 +7,7 @@ import {
     getPoliCounts,
     getSpecialtyCounts,
     matchesPoliOptionQuery,
+    shouldShowSpecialtyOption,
     state,
 } from './dokterService.js';
 import { renderDoctorPage, renderModal, renderProfile, openBookingModal, showLoading, showError, t, getLocale, escapeHtml } from './dokterUI.js';
@@ -204,10 +205,13 @@ function updateSpecialtyCounts(keyword = "", selectedPoliCodes = []) {
         }
 
         const isChecked = cb.checked;
+        option.dataset.doctorCount = String(count);
         option.classList.toggle("is-selected", isChecked);
         option.classList.toggle("is-empty", count === 0);
         cb.disabled = count === 0 && !isChecked;
     });
+
+    filterSpecialtyListByQuery();
 }
 
 function updatePoliCounts(keyword = "", selectedSpecialtyCodes = []) {
@@ -230,16 +234,26 @@ function updatePoliCounts(keyword = "", selectedSpecialtyCodes = []) {
 }
 
 function filterSpecialtyListByQuery() {
-    if (!specialtySearchInput) return;
-    const query = specialtySearchInput.value.trim().toLowerCase();
+    const query = specialtySearchInput ? specialtySearchInput.value.trim().toLowerCase() : "";
     let visibleCount = 0;
 
     specialtyOptions.forEach((option) => {
+        const cb = option.querySelector(".specialty-checkbox");
         const nameEl = option.querySelector(".specialty-name");
         const labelText = (nameEl ? nameEl.textContent : option.textContent).toLowerCase();
-        const isMatch = query === "" || labelText.includes(query);
-        option.style.display = isMatch ? "" : "none";
-        if (isMatch) visibleCount++;
+        const hasComputedCount = option.dataset.doctorCount !== undefined;
+        const isVisible = hasComputedCount
+            ? shouldShowSpecialtyOption({
+                count: Number(option.dataset.doctorCount),
+                isChecked: Boolean(cb?.checked),
+                label: labelText,
+                query,
+            })
+            : query === "" || labelText.includes(query);
+
+        option.hidden = !isVisible;
+        option.style.display = isVisible ? "" : "none";
+        if (isVisible) visibleCount++;
     });
 
     if (specialtyEmpty) {
@@ -637,7 +651,7 @@ if (btnSelectAllSpecs) {
     btnSelectAllSpecs.addEventListener("click", () => {
         specialtyCheckboxes.forEach((cb) => {
             const option = cb.closest(".specialty-option");
-            const isVisible = !option || option.style.display !== "none";
+            const isVisible = !option || (!option.hidden && option.style.display !== "none");
             if (isVisible && !cb.disabled) {
                 cb.checked = true;
             }
