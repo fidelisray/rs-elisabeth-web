@@ -35,40 +35,14 @@
     @endphp
 
     <x-hero-section
+        customClass="hero-glossary"
         badgeIcon="fa-solid fa-spell-check"
         :badgeText="__('Kamus Istilah Medis')"
         :title="__('Ensiklopedia Istilah Medis & Kesehatan')"
         :subtitle="__('Temukan penjelasan komprehensif dan mudah dipahami mengenai berbagai istilah medis, nama penyakit, dan nama gangguan kesehatan lainnya')"
         :breadcrumbs="$glossaryBreadcrumbs"
     >
-        <p class="search-label fw-medium mb-2">{{ __('Pencarian Istilah Medis') }}</p>
-
-        <div class="search-box d-flex align-items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-            </svg>
-            <form action="{{ route('glossary.index') }}" method="GET" id="glossarySearchForm" role="search" autocomplete="off" class="d-flex w-100 align-items-center gap-2">
-                <input
-                    type="text"
-                    id="glossarySearchInput"
-                    name="q"
-                    value="{{ $keyword ?? '' }}"
-                    class="form-control"
-                    placeholder="{{ __('Cari istilah medis...') }}"
-                    minlength="2"
-                    autocomplete="off"
-                >
-                @if(!empty($keyword))
-                    <a href="{{ route('glossary.index') }}" id="resetSearchBtn" class="btn btn-outline-danger">
-                        {{ __('Reset') }}
-                    </a>
-                @else
-                    <button type="submit" class="btn btn-outline-success">
-                        {{ __('Cari') }}
-                    </button>
-                @endif
-            </form>
-        </div>
+        <x-glossary-search-box :keyword="$keyword ?? ''" variant="hero" />
 
         <x-slot:rightCol>
             <div class="letter-panel-label fw-medium mb-2">{{ __('Telusuri Cepat Berdasarkan Abjad') }}</div>
@@ -532,6 +506,12 @@
                                                 {{ __('Belum ada istilah medis yang terdaftar untuk awalan huruf') }} <strong>"{{ $activeLetter }}"</strong>.
                                             @endif
                                         </p>
+                                        @if(isset($keyword) && $keyword !== '')
+                                            <p class="empty-title-hint">
+                                                <i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>
+                                                {{ __('Pencarian mencocokkan nama istilah medis. Coba kata kunci seperti Diabetes, Asthma, Stroke, atau Migraine.') }}
+                                            </p>
+                                        @endif
                                         @if(isset($keyword) && $keyword !== '' && !empty($popularTerms))
                                             <div class="empty-popular-suggestions">
                                                 <p class="empty-popular-label mb-2">
@@ -623,52 +603,7 @@
                     </div>
                 </section>
             @endif
-           
         </div>
-
-
-        <section id="glosarium-search-result">
-            <div class="container">
-                {{-- <div id="glossarySearchResults" class="list-group"> --}}
-                    {{-- Hasil pencarian akan di-render di sini oleh JS --}}
-                {{-- </div> --}}
-                <div id="glossarySearchResults" class="my-4" style="display: none;"></div>
-            </div>
-
-
-
-
-
-
-            <div class="modal fade" id="termDetailModal" tabindex="-1" aria-labelledby="termDetailModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content">
-                        
-                        <div class="modal-header bg-primary text-white">
-                            <h5 class="modal-title" id="termDetailModalLabel">{{ __('Detail Istilah Medis') }}</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{{ __('Tutup') }}"></button>
-                        </div>
-                        
-                        <div class="modal-body">
-                            <h4 id="modalTermName" class="mb-3 text-dark fw-bold"></h4>
-                            <p id="modalTermDescription" class="text-secondary" style="line-height: 1.6;"></p>
-                        </div>
-                        
-                        <div class="modal-footer border-top-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Tutup') }}</button>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-
-
-
-
-        </section>
-
-
-
 
         @include('components.footer')
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

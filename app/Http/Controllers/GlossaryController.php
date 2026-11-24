@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\GlossaryPopularityService;
+use App\Services\GlossarySearchService;
 use App\Services\HospitalApiService;
 
 class GlossaryController extends Controller
 {
     public function __construct(
         protected HospitalApiService $apiService,
-        protected GlossaryPopularityService $popularityService
+        protected GlossaryPopularityService $popularityService,
+        protected GlossarySearchService $searchService
     ) {}
 
     
@@ -48,24 +50,10 @@ class GlossaryController extends Controller
             ->values()
             ->toArray();
 
-        // Jika ada pencarian
+        // Jika ada pencarian (pencarian murni khusus judul dengan token-based AND)
         if ($keyword !== '') {
-            $lowerKeyword = strtolower($keyword);
-            $matchedItems = collect($allItems)
-                ->filter(function ($item) use ($lowerKeyword) {
-                    return str_contains(strtolower((string) ($item['istilah'] ?? '')), $lowerKeyword) ||
-                           str_contains(strtolower((string) ($item['slug'] ?? '')), $lowerKeyword) ||
-                           str_contains(strtolower((string) ($item['deskripsi'] ?? '')), $lowerKeyword);
-                })
-                ->values()
-                ->all();
-
-            $glossary = collect($matchedItems)
-                ->groupBy(function ($item) {
-                    return ucfirst(substr($item['istilah'], 0, 2));
-                })
-                ->sortKeys()
-                ->toArray();
+            $matchedItems = $this->searchService->searchTitleMatches($allItems, $keyword);
+            $glossary = $this->searchService->groupByPrefix($matchedItems);
 
             $topRelevantTerms = [];
             $popularTerms = [];
@@ -158,17 +146,17 @@ class GlossaryController extends Controller
         $nextItem = $currentIndex < ($sortedAll->count() - 1) ? $sortedAll->get($currentIndex + 1) : null;
 
         $activeLetter = strtoupper(substr($item['istilah'], 0, 1));
-        $activePrefix = ucfirst(strtolower(substr($item['istilah'], 0, 2)));
+        $activePrefix = $this->searchService->extractPrefix((string) ($item['istilah'] ?? ''));
 
         $samePrefixItems = $sortedAll->filter(function ($entry) use ($item, $activePrefix) {
             return strtolower($entry['slug']) !== strtolower($item['slug'])
-                && strtolower(substr($entry['istilah'], 0, 2)) === strtolower($activePrefix);
+                && strtolower($this->searchService->extractPrefix((string) ($entry['istilah'] ?? ''))) === strtolower($activePrefix);
         });
 
         $sameLetterItems = $sortedAll->filter(function ($entry) use ($item, $activeLetter, $activePrefix) {
             return strtolower($entry['slug']) !== strtolower($item['slug'])
                 && strtoupper(substr($entry['istilah'], 0, 1)) === $activeLetter
-                && strtolower(substr($entry['istilah'], 0, 2)) !== strtolower($activePrefix);
+                && strtolower($this->searchService->extractPrefix((string) ($entry['istilah'] ?? ''))) !== strtolower($activePrefix);
         });
 
         $relatedItems = $samePrefixItems
@@ -209,27 +197,23 @@ class GlossaryController extends Controller
     }
 
     /**
-     * Search via AJAX (Fetch API dari frontend)
-    */
+     * Autocomplete suggestion endpoint (Fetch API dari search-box glosarium).
+     */
     public function search(Request $request)
     {
-        
-        $keyword = trim($request->query('q', ''));
+        $rawQuery = $request->query('q', '');
+        $keyword = is_string($rawQuery) ? trim($rawQuery) : '';
 
-        if (strlen($keyword) < 2) {
-            return response()->json([]);
+        $all = $this->apiService->getLocalGlossary();
+
+        if ($keyword === '') {
+            $payload = $this->searchService->popularSuggestions($all, $this->popularityService, 6);
+        } else {
+            $payload = $this->searchService->suggest($all, $keyword, $this->popularityService, 8);
         }
 
-        $all     = $this->apiService->getLocalGlossary();
-        $results = collect($all)
-            ->filter(fn($item) =>
-                str_contains(strtolower($item['istilah']),   strtolower($keyword)) ||
-                str_contains(strtolower($item['deskripsi']), strtolower($keyword))
-            )
-            ->values()
-            ->take(20); // batasi hasil search
-
-        // dd($results);
-        return response()->json($results);
+        return response()
+            ->json($payload)
+            ->header('Cache-Control', 'private, no-store');
     }
 }

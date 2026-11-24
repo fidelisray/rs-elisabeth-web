@@ -710,5 +710,20 @@
     "Artikel Kesehatan Terkait": "Related Health Articles",
     "Temukan tips pencegahan dan panduan gaya hidup sehat dari tim medis kami.": "Discover prevention tips and healthy lifestyle guides from our medical team.",
     "Istilah medis tidak ditemukan.": "Medical term not found.",
-    "100 Tahun RS St. Elisabeth": "100 Years of St. Elisabeth Hospital"
+    "100 Tahun RS St. Elisabeth": "100 Years of St. Elisabeth Hospital",
+    "Cari nama istilah medis (mis. Diabetes, Asthma, Stroke)...": "Search medical term titles (e.g. Diabetes, Asthma, Stroke)...",
+    "Istilah Populer": "Popular Terms",
+    "Saran Istilah Medis": "Medical Term Suggestions",
+    "Lihat semua :count hasil untuk \":query\"": "View all :count results for \":query\"",
+    "Lihat 1 hasil untuk \":query\"": "View 1 result for \":query\"",
+    "Mencari istilah medis...": "Searching medical terms...",
+    "Tidak ada nama istilah medis yang cocok": "No matching medical term titles found",
+    "Coba gunakan nama istilah medis seperti Diabetes, Asthma, atau Stroke.": "Try searching medical term names such as Diabetes, Asthma, or Stroke.",
+    "Gagal memuat saran pencarian. Tekan Enter untuk mencari.": "Unable to load search suggestions. Press Enter to search.",
+    "Hapus kata pencarian": "Clear search query",
+    "Daftar saran istilah medis": "Medical term search suggestions",
+    "Cari Istilah Lain": "Search Another Term",
+    "Pencarian mencocokkan nama istilah medis. Coba kata kunci seperti Diabetes, Asthma, Stroke, atau Migraine.": "Search matches medical term titles. Try keywords such as Diabetes, Asthma, Stroke, or Migraine.",
+    "Menampilkan :count saran istilah medis": "Showing :count medical term suggestions",
+    "Menampilkan :count istilah populer": "Showing :count popular terms"
 }

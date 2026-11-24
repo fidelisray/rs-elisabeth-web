@@ -70,6 +70,7 @@ class GlossaryLocalizationTest extends TestCase
         $views = [
             resource_path('views/glosarium/index.blade.php'),
             resource_path('views/glosarium/show.blade.php'),
+            resource_path('views/components/glossary-search-box.blade.php'),
         ];
 
         $extractedKeys = [];
