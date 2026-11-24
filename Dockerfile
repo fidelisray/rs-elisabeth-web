@@ -17,86 +17,118 @@ COPY . .
 RUN npm run build
 
 # ==============================================================================
-# STAGE 1: PHP-FPM Application Server
-# Menggunakan Alpine untuk image yang jauh lebih kecil vs Debian.
+# STAGE 1: PHP-FPM & Laravel Scheduler Application Server (Debian 12 Bookworm)
+# Menggunakan Debian 12 (glibc) agar selaras dengan dukungan resmi Tier-1
+# Microsoft ODBC Driver 18 (msodbcsql18) untuk koneksi read-only SQL Server.
 # ==============================================================================
-FROM php:8.4.27-fpm-alpine AS fpm_app
+FROM php:8.4-fpm-bookworm AS fpm_app
 
 LABEL maintainer="RS Elisabeth" \
-      description="PHP-FPM Application Image for RS Elisabeth Web Frontend"
+      description="PHP-FPM & Scheduler Application Image for RS Elisabeth Web Frontend"
 
-# 1. Install Alpine system dependencies
-RUN apk add --no-cache \
-    git \
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Jakarta
+
+# 1. Install Debian system dependencies, Supervisor, dan build libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    supervisor \
     curl \
-    libpng-dev \
-    libxml2-dev \
+    gnupg2 \
+    ca-certificates \
+    apt-transport-https \
+    git \
     zip \
     unzip \
-    icu-dev \
-    libzip-dev \
-    postgresql-dev \
-    zlib-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    oniguruma-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     libwebp-dev \
-    bash
+    libxml2-dev \
+    libzip-dev \
+    libpq-dev \
+    libicu-dev \
+    libonig-dev \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
-# 2. Configure & Install PHP Extensions
+# 2. Install Microsoft ODBC Driver 18 for SQL Server (repo resmi Microsoft Debian 12)
+RUN curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
+    && curl -fsSL https://packages.microsoft.com/config/debian/12/prod.list > /etc/apt/sources.list.d/mssql-release.list \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
+        msodbcsql18 \
+        unixodbc-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# 3. Configure & Install Core PHP Extensions + pdo_sqlsrv & redis (PHP 8.4 compatible)
 # opcache: WAJIB untuk production, meningkatkan performa PHP secara signifikan
-# phpredis: C-extension berkecepatan tinggi untuk in-memory caching, session, dan queue
+# phpredis: C-extension berkecepatan tinggi untuk in-memory caching dan session
+# pdo_sqlsrv: Driver PDO resmi SQL Server untuk referensi read-only dbo.ref_poli_online
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd intl zip opcache \
-    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS linux-headers \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && apk del .build-deps \
-    && rm -rf /tmp/pear \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_pgsql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        intl \
+        zip \
+        opcache
+
+COPY --from=mlocati/php-extension-installer:latest /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions pdo_sqlsrv redis \
+    && rm -f /usr/local/bin/install-php-extensions \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && echo "session.upload_progress.enabled = 0" > "$PHP_INI_DIR/conf.d/security-hardening.ini"
 
-# 3. Install Composer dari official image
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# 4. Install Composer dari official image (akan dihapus dari image runtime setelah autoload selesai)
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# 4. Set working directory
+# 5. Copy konfigurasi Supervisord (PHP-FPM + Laravel Scheduler)
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/log/supervisor
+
+# 6. Set working directory
 WORKDIR /var/www/html
 
-# 5. OPTIMASI LAYER CACHE: Copy manifest Composer dulu.
+# 7. OPTIMASI LAYER CACHE: Copy manifest Composer dulu.
 #    Layer ini hanya rebuild jika composer.json atau composer.lock berubah,
 #    bukan setiap kali ada perubahan file .php atau .blade.php.
 COPY composer.json composer.lock ./
 
-# 6. Install PHP dependencies (tanpa scripts artisan — source belum di-copy)
+# 8. Install PHP dependencies (tanpa scripts artisan karena source belum di-copy)
 RUN composer install --optimize-autoloader --no-dev --no-scripts --no-interaction
 
-# 7. Salin seluruh source code aplikasi
+# 9. Salin seluruh source code aplikasi
 #    File yang ada di .dockerignore (vendor, node_modules, .env, dll) TIDAK disalin
 COPY . .
 
-# 8. Salin hasil build Vite dari Stage 0 (hanya folder public/build)
+# 10. Salin hasil build Vite dari Stage 0 (hanya folder public/build)
 COPY --from=node_builder /app/public/build /var/www/html/public/build
 
-# 9. Re-generate autoloader & jalankan artisan post-install scripts
-#    APP_KEY dummy sebagai ARG (bukan ENV) agar tidak tersimpan di layer image
-#    dan tidak memicu warning Docker Scout. Key ASLI di-inject via env_file saat runtime.
+# 11. Re-generate autoloader, jalankan package:discover dengan dummy APP_KEY, lalu hapus binary composer
+#     APP_KEY dummy sebagai ARG (bukan ENV) agar tidak tersimpan di layer image
+#     dan tidak memicu warning Docker Scout. Key ASLI di-inject via env_file saat runtime.
 ARG BUILD_APP_K="base64:ZG9ja2VyYnVpbGRrZXkxMjM0NTY3ODkwYWJjZGVmZ2g="
-RUN APP_K="${BUILD_APP_K}" composer dump-autoload --optimize \
-    && APP_K="${BUILD_APP_K}" php artisan package:discover --ansi
+RUN APP_KEY="${BUILD_APP_K}" composer dump-autoload --optimize \
+    && APP_KEY="${BUILD_APP_K}" php artisan package:discover --ansi \
+    && rm -f /usr/bin/composer
 
-# 10. Set permissions untuk folder-folder krusial Laravel
+# 12. Set permissions untuk folder-folder krusial Laravel
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 775 /var/www/html/storage \
     && chmod -R 775 /var/www/html/bootstrap/cache
 
-# 11. Salin & set permission entrypoint
+# 13. Salin entrypoint, pastikan line-ending LF (anti CRLF Windows), dan set executable
 COPY docker/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 # PHP-FPM listen di port 9000
 EXPOSE 9000
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["php-fpm"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
