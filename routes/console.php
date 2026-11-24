@@ -27,3 +27,8 @@ Schedule::command('dokter:fetch-all')
 Schedule::command('glossary:refresh')
     ->dailyAt('02:00') // Jalan jam 2 pagi saat server sepi
     ->withoutOverlapping();
+
+// 3. Prune Statistik Harian Popular Terms Kamus Medis (Retensi 90 hari)
+Schedule::command('glossary:prune-stats')
+    ->dailyAt('02:30')
+    ->withoutOverlapping();

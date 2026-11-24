@@ -649,5 +649,17 @@
     "Filter": "Filter",
     "Motto": "Motto",
     "Visi": "Vision",
-    "Misi": "Mission"
+    "Misi": "Mission",
+    "Istilah medis pilihan yang sering dibutuhkan pasien": "Curated medical terms frequently needed by patients",
+    "Berdasarkan pencarian 30 hari terakhir": "Based on searches over the last 30 days",
+    "Arahkan kursor ke istilah untuk melihat intisari": "Hover or focus on a term to preview its summary",
+    "Daftar istilah yang sering dicari": "List of frequently searched terms",
+    "Peringkat": "Rank",
+    "Sedang Tren": "Trending",
+    "Intisari Istilah": "Term Summary",
+    "Klik istilah untuk membaca penjelasan klinis lengkap.": "Select a term to read the full clinical explanation.",
+    "Baca penjelasan lengkap": "Read full explanation",
+    "Hasil Paling Relevan": "Most Relevant Matches",
+    "Istilah dengan kecocokan terdekat untuk pencarian": "Closest matching medical terms for",
+    "Istilah yang Sering Dicari Pasien:": "Terms Frequently Searched by Patients:"
 }

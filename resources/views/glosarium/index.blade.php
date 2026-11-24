@@ -52,13 +52,13 @@
                     type="text"
                     id="glossarySearchInput"
                     name="q"
-                    value="{{ request('q') }}"
+                    value="{{ $keyword ?? '' }}"
                     class="form-control"
                     placeholder="{{ __('Cari istilah medis...') }}"
                     minlength="2"
                     autocomplete="off"
                 >
-                @if(request('q'))
+                @if(!empty($keyword))
                     <a href="{{ route('glossary.index') }}" id="resetSearchBtn" class="btn btn-outline-danger">
                         {{ __('Reset') }}
                     </a>
@@ -168,38 +168,9 @@
                  <section id="explore-services" class="py-5">
                     <div class="container" style="max-width: 1100px;">
                         @php
-                            $flatTerms = [];
-                            foreach ($glossary as $items) {
-                                foreach ($items as $item) {
-                                    $flatTerms[] = $item;
-                                }
-                            }
-                            $totalTerms = count($flatTerms);
-
-                            $popularSlugs = [
-                                'hypertension', 'diabetes', 'type-2-diabetes', 'asthma',
-                                'stroke', 'heart-attack', 'heart-disease', 'anemia',
-                                'migraine-headache', 'allergies', 'dengue-fever',
-                                'typhoid-fever', 'gastritis', 'chronic-kidney-disease',
-                                'kidney-failure', 'pneumonia', 'tuberculosis', 'appendicitis',
-                                'arthritis', 'osteoporosis', 'epilepsy', 'atrial-fibrillation',
-                            ];
-                            $popularTerms = [];
-                            $seen = [];
-                            foreach ($popularSlugs as $slug) {
-                                foreach ($flatTerms as $term) {
-                                    $key = strtolower($term['slug']);
-                                    if (!isset($seen[$key]) && $key === strtolower($slug)) {
-                                        $popularTerms[] = $term;
-                                        $seen[$key] = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            $popularTerms = array_slice($popularTerms, 0, 14);
-                            if (empty($popularTerms)) {
-                                $popularTerms = array_slice($flatTerms, 0, 14);
-                            }
+                            $totalTerms = $totalTerms ?? 0;
+                            $popularTerms = $popularTerms ?? [];
+                            $popularMeta = $popularMeta ?? ['mode' => 'curated'];
                         @endphp
 
                         <!-- Intro -->
@@ -215,28 +186,28 @@
                         <!-- Stats -->
                         <div class="row g-3 mb-4">
                             <div class="col-6 col-md-3">
-                                <div class="stat-card h-100">
+                                <div class="stat-card gsap-explore-stat h-100">
                                     <div class="stat-icon"><i class="fa-solid fa-book-medical"></i></div>
                                     <div class="stat-value">{{ number_format($totalTerms, 0, ',', '.') }}+</div>
                                     <div class="stat-label">{{ __('Istilah Medis') }}</div>
                                 </div>
                             </div>
                             <div class="col-6 col-md-3">
-                                <div class="stat-card h-100">
+                                <div class="stat-card gsap-explore-stat h-100">
                                     <div class="stat-icon"><i class="fa-solid fa-font"></i></div>
                                     <div class="stat-value">{{ count($availableLetters) }}</div>
                                     <div class="stat-label">{{ __('Abjad Tersedia') }}</div>
                                 </div>
                             </div>
                             <div class="col-6 col-md-3">
-                                <div class="stat-card h-100">
+                                <div class="stat-card gsap-explore-stat h-100">
                                     <div class="stat-icon"><i class="fa-solid fa-shield-heart"></i></div>
                                     <div class="stat-value">100%</div>
                                     <div class="stat-label">{{ __('Sumber Terpercaya') }}</div>
                                 </div>
                             </div>
                             <div class="col-6 col-md-3">
-                                <div class="stat-card h-100">
+                                <div class="stat-card gsap-explore-stat h-100">
                                     <div class="stat-icon"><i class="fa-solid fa-circle-info"></i></div>
                                     <div class="stat-value">{{ __('Gratis') }}</div>
                                     <div class="stat-label">{{ __('Akses Informasi') }}</div>
@@ -245,25 +216,77 @@
                         </div>
 
                         <!-- Popular terms -->
-                        <div class="bg-white rounded-4 shadow-sm border p-4 p-md-5 mb-4">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
-                                <h3 class="h5 fw-bold mb-0" style="color: var(--brand-blue-dark);">
-                                    <i class="fa-solid fa-fire-flame-curved me-2" style="color: var(--brand-blue-light);"></i>{{ __('Istilah yang Sering Dicari') }}
-                                </h3>
-                                {{-- 
-                                <a href="#" class="text-decoration-none fw-semibold" style="color: var(--brand-blue-light);"
-                                   onclick="document.getElementById('glossarySearchInput').focus(); return false;">
-                                    {{ __('Cari sendiri') }} <i class="fa-solid fa-arrow-right ms-1"></i>
-                                </a>
-                                 --}}
+                        <div class="popular-terms-card bg-white rounded-4 shadow-sm border p-4 p-md-5 mb-4 gsap-explore-popular">
+                            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2 mb-3">
+                                <div>
+                                    <h3 class="h5 fw-bold mb-1" style="color: var(--brand-blue-dark);">
+                                        <i class="fa-solid fa-fire-flame-curved me-2" style="color: var(--brand-blue-light);" aria-hidden="true"></i>{{ __('Istilah yang Sering Dicari') }}
+                                    </h3>
+                                    <p class="popular-terms-subtitle mb-0">
+                                        @if(($popularMeta['mode'] ?? 'curated') === 'curated')
+                                            {{ __('Istilah medis pilihan yang sering dibutuhkan pasien') }}
+                                        @else
+                                            {{ __('Berdasarkan pencarian 30 hari terakhir') }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <span class="popular-preview-hint d-none d-md-inline-flex align-items-center gap-1">
+                                    <i class="fa-regular fa-hand-pointer" aria-hidden="true"></i>
+                                    <span>{{ __('Arahkan kursor ke istilah untuk melihat intisari') }}</span>
+                                </span>
                             </div>
                             @if(!empty($popularTerms))
-                                <div class="d-flex flex-wrap gap-2">
-                                    @foreach($popularTerms as $term)
-                                        <a href="{{ route('glossary.show', urlencode($term['slug'])) }}" class="term-pill">
-                                            {{ $term['istilah'] }}
+                                @php
+                                    $firstTerm = $popularTerms[0];
+                                    $firstTermUrl = route('glossary.show', ['term' => $firstTerm['slug'], 'src' => 'pop']);
+                                @endphp
+                                <div class="popular-pills-wrap d-flex flex-wrap gap-2" role="list" aria-label="{{ __('Daftar istilah yang sering dicari') }}">
+                                    @foreach($popularTerms as $idx => $term)
+                                        @php
+                                            $rank = (int) ($term['rank'] ?? ($idx + 1));
+                                            $isTopThree = $rank <= 3;
+                                            $isTrending = !empty($term['is_trending']);
+                                            $termUrl = route('glossary.show', ['term' => $term['slug'], 'src' => 'pop']);
+                                            $termExcerpt = $term['lead_excerpt'] ?? '';
+                                        @endphp
+                                        <a
+                                            href="{{ $termUrl }}"
+                                            role="listitem"
+                                            class="term-pill gsap-explore-pill {{ $isTopThree ? 'term-pill--top' : '' }} {{ $isTrending ? 'term-pill--trending' : '' }} {{ $idx === 0 ? 'is-preview-active' : '' }}"
+                                            data-term-title="{{ $term['istilah'] }}"
+                                            data-term-excerpt="{{ $termExcerpt }}"
+                                            data-term-url="{{ $termUrl }}"
+                                            data-term-rank="{{ $rank }}"
+                                        >
+                                            @if($isTopThree)
+                                                <span class="term-pill-rank" aria-label="{{ __('Peringkat') }} {{ $rank }}">#{{ $rank }}</span>
+                                            @endif
+                                            <span class="term-pill-label">{{ $term['istilah'] }}</span>
+                                            @if($isTrending)
+                                                <span class="term-pill-trend-tag">
+                                                    <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+                                                    <span>{{ __('Sedang Tren') }}</span>
+                                                </span>
+                                            @endif
                                         </a>
                                     @endforeach
+                                </div>
+
+                                <div class="popular-preview-strip mt-3" id="popularTermPreview" aria-live="polite">
+                                    <div class="popular-preview-header">
+                                        <span class="popular-preview-badge">
+                                            <i class="fa-solid fa-stethoscope" aria-hidden="true"></i>
+                                            <span>{{ __('Intisari Istilah') }}</span>
+                                        </span>
+                                        <strong class="popular-preview-title" id="popularPreviewTitle">{{ $firstTerm['istilah'] }}</strong>
+                                    </div>
+                                    <p class="popular-preview-text mb-2" id="popularPreviewExcerpt">
+                                        {{ $firstTerm['lead_excerpt'] ?? __('Klik istilah untuk membaca penjelasan klinis lengkap.') }}
+                                    </p>
+                                    <a href="{{ $firstTermUrl }}" class="popular-preview-link" id="popularPreviewLink">
+                                        <span>{{ __('Baca penjelasan lengkap') }}</span>
+                                        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
                                 </div>
                             @else
                                 <p class="text-muted mb-0">
@@ -394,9 +417,48 @@
                         @endif
 
                         <!-- Main Asymmetric Directory Grid -->
+                        @php
+                            $termLinkSource = (isset($keyword) && $keyword !== '') ? 'search' : 'dir';
+                        @endphp
                         <div class="glosarium-container">
                             <section class="content-body" id="glossaryGroupsContainer">
                                 @if(count($glossary) > 0)
+                                    @if(isset($keyword) && $keyword !== '' && !empty($topRelevantTerms))
+                                        <article class="relevant-matches-card mb-4" aria-labelledby="topRelevantHeading">
+                                            <div class="relevant-matches-header">
+                                                <div class="relevant-matches-badge" aria-hidden="true">
+                                                    <i class="fa-solid fa-bullseye"></i>
+                                                </div>
+                                                <div class="relevant-matches-info">
+                                                    <h3 id="topRelevantHeading" class="relevant-matches-title">
+                                                        {{ __('Hasil Paling Relevan') }}
+                                                    </h3>
+                                                    <span class="relevant-matches-sub">
+                                                        {{ __('Istilah dengan kecocokan terdekat untuk pencarian') }} "{{ $keyword }}"
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="relevant-matches-grid">
+                                                @foreach($topRelevantTerms as $relTerm)
+                                                    <a
+                                                        href="{{ route('glossary.show', ['term' => $relTerm['slug'], 'src' => 'search']) }}"
+                                                        class="relevant-match-item"
+                                                    >
+                                                        <div class="relevant-match-top">
+                                                            <strong class="relevant-match-name">{{ $relTerm['istilah'] }}</strong>
+                                                            <span class="term-card-arrow" aria-hidden="true">
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                            </span>
+                                                        </div>
+                                                        @if(!empty($relTerm['lead_excerpt']))
+                                                            <p class="relevant-match-excerpt mb-0">{{ $relTerm['lead_excerpt'] }}</p>
+                                                        @endif
+                                                    </a>
+                                                @endforeach
+                                            </div>
+                                        </article>
+                                    @endif
+
                                     @foreach($glossary as $prefix => $items)
                                         @php $prefixId = 'prefix-' . \Illuminate\Support\Str::slug($prefix); @endphp
                                         <article class="glossary-group-card" id="{{ $prefixId }}" data-prefix="{{ $prefix }}">
@@ -420,7 +482,7 @@
                                             <div class="glossary-terms-grid">
                                                 @foreach($items as $item)
                                                     <a
-                                                        href="{{ route('glossary.show', urlencode($item['slug'])) }}"
+                                                        href="{{ route('glossary.show', ['term' => $item['slug'], 'src' => $termLinkSource]) }}"
                                                         class="glossary-term-card"
                                                         data-term="{{ strtolower($item['istilah']) }}"
                                                     >
@@ -463,6 +525,23 @@
                                                 {{ __('Belum ada istilah medis yang terdaftar untuk awalan huruf') }} <strong>"{{ $activeLetter }}"</strong>.
                                             @endif
                                         </p>
+                                        @if(isset($keyword) && $keyword !== '' && !empty($popularTerms))
+                                            <div class="empty-popular-suggestions">
+                                                <p class="empty-popular-label mb-2">
+                                                    {{ __('Istilah yang Sering Dicari Pasien:') }}
+                                                </p>
+                                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                                    @foreach($popularTerms as $suggestedTerm)
+                                                        <a
+                                                            href="{{ route('glossary.show', ['term' => $suggestedTerm['slug'], 'src' => 'pop']) }}"
+                                                            class="term-pill"
+                                                        >
+                                                            <span class="term-pill-label">{{ $suggestedTerm['istilah'] }}</span>
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
                                         <a href="{{ route('glossary.index') }}" class="btn-reset-filter text-decoration-none">
                                             <i class="fa-solid fa-arrow-left me-1"></i> {{ __('Kembali ke Kamus Utama') }}
                                         </a>
