@@ -16,6 +16,7 @@ services:
     environment:
       # Override nilai kritis dari .env agar sesuai environment Docker.
       # Nilai ini mengoverride apapun yang ada di .env
+      - TZ=Asia/Jakarta
       - APP_ENV=production
       - APP_DEBUG=false
       - LOG_LEVEL=error
@@ -49,35 +50,7 @@ services:
       start_period: 60s
 
   # ---------------------------------------------------------
-  # 2. SCHEDULER (Laravel Cron / Schedule Worker)
-  # ---------------------------------------------------------
-  web_scheduler:
-    # image: fidelisray/rs-elisabeth-web:latest
-    image: 172.17.12.17:5051/fidelisray/rs-elisabeth-web/rs-elisabeth-web-app:latest
-    container_name: rses_web_scheduler
-    restart: unless-stopped
-    env_file:
-      - .env
-    environment:
-      - APP_ENV=production
-      - DB_HOST=web_db
-      - REDIS_HOST=web_redis
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD:?REDIS_PASSWORD belum diset (isi di .env atau environment)}
-      - CACHE_STORE=redis
-      - QUEUE_CONNECTION=sync
-    # Override command bawaan (php-fpm) menjadi worker scheduler
-    command: ["php", "artisan", "schedule:work"]
-    networks:
-      - rses_web_network
-    depends_on:
-      web_app:
-        condition: service_healthy
-      web_redis:
-        condition: service_healthy
-
-  # ---------------------------------------------------------
-  # 3. NGINX (Web Server)
+  # 2. NGINX (Web Server)
   # ---------------------------------------------------------
   web_nginx:
     image: nginx:alpine
@@ -103,7 +76,7 @@ services:
       start_period: 15s
 
   # ---------------------------------------------------------
-  # 4. DATABASE POSTGRESQL
+  # 3. DATABASE POSTGRESQL
   # ---------------------------------------------------------
   web_db:
     image: postgres:15-alpine
@@ -115,6 +88,7 @@ services:
     # ports:
     #   - "5433:5432"
     environment:
+      TZ: Asia/Jakarta
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -130,7 +104,7 @@ services:
       start_period: 10s
 
   # ---------------------------------------------------------
-  # 5. REDIS (In-Memory Cache & Session Store)
+  # 4. REDIS (In-Memory Cache & Session Store)
   # ---------------------------------------------------------
   web_redis:
     image: redis:7-alpine
