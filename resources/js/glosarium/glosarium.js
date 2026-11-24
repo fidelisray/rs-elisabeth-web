@@ -186,7 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterEmptyCard = document.getElementById("glossaryFilterEmpty");
     const filterKeywordEl = document.getElementById("glossaryFilterKeyword");
     const visibleCountEl = document.getElementById("glossaryVisibleCount");
+    const visibleTermsLabelEl = document.getElementById("glossaryVisibleTermsLabel");
     const visibleGroupsEl = document.getElementById("glossaryVisibleGroups");
+    const visibleGroupsLabelEl = document.getElementById("glossaryVisibleGroupsLabel");
+    const sideGroupsCountEl = document.getElementById("glossarySideGroupsCount");
+    const sideGroupsLabelEl = document.getElementById("glossarySideGroupsLabel");
     const relevantMatchesCard = document.querySelector(".relevant-matches-card");
     const stickySidebar = document.querySelector(".glossary-sidebar-sticky");
     const mainNavbar = document.getElementById("main-navbar");
@@ -354,6 +358,16 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function syncCountLabel(labelEl, count) {
+        if (!labelEl) {
+            return;
+        }
+        const text = count === 1 ? labelEl.dataset.singular : labelEl.dataset.plural;
+        if (text) {
+            labelEl.textContent = text;
+        }
+    }
+
     function applyLocalFilter(rawQuery) {
         const query = rawQuery.trim().toLowerCase();
         let totalVisibleTerms = 0;
@@ -371,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
         groupCards.forEach((groupCard) => {
             const termCards = Array.from(groupCard.querySelectorAll(".glossary-term-card"));
             const groupCountEl = groupCard.querySelector(".group-visible-count");
+            const groupLabelEl = groupCard.querySelector(".group-visible-label");
             let visibleInGroup = 0;
 
             termCards.forEach((termCard) => {
@@ -390,6 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (groupCountEl) {
                 groupCountEl.textContent = visibleInGroup;
             }
+            syncCountLabel(groupLabelEl, visibleInGroup);
 
             const hasVisible = visibleInGroup > 0;
             groupCard.style.display = hasVisible ? "" : "none";
@@ -400,6 +416,10 @@ document.addEventListener("DOMContentLoaded", () => {
             prefixPills.forEach((pill) => {
                 if (pill.dataset.target === groupCard.id) {
                     pill.style.display = hasVisible ? "" : "none";
+                    const pillCountEl = pill.querySelector(".prefix-count");
+                    if (pillCountEl) {
+                        pillCountEl.textContent = visibleInGroup;
+                    }
                 }
             });
         });
@@ -407,9 +427,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (visibleCountEl) {
             visibleCountEl.textContent = totalVisibleTerms;
         }
+        syncCountLabel(visibleTermsLabelEl, totalVisibleTerms);
+
         if (visibleGroupsEl) {
             visibleGroupsEl.textContent = totalVisibleGroups;
         }
+        syncCountLabel(visibleGroupsLabelEl, totalVisibleGroups);
+
+        if (sideGroupsCountEl) {
+            sideGroupsCountEl.textContent = totalVisibleGroups;
+        }
+        syncCountLabel(sideGroupsLabelEl, totalVisibleGroups);
 
         if (filterEmptyCard) {
             const isEmpty = totalVisibleTerms === 0 && query.length > 0;
