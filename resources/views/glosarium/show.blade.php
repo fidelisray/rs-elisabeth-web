@@ -24,20 +24,26 @@
 
         @php
             $letter = $activeLetter ?? strtoupper(substr($item['istilah'] ?? 'A', 0, 1));
-            $prefix = $activePrefix ?? ucfirst(strtolower(substr($item['istilah'] ?? 'Aa', 0, 2)));
-        @endphp
-
-        @include('components.hero-section', [
-            'badgeIcon' => 'fa-solid fa-file-medical',
-            'badgeText' => __('Definisi Istilah Medis'),
-            'title' => $item['istilah'] ?? '',
-            'breadcrumbs' => [
+            $prefix = $activePrefix ?? ucfirst(strtolower(trim(substr($item['istilah'] ?? 'Aa', 0, 2))));
+            $detailBreadcrumbs = [
                 ['label' => __('Beranda'), 'url' => url('/')],
                 ['label' => __('Kamus Medis'), 'url' => route('glossary.index')],
                 ['label' => __('Awalan') . " '{$letter}'", 'url' => route('glossary.index', ['letter' => $letter])],
                 ['label' => $item['istilah'] ?? ''],
-            ],
-        ])
+            ];
+        @endphp
+
+        <x-hero-section
+            customClass="hero-glossary hero-glossary-detail"
+            badgeIcon="fa-solid fa-file-medical"
+            :badgeText="__('Definisi Istilah Medis')"
+            :title="$item['istilah'] ?? ''"
+            :breadcrumbs="$detailBreadcrumbs"
+        >
+            <x-slot:rightCol>
+                <x-glossary-search-box variant="detail" idPrefix="glossaryDetailSearch" />
+            </x-slot:rightCol>
+        </x-hero-section>
 
         <section class="glosarium-detail py-4 py-lg-5">
             <div class="container">

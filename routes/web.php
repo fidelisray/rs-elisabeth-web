@@ -98,7 +98,7 @@ Route::redirect('/kuisioner/rawat-inap', '/kuesioner/rawat-inap');
 // Route::prefix('kamus-medis')->name('glossary.')->group(function () {
 Route::prefix('glosarium')->name('glossary.')->group(function () {
     Route::get('/',       [GlossaryController::class, 'index'])  ->name('index');
-    Route::get('/cari',   [GlossaryController::class, 'search']) ->name('search');
+    Route::get('/cari',   [GlossaryController::class, 'search']) ->name('search')->middleware('throttle:120,1');
     Route::get('/{term}', [GlossaryController::class, 'show'])   ->name('show');
 });
 
