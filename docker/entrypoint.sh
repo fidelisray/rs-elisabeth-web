@@ -1,9 +1,13 @@
 #!/bin/sh
 set -e
 
-if [ "$1" != "php-fpm" ]; then
-    exec "$@"
-fi
+case "$1" in
+    *supervisord*|php-fpm)
+        ;;
+    *)
+        exec "$@"
+        ;;
+esac
 rm -f /tmp/app_healthy
 
 echo "================================================================"
@@ -42,10 +46,13 @@ echo "[8/8] Syncing public assets to shared volume for Nginx..."
 mkdir -p /var/www/html/public_shared
 cp -rp /var/www/html/public/. /var/www/html/public_shared/
 
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
 touch /tmp/app_healthy
 
 echo "================================================================"
-echo " Bootstrap complete! Starting PHP-FPM..."
+echo " Bootstrap complete! Starting Supervisord (PHP-FPM & Scheduler)..."
 echo "================================================================"
 
 exec "$@"
