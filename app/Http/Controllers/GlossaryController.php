@@ -150,7 +150,7 @@ class GlossaryController extends Controller
                 || strtolower($i['istilah']) === $decodedTerm
         );
 
-        abort_if($currentIndex === false, 404, 'Istilah medis tidak ditemukan.');
+        abort_if($currentIndex === false, 404, __('Istilah medis tidak ditemukan.'));
 
         $item = $sortedAll->get($currentIndex);
         $this->popularityService->recordTermView($request, (string) ($item['slug'] ?? $decodedTerm));
