@@ -188,7 +188,7 @@
                             <div class="col-6 col-md-3">
                                 <div class="stat-card gsap-explore-stat h-100">
                                     <div class="stat-icon"><i class="fa-solid fa-book-medical"></i></div>
-                                    <div class="stat-value">{{ number_format($totalTerms, 0, ',', '.') }}+</div>
+                                    <div class="stat-value">{{ app()->getLocale() === 'en' ? number_format($totalTerms, 0, '.', ',') : number_format($totalTerms, 0, ',', '.') }}+</div>
                                     <div class="stat-label">{{ __('Istilah Medis') }}</div>
                                 </div>
                             </div>
@@ -355,9 +355,13 @@
                                     <p class="glossary-directory-meta mb-0">
                                         {{ __('Menampilkan') }}
                                         <strong id="glossaryVisibleCount">{{ $totalGlossaryTerms }}</strong>
-                                        {{ __('istilah medis dalam') }}
+                                        <span id="glossaryVisibleTermsLabel"
+                                              data-singular="{{ trans_choice('istilah medis dalam', 1) }}"
+                                              data-plural="{{ trans_choice('istilah medis dalam', 2) }}">{{ trans_choice('istilah medis dalam', $totalGlossaryTerms) }}</span>
                                         <strong id="glossaryVisibleGroups">{{ $totalPrefixGroups }}</strong>
-                                        {{ __('kelompok sub-awalan') }}
+                                        <span id="glossaryVisibleGroupsLabel"
+                                              data-singular="{{ trans_choice('kelompok sub-awalan', 1) }}"
+                                              data-plural="{{ trans_choice('kelompok sub-awalan', 2) }}">{{ trans_choice('kelompok sub-awalan', $totalPrefixGroups) }}</span>
                                     </p>
                                 @endif
                             </div>
@@ -475,7 +479,10 @@
                                                     </span>
                                                 </div>
                                                 <span class="glossary-group-count">
-                                                    <strong class="group-visible-count">{{ count($items) }}</strong> {{ __('Istilah') }}
+                                                    <strong class="group-visible-count">{{ count($items) }}</strong>
+                                                    <span class="group-visible-label"
+                                                          data-singular="{{ trans_choice('Istilah', 1) }}"
+                                                          data-plural="{{ trans_choice('Istilah', 2) }}">{{ trans_choice('Istilah', count($items)) }}</span>
                                                 </span>
                                             </div>
 
@@ -560,7 +567,12 @@
                                                     </span>
                                                     <h3 class="side-card-title mb-0">{{ __('Navigasi Sub-Awalan') }}</h3>
                                                 </div>
-                                                <span class="side-card-badge">{{ $totalPrefixGroups }} {{ __('Grup') }}</span>
+                                                <span class="side-card-badge">
+                                                    <span id="glossarySideGroupsCount">{{ $totalPrefixGroups }}</span>
+                                                    <span id="glossarySideGroupsLabel"
+                                                          data-singular="{{ trans_choice('Grup', 1) }}"
+                                                          data-plural="{{ trans_choice('Grup', 2) }}">{{ trans_choice('Grup', $totalPrefixGroups) }}</span>
+                                                </span>
                                             </div>
                                             <p class="side-card-desc">
                                                 {{ __('Klik kode sub-awalan di bawah untuk melompat langsung ke kelompok istilah yang Anda cari.') }}
