@@ -136,7 +136,7 @@
                     @if(!empty($prevItem) || !empty($nextItem))
                         <nav class="glossary-seq-grid" aria-label="{{ __('Navigasi istilah berurutan') }}">
                             @if(!empty($prevItem))
-                                <a href="{{ route('glossary.show', urlencode($prevItem['slug'])) }}" class="glossary-seq-card seq-prev gsap-detail-reveal">
+                                <a href="{{ route('glossary.show', ['term' => $prevItem['slug'], 'src' => 'rel']) }}" class="glossary-seq-card seq-prev gsap-detail-reveal">
                                     <span class="seq-arrow" aria-hidden="true">
                                         <i class="fa-solid fa-arrow-left"></i>
                                     </span>
@@ -155,7 +155,7 @@
                             @endif
 
                             @if(!empty($nextItem))
-                                <a href="{{ route('glossary.show', urlencode($nextItem['slug'])) }}" class="glossary-seq-card seq-next gsap-detail-reveal">
+                                <a href="{{ route('glossary.show', ['term' => $nextItem['slug'], 'src' => 'rel']) }}" class="glossary-seq-card seq-next gsap-detail-reveal">
                                     <div class="seq-meta text-md-end">
                                         <span class="seq-label">{{ __('Istilah Selanjutnya') }}</span>
                                         <strong class="seq-title">{{ $nextItem['istilah'] }}</strong>
@@ -198,7 +198,7 @@
 
                             <div class="glossary-terms-grid">
                                 @foreach($relatedItems as $rel)
-                                    <a href="{{ route('glossary.show', urlencode($rel['slug'])) }}" class="glossary-term-card gsap-related-item">
+                                    <a href="{{ route('glossary.show', ['term' => $rel['slug'], 'src' => 'rel']) }}" class="glossary-term-card gsap-related-item">
                                         <span class="term-card-dot" aria-hidden="true"></span>
                                         <span class="term-card-name">{{ $rel['istilah'] }}</span>
                                         <span class="term-card-arrow" aria-hidden="true">
