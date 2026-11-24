@@ -1,9 +1,12 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { initGlossarySearchBoxes } from "./glossary-search";
 
 gsap.registerPlugin(ScrollTrigger);
 
 document.addEventListener("DOMContentLoaded", () => {
+    initGlossarySearchBoxes();
+
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Strip internal attribution parameter (?src=...) from the browser URL bar after server tracking.

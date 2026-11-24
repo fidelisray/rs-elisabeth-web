@@ -22,6 +22,10 @@ class GlossaryPopularityService
 
     protected const BOT_PATTERN = '/bot|crawl|spider|slurp|mediapartners|adsbot|bingpreview|facebookexternalhit|whatsapp|telegrambot|twitterbot|linkedinbot|embedly|quora|pinterest|slackbot|discordbot|applebot|yandex|baiduspider|duckduckbot|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|gptbot|claudebot|ccbot|lighthouse|headlesschrome|phantomjs|puppeteer|playwright|curl|wget|python-requests|go-http-client|axios|okhttp|postmanruntime|insomnia|uptimerobot|pingdom|statuscake|datadog|newrelic/i';
 
+    public function __construct(
+        protected ?GlossarySearchService $searchService = null
+    ) {}
+
     public function recordTermView(Request $request, string $canonicalSlug, bool $deferToTerminating = true): void
     {
         $slug = strtolower(trim($canonicalSlug));
@@ -708,69 +712,23 @@ class GlossaryPopularityService
     public function getTopRelevantSearchMatches(array $matchedItems, string $keyword, ?int $limit = null): array
     {
         $limit = max(1, $limit ?? (int) config('glossary.top_relevant_search_limit', 6));
-        $q = strtolower(trim($keyword));
+        $trimmed = trim($keyword);
 
-        if ($q === '' || empty($matchedItems)) {
+        if ($trimmed === '' || empty($matchedItems)) {
             return [];
         }
 
-        $quotedQ = preg_quote($q, '/');
-        $wholeWordPattern = '/(?<![\p{L}\p{N}_])' . $quotedQ . '(?![\p{L}\p{N}_])/iu';
-        $scored = [];
+        $searchService = $this->searchService ??= new GlossarySearchService();
+        $ranked = $searchService->searchTitleMatches($matchedItems, $trimmed);
+        $topMatches = array_slice($ranked, 0, $limit);
 
-        foreach ($matchedItems as $item) {
-            $title = strtolower(trim((string) ($item['istilah'] ?? '')));
-            $slug = strtolower(trim((string) ($item['slug'] ?? '')));
+        return array_map(function (array $item): array {
             $rawDesc = trim((string) ($item['deskripsi'] ?? ''));
-            $cleanDesc = trim((string) preg_replace('/\s+/u', ' ', strip_tags($rawDesc)));
-            $sentences = $cleanDesc !== ''
-                ? preg_split('/(?<=[.!?])\s+/u', $cleanDesc, 2, PREG_SPLIT_NO_EMPTY)
-                : [];
-            $firstSentenceLower = strtolower(trim((string) ($sentences[0] ?? $cleanDesc)));
-            $leadExcerpt = $this->extractLeadExcerpt($rawDesc);
-            $descLower = strtolower($cleanDesc);
 
-            $score = 0;
-
-            if ($title === $q || $slug === $q) {
-                $score += 100;
-            } elseif (str_starts_with($title, $q) || str_starts_with($slug, $q)) {
-                $score += 60;
-            } elseif (str_contains($title, $q) || str_contains($slug, $q)) {
-                $score += 40;
-            }
-
-            if ($firstSentenceLower !== '' && preg_match($wholeWordPattern, $firstSentenceLower)) {
-                $score += 25;
-            } elseif ($firstSentenceLower !== '' && str_contains($firstSentenceLower, $q)) {
-                $score += 15;
-            } elseif (str_contains($descLower, $q)) {
-                $score += 5;
-            }
-
-            if ($score > 0) {
-                $scored[] = array_merge($item, [
-                    'relevance_score' => $score,
-                    'lead_excerpt' => $leadExcerpt,
-                ]);
-            }
-        }
-
-        usort($scored, function (array $a, array $b): int {
-            $scoreDiff = $b['relevance_score'] <=> $a['relevance_score'];
-            if ($scoreDiff !== 0) {
-                return $scoreDiff;
-            }
-
-            $lenDiff = mb_strlen((string) ($a['istilah'] ?? '')) <=> mb_strlen((string) ($b['istilah'] ?? ''));
-            if ($lenDiff !== 0) {
-                return $lenDiff;
-            }
-
-            return strcmp(strtolower((string) ($a['istilah'] ?? '')), strtolower((string) ($b['istilah'] ?? '')));
-        });
-
-        return array_slice($scored, 0, $limit);
+            return array_merge($item, [
+                'lead_excerpt' => $this->extractLeadExcerpt($rawDesc),
+            ]);
+        }, $topMatches);
     }
 
     public function getDetailedStatsReport(array $allGlossaryItems, ?int $limit = null): array
