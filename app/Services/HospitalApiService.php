@@ -11,6 +11,7 @@ class HospitalApiService
     protected string $baseUrl;
     protected string $apiKey;
     protected int $timeout;
+    protected array $localGlossaryMemo = [];
 
     // protected const TOKEN_CACHE_KEY = null;
     protected const TOKEN_CACHE_KEY = 'hospital_api_token';
@@ -254,7 +255,11 @@ class HospitalApiService
 
         $cacheKey = "local_glossary_{$locale}_{$mtime}";
 
-        return Cache::remember($cacheKey, $ttl, function () use ($path) {
+        if (isset($this->localGlossaryMemo[$cacheKey])) {
+            return $this->localGlossaryMemo[$cacheKey];
+        }
+
+        $items = Cache::remember($cacheKey, $ttl, function () use ($path) {
             $raw = file_get_contents($path);
 
             if ($raw === false) {
@@ -286,6 +291,10 @@ class HospitalApiService
                 $decoded['data']
             )));
         });
+
+        $this->localGlossaryMemo[$cacheKey] = $items;
+
+        return $items;
     }
 
     /**

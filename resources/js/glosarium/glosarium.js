@@ -6,10 +6,22 @@ gsap.registerPlugin(ScrollTrigger);
 document.addEventListener("DOMContentLoaded", () => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // =========================================================================
-    // 1. HALAMAN DETAIL ISTILAH MEDIS (glosarium/show.blade.php)
-    // =========================================================================
+    // Strip internal attribution parameter (?src=...) from the browser URL bar after server tracking.
     const detailShell = document.querySelector(".glossary-detail-shell");
+    if (detailShell && window.history && typeof window.history.replaceState === "function") {
+        try {
+            const currentUrl = new URL(window.location.href);
+            if (currentUrl.searchParams.has("src")) {
+                currentUrl.searchParams.delete("src");
+                const cleanQuery = currentUrl.searchParams.toString();
+                const cleanUrl = currentUrl.pathname + (cleanQuery ? `?${cleanQuery}` : "") + currentUrl.hash;
+                window.history.replaceState(window.history.state || {}, document.title, cleanUrl);
+            }
+        } catch (err) {
+            // Fallback silently if URL constructor fails.
+        }
+    }
+
     if (detailShell && !prefersReducedMotion) {
         const revealBlocks = Array.from(detailShell.querySelectorAll(".gsap-detail-reveal"));
         const paragraphs = Array.from(detailShell.querySelectorAll(".gsap-detail-paragraph"));
@@ -73,9 +85,95 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // =========================================================================
-    // 2. HALAMAN DIREKTORI GLOSARIUM (glosarium/index.blade.php)
-    // =========================================================================
+    // Interactive Quick-Preview Strip & entrance animation on Explore landing page.
+    const previewContainer = document.getElementById("popularTermPreview");
+    const previewTitleEl = document.getElementById("popularPreviewTitle");
+    const previewExcerptEl = document.getElementById("popularPreviewExcerpt");
+    const previewLinkEl = document.getElementById("popularPreviewLink");
+    const popularPills = Array.from(document.querySelectorAll(".term-pill[data-term-excerpt]"));
+
+    if (previewContainer && popularPills.length > 0) {
+        const updatePopularPreview = (pill) => {
+            const title = pill.dataset.termTitle || "";
+            const excerpt = pill.dataset.termExcerpt || "";
+            const url = pill.dataset.termUrl || pill.getAttribute("href") || "#";
+
+            if (!title) {
+                return;
+            }
+
+            popularPills.forEach((p) => p.classList.toggle("is-preview-active", p === pill));
+
+            if (previewTitleEl) {
+                previewTitleEl.textContent = title;
+            }
+            if (previewExcerptEl && excerpt) {
+                previewExcerptEl.textContent = excerpt;
+            }
+            if (previewLinkEl) {
+                previewLinkEl.setAttribute("href", url);
+            }
+        };
+
+        popularPills.forEach((pill) => {
+            pill.addEventListener("mouseenter", () => updatePopularPreview(pill));
+            pill.addEventListener("focus", () => updatePopularPreview(pill));
+        });
+    }
+
+    const exploreSection = document.getElementById("explore-services");
+    if (exploreSection && !prefersReducedMotion) {
+        const statCards = Array.from(exploreSection.querySelectorAll(".gsap-explore-stat"));
+        const popularCard = exploreSection.querySelector(".gsap-explore-popular");
+        const explorePills = Array.from(exploreSection.querySelectorAll(".gsap-explore-pill"));
+
+        if (statCards.length > 0) {
+            gsap.fromTo(
+                statCards,
+                { opacity: 0, y: 18 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.45,
+                    stagger: 0.06,
+                    ease: "power3.out",
+                    clearProps: "transform,opacity",
+                }
+            );
+        }
+
+        if (popularCard) {
+            gsap.fromTo(
+                popularCard,
+                { opacity: 0, y: 22 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    delay: 0.1,
+                    ease: "power3.out",
+                    clearProps: "transform,opacity",
+                }
+            );
+        }
+
+        if (explorePills.length > 0) {
+            gsap.fromTo(
+                explorePills,
+                { opacity: 0, y: 10 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.34,
+                    stagger: 0.022,
+                    delay: 0.16,
+                    ease: "power2.out",
+                    clearProps: "transform,opacity",
+                }
+            );
+        }
+    }
+
     const groupCards = Array.from(document.querySelectorAll(".glossary-group-card"));
     if (groupCards.length === 0) {
         return;
@@ -89,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const filterKeywordEl = document.getElementById("glossaryFilterKeyword");
     const visibleCountEl = document.getElementById("glossaryVisibleCount");
     const visibleGroupsEl = document.getElementById("glossaryVisibleGroups");
+    const relevantMatchesCard = document.querySelector(".relevant-matches-card");
     const stickySidebar = document.querySelector(".glossary-sidebar-sticky");
     const mainNavbar = document.getElementById("main-navbar");
 
@@ -263,6 +362,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (filterClearBtn) {
             filterClearBtn.style.display = query.length > 0 ? "inline-flex" : "none";
+        }
+
+        if (relevantMatchesCard) {
+            relevantMatchesCard.style.display = query.length > 0 ? "none" : "";
         }
 
         groupCards.forEach((groupCard) => {
