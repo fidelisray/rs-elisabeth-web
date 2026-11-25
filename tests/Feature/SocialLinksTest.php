@@ -87,18 +87,31 @@ class SocialLinksTest extends TestCase
 
     public function test_services_config_sanitizes_invalid_or_unsafe_social_urls_to_hash_fallback(): void
     {
-        $envBackup = [
-            'HOSPITAL_SOCIAL_INSTAGRAM_URL' => getenv('HOSPITAL_SOCIAL_INSTAGRAM_URL'),
-            'HOSPITAL_SOCIAL_FACEBOOK_URL' => getenv('HOSPITAL_SOCIAL_FACEBOOK_URL'),
-            'HOSPITAL_SOCIAL_YOUTUBE_URL' => getenv('HOSPITAL_SOCIAL_YOUTUBE_URL'),
-            'HOSPITAL_SOCIAL_THREADS_URL' => getenv('HOSPITAL_SOCIAL_THREADS_URL'),
+        $testValues = [
+            'HOSPITAL_SOCIAL_INSTAGRAM_URL' => 'https://www.instagram.com/rselisabeth/',
+            'HOSPITAL_SOCIAL_FACEBOOK_URL' => 'javascript:alert(1)',
+            'HOSPITAL_SOCIAL_YOUTUBE_URL' => 'not-a-valid-url',
+            'HOSPITAL_SOCIAL_THREADS_URL' => '  https://www.threads.net/@rselisabeth  ',
         ];
 
+        $envBackup = [];
+
+        foreach (array_keys($testValues) as $key) {
+            $envBackup[$key] = [
+                'getenv' => getenv($key),
+                'has_env' => array_key_exists($key, $_ENV),
+                'env' => $_ENV[$key] ?? null,
+                'has_server' => array_key_exists($key, $_SERVER),
+                'server' => $_SERVER[$key] ?? null,
+            ];
+        }
+
         try {
-            putenv('HOSPITAL_SOCIAL_INSTAGRAM_URL=https://www.instagram.com/rselisabeth/');
-            putenv('HOSPITAL_SOCIAL_FACEBOOK_URL=javascript:alert(1)');
-            putenv('HOSPITAL_SOCIAL_YOUTUBE_URL=not-a-valid-url');
-            putenv('HOSPITAL_SOCIAL_THREADS_URL=  https://www.threads.net/@rselisabeth  ');
+            foreach ($testValues as $key => $value) {
+                putenv("{$key}={$value}");
+                $_ENV[$key] = $value;
+                $_SERVER[$key] = $value;
+            }
 
             $services = require base_path('config/services.php');
 
@@ -107,11 +120,23 @@ class SocialLinksTest extends TestCase
             $this->assertSame('#', $services['social']['youtube']);
             $this->assertSame('https://www.threads.net/@rselisabeth', $services['social']['threads']);
         } finally {
-            foreach ($envBackup as $key => $value) {
-                if ($value === false) {
+            foreach ($envBackup as $key => $state) {
+                if ($state['getenv'] === false) {
                     putenv($key);
                 } else {
-                    putenv("{$key}={$value}");
+                    putenv("{$key}={$state['getenv']}");
+                }
+
+                if ($state['has_env']) {
+                    $_ENV[$key] = $state['env'];
+                } else {
+                    unset($_ENV[$key]);
+                }
+
+                if ($state['has_server']) {
+                    $_SERVER[$key] = $state['server'];
+                } else {
+                    unset($_SERVER[$key]);
                 }
             }
         }
@@ -130,7 +155,7 @@ class SocialLinksTest extends TestCase
         $this->assertStringContainsString('aria-label="Unduh aplikasi Elisameds di Google Play Store"', $idHtml);
         $this->assertStringContainsString('aria-label="Unduh aplikasi Elisameds di App Store"', $idHtml);
         $this->assertMatchesRegularExpression('/href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.elisameds\.app"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/', $idHtml);
-        $this->assertMatchesRegularExpression('/href="https:\/\/apps\.apple\.com\/us\/app\/elisameds\/id6751548417"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/', $idHtml);
+        $this->assertMatchesRegularExpression('/href="https:\/\/apps\.apple\.com\/id\/app\/elisameds\/id6748007776"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/', $idHtml);
 
         app()->setLocale('en');
         $enHtml = view('components.footer')->render();
