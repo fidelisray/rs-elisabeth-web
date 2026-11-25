@@ -47,16 +47,61 @@ class StoreQuestionnaireRequest extends FormRequest
 
     public function messages(): array
     {
-        return [
+        $type = $this->getQuestionnaireType();
+        $meta = QuestionnaireDefinition::fieldMetadata($type);
+
+        $messages = [
             'hp_website.size' => __('Terdeteksi aktivitas bot yang tidak valid.'),
-            'age_group.required' => __('Mohon pilih kelompok usia Anda.'),
-            'gender.required' => __('Mohon pilih jenis kelamin Anda.'),
-            'payment_method.required' => __('Mohon pilih cara bayar yang Anda gunakan.'),
-            'suggestions.required' => __('Mohon tuliskan saran atau masukan Anda untuk peningkatan layanan rawat jalan kami.'),
-            'suggestions.min' => __('Saran atau masukan minimal memuat :min karakter.'),
-            'suggestions.max' => __('Saran atau masukan tidak boleh melebihi :max karakter.'),
-            '*.required' => __('Mohon berikan penilaian pada seluruh butir pertanyaan kuesioner.'),
-            '*.in' => __('Pilihan jawaban tidak valid.'),
+            'age_group.required' => __('Pertanyaan :code (:question) - :reason', [
+                'code' => 'A',
+                'question' => $meta['age_group']['text'] ?? __('Berapakah usia anda?'),
+                'reason' => __('Mohon pilih kelompok usia Anda.'),
+            ]),
+            'gender.required' => __('Pertanyaan :code (:question) - :reason', [
+                'code' => 'B',
+                'question' => $meta['gender']['text'] ?? __('Apakah jenis kelamin anda?'),
+                'reason' => __('Mohon pilih jenis kelamin Anda.'),
+            ]),
+            'payment_method.required' => __('Pertanyaan :code (:question) - :reason', [
+                'code' => 'C',
+                'question' => $meta['payment_method']['text'] ?? __('Cara Bayar'),
+                'reason' => __('Mohon pilih cara bayar yang Anda gunakan.'),
+            ]),
+            'suggestions.required' => __(':section (:question) - :reason', [
+                'section' => __('Saran & Masukan'),
+                'question' => $meta['suggestions']['text'] ?? __('Saran & Masukan'),
+                'reason' => __('Mohon tuliskan saran atau masukan Anda untuk peningkatan layanan rawat jalan kami.'),
+            ]),
+            'suggestions.min' => __(':section - :reason', [
+                'section' => __('Saran & Masukan'),
+                'reason' => __('Saran atau masukan minimal memuat :min karakter.'),
+            ]),
+            'suggestions.max' => __(':section - :reason', [
+                'section' => __('Saran & Masukan'),
+                'reason' => __('Saran atau masukan tidak boleh melebihi :max karakter.'),
+            ]),
         ];
+
+        $idx = 1;
+        foreach (array_keys(QuestionnaireDefinition::QUESTIONS[$type] ?? []) as $code) {
+            $numStr = (string) $idx;
+            $questionText = $meta[$code]['text'] ?? $code;
+            $messages["{$code}.required"] = __('Pertanyaan :number (:question) - :reason', [
+                'number' => $numStr,
+                'question' => $questionText,
+                'reason' => __('Mohon pilih salah satu penilaian pada pertanyaan ini.'),
+            ]);
+            $messages["{$code}.in"] = __('Pertanyaan :number (:question) - :reason', [
+                'number' => $numStr,
+                'question' => $questionText,
+                'reason' => __('Pilihan jawaban tidak valid.'),
+            ]);
+            $idx++;
+        }
+
+        $messages['*.required'] = __('Mohon berikan penilaian pada seluruh butir pertanyaan kuesioner.');
+        $messages['*.in'] = __('Pilihan jawaban tidak valid.');
+
+        return $messages;
     }
 }

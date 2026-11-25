@@ -340,4 +340,64 @@ class QuestionnaireSubmissionTest extends TestCase
             return str_ends_with($request->url(), '/questionnaires/rawat-inap');
         });
     }
+
+    /**
+     * Test 16: Kartu sukses menampilkan mini logo rumah sakit dan tombol terlokalisasi ID & EN.
+     */
+    public function test_success_state_renders_hospital_logo_icon_and_localized_buttons(): void
+    {
+        App::setLocale('id');
+        $idResponse = $this->withSession(['questionnaire_success' => true])->get('/kuesioner/igd');
+
+        $idResponse->assertOk();
+        $idHtml = $idResponse->getContent();
+        $this->assertMatchesRegularExpression('/<div class="questionnaire-main-card questionnaire-success-card">.*?<\/div>\s*<\/div>/s', $idHtml);
+        preg_match('/<div class="questionnaire-main-card questionnaire-success-card">.*?<\/div>\s*<\/div>/s', $idHtml, $matches);
+        $successCardHtml = $matches[0] ?? '';
+
+        $this->assertStringContainsString('Isi Kuesioner Lainnya', $successCardHtml);
+        $this->assertStringContainsString('Website RS St. Elisabeth Semarang', $successCardHtml);
+        $this->assertStringContainsString('class="questionnaire-hospital-icon"', $successCardHtml);
+        $this->assertStringContainsString('web-icon', $successCardHtml);
+        $this->assertStringNotContainsString('fa-house', $successCardHtml);
+
+        App::setLocale('en');
+        $enResponse = $this->withSession(['questionnaire_success' => true])->get('/kuesioner/igd');
+
+        $enResponse->assertOk();
+        $enResponse->assertSee('Fill Out Another Questionnaire');
+        $enResponse->assertSee('St. Elisabeth Hospital Semarang Website');
+        $enResponse->assertSee('class="questionnaire-hospital-icon"', false);
+    }
+
+    /**
+     * Test 17: Pesan error validasi menunjuk ke nomor dan teks pertanyaan spesifik beserta tautan anchor kartu.
+     */
+    public function test_validation_errors_point_to_specific_questions_with_anchor_links_and_card_highlight(): void
+    {
+        App::setLocale('id');
+        $postResponse = $this->from('/kuesioner/igd')->post('/kuesioner/igd', []);
+        $postResponse->assertRedirect('/kuesioner/igd');
+
+        $htmlResponse = $this->followRedirects($postResponse);
+        $htmlResponse->assertOk();
+        $htmlResponse->assertSee('id="questionnaireErrorSummary"', false);
+        $htmlResponse->assertSee('Klik pada daftar di bawah untuk langsung menuju ke pertanyaan yang belum lengkap:');
+        $htmlResponse->assertSee('href="#card_age_group"', false);
+        $htmlResponse->assertSee('href="#card_gender"', false);
+        $htmlResponse->assertSee('href="#card_payment_method"', false);
+        $htmlResponse->assertSee('href="#card_speed_triage_arrival"', false);
+        $htmlResponse->assertSee('Pertanyaan A (Berapakah usia anda?) - Mohon pilih kelompok usia Anda.');
+        $htmlResponse->assertSee('Pertanyaan 1 (Seberapa cepat Anda ditangani oleh petugas IGD setelah tiba?) - Mohon pilih salah satu penilaian pada pertanyaan ini.');
+        $this->assertMatchesRegularExpression('/class="question-item-card[^"]*has-error[^"]*"[\s\S]*?id="card_age_group"/', $htmlResponse->getContent());
+        $this->assertMatchesRegularExpression('/class="question-item-card[^"]*has-error[^"]*"[\s\S]*?id="card_speed_triage_arrival"/', $htmlResponse->getContent());
+
+        App::setLocale('en');
+        $enPost = $this->from('/kuesioner/igd')->post('/kuesioner/igd', []);
+        $enHtml = $this->followRedirects($enPost);
+        $enHtml->assertOk();
+        $enHtml->assertSee('Click an item below to jump directly to the incomplete question:');
+        $enHtml->assertSee('Question A (What is your age?) - Please select your age group.');
+        $enHtml->assertSee('Question 1 (How quickly were you attended to by ER staff upon arrival?) - Please select a rating for this question.');
+    }
 }

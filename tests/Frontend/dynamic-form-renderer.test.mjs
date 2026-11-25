@@ -245,3 +245,49 @@ test('maintains PHP parity for whitespace-only strings and matrix_grid object va
     assert.equal(evaluateOperator({ r1: ['c1'] }, 'contains', 'c1'), false);
     assert.equal(evaluateOperator({ r1: 'c1' }, 'gt', 0), false);
 });
+
+test('resolves specific question summary metadata and clears field error reactively when valid answer is provided', () => {
+    const wizard = new DynamicFormWizard({ querySelector: () => null }, {
+        schema: {
+            sections: [{
+                section_key: 'sec_1',
+                title: 'Bagian 1',
+                fields: [
+                    { field_key: 'intro', type: 'info_block', label: 'Pengantar', sort_order: 1 },
+                    { field_key: 'nama', type: 'short_text', label: 'Nama Lengkap', is_required: true, sort_order: 2 },
+                    { field_key: 'layanan', type: 'radio', label: 'Unit Layanan', is_required: true, sort_order: 3, options: { choices: [{ key: 'igd', label: 'IGD' }] } },
+                ],
+            }],
+        },
+        siteLocale: 'id',
+    });
+
+    const visibleFields = wizard.sections[0].fields;
+    wizard.fieldErrors = wizard.validateVisibleFields(visibleFields);
+
+    assert.equal(wizard.fieldErrors.nama?.[0], 'Pertanyaan [Nama Lengkap] wajib diisi.');
+    assert.equal(wizard.fieldErrors.layanan?.[0], 'Pertanyaan [Unit Layanan] wajib dipilih.');
+
+    // info_block tidak dihitung sebagai nomor pertanyaan
+    const namaMeta = wizard.getFieldSummaryMeta('nama');
+    const layananMeta = wizard.getFieldSummaryMeta('layanan');
+    assert.equal(namaMeta.number, 1);
+    assert.equal(namaMeta.badge, 'Pertanyaan 1');
+    assert.equal(layananMeta.number, 2);
+    assert.equal(layananMeta.badge, 'Pertanyaan 2');
+
+    // Jika nilai masih kosong, error tetap dipertahankan
+    wizard.answers.nama = '   ';
+    wizard.clearFieldErrorIfValid(visibleFields[1]);
+    assert.ok(wizard.fieldErrors.nama?.length > 0);
+
+    // Begitu diisi jawaban valid, error untuk field tersebut langsung terhapus
+    wizard.answers.nama = 'Maria Kristina';
+    wizard.clearFieldErrorIfValid(visibleFields[1]);
+    assert.equal(wizard.fieldErrors.nama, undefined);
+    assert.ok(wizard.fieldErrors.layanan?.length > 0);
+
+    wizard.answers.layanan = { selected: 'igd' };
+    wizard.clearFieldErrorIfValid(visibleFields[2]);
+    assert.deepEqual(wizard.fieldErrors, {});
+});

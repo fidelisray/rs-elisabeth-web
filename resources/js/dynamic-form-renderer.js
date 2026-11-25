@@ -29,6 +29,8 @@ const UI_STRINGS = {
         backToHome: 'Kembali ke Beranda',
         reloadPage: 'Muat Ulang Halaman',
         summaryErrorTitle: 'Periksa kembali isian formulir berikut:',
+        summaryErrorSubtitle: 'Klik pada daftar di bawah untuk langsung menuju ke pertanyaan yang perlu dilengkapi:',
+        questionBadge: 'Pertanyaan {num}',
         uploadInProgress: 'Tunggu hingga seluruh proses unggah berkas selesai.',
         ratingSelected: 'Dipilih: {val} dari {max}',
         ratingAria: '{val} dari {max}',
@@ -95,6 +97,8 @@ const UI_STRINGS = {
         backToHome: 'Back to Home',
         reloadPage: 'Reload Page',
         summaryErrorTitle: 'Please check the following form fields:',
+        summaryErrorSubtitle: 'Click an item below to jump directly to the question that needs attention:',
+        questionBadge: 'Question {num}',
         uploadInProgress: 'Please wait until all file uploads finish.',
         ratingSelected: 'Selected: {val} out of {max}',
         ratingAria: '{val} out of {max}',
@@ -925,7 +929,9 @@ class DynamicFormWizard {
             });
 
             this.bannerReload = Boolean(serverErrors.form || serverErrors.version_id);
-            this.bannerError = topMessages[0] || json.message || this.t.errNetwork;
+            this.bannerError = Object.keys(mappedFieldErrors).length > 0 && topMessages.length === 0
+                ? null
+                : (topMessages[0] || json.message || this.t.errNetwork);
 
             if (firstBadFieldKey) {
                 this.navigateToSectionOfField(firstBadFieldKey);
@@ -1166,7 +1172,153 @@ class DynamicFormWizard {
             errEl.setAttribute('role', 'alert');
             errEl.textContent = errors.join(' ');
             card.appendChild(errEl);
+        } else {
+            this.syncSummaryBannerAfterClear(key);
         }
+    }
+
+    getFieldSummaryMeta(fieldKey) {
+        for (const section of this.sections) {
+            let qNum = 0;
+            for (const f of section.fields) {
+                if (f.type !== 'info_block') {
+                    qNum += 1;
+                }
+                if (f.field_key === fieldKey) {
+                    return {
+                        field: f,
+                        sectionKey: section.section_key,
+                        number: qNum,
+                        badge: formatMsg(this.t.questionBadge, { num: qNum }),
+                    };
+                }
+            }
+        }
+        return {
+            field: null,
+            sectionKey: null,
+            number: 0,
+            badge: fieldKey,
+        };
+    }
+
+    syncSummaryBannerAfterClear(fieldKey) {
+        if (!this.root || typeof this.root.querySelector !== 'function') return;
+        const summaryItem = this.root.querySelector(`[data-summary-item="${fieldKey}"]`);
+        if (summaryItem) {
+            summaryItem.remove();
+        }
+        if (Object.keys(this.fieldErrors).length === 0) {
+            const summaryBanner = this.root.querySelector('[data-error-summary]');
+            if (summaryBanner) {
+                summaryBanner.remove();
+            }
+        }
+    }
+
+    clearFieldErrorIfValid(field) {
+        if (!field || !field.field_key) return;
+        const key = field.field_key;
+        if (!this.fieldErrors[key] || this.fieldErrors[key].length === 0) {
+            return;
+        }
+
+        const errs = this.validateSingleField(field);
+        if (errs.length > 0) {
+            return;
+        }
+
+        delete this.fieldErrors[key];
+
+        if (!this.root || typeof this.root.querySelector !== 'function') return;
+        const card = this.root.querySelector(`[data-field-key="${key}"]`);
+        if (card) {
+            card.classList.remove('has-error');
+            const errNode = card.querySelector('.df-field-error');
+            if (errNode) errNode.remove();
+            card.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
+        }
+
+        this.syncSummaryBannerAfterClear(key);
+    }
+
+    jumpToFieldError(fieldKey) {
+        const meta = this.getFieldSummaryMeta(fieldKey);
+        if (meta.sectionKey && meta.sectionKey !== this.currentSectionKey()) {
+            this.navigateToSectionOfField(fieldKey);
+            this.render();
+        }
+        this.focusFieldByKey(fieldKey);
+    }
+
+    renderFieldErrorSummary(visibleFields) {
+        const errKeys = Object.keys(this.fieldErrors).filter((k) => (this.fieldErrors[k] || []).length > 0);
+        if (errKeys.length === 0) return null;
+
+        const visibleOrder = visibleFields.map((f) => f.field_key);
+        const orderedKeys = [
+            ...visibleOrder.filter((k) => errKeys.includes(k)),
+            ...errKeys.filter((k) => !visibleOrder.includes(k)),
+        ];
+
+        const alertBox = document.createElement('div');
+        alertBox.className = 'df-alert-banner is-error df-error-summary';
+        alertBox.setAttribute('role', 'alert');
+        alertBox.setAttribute('tabindex', '-1');
+        alertBox.setAttribute('data-alert-focus', '1');
+        alertBox.setAttribute('data-error-summary', '1');
+
+        const header = document.createElement('div');
+        header.className = 'df-error-summary-header';
+
+        const title = document.createElement('div');
+        title.className = 'df-error-summary-title';
+        title.textContent = this.t.summaryErrorTitle;
+
+        const subtitle = document.createElement('div');
+        subtitle.className = 'df-error-summary-subtitle';
+        subtitle.textContent = this.t.summaryErrorSubtitle;
+
+        header.append(title, subtitle);
+        alertBox.appendChild(header);
+
+        const list = document.createElement('ul');
+        list.className = 'df-error-summary-list';
+
+        orderedKeys.forEach((fieldKey) => {
+            const messages = this.fieldErrors[fieldKey] || [];
+            if (messages.length === 0) return;
+
+            const meta = this.getFieldSummaryMeta(fieldKey);
+            const li = document.createElement('li');
+            li.setAttribute('data-summary-item', fieldKey);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'df-error-summary-link';
+            btn.setAttribute('data-summary-field', fieldKey);
+
+            const badge = document.createElement('span');
+            badge.className = 'df-error-summary-badge';
+            badge.textContent = meta.badge;
+
+            const text = document.createElement('span');
+            text.className = 'df-error-summary-text';
+            text.textContent = messages[0];
+
+            const arrow = document.createElement('span');
+            arrow.className = 'df-error-summary-arrow';
+            arrow.setAttribute('aria-hidden', 'true');
+            arrow.textContent = '↓';
+
+            btn.append(badge, text, arrow);
+            btn.addEventListener('click', () => this.jumpToFieldError(fieldKey));
+            li.appendChild(btn);
+            list.appendChild(li);
+        });
+
+        alertBox.appendChild(list);
+        return alertBox;
     }
 
     scrollToCardTop() {
@@ -1182,6 +1334,12 @@ class DynamicFormWizard {
     }
 
     focusFirstErrorField(visibleFields) {
+        const summaryEl = this.root.querySelector('[data-error-summary]');
+        if (summaryEl) {
+            summaryEl.focus();
+            summaryEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
         const firstInvalid = visibleFields.find((f) => this.fieldErrors[f.field_key]?.length);
         if (firstInvalid) {
             this.focusFieldByKey(firstInvalid.field_key);
@@ -1191,9 +1349,11 @@ class DynamicFormWizard {
     focusFieldByKey(fieldKey) {
         const card = this.root.querySelector(`[data-field-key="${fieldKey}"]`);
         if (!card) return;
+        card.classList.add('is-focused-target');
+        setTimeout(() => card.classList.remove('is-focused-target'), 1400);
         const focusable = card.querySelector('input:not([type="hidden"]), select, textarea, button, [tabindex="0"]');
         if (focusable) {
-            focusable.focus();
+            focusable.focus({ preventScroll: true });
         }
         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
@@ -1360,6 +1520,12 @@ class DynamicFormWizard {
             }
 
             formEl.appendChild(alertBox);
+        }
+
+        // Field-level specific validation summary banner
+        const summaryBanner = this.renderFieldErrorSummary(visibleFields);
+        if (summaryBanner) {
+            formEl.appendChild(summaryBanner);
         }
 
         // Section heading
@@ -1545,6 +1711,7 @@ class DynamicFormWizard {
 
             input.addEventListener('input', (e) => {
                 this.answers[key] = e.target.value;
+                this.clearFieldErrorIfValid(field);
                 this.refreshVisibilityInPlace();
             });
             return input;
@@ -1571,6 +1738,7 @@ class DynamicFormWizard {
             textarea.addEventListener('input', (e) => {
                 this.answers[key] = e.target.value;
                 counter.textContent = formatMsg(this.t.charCount, { len: charLength(e.target.value), max: maxLen });
+                this.clearFieldErrorIfValid(field);
                 this.refreshVisibilityInPlace();
             });
 
@@ -1622,6 +1790,7 @@ class DynamicFormWizard {
                         otherWrap.classList.toggle('d-none', choice.key !== OTHER_CHOICE_KEY);
                         if (choice.key === OTHER_CHOICE_KEY && otherInput) otherInput.focus();
                     }
+                    this.clearFieldErrorIfValid(field);
                     this.refreshVisibilityInPlace();
                 });
 
@@ -1642,6 +1811,7 @@ class DynamicFormWizard {
                 otherInput.value = current.other_text || '';
                 otherInput.addEventListener('input', (e) => {
                     this.answers[key] = { selected: OTHER_CHOICE_KEY, other_text: e.target.value };
+                    this.clearFieldErrorIfValid(field);
                 });
 
                 otherWrap.appendChild(otherInput);
@@ -1704,6 +1874,7 @@ class DynamicFormWizard {
                         otherWrap.classList.toggle('d-none', !selectedSet.has(OTHER_CHOICE_KEY));
                         if (cb.checked && choice.key === OTHER_CHOICE_KEY && otherInput) otherInput.focus();
                     }
+                    this.clearFieldErrorIfValid(field);
                     this.refreshVisibilityInPlace();
                 });
 
@@ -1725,6 +1896,7 @@ class DynamicFormWizard {
                 otherInput.addEventListener('input', (e) => {
                     const arr = Array.from(selectedSet);
                     this.answers[key] = { selected: arr, other_text: e.target.value };
+                    this.clearFieldErrorIfValid(field);
                 });
 
                 otherWrap.appendChild(otherInput);
@@ -1757,6 +1929,7 @@ class DynamicFormWizard {
             select.value = this.answers[key] ?? '';
             select.addEventListener('change', (e) => {
                 this.answers[key] = e.target.value;
+                this.clearFieldErrorIfValid(field);
                 this.refreshVisibilityInPlace();
             });
             return select;
@@ -1803,6 +1976,7 @@ class DynamicFormWizard {
 
                 radio.addEventListener('change', () => {
                     this.answers[key] = v;
+                    this.clearFieldErrorIfValid(field);
                     this.refreshVisibilityInPlace();
                 });
 
@@ -1858,6 +2032,7 @@ class DynamicFormWizard {
                         el.classList.toggle('is-active', idx + 1 <= v);
                     });
                     summary.textContent = formatMsg(this.t.ratingSelected, { val: v, max: maxStars });
+                    this.clearFieldErrorIfValid(field);
                     this.refreshVisibilityInPlace();
                 });
 
@@ -1941,6 +2116,7 @@ class DynamicFormWizard {
                             else delete map[row.key];
                         }
                         this.answers[key] = Object.keys(map).length > 0 ? map : undefined;
+                        this.clearFieldErrorIfValid(field);
                         this.refreshVisibilityInPlace();
                     });
 
@@ -1973,6 +2149,7 @@ class DynamicFormWizard {
 
             input.addEventListener('change', (e) => {
                 this.answers[key] = e.target.value;
+                this.clearFieldErrorIfValid(field);
                 this.refreshVisibilityInPlace();
             });
             return input;
@@ -1992,6 +2169,7 @@ class DynamicFormWizard {
 
             input.addEventListener('change', (e) => {
                 this.answers[key] = e.target.value ? e.target.value.slice(0, 5) : '';
+                this.clearFieldErrorIfValid(field);
                 this.refreshVisibilityInPlace();
             });
             return input;
