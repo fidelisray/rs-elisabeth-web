@@ -116,4 +116,26 @@ class SocialLinksTest extends TestCase
             }
         }
     }
+
+    public function test_footer_renders_google_play_and_app_store_links_with_safe_attributes_and_localization(): void
+    {
+        app()->setLocale('id');
+        $idHtml = view('components.footer')->render();
+
+        $this->assertStringContainsString('class="footer-store-links"', $idHtml);
+        $this->assertStringContainsString('class="footer-store-btn google-play-btn"', $idHtml);
+        $this->assertStringContainsString('class="footer-store-btn app-store-btn"', $idHtml);
+        $this->assertStringContainsString('fa-brands fa-google-play', $idHtml);
+        $this->assertStringContainsString('fa-brands fa-apple', $idHtml);
+        $this->assertStringContainsString('aria-label="Unduh aplikasi Elisameds di Google Play Store"', $idHtml);
+        $this->assertStringContainsString('aria-label="Unduh aplikasi Elisameds di App Store"', $idHtml);
+        $this->assertMatchesRegularExpression('/href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.elisameds\.app"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/', $idHtml);
+        $this->assertMatchesRegularExpression('/href="https:\/\/apps\.apple\.com\/us\/app\/elisameds\/id6751548417"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/', $idHtml);
+
+        app()->setLocale('en');
+        $enHtml = view('components.footer')->render();
+
+        $this->assertStringContainsString('aria-label="Download Elisameds app on Google Play Store"', $enHtml);
+        $this->assertStringContainsString('aria-label="Download Elisameds app on App Store"', $enHtml);
+    }
 }
