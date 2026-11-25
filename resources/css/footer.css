@@ -91,19 +91,19 @@ h4.footer-title {
 
 .btn-social.instagram:hover,
 .btn-social.instagram:focus-visible {
-    background-color: #E1306C;
+    background-color: #e1306c;
     box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4);
 }
 
 .btn-social.facebook:hover,
 .btn-social.facebook:focus-visible {
-    background-color: #1877F2;
+    background-color: #1877f2;
     box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
 }
 
 .btn-social.youtube:hover,
 .btn-social.youtube:focus-visible {
-    background-color: #FF0000;
+    background-color: #ff0000;
     box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
 }
 
@@ -117,31 +117,71 @@ h4.footer-title {
 
 @media (prefers-reduced-motion: reduce) {
     .btn-social {
-        transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+        transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            color 0.2s ease;
     }
 
     .btn-social:hover,
-    .btn-social:focus-visible {
+    .btn-social:focus-visible,
+    #footer .footer-store-btn:hover,
+    #footer .footer-store-btn:focus-visible {
         transform: none;
+    }
+
+    #footer .footer-store-btn {
+        transition: none;
     }
 }
 
-.google-play-btn {
-    display: inline-block;
+.elisameds-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-store-links {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+#footer .footer-store-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    min-height: 48px;
+    line-height: 1;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #fff;
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.google-play-btn:hover {
+#footer .footer-store-btn:hover,
+#footer .footer-store-btn:focus-visible {
     transform: translateY(-4px) scale(1.05);
 }
 
-.fa-google-play {
-    font-size: 3rem;
-    color: #fff;
-    transition: all 0.3s ease;
+#footer .footer-store-btn:focus-visible {
+    outline: 2px solid var(--accent-color, #f8f804);
+    outline-offset: 4px;
 }
 
-.google-play-btn:hover .fa-google-play {
+#footer .google-play-btn .fa-google-play {
+    display: inline-block;
+    font-size: 3rem;
+    line-height: 1;
+    color: #fff;
+    transition:
+        color 0.3s ease,
+        filter 0.3s ease;
+}
+
+#footer .google-play-btn:hover .fa-google-play,
+#footer .google-play-btn:focus-visible .fa-google-play {
     background: linear-gradient(
         135deg,
         #00d2ff 0%,
@@ -150,14 +190,35 @@ h4.footer-title {
         #ea4335 90%
     );
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+#footer .app-store-btn .fa-apple {
     display: inline-block;
+    position: relative;
+    top: -3px;
+    font-size: 3.65rem;
+    line-height: 1;
+    color: #fff;
+    transition:
+        color 0.3s ease,
+        filter 0.3s ease;
+}
+
+#footer .app-store-btn:hover .fa-apple,
+#footer .app-store-btn:focus-visible .fa-apple {
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 48%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 12px rgba(255, 255, 255, 0.35));
 }
 
 .elisameds-desc {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.78);
 }
 
 /* ==========================================================================
@@ -166,7 +227,9 @@ h4.footer-title {
    ========================================================================== */
 @media (max-width: 767.98px) {
     #footer {
-        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+        padding-bottom: calc(
+            1.5rem + env(safe-area-inset-bottom, 0px)
+        ) !important;
     }
 
     #footer.pt-5 {
@@ -223,8 +286,22 @@ h4.footer-title {
         font-size: 1.15rem;
     }
 
-    .fa-google-play {
-        font-size: 2rem;
+    .footer-store-links {
+        gap: 0.65rem;
+    }
+
+    #footer .footer-store-btn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    #footer .google-play-btn .fa-google-play {
+        font-size: 2.15rem;
+    }
+
+    #footer .app-store-btn .fa-apple {
+        top: -2px;
+        font-size: 2.62rem;
     }
 
     .elisameds-desc {

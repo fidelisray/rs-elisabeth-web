@@ -1069,14 +1069,14 @@
                         </ul>
 
                         <div class="d-flex flex-wrap gap-3 mt-4">
-                            <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" class="btn-store shadow">
+                            <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" class="btn-store shadow" target="_blank">
                                 <i class="fab fa-google-play"></i>
                                 <div class="store-text">
                                     <span class="small-text">GET IT ON</span>
                                     <span class="large-text">Google Play</span>
                                 </div>
                             </a>
-                            <a href="https://apps.apple.com/id/app/elisameds/id6748007776" class="btn-store shadow">
+                            <a href="https://apps.apple.com/id/app/elisameds/id6748007776" class="btn-store shadow" target="_blank">
                                 <i class="fab fa-apple"></i>
                                 <div class="store-text">
                                     <span class="small-text">Download on the</span>
