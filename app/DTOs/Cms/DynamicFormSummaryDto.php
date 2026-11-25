@@ -2,6 +2,7 @@
 
 namespace App\DTOs\Cms;
 
+use App\Support\RichTextSanitizer;
 use Illuminate\Support\Carbon;
 
 class DynamicFormSummaryDto
@@ -48,6 +49,11 @@ class DynamicFormSummaryDto
                 ? (int) $data['published_version_number']
                 : null,
         );
+    }
+
+    public function plainDescription(int $limit = 135): ?string
+    {
+        return RichTextSanitizer::toPlainText($this->description, $limit);
     }
 
     private static function parseDate(mixed $value): ?Carbon

@@ -42,11 +42,14 @@
                 'breadcrumbs' => $heroBreadcrumbs,
             ])
         @else
+            @php
+                $safeFormDescription = \App\Support\RichTextSanitizer::sanitize($form->description);
+            @endphp
             @include('components.hero-section', [
                 'badgeIcon' => $form->mode === 'feedback' ? 'fa-solid fa-comment-medical' : 'fa-solid fa-clipboard-check',
                 'badgeText' => $form->mode === 'feedback' ? __('Kritik & Saran') : __('Kuesioner & Survei'),
                 'title' => $form->title,
-                'subtitle' => $form->description,
+                'subtitle' => null,
                 'breadcrumbs' => $heroBreadcrumbs,
             ])
         @endif
@@ -118,6 +121,12 @@
                                 </div>
                             @else
                                 <div class="df-sheet-card">
+                                    @if(!empty($safeFormDescription))
+                                        <div class="df-form-intro df-rich-text">
+                                            {!! $safeFormDescription !!}
+                                        </div>
+                                    @endif
+
                                     <noscript>
                                         <div class="df-alert-banner is-error" role="alert">
                                             <strong>{{ __('JavaScript Diperlukan') }}</strong>

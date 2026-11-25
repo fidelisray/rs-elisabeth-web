@@ -2,6 +2,7 @@
 
 namespace App\DTOs\Cms;
 
+use App\Support\RichTextSanitizer;
 use Illuminate\Support\Carbon;
 
 class DynamicFormSchemaDto
@@ -53,6 +54,9 @@ class DynamicFormSchemaDto
             ));
             usort($fields, fn (array $a, array $b): int => ((int) ($a['sort_order'] ?? 0)) <=> ((int) ($b['sort_order'] ?? 0)));
             $section['fields'] = $fields;
+            $section['description'] = isset($section['description']) && is_string($section['description'])
+                ? RichTextSanitizer::sanitize($section['description'])
+                : null;
 
             return $section;
         }, $rawSections);
@@ -61,7 +65,9 @@ class DynamicFormSchemaDto
             id: $data['id'] ?? 0,
             title: (string) ($data['title'] ?? ''),
             slug: (string) ($data['slug'] ?? ''),
-            description: isset($data['description']) && is_string($data['description']) ? $data['description'] : null,
+            description: isset($data['description']) && is_string($data['description'])
+                ? RichTextSanitizer::sanitize($data['description'])
+                : null,
             mode: (string) ($data['mode'] ?? 'questionnaire'),
             locale: in_array($data['locale'] ?? 'id', ['id', 'en'], true) ? (string) $data['locale'] : 'id',
             status: (string) ($data['status'] ?? 'published'),

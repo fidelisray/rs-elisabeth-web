@@ -141,9 +141,12 @@
                                             <div class="df-catalog-card-body">
                                                 <h2 class="df-catalog-card-title">{{ $formItem->title }}</h2>
 
-                                                @if(!empty($formItem->description))
+                                                @php
+                                                    $plainDesc = $formItem->plainDescription(135);
+                                                @endphp
+                                                @if($plainDesc !== null)
                                                     <p class="df-catalog-card-desc">
-                                                        {{ \Illuminate\Support\Str::limit(strip_tags($formItem->description), 135) }}
+                                                        {{ $plainDesc }}
                                                     </p>
                                                 @else
                                                     <p class="df-catalog-card-desc">

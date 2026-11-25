@@ -48,7 +48,10 @@
     font-size: 0.9rem;
     font-weight: 600;
     text-decoration: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .df-filter-link:hover {
@@ -78,7 +81,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .df-catalog-card:hover {
@@ -188,7 +194,10 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .df-btn-primary:hover:not(:disabled) {
@@ -219,7 +228,9 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .df-btn-secondary:hover:not(:disabled) {
@@ -351,11 +362,86 @@
     overflow-wrap: anywhere;
 }
 
-.df-section-desc {
-    color: #475569;
-    font-size: 0.95rem;
+.df-form-intro {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.75rem;
+    padding: 1.15rem 1.35rem;
+    margin-bottom: 1.75rem;
+    color: #1e293b;
+}
+
+.df-rich-text {
+    font-size: 0.96rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+    max-width: 100%;
+}
+
+.df-rich-text p {
+    margin: 0 0 0.65rem;
+}
+
+.df-rich-text li > p {
     margin: 0;
-    white-space: pre-line;
+}
+
+.df-rich-text p:last-child,
+.df-rich-text ul:last-child,
+.df-rich-text ol:last-child,
+.df-rich-text blockquote:last-child {
+    margin-bottom: 0;
+}
+
+.df-rich-text h2,
+.df-rich-text h3 {
+    color: var(--secondary-darker-color, #124f8c);
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0.85rem 0 0.4rem;
+}
+
+.df-rich-text h2 {
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+}
+
+.df-rich-text h3 {
+    font-size: clamp(0.98rem, 1.3vw, 1.08rem);
+}
+
+.df-rich-text ul,
+.df-rich-text ol {
+    margin: 0.4rem 0 0.65rem;
+    padding-left: 1.35rem;
+}
+
+.df-rich-text li + li {
+    margin-top: 0.25rem;
+}
+
+.df-rich-text blockquote {
+    margin: 0.65rem 0;
+    padding: 0.5rem 0.9rem;
+    border-left: 3px solid var(--secondary-color, #026199);
+    background-color: #f1f5f9;
+    border-radius: 0 0.4rem 0.4rem 0;
+}
+
+.df-rich-text a {
+    color: #0369a1;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.df-rich-text a:hover {
+    color: var(--secondary-darker-color, #124f8c);
+}
+
+.df-section-desc {
+    color: #334155;
+    font-size: 0.95rem;
+    margin: 0.35rem 0 0;
 }
 
 /* Field wrappers */
@@ -424,7 +510,9 @@
     color: #1e293b;
     font-size: 1rem;
     line-height: 1.5;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .df-textarea {
@@ -464,7 +552,9 @@
     background-color: #f8fafc;
     color: #1e293b;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .df-choice-option:hover {
@@ -539,7 +629,10 @@
     background-color: #f8fafc;
     color: #1e293b;
     font-weight: 700;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .df-scale-label:hover .df-scale-pill {
@@ -585,7 +678,10 @@
     border-radius: 0.6rem;
     background-color: #f8fafc;
     color: #475569;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
 }
 
 .df-rating-btn.is-active {
@@ -878,7 +974,10 @@
     font-weight: 500;
     line-height: 1.4;
     cursor: pointer;
-    transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.18s ease;
 }
 
 .df-error-summary-link:hover,
@@ -953,7 +1052,8 @@
 }
 
 .df-ticket-code {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 1.4rem;
     font-weight: 700;
     color: #124f8c;
@@ -1016,6 +1116,11 @@
     .df-sheet-card {
         padding: 1.25rem 1rem;
         border-radius: 0.85rem;
+    }
+
+    .df-form-intro {
+        padding: 0.9rem 1rem;
+        margin-bottom: 1.25rem;
     }
 
     .df-field-card {

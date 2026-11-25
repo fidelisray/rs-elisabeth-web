@@ -43,12 +43,16 @@ const UI_STRINGS = {
         errOtherMax: 'Isian teks Lainnya pada [{label}] maksimal 500 karakter.',
         errEmail: 'Format email pada [{label}] tidak valid.',
         errUrl: 'Format URL pada [{label}] harus diawali http:// atau https://.',
-        errPhone: 'Format nomor telepon pada [{label}] tidak valid.',
+        errPhone: 'Format nomor telepon Indonesia pada [{label}] tidak valid. Gunakan awalan 08 atau +628 (10-13 digit angka).',
+        phonePlaceholder: 'Contoh: 081234567890',
         errNumber: 'Pertanyaan [{label}] harus berupa angka.',
         errMinValue: 'Nilai pada [{label}] minimal {min}.',
         errMaxValue: 'Nilai pada [{label}] maksimal {max}.',
         errMinLength: 'Jawaban [{label}] minimal {min} karakter.',
         errMaxLength: 'Jawaban [{label}] maksimal {max} karakter.',
+        errFormatLettersSpaces: "Pertanyaan [{label}] hanya boleh berisi huruf, spasi, dan tanda baca nama umum (., '-).",
+        errFormatDigitsOnly: 'Pertanyaan [{label}] hanya boleh berisi angka (0-9).',
+        errFormatCodeDash: 'Pertanyaan [{label}] hanya boleh berisi huruf, angka, dan tanda hubung (-).',
         errPattern: 'Format jawaban pada [{label}] tidak sesuai pola yang diminta.',
         errMinSelected: 'Pertanyaan [{label}] membutuhkan minimal {min} pilihan.',
         errMaxSelected: 'Pertanyaan [{label}] maksimal {max} pilihan.',
@@ -111,12 +115,16 @@ const UI_STRINGS = {
         errOtherMax: 'Other option text for [{label}] must not exceed 500 characters.',
         errEmail: 'Please enter a valid email address for [{label}].',
         errUrl: 'URL for [{label}] must start with http:// or https://.',
-        errPhone: 'Please enter a valid phone number for [{label}].',
+        errPhone: 'Please enter a valid Indonesian phone number for [{label}] (starting with 08 or +628, 10-13 digits).',
+        phonePlaceholder: 'e.g. 081234567890',
         errNumber: '[{label}] must be a numeric value.',
         errMinValue: '[{label}] must be at least {min}.',
         errMaxValue: '[{label}] must not exceed {max}.',
         errMinLength: '[{label}] must be at least {min} characters.',
         errMaxLength: '[{label}] must not exceed {max} characters.',
+        errFormatLettersSpaces: "[{label}] may only contain letters, spaces, and common name punctuation (., '-).",
+        errFormatDigitsOnly: '[{label}] may only contain digits (0-9).',
+        errFormatCodeDash: '[{label}] may only contain letters, numbers, and hyphens (-).',
         errPattern: '[{label}] does not match the required format.',
         errMinSelected: 'Please select at least {min} option(s) for [{label}].',
         errMaxSelected: 'Please select at most {max} option(s) for [{label}].',
@@ -191,6 +199,100 @@ function parseOptionalRuleInt(val) {
 
 function charLength(str) {
     return Array.from(String(str)).length;
+}
+
+function isValidIndonesianPhone(value) {
+    if (typeof value !== 'string') return false;
+    const trimmed = value.trim();
+    if (trimmed === '' || !/^\+?[0-9\s\-.]+$/.test(trimmed)) return false;
+    const compact = trimmed.replace(/[\s\-.]/g, '');
+    return /^(?:\+62|62|0)8[1-9][0-9]{7,10}$/.test(compact);
+}
+
+const TEXT_FORMAT_PRESET_REGEX = {
+    letters_spaces: /^[\p{L}\s.,'-]+$/u,
+    digits_only: /^[0-9]+$/,
+    code_dash: /^[A-Za-z0-9-]+$/,
+};
+
+function matchesTextFormatPreset(preset, value) {
+    const regex = TEXT_FORMAT_PRESET_REGEX[preset];
+    if (!regex) return true;
+    return regex.test(String(value));
+}
+
+const RICH_HTML_ALLOWED_TAGS = new Set([
+    'P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'S', 'DEL',
+    'H2', 'H3', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A',
+]);
+
+const RICH_HTML_DROP_TAGS = new Set([
+    'SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'NOSCRIPT', 'IMG',
+]);
+
+function isSafeRichHref(rawHref) {
+    if (typeof rawHref !== 'string') return null;
+    const trimmed = rawHref.trim();
+    if (!trimmed) return null;
+    if (/^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(trimmed)) {
+        return trimmed;
+    }
+    return isSafeHttpUrl(trimmed);
+}
+
+function appendSanitizedRichHtml(container, html) {
+    if (typeof html !== 'string' || html.trim() === '') return;
+    const trimmed = html.trim();
+
+    if (!/<[a-z][\s\S]*>/i.test(trimmed) || typeof DOMParser === 'undefined') {
+        const p = document.createElement('p');
+        p.style.whiteSpace = 'pre-line';
+        p.textContent = trimmed;
+        container.appendChild(p);
+        return;
+    }
+
+    const doc = new DOMParser().parseFromString(trimmed, 'text/html');
+    const cloneSafe = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return document.createTextNode(node.nodeValue || '');
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return null;
+        }
+        const tag = node.tagName.toUpperCase();
+        if (RICH_HTML_DROP_TAGS.has(tag)) {
+            return null;
+        }
+        if (!RICH_HTML_ALLOWED_TAGS.has(tag)) {
+            const frag = document.createDocumentFragment();
+            Array.from(node.childNodes).forEach((child) => {
+                const safeChild = cloneSafe(child);
+                if (safeChild) frag.appendChild(safeChild);
+            });
+            return frag;
+        }
+
+        const el = document.createElement(tag.toLowerCase());
+        if (tag === 'A') {
+            const safeHref = isSafeRichHref(node.getAttribute('href'));
+            if (safeHref) {
+                el.setAttribute('href', safeHref);
+                el.setAttribute('target', '_blank');
+                el.setAttribute('rel', 'noopener noreferrer');
+            }
+        }
+        Array.from(node.childNodes).forEach((child) => {
+            const safeChild = cloneSafe(child);
+            if (safeChild) el.appendChild(safeChild);
+        });
+        return el;
+    };
+
+    Array.from(doc.body.childNodes).forEach((child) => {
+        const safeChild = cloneSafe(child);
+        if (safeChild) container.appendChild(safeChild);
+    });
 }
 
 function compilePattern(pattern) {
@@ -601,24 +703,35 @@ class DynamicFormWizard {
                 }
             }
             if (subtype === 'phone') {
-                const digits = trimmed.replace(/[^0-9]/g, '');
-                if (!/^\+?[0-9\s\-().]{7,20}$/.test(trimmed) || digits.length < 7 || digits.length > 16) {
+                if (!isValidIndonesianPhone(trimmed)) {
                     errs.push(formatMsg(this.t.errPhone, { label }));
                 }
             }
 
-            const charLen = charLength(trimmed);
-            const minLen = parseOptionalRuleInt(rules.min_length);
-            const rawMaxLen = parseOptionalRuleInt(rules.max_length);
-            const maxLen = rawMaxLen !== null && rawMaxLen > 0 ? Math.min(500, rawMaxLen) : 500;
-            if (minLen !== null && charLen < minLen) {
-                errs.push(formatMsg(this.t.errMinLength, { label, min: minLen }));
-            }
-            if (charLen > maxLen) {
-                errs.push(formatMsg(this.t.errMaxLength, { label, max: maxLen }));
+            if (subtype !== 'phone') {
+                const charLen = charLength(trimmed);
+                const minLen = parseOptionalRuleInt(rules.min_length);
+                const rawMaxLen = parseOptionalRuleInt(rules.max_length);
+                const maxLen = rawMaxLen !== null && rawMaxLen > 0 ? Math.min(500, rawMaxLen) : 500;
+                if (minLen !== null && charLen < minLen) {
+                    errs.push(formatMsg(this.t.errMinLength, { label, min: minLen }));
+                }
+                if (charLen > maxLen) {
+                    errs.push(formatMsg(this.t.errMaxLength, { label, max: maxLen }));
+                }
             }
 
-            if (rules.pattern) {
+            const preset = subtype === 'text' ? rules.format_preset : null;
+            if (preset && Object.prototype.hasOwnProperty.call(TEXT_FORMAT_PRESET_REGEX, preset)) {
+                if (!matchesTextFormatPreset(preset, trimmed)) {
+                    const msgKey = ({
+                        letters_spaces: 'errFormatLettersSpaces',
+                        digits_only: 'errFormatDigitsOnly',
+                        code_dash: 'errFormatCodeDash',
+                    })[preset] || 'errPattern';
+                    errs.push(formatMsg(this.t[msgKey], { label }));
+                }
+            } else if (rules.pattern) {
                 const regex = compilePattern(rules.pattern);
                 if (regex && !regex.test(trimmed)) {
                     errs.push(formatMsg(this.t.errPattern, { label }));
@@ -1538,10 +1651,12 @@ class DynamicFormWizard {
         secHeader.appendChild(secTitle);
 
         if (current.description) {
-            const secDesc = document.createElement('p');
-            secDesc.className = 'df-section-desc';
-            secDesc.textContent = current.description;
-            secHeader.appendChild(secDesc);
+            const secDesc = document.createElement('div');
+            secDesc.className = 'df-section-desc df-rich-text';
+            appendSanitizedRichHtml(secDesc, current.description);
+            if (secDesc.textContent.trim() !== '') {
+                secHeader.appendChild(secDesc);
+            }
         }
         formEl.appendChild(secHeader);
 
@@ -1703,7 +1818,16 @@ class DynamicFormWizard {
             input.className = 'df-input';
             input.type = ({ email: 'email', phone: 'tel', number: 'number', url: 'url' })[subtype] || 'text';
             if (subtype === 'number') input.step = 'any';
-            if (field.placeholder) input.placeholder = field.placeholder;
+            if (subtype === 'phone') {
+                input.inputMode = 'tel';
+            } else if (subtype === 'text' && rules.format_preset === 'digits_only') {
+                input.inputMode = 'numeric';
+            }
+            if (field.placeholder) {
+                input.placeholder = field.placeholder;
+            } else if (subtype === 'phone') {
+                input.placeholder = this.t.phonePlaceholder;
+            }
             if (field.is_required) input.required = true;
             if (meta.describedBy) input.setAttribute('aria-describedby', meta.describedBy);
             if (meta.hasError) input.setAttribute('aria-invalid', 'true');
@@ -2368,7 +2492,9 @@ export {
     evaluateVisibility,
     isNumericValue,
     isSafeHttpUrl,
+    isValidIndonesianPhone,
     isValueEmpty,
+    matchesTextFormatPreset,
     normalizeComparableValue,
     resolveChoiceJumpTarget,
     resolveSectionNextTarget,

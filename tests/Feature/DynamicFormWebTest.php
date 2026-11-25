@@ -393,6 +393,51 @@ class DynamicFormWebTest extends TestCase
             ->assertJsonPath('errors.respondent_key.0', 'You have already submitted this form.');
     }
 
+    public function test_renders_sanitized_rich_text_form_description_in_intro_block_and_clean_plain_excerpt_in_catalog(): void
+    {
+        $richDescription = '<p>Isi <strong>survei ini</strong> dengan jujur.</p><ul><li>Poin pertama</li><li>Poin kedua</li></ul>'
+            .'<a href="https://rs-elisabeth.com/panduan">Panduan</a>'
+            .'<script>alert("xss")</script><img src="x" onerror="alert(1)">';
+
+        Http::fake([
+            'https://cms.invalid/api/v1/cms/forms' => Http::response([
+                'data' => [[
+                    'id' => 77,
+                    'title' => 'Survei Rich Text',
+                    'slug' => 'survei-rich-text',
+                    'description' => '<p>Paragraf&nbsp;satu.</p><p>Paragraf dua.</p>',
+                    'mode' => 'questionnaire',
+                    'locale' => 'id',
+                    'status' => 'published',
+                    'is_accepting_responses' => true,
+                    'is_public_listed' => true,
+                ]],
+            ], 200),
+            'https://cms.invalid/api/v1/cms/forms/survei-rich-text' => Http::response([
+                'data' => $this->formSchemaPayload('survei-rich-text', [
+                    'title' => 'Survei Rich Text',
+                    'description' => $richDescription,
+                ]),
+            ], 200),
+        ]);
+
+        // Katalog menampilkan ringkasan polos bersih tanpa tag HTML, kata menempel, maupun &nbsp;
+        $catalog = $this->get(route('dynamic-forms.index'))->assertOk();
+        $catalog->assertSee('Paragraf satu. Paragraf dua.');
+        $catalog->assertDontSee('&nbsp;', false);
+        $catalog->assertDontSee('<p>Paragraf', false);
+
+        // Halaman formulir menampilkan Rich Text tersanitasi di .df-form-intro dan tidak mencetaknya di hero-subtitle
+        $show = $this->get(route('dynamic-forms.show', ['slug' => 'survei-rich-text']))->assertOk();
+        $show->assertSee('df-form-intro df-rich-text', false);
+        $show->assertSee('<strong>survei ini</strong>', false);
+        $show->assertSee('<li>Poin pertama</li>', false);
+        $show->assertSee('rel="noopener noreferrer"', false);
+        $show->assertDontSee('<script>', false);
+        $show->assertDontSee('onerror', false);
+        $show->assertDontSee('hero-subtitle', false);
+    }
+
     private function formSchemaPayload(string $slug, array $overrides = []): array
     {
         return array_merge([

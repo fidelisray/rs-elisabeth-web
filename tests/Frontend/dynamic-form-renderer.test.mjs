@@ -6,7 +6,9 @@ import {
     evaluateVisibility,
     isNumericValue,
     isSafeHttpUrl,
+    isValidIndonesianPhone,
     isValueEmpty,
+    matchesTextFormatPreset,
     resolveChoiceJumpTarget,
     resolveSectionNextTarget,
 } from '../../resources/js/dynamic-form-renderer.js';
@@ -244,6 +246,58 @@ test('maintains PHP parity for whitespace-only strings and matrix_grid object va
     assert.equal(evaluateOperator({ r1: 'c1' }, 'contains', 'object'), false);
     assert.equal(evaluateOperator({ r1: ['c1'] }, 'contains', 'c1'), false);
     assert.equal(evaluateOperator({ r1: 'c1' }, 'gt', 0), false);
+});
+
+test('validates Indonesian phone numbers (10-13 local digits) and short_text format presets with CMS parity', () => {
+    for (const valid of ['0812345678', '0812345678901', '+6281234567890', '6281234567890', '0812-3456-7890', '0812.3456.7890']) {
+        assert.equal(isValidIndonesianPhone(valid), true, `Expected valid phone: ${valid}`);
+    }
+    for (const invalid of ['081234567', '08123456789012', '08012345678', '0248310076', '1234567890', '0812abcd7890', '']) {
+        assert.equal(isValidIndonesianPhone(invalid), false, `Expected invalid phone: ${invalid}`);
+    }
+
+    assert.equal(matchesTextFormatPreset('letters_spaces', "dr. Budi Santoso, Sp.PD Ma'ruf"), true);
+    assert.equal(matchesTextFormatPreset('letters_spaces', 'Budi 123'), false);
+    assert.equal(matchesTextFormatPreset('digits_only', '0033740101900001'), true);
+    assert.equal(matchesTextFormatPreset('digits_only', '3374-0101'), false);
+    assert.equal(matchesTextFormatPreset('code_dash', 'RM-001234'), true);
+    assert.equal(matchesTextFormatPreset('code_dash', 'RM 001!'), false);
+
+    const wizard = new DynamicFormWizard({ querySelector: () => null }, {
+        schema: {
+            sections: [{
+                section_key: 'sec_1',
+                title: 'Identitas',
+                fields: [
+                    { field_key: 'nama', type: 'short_text', label: 'Nama', is_required: true, options: { subtype: 'text' }, validation_rules: { format_preset: 'letters_spaces' } },
+                    { field_key: 'nik', type: 'short_text', label: 'NIK', is_required: true, options: { subtype: 'text' }, validation_rules: { format_preset: 'digits_only', min_length: 16, max_length: 16 } },
+                    { field_key: 'kode', type: 'short_text', label: 'Kode', is_required: true, options: { subtype: 'text' }, validation_rules: { format_preset: 'code_dash' } },
+                    { field_key: 'hp', type: 'short_text', label: 'HP', is_required: true, options: { subtype: 'phone' } },
+                ],
+            }],
+        },
+        siteLocale: 'id',
+    });
+
+    wizard.answers = {
+        nama: "dr. Siti Ma'ruf",
+        nik: '0033740101900001',
+        kode: 'IGD-02',
+        hp: '+62 812-3456-7890',
+    };
+    assert.deepEqual(wizard.validateVisibleFields(wizard.sections[0].fields), {});
+
+    wizard.answers = {
+        nama: 'Budi 99',
+        nik: '12345',
+        kode: 'IGD 02!',
+        hp: '08012345678',
+    };
+    const errs = wizard.validateVisibleFields(wizard.sections[0].fields);
+    assert.ok(errs.nama?.[0]?.includes('huruf, spasi'));
+    assert.ok(errs.nik?.length > 0);
+    assert.ok(errs.kode?.[0]?.includes('tanda hubung'));
+    assert.ok(errs.hp?.[0]?.includes('nomor telepon Indonesia'));
 });
 
 test('resolves specific question summary metadata and clears field error reactively when valid answer is provided', () => {
