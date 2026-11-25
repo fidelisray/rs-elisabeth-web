@@ -3,10 +3,10 @@
         <div class="row g-4 g-lg-5 mb-5">
             <!-- Bagian 1: Identitas & Kontak -->
             <div class="col-lg-4 col-md-6">
-                <div class="footer-header mb-4">
+                {{-- <div class="footer-header mb-4">
                     <h4 class="rs-name mb-1">RS St. Elisabeth Semarang</h4>
                     <p class="moto">Pancaran cintanya menyembuhkan derita sesama</p>
-                </div>
+                </div> --}}
                 
                 <h4 class="footer-title mb-4 fs-5">{{ __('Hubungi Kami') }}</h4>
                 <ul class="list-unstyled mb-4">
@@ -59,13 +59,30 @@
             <!-- Bagian 3: Aplikasi Elisameds -->
             <div class="col-lg-4 col-md-12">
                 <h4 class="footer-title mb-4 fs-5">{{ __('Aplikasi Elisameds') }}</h4>
-                <div class="p-4 rounded-4" style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);">
-                    <p class="elisameds-desc mb-4 lh-lg" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
+                <div class="elisameds-card p-4 rounded-4">
+                    <p class="elisameds-desc mb-4 lh-lg">
                         {{ __('Permudah urusan kesehatan Anda. Unduh aplikasi Mobile RS St. Elisabeth Semarang sekarang juga untuk layanan pendaftaran dan riwayat medis yang lebih cepat & praktis.') }}
                     </p>
-                    <a href="https://play.google.com/store/apps/details?id=com.elisameds.app" aria-label="{{ __('Unduh aplikasi Elisameds di Google Play Store') }}" class="google-play-btn d-inline-block">
-                        <i class="fa-brands fa-google-play"></i>
-                    </a>
+                    <div class="footer-store-links">
+                        <a
+                            href="https://play.google.com/store/apps/details?id=com.elisameds.app"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="{{ __('Unduh aplikasi Elisameds di Google Play Store') }}"
+                            class="footer-store-btn google-play-btn"
+                        >
+                            <i class="fa-brands fa-google-play" aria-hidden="true"></i>
+                        </a>
+                        <a
+                            href="https://apps.apple.com/id/app/elisameds/id6748007776"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="{{ __('Unduh aplikasi Elisameds di App Store') }}"
+                            class="footer-store-btn app-store-btn"
+                        >
+                            <i class="fa-brands fa-apple" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -79,7 +96,7 @@
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <p class="mb-0 small" style="color: rgba(255,255,255,0.5); font-size: 0.85rem;">
-                    Designed & Developed with <i class="fa-solid fa-heart text-danger mx-1"></i> by <strong>Elisasoftworks</strong>
+                    Designed & Developed with <i class="fa-solid fa-heart text-danger mx-1"></i> by <strong>Elisa Softworks</strong>
                 </p>
             </div>
         </div>
