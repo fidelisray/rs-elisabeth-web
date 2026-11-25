@@ -1,4 +1,9 @@
 *
 !private/
 !public/
+!json/
+json/*
+!json/glossarium/
+json/glossarium/*
+!json/glossarium/*.json
 !.gitignore
